@@ -4,9 +4,9 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394910140.3814054
+_modified_time = 1394911883.6484995
 _enable_loop = True
-_template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/index.tmpl'
+_template_filename = 'themes/monospace/templates/index.tmpl'
 _template_uri = 'index.tmpl'
 _source_encoding = 'utf-8'
 _exports = ['content']
@@ -34,14 +34,15 @@ def render_body(context,**pageargs):
     __M_caller = context.caller_stack._push_frame()
     try:
         __M_locals = __M_dict_builtin(pageargs=pageargs)
-        date_format = context.get('date_format', UNDEFINED)
-        comments = _mako_get_namespace(context, 'comments')
-        messages = context.get('messages', UNDEFINED)
-        index_teasers = context.get('index_teasers', UNDEFINED)
-        helper = _mako_get_namespace(context, 'helper')
         posts = context.get('posts', UNDEFINED)
+        messages = context.get('messages', UNDEFINED)
+        helper = _mako_get_namespace(context, 'helper')
         def content():
             return render_content(context._locals(__M_locals))
+        comments = _mako_get_namespace(context, 'comments')
+        index_teasers = context.get('index_teasers', UNDEFINED)
+        _link = context.get('_link', UNDEFINED)
+        date_format = context.get('date_format', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 2
         __M_writer('\n')
@@ -53,7 +54,7 @@ def render_body(context,**pageargs):
             context['self'].content(**pageargs)
         
 
-        # SOURCE LINE 29
+        # SOURCE LINE 31
         __M_writer('\n')
         return ''
     finally:
@@ -63,67 +64,65 @@ def render_body(context,**pageargs):
 def render_content(context,**pageargs):
     __M_caller = context.caller_stack._push_frame()
     try:
-        date_format = context.get('date_format', UNDEFINED)
-        comments = _mako_get_namespace(context, 'comments')
-        messages = context.get('messages', UNDEFINED)
-        index_teasers = context.get('index_teasers', UNDEFINED)
-        helper = _mako_get_namespace(context, 'helper')
         posts = context.get('posts', UNDEFINED)
+        messages = context.get('messages', UNDEFINED)
+        helper = _mako_get_namespace(context, 'helper')
         def content():
             return render_content(context)
+        comments = _mako_get_namespace(context, 'comments')
+        index_teasers = context.get('index_teasers', UNDEFINED)
+        _link = context.get('_link', UNDEFINED)
+        date_format = context.get('date_format', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 5
         __M_writer('\n')
         # SOURCE LINE 6
         for post in posts:
             # SOURCE LINE 7
-            __M_writer('        <article class="postbox h-entry post-')
-            __M_writer(str(post.meta('type')))
-            __M_writer('">\n        <h1 class="p-name"><a href="')
+            __M_writer('        <div class="postbox">\n        <h1><a href="')
             # SOURCE LINE 8
             __M_writer(str(post.permalink()))
-            __M_writer('" class="u-url">')
+            __M_writer('">')
             __M_writer(str(post.title()))
-            __M_writer('</a>\n        <small>&nbsp;&nbsp;\n             ')
-            # SOURCE LINE 10
-            __M_writer(str(messages("Posted:")))
-            __M_writer(' <time class="published dt-published" datetime="')
+            __M_writer('</a></h1>\n            <div class="meta" style="background-color: rgb(234, 234, 234); ">                    \n                <span class="authordate">\n                    ')
+            # SOURCE LINE 11
+            __M_writer(str(messages("Posted")))
+            __M_writer(': <time class="published" datetime="')
             __M_writer(str(post.date.isoformat()))
             __M_writer('">')
             __M_writer(str(post.formatted_date(date_format)))
-            __M_writer('</time>\n        </small></h1>\n        <hr>\n')
-            # SOURCE LINE 13
-            if index_teasers:
-                # SOURCE LINE 14
-                __M_writer('        <div class="p-summary">\n        ')
-                # SOURCE LINE 15
-                __M_writer(str(post.text(teaser_only=True)))
-                __M_writer('\n')
+            __M_writer('</time>\n                </span>\n                <br>\n                <span class="tags">Tags:&nbsp;\n')
+            # SOURCE LINE 15
+            if post.tags:
                 # SOURCE LINE 16
-            else:
-                # SOURCE LINE 17
-                __M_writer('        <div class="e-content">\n        ')
-                # SOURCE LINE 18
-                __M_writer(str(post.text(teaser_only=False)))
-                __M_writer('\n')
+                for tag in post.tags:
+                    # SOURCE LINE 17
+                    __M_writer('                            <a class="tag" href="')
+                    __M_writer(str(_link('tag', tag)))
+                    __M_writer('"><span>')
+                    __M_writer(str(tag))
+                    __M_writer('</span></a>\n')
             # SOURCE LINE 20
-            __M_writer('        </div>\n')
-            # SOURCE LINE 21
+            __M_writer('                </span>\n            </div>\n        ')
+            # SOURCE LINE 22
+            __M_writer(str(post.text(teaser_only=index_teasers)))
+            __M_writer('\n')
+            # SOURCE LINE 23
             if not post.meta('nocomments'):
-                # SOURCE LINE 22
+                # SOURCE LINE 24
                 __M_writer('            ')
-                __M_writer(str(comments.comment_link(post.permalink(), post._base_path)))
+                __M_writer(str(comments.comment_link(post.permalink(), post.base_path)))
                 __M_writer('\n')
-            # SOURCE LINE 24
-            __M_writer('        </article>\n')
-        # SOURCE LINE 26
+            # SOURCE LINE 26
+            __M_writer('        </div>\n')
+        # SOURCE LINE 28
         __M_writer('    ')
         __M_writer(str(helper.html_pager()))
         __M_writer('\n    ')
-        # SOURCE LINE 27
+        # SOURCE LINE 29
         __M_writer(str(comments.comment_link_script()))
         __M_writer('\n\t')
-        # SOURCE LINE 28
+        # SOURCE LINE 30
         __M_writer(str(helper.mathjax_script(posts)))
         __M_writer('\n')
         return ''

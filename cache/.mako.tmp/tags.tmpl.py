@@ -4,9 +4,9 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394910140.1987936
+_modified_time = 1394911883.2554
 _enable_loop = True
-_template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/bootstrap3/templates/tags.tmpl'
+_template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/tags.tmpl'
 _template_uri = 'tags.tmpl'
 _source_encoding = 'utf-8'
 _exports = ['content']
@@ -29,10 +29,10 @@ def render_body(context,**pageargs):
         __M_locals = __M_dict_builtin(pageargs=pageargs)
         def content():
             return render_content(context._locals(__M_locals))
-        cat_items = context.get('cat_items', UNDEFINED)
         items = context.get('items', UNDEFINED)
         messages = context.get('messages', UNDEFINED)
         title = context.get('title', UNDEFINED)
+        cat_items = context.get('cat_items', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 2
         __M_writer('\n')
@@ -52,10 +52,10 @@ def render_content(context,**pageargs):
     try:
         def content():
             return render_content(context)
-        cat_items = context.get('cat_items', UNDEFINED)
         items = context.get('items', UNDEFINED)
         messages = context.get('messages', UNDEFINED)
         title = context.get('title', UNDEFINED)
+        cat_items = context.get('cat_items', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 3
         __M_writer('\n    <h1>')
@@ -67,7 +67,7 @@ def render_content(context,**pageargs):
             # SOURCE LINE 6
             __M_writer('        <h2>')
             __M_writer(str(messages("Categories")))
-            __M_writer('</h2>\n        <ul class="list-unstyled bricks">\n')
+            __M_writer('</h2>\n        <ul class="unstyled bricks">\n')
             # SOURCE LINE 8
             for text, link in cat_items:
                 # SOURCE LINE 9
@@ -89,7 +89,7 @@ def render_content(context,**pageargs):
         # SOURCE LINE 18
         if items:
             # SOURCE LINE 19
-            __M_writer('        <ul class="list-unstyled bricks">\n')
+            __M_writer('        <ul class="unstyled bricks">\n')
             # SOURCE LINE 20
             for text, link in items:
                 # SOURCE LINE 21

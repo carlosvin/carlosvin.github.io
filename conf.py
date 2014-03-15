@@ -8,16 +8,16 @@ import time
 OUTPUT_FOLDER="../output"
 
 # Data about this site
-BLOG_AUTHOR = "Your Name"
-BLOG_TITLE = "Demo Site"
+BLOG_AUTHOR = "Carlos Martín Sánchez"
+BLOG_TITLE = "Vin's Blog"
 # This is the main URL for your site. It will be used
 # in a prominent link
-SITE_URL = "http://getnikola.com/"
+SITE_URL = "/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://getnikola.com/"
-BLOG_EMAIL = "joe@demo.site"
-BLOG_DESCRIPTION = "This is a demo site for Nikola."
+BLOG_EMAIL = "carlosvin@gmail.com"
+BLOG_DESCRIPTION = "Carlos Martín Sánchez Website/Blog"
 
 # Nikola is multilingual!
 #
@@ -332,7 +332,8 @@ COMPILERS = {
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-THEME = "bootstrap3"
+#THEME = "bootstrap3"
+THEME = "monospace"
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
@@ -620,7 +621,7 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # FILE_METADATA_REGEXP = None
 
 # Additional metadata that is added to a post when creating a new_post
-# ADDITIONAL_METADATA = {}
+ADDITIONAL_METADATA = {    'author': 'carlosvin'}
 
 # Nikola supports Twitter Card summaries / Open Graph.
 # Twitter cards make it possible for you to attach media to Tweets
@@ -635,14 +636,14 @@ CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
 # Specifying the id for either 'site' or 'creator' will be preferred
 # over the cleartext username. Specifying an ID is not necessary.
 # Displaying images is currently not supported.
-# TWITTER_CARD = {
-#     # 'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
+TWITTER_CARD = {
+  'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
 #     # 'site': '@website',  # twitter nick for the website
 #     # 'site:id': 123456,  # Same as site, but the website's Twitter user ID
 #                           # instead.
-#     # 'creator': '@username',  # Username for the content creator / author.
+  'creator': '@carlosvin',  # Username for the content creator / author.
 #     # 'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
-# }
+}
 
 
 # Post's dates are considered in UTC by default, if you want to use

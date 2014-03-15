@@ -4,12 +4,12 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394910140.529479
+_modified_time = 1394911883.585948
 _enable_loop = True
 _template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/moot_helper.tmpl'
 _template_uri = 'moot_helper.tmpl'
 _source_encoding = 'utf-8'
-_exports = ['comment_form', 'comment_link', 'comment_link_script']
+_exports = ['comment_link_script', 'comment_link', 'comment_form']
 
 
 def render_body(context,**pageargs):
@@ -30,20 +30,12 @@ def render_body(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
-def render_comment_form(context,url,title,identifier):
+def render_comment_link_script(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        comment_system_id = context.get('comment_system_id', UNDEFINED)
         __M_writer = context.writer()
-        # SOURCE LINE 3
-        __M_writer('\n    <a class="moot" href="https://moot.it/i/')
-        # SOURCE LINE 4
-        __M_writer(str(comment_system_id))
-        __M_writer('/')
-        __M_writer(str(identifier))
-        __M_writer('">')
-        __M_writer(str(comment_system_id))
-        __M_writer(' forums</a>\n')
+        # SOURCE LINE 11
+        __M_writer('\n<script src="https://cdn.moot.it/1/moot.min.js"></script>\n')
         return ''
     finally:
         context.caller_stack._pop_frame()
@@ -60,12 +52,20 @@ def render_comment_link(context,link,identifier):
         context.caller_stack._pop_frame()
 
 
-def render_comment_link_script(context):
+def render_comment_form(context,url,title,identifier):
     __M_caller = context.caller_stack._push_frame()
     try:
+        comment_system_id = context.get('comment_system_id', UNDEFINED)
         __M_writer = context.writer()
-        # SOURCE LINE 11
-        __M_writer('\n<script src="https://cdn.moot.it/1/moot.min.js"></script>\n')
+        # SOURCE LINE 3
+        __M_writer('\n    <a class="moot" href="https://moot.it/i/')
+        # SOURCE LINE 4
+        __M_writer(str(comment_system_id))
+        __M_writer('/')
+        __M_writer(str(identifier))
+        __M_writer('">')
+        __M_writer(str(comment_system_id))
+        __M_writer(' forums</a>\n')
         return ''
     finally:
         context.caller_stack._pop_frame()

@@ -4,12 +4,12 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394910140.3161905
+_modified_time = 1394911883.358741
 _enable_loop = True
-_template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/bootstrap3/templates/bootstrap_helper.tmpl'
+_template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/bootstrap/templates/bootstrap_helper.tmpl'
 _template_uri = 'bootstrap_helper.tmpl'
 _source_encoding = 'ascii'
-_exports = ['html_navigation_links', 'html_head', 'late_load_js', 'html_translations']
+_exports = ['html_navigation_links', 'html_head', 'late_load_js']
 
 
 def render_body(context,**pageargs):
@@ -17,15 +17,11 @@ def render_body(context,**pageargs):
     try:
         __M_locals = __M_dict_builtin(pageargs=pageargs)
         __M_writer = context.writer()
-        # SOURCE LINE 2
-        __M_writer('\n')
-        # SOURCE LINE 55
+        # SOURCE LINE 54
         __M_writer('\n\n')
-        # SOURCE LINE 76
+        # SOURCE LINE 75
         __M_writer('\n\n\n')
-        # SOURCE LINE 100
-        __M_writer('\n\n\n')
-        # SOURCE LINE 109
+        # SOURCE LINE 99
         __M_writer('\n')
         return ''
     finally:
@@ -35,56 +31,56 @@ def render_body(context,**pageargs):
 def render_html_navigation_links(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        tuple = context.get('tuple', UNDEFINED)
-        rel_link = context.get('rel_link', UNDEFINED)
-        isinstance = context.get('isinstance', UNDEFINED)
         lang = context.get('lang', UNDEFINED)
         navigation_links = context.get('navigation_links', UNDEFINED)
+        tuple = context.get('tuple', UNDEFINED)
         permalink = context.get('permalink', UNDEFINED)
+        isinstance = context.get('isinstance', UNDEFINED)
+        rel_link = context.get('rel_link', UNDEFINED)
         __M_writer = context.writer()
-        # SOURCE LINE 79
+        # SOURCE LINE 78
         __M_writer('\n')
-        # SOURCE LINE 80
+        # SOURCE LINE 79
         for url, text in navigation_links[lang]:
-            # SOURCE LINE 81
+            # SOURCE LINE 80
             if isinstance(url, tuple):
-                # SOURCE LINE 82
+                # SOURCE LINE 81
                 __M_writer('            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">')
                 __M_writer(str(text))
                 __M_writer('<b class="caret"></b></a>\n            <ul class="dropdown-menu">\n')
-                # SOURCE LINE 84
+                # SOURCE LINE 83
                 for suburl, text in url:
-                    # SOURCE LINE 85
+                    # SOURCE LINE 84
                     if rel_link(permalink, suburl) == "#":
-                        # SOURCE LINE 86
+                        # SOURCE LINE 85
                         __M_writer('                    <li class="active"><a href="')
                         __M_writer(str(permalink))
                         __M_writer('">')
                         __M_writer(str(text))
                         __M_writer('</a>\n')
-                        # SOURCE LINE 87
+                        # SOURCE LINE 86
                     else:
-                        # SOURCE LINE 88
+                        # SOURCE LINE 87
                         __M_writer('                    <li><a href="')
                         __M_writer(str(suburl))
                         __M_writer('">')
                         __M_writer(str(text))
                         __M_writer('</a>\n')
-                # SOURCE LINE 91
+                # SOURCE LINE 90
                 __M_writer('            </ul>\n')
-                # SOURCE LINE 92
+                # SOURCE LINE 91
             else:
-                # SOURCE LINE 93
+                # SOURCE LINE 92
                 if rel_link(permalink, url) == "#":
-                    # SOURCE LINE 94
+                    # SOURCE LINE 93
                     __M_writer('                <li class="active"><a href="')
                     __M_writer(str(permalink))
                     __M_writer('">')
                     __M_writer(str(text))
                     __M_writer('</a>\n')
-                    # SOURCE LINE 95
+                    # SOURCE LINE 94
                 else:
-                    # SOURCE LINE 96
+                    # SOURCE LINE 95
                     __M_writer('                <li><a href="')
                     __M_writer(str(url))
                     __M_writer('">')
@@ -98,106 +94,106 @@ def render_html_navigation_links(context):
 def render_html_head(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        description = context.get('description', UNDEFINED)
-        rss_link = context.get('rss_link', UNDEFINED)
-        translations = context.get('translations', UNDEFINED)
-        blog_author = context.get('blog_author', UNDEFINED)
-        use_cdn = context.get('use_cdn', UNDEFINED)
+        blog_title = context.get('blog_title', UNDEFINED)
         striphtml = context.get('striphtml', UNDEFINED)
+        favicons = context.get('favicons', UNDEFINED)
+        translations = context.get('translations', UNDEFINED)
+        description = context.get('description', UNDEFINED)
+        use_cdn = context.get('use_cdn', UNDEFINED)
+        blog_author = context.get('blog_author', UNDEFINED)
+        permalink = context.get('permalink', UNDEFINED)
+        has_custom_css = context.get('has_custom_css', UNDEFINED)
         _link = context.get('_link', UNDEFINED)
-        abs_link = context.get('abs_link', UNDEFINED)
-        title = context.get('title', UNDEFINED)
+        mathjax_config = context.get('mathjax_config', UNDEFINED)
+        rss_link = context.get('rss_link', UNDEFINED)
         use_bundles = context.get('use_bundles', UNDEFINED)
         len = context.get('len', UNDEFINED)
-        blog_title = context.get('blog_title', UNDEFINED)
-        mathjax_config = context.get('mathjax_config', UNDEFINED)
-        favicons = context.get('favicons', UNDEFINED)
-        has_custom_css = context.get('has_custom_css', UNDEFINED)
-        permalink = context.get('permalink', UNDEFINED)
+        title = context.get('title', UNDEFINED)
+        abs_link = context.get('abs_link', UNDEFINED)
         __M_writer = context.writer()
-        # SOURCE LINE 3
-        __M_writer('\n    <meta charset="utf-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n')
-        # SOURCE LINE 6
+        # SOURCE LINE 2
+        __M_writer('\n    <meta charset="utf-8">\n')
+        # SOURCE LINE 4
         if description:
-            # SOURCE LINE 7
+            # SOURCE LINE 5
             __M_writer('    <meta name="description" content="')
             __M_writer(str(description))
             __M_writer('">\n')
-        # SOURCE LINE 9
+        # SOURCE LINE 7
         __M_writer('    <meta name="author" content="')
         __M_writer(str(blog_author))
         __M_writer('">\n    <title>')
-        # SOURCE LINE 10
+        # SOURCE LINE 8
         __M_writer(striphtml(str(title)))
         __M_writer(' | ')
         __M_writer(striphtml(str(blog_title)))
         __M_writer('</title>\n    ')
-        # SOURCE LINE 11
+        # SOURCE LINE 9
         __M_writer(str(mathjax_config))
         __M_writer('\n')
-        # SOURCE LINE 12
+        # SOURCE LINE 10
         if use_bundles:
-            # SOURCE LINE 13
+            # SOURCE LINE 11
             if use_cdn:
+                # SOURCE LINE 12
+                __M_writer('            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">\n            <link href="/assets/css/all.css" rel="stylesheet" type="text/css">\n')
                 # SOURCE LINE 14
-                __M_writer('            <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">\n            <link href="/assets/css/all.css" rel="stylesheet" type="text/css">\n')
-                # SOURCE LINE 16
             else:
-                # SOURCE LINE 17
+                # SOURCE LINE 15
                 __M_writer('            <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">\n')
-            # SOURCE LINE 19
+            # SOURCE LINE 17
         else:
-            # SOURCE LINE 20
+            # SOURCE LINE 18
             if use_cdn:
-                # SOURCE LINE 21
-                __M_writer('            <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">\n')
-                # SOURCE LINE 22
+                # SOURCE LINE 19
+                __M_writer('            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">\n')
+                # SOURCE LINE 20
             else:
-                # SOURCE LINE 23
-                __M_writer('            <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">\n')
-            # SOURCE LINE 25
+                # SOURCE LINE 21
+                __M_writer('            <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">\n            <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">\n')
+            # SOURCE LINE 24
             __M_writer('        <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">\n        <link href="/assets/css/code.css" rel="stylesheet" type="text/css">\n        <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css"/>\n        <link href="/assets/css/theme.css" rel="stylesheet" type="text/css"/>\n')
-            # SOURCE LINE 29
+            # SOURCE LINE 28
             if has_custom_css:
-                # SOURCE LINE 30
+                # SOURCE LINE 29
                 __M_writer('            <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">\n')
-        # SOURCE LINE 33
+        # SOURCE LINE 32
         if permalink:
-            # SOURCE LINE 34
+            # SOURCE LINE 33
             __M_writer('      <link rel="canonical" href="')
             __M_writer(str(abs_link(permalink)))
             __M_writer('">\n')
-        # SOURCE LINE 36
+        # SOURCE LINE 35
         __M_writer('    <!--[if lt IE 9]>\n      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>\n    <![endif]-->\n')
-        # SOURCE LINE 39
+        # SOURCE LINE 38
         if rss_link:
-            # SOURCE LINE 40
+            # SOURCE LINE 39
             __M_writer('        ')
             __M_writer(str(rss_link))
             __M_writer('\n')
-            # SOURCE LINE 41
+            # SOURCE LINE 40
         else:
-            # SOURCE LINE 42
+            # SOURCE LINE 41
             if len(translations) > 1:
-                # SOURCE LINE 43
+                # SOURCE LINE 42
                 for language in translations:
-                    # SOURCE LINE 44
+                    # SOURCE LINE 43
                     __M_writer('                <link rel="alternate" type="application/rss+xml" title="RSS (')
                     __M_writer(str(language))
                     __M_writer(')" href="')
                     __M_writer(str(_link('rss', None, language)))
                     __M_writer('">\n')
-                # SOURCE LINE 46
+                # SOURCE LINE 45
             else:
-                # SOURCE LINE 47
+                # SOURCE LINE 46
                 __M_writer('            <link rel="alternate" type="application/rss+xml" title="RSS" href="')
                 __M_writer(str(_link('rss', None)))
                 __M_writer('">\n')
-        # SOURCE LINE 50
+        # SOURCE LINE 49
         if favicons:
-            # SOURCE LINE 51
+            # SOURCE LINE 50
             for name, file, size in favicons:
-                # SOURCE LINE 52
+                # SOURCE LINE 51
                 __M_writer('            <link rel="')
                 __M_writer(str(name))
                 __M_writer('" href="')
@@ -216,57 +212,30 @@ def render_late_load_js(context):
         use_bundles = context.get('use_bundles', UNDEFINED)
         use_cdn = context.get('use_cdn', UNDEFINED)
         __M_writer = context.writer()
+        # SOURCE LINE 56
+        __M_writer('\n')
         # SOURCE LINE 57
-        __M_writer('\n')
-        # SOURCE LINE 58
         if use_bundles:
-            # SOURCE LINE 59
+            # SOURCE LINE 58
             if use_cdn:
-                # SOURCE LINE 60
-                __M_writer('            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>\n            <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>\n            <script src="/assets/js/all.js" type="text/javascript"></script>\n')
+                # SOURCE LINE 59
+                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>\n            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>\n            <script src="/assets/js/all.js" type="text/javascript"></script>\n')
+                # SOURCE LINE 62
+            else:
                 # SOURCE LINE 63
-            else:
-                # SOURCE LINE 64
                 __M_writer('            <script src="/assets/js/all-nocdn.js" type="text/javascript"></script>\n')
-            # SOURCE LINE 66
+            # SOURCE LINE 65
         else:
-            # SOURCE LINE 67
+            # SOURCE LINE 66
             if use_cdn:
-                # SOURCE LINE 68
-                __M_writer('            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>\n            <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>\n')
-                # SOURCE LINE 70
+                # SOURCE LINE 67
+                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>\n            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>\n')
+                # SOURCE LINE 69
             else:
-                # SOURCE LINE 71
+                # SOURCE LINE 70
                 __M_writer('            <script src="/assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>\n            <script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>\n')
-            # SOURCE LINE 74
+            # SOURCE LINE 73
             __M_writer('        <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
-def render_html_translations(context):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        lang = context.get('lang', UNDEFINED)
-        messages = context.get('messages', UNDEFINED)
-        _link = context.get('_link', UNDEFINED)
-        translations = context.get('translations', UNDEFINED)
-        __M_writer = context.writer()
-        # SOURCE LINE 103
-        __M_writer('\n')
-        # SOURCE LINE 104
-        for langname in translations.keys():
-            # SOURCE LINE 105
-            if langname != lang:
-                # SOURCE LINE 106
-                __M_writer('            <li><a href="')
-                __M_writer(str(_link("index", None, langname)))
-                __M_writer('" rel="alternate" hreflang="')
-                __M_writer(str(langname))
-                __M_writer('">')
-                __M_writer(str(messages("LANGUAGE", langname)))
-                __M_writer('</a></li>\n')
         return ''
     finally:
         context.caller_stack._pop_frame()

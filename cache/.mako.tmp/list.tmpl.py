@@ -4,9 +4,9 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394910140.6091907
+_modified_time = 1394911883.7136612
 _enable_loop = True
-_template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/bootstrap3/templates/list.tmpl'
+_template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/list.tmpl'
 _template_uri = 'list.tmpl'
 _source_encoding = 'utf-8'
 _exports = ['content']
@@ -30,7 +30,6 @@ def render_body(context,**pageargs):
         def content():
             return render_content(context._locals(__M_locals))
         items = context.get('items', UNDEFINED)
-        messages = context.get('messages', UNDEFINED)
         title = context.get('title', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 2
@@ -39,7 +38,7 @@ def render_body(context,**pageargs):
             context['self'].content(**pageargs)
         
 
-        # SOURCE LINE 18
+        # SOURCE LINE 16
         __M_writer('\n')
         return ''
     finally:
@@ -52,7 +51,6 @@ def render_content(context,**pageargs):
         def content():
             return render_content(context)
         items = context.get('items', UNDEFINED)
-        messages = context.get('messages', UNDEFINED)
         title = context.get('title', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 3
@@ -63,7 +61,7 @@ def render_content(context,**pageargs):
         # SOURCE LINE 7
         if items:
             # SOURCE LINE 8
-            __M_writer('        <ul class="list-unstyled">\n')
+            __M_writer('        <ul class="unstyled">\n')
             # SOURCE LINE 9
             for text, link in items:
                 # SOURCE LINE 10
@@ -74,13 +72,7 @@ def render_content(context,**pageargs):
                 __M_writer('</a>\n')
             # SOURCE LINE 12
             __M_writer('        </ul>\n')
-            # SOURCE LINE 13
-        else:
-            # SOURCE LINE 14
-            __M_writer('        <p>')
-            __M_writer(str(messages("Nothing found.")))
-            __M_writer('</p>\n')
-        # SOURCE LINE 16
+        # SOURCE LINE 14
         __M_writer('        </div>\n        <!--End of body content-->\n')
         return ''
     finally:

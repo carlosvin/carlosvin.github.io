@@ -1,0 +1,11 @@
+.. title: My first post using Nikola
+.. slug: my-first-post-using-nikola
+.. date: 2014/03/15 20:05:55
+.. tags: nikola
+.. link: 
+.. description: My first impressions using Nikola
+.. type: text
+
+Today I've officially moved from my old blog carlosvin.alwaysdata.net to here, carlosvin.github.io. 
+
+My old blog system was supported by Django and MySQL, I didn't really need a framework like Django and a database server. I had 2 or 3 visits per day. I wrote a post by month.
