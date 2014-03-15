@@ -4,7 +4,7 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394911883.6252515
+_modified_time = 1394912236.364641
 _enable_loop = True
 _template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/listing.tmpl'
 _template_uri = 'listing.tmpl'
@@ -34,8 +34,8 @@ def render_body(context,**pageargs):
         _mako_get_namespace(context, 'ui')._populate(_import_ns, ['bar'])
         def content():
             return render_content(context._locals(__M_locals))
-        code = _import_ns.get('code', context.get('code', UNDEFINED))
         folders = _import_ns.get('folders', context.get('folders', UNDEFINED))
+        code = _import_ns.get('code', context.get('code', UNDEFINED))
         ui = _mako_get_namespace(context, 'ui')
         crumbs = _import_ns.get('crumbs', context.get('crumbs', UNDEFINED))
         files = _import_ns.get('files', context.get('files', UNDEFINED))
@@ -62,8 +62,8 @@ def render_content(context,**pageargs):
         _mako_get_namespace(context, 'ui')._populate(_import_ns, ['bar'])
         def content():
             return render_content(context)
-        code = _import_ns.get('code', context.get('code', UNDEFINED))
         folders = _import_ns.get('folders', context.get('folders', UNDEFINED))
+        code = _import_ns.get('code', context.get('code', UNDEFINED))
         ui = _mako_get_namespace(context, 'ui')
         crumbs = _import_ns.get('crumbs', context.get('crumbs', UNDEFINED))
         files = _import_ns.get('files', context.get('files', UNDEFINED))

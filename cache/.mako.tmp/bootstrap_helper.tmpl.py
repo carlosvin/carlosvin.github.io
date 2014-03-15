@@ -4,12 +4,12 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394911883.358741
+_modified_time = 1394912236.0973554
 _enable_loop = True
 _template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/bootstrap/templates/bootstrap_helper.tmpl'
 _template_uri = 'bootstrap_helper.tmpl'
 _source_encoding = 'ascii'
-_exports = ['html_navigation_links', 'html_head', 'late_load_js']
+_exports = ['late_load_js', 'html_head', 'html_navigation_links']
 
 
 def render_body(context,**pageargs):
@@ -28,64 +28,36 @@ def render_body(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
-def render_html_navigation_links(context):
+def render_late_load_js(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        lang = context.get('lang', UNDEFINED)
-        navigation_links = context.get('navigation_links', UNDEFINED)
-        tuple = context.get('tuple', UNDEFINED)
-        permalink = context.get('permalink', UNDEFINED)
-        isinstance = context.get('isinstance', UNDEFINED)
-        rel_link = context.get('rel_link', UNDEFINED)
+        use_bundles = context.get('use_bundles', UNDEFINED)
+        use_cdn = context.get('use_cdn', UNDEFINED)
         __M_writer = context.writer()
-        # SOURCE LINE 78
+        # SOURCE LINE 56
         __M_writer('\n')
-        # SOURCE LINE 79
-        for url, text in navigation_links[lang]:
-            # SOURCE LINE 80
-            if isinstance(url, tuple):
-                # SOURCE LINE 81
-                __M_writer('            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">')
-                __M_writer(str(text))
-                __M_writer('<b class="caret"></b></a>\n            <ul class="dropdown-menu">\n')
-                # SOURCE LINE 83
-                for suburl, text in url:
-                    # SOURCE LINE 84
-                    if rel_link(permalink, suburl) == "#":
-                        # SOURCE LINE 85
-                        __M_writer('                    <li class="active"><a href="')
-                        __M_writer(str(permalink))
-                        __M_writer('">')
-                        __M_writer(str(text))
-                        __M_writer('</a>\n')
-                        # SOURCE LINE 86
-                    else:
-                        # SOURCE LINE 87
-                        __M_writer('                    <li><a href="')
-                        __M_writer(str(suburl))
-                        __M_writer('">')
-                        __M_writer(str(text))
-                        __M_writer('</a>\n')
-                # SOURCE LINE 90
-                __M_writer('            </ul>\n')
-                # SOURCE LINE 91
+        # SOURCE LINE 57
+        if use_bundles:
+            # SOURCE LINE 58
+            if use_cdn:
+                # SOURCE LINE 59
+                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>\n            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>\n            <script src="/assets/js/all.js" type="text/javascript"></script>\n')
+                # SOURCE LINE 62
             else:
-                # SOURCE LINE 92
-                if rel_link(permalink, url) == "#":
-                    # SOURCE LINE 93
-                    __M_writer('                <li class="active"><a href="')
-                    __M_writer(str(permalink))
-                    __M_writer('">')
-                    __M_writer(str(text))
-                    __M_writer('</a>\n')
-                    # SOURCE LINE 94
-                else:
-                    # SOURCE LINE 95
-                    __M_writer('                <li><a href="')
-                    __M_writer(str(url))
-                    __M_writer('">')
-                    __M_writer(str(text))
-                    __M_writer('</a>\n')
+                # SOURCE LINE 63
+                __M_writer('            <script src="/assets/js/all-nocdn.js" type="text/javascript"></script>\n')
+            # SOURCE LINE 65
+        else:
+            # SOURCE LINE 66
+            if use_cdn:
+                # SOURCE LINE 67
+                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>\n            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>\n')
+                # SOURCE LINE 69
+            else:
+                # SOURCE LINE 70
+                __M_writer('            <script src="/assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>\n            <script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>\n')
+            # SOURCE LINE 73
+            __M_writer('        <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>\n')
         return ''
     finally:
         context.caller_stack._pop_frame()
@@ -94,22 +66,22 @@ def render_html_navigation_links(context):
 def render_html_head(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        blog_title = context.get('blog_title', UNDEFINED)
-        striphtml = context.get('striphtml', UNDEFINED)
-        favicons = context.get('favicons', UNDEFINED)
-        translations = context.get('translations', UNDEFINED)
-        description = context.get('description', UNDEFINED)
-        use_cdn = context.get('use_cdn', UNDEFINED)
-        blog_author = context.get('blog_author', UNDEFINED)
-        permalink = context.get('permalink', UNDEFINED)
-        has_custom_css = context.get('has_custom_css', UNDEFINED)
         _link = context.get('_link', UNDEFINED)
-        mathjax_config = context.get('mathjax_config', UNDEFINED)
+        blog_title = context.get('blog_title', UNDEFINED)
+        title = context.get('title', UNDEFINED)
+        striphtml = context.get('striphtml', UNDEFINED)
         rss_link = context.get('rss_link', UNDEFINED)
         use_bundles = context.get('use_bundles', UNDEFINED)
+        description = context.get('description', UNDEFINED)
         len = context.get('len', UNDEFINED)
-        title = context.get('title', UNDEFINED)
+        translations = context.get('translations', UNDEFINED)
+        mathjax_config = context.get('mathjax_config', UNDEFINED)
         abs_link = context.get('abs_link', UNDEFINED)
+        permalink = context.get('permalink', UNDEFINED)
+        favicons = context.get('favicons', UNDEFINED)
+        has_custom_css = context.get('has_custom_css', UNDEFINED)
+        use_cdn = context.get('use_cdn', UNDEFINED)
+        blog_author = context.get('blog_author', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 2
         __M_writer('\n    <meta charset="utf-8">\n')
@@ -206,36 +178,64 @@ def render_html_head(context):
         context.caller_stack._pop_frame()
 
 
-def render_late_load_js(context):
+def render_html_navigation_links(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        use_bundles = context.get('use_bundles', UNDEFINED)
-        use_cdn = context.get('use_cdn', UNDEFINED)
+        lang = context.get('lang', UNDEFINED)
+        navigation_links = context.get('navigation_links', UNDEFINED)
+        rel_link = context.get('rel_link', UNDEFINED)
+        isinstance = context.get('isinstance', UNDEFINED)
+        permalink = context.get('permalink', UNDEFINED)
+        tuple = context.get('tuple', UNDEFINED)
         __M_writer = context.writer()
-        # SOURCE LINE 56
+        # SOURCE LINE 78
         __M_writer('\n')
-        # SOURCE LINE 57
-        if use_bundles:
-            # SOURCE LINE 58
-            if use_cdn:
-                # SOURCE LINE 59
-                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>\n            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>\n            <script src="/assets/js/all.js" type="text/javascript"></script>\n')
-                # SOURCE LINE 62
+        # SOURCE LINE 79
+        for url, text in navigation_links[lang]:
+            # SOURCE LINE 80
+            if isinstance(url, tuple):
+                # SOURCE LINE 81
+                __M_writer('            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">')
+                __M_writer(str(text))
+                __M_writer('<b class="caret"></b></a>\n            <ul class="dropdown-menu">\n')
+                # SOURCE LINE 83
+                for suburl, text in url:
+                    # SOURCE LINE 84
+                    if rel_link(permalink, suburl) == "#":
+                        # SOURCE LINE 85
+                        __M_writer('                    <li class="active"><a href="')
+                        __M_writer(str(permalink))
+                        __M_writer('">')
+                        __M_writer(str(text))
+                        __M_writer('</a>\n')
+                        # SOURCE LINE 86
+                    else:
+                        # SOURCE LINE 87
+                        __M_writer('                    <li><a href="')
+                        __M_writer(str(suburl))
+                        __M_writer('">')
+                        __M_writer(str(text))
+                        __M_writer('</a>\n')
+                # SOURCE LINE 90
+                __M_writer('            </ul>\n')
+                # SOURCE LINE 91
             else:
-                # SOURCE LINE 63
-                __M_writer('            <script src="/assets/js/all-nocdn.js" type="text/javascript"></script>\n')
-            # SOURCE LINE 65
-        else:
-            # SOURCE LINE 66
-            if use_cdn:
-                # SOURCE LINE 67
-                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>\n            <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js"></script>\n')
-                # SOURCE LINE 69
-            else:
-                # SOURCE LINE 70
-                __M_writer('            <script src="/assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>\n            <script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>\n')
-            # SOURCE LINE 73
-            __M_writer('        <script src="/assets/js/jquery.colorbox-min.js" type="text/javascript"></script>\n')
+                # SOURCE LINE 92
+                if rel_link(permalink, url) == "#":
+                    # SOURCE LINE 93
+                    __M_writer('                <li class="active"><a href="')
+                    __M_writer(str(permalink))
+                    __M_writer('">')
+                    __M_writer(str(text))
+                    __M_writer('</a>\n')
+                    # SOURCE LINE 94
+                else:
+                    # SOURCE LINE 95
+                    __M_writer('                <li><a href="')
+                    __M_writer(str(url))
+                    __M_writer('">')
+                    __M_writer(str(text))
+                    __M_writer('</a>\n')
         return ''
     finally:
         context.caller_stack._pop_frame()

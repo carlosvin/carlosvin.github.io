@@ -4,12 +4,12 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394911883.6113431
+_modified_time = 1394912236.3507984
 _enable_loop = True
 _template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/isso_helper.tmpl'
 _template_uri = 'isso_helper.tmpl'
 _source_encoding = 'utf-8'
-_exports = ['comment_link_script', 'comment_link', 'comment_form']
+_exports = ['comment_link', 'comment_link_script', 'comment_form']
 
 
 def render_body(context,**pageargs):
@@ -23,6 +23,24 @@ def render_body(context,**pageargs):
         __M_writer('\n\n\n')
         # SOURCE LINE 20
         __M_writer('\n')
+        return ''
+    finally:
+        context.caller_stack._pop_frame()
+
+
+def render_comment_link(context,link,identifier):
+    __M_caller = context.caller_stack._push_frame()
+    try:
+        comment_system_id = context.get('comment_system_id', UNDEFINED)
+        __M_writer = context.writer()
+        # SOURCE LINE 9
+        __M_writer('\n')
+        # SOURCE LINE 10
+        if comment_system_id:
+            # SOURCE LINE 11
+            __M_writer('        <a href="')
+            __M_writer(str(link))
+            __M_writer('#isso-thread">Comments</a>\n')
         return ''
     finally:
         context.caller_stack._pop_frame()
@@ -43,24 +61,6 @@ def render_comment_link_script(context):
             __M_writer('js/count.min.js" data-isso="')
             __M_writer(str(comment_system_id))
             __M_writer('"></script>\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
-def render_comment_link(context,link,identifier):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        comment_system_id = context.get('comment_system_id', UNDEFINED)
-        __M_writer = context.writer()
-        # SOURCE LINE 9
-        __M_writer('\n')
-        # SOURCE LINE 10
-        if comment_system_id:
-            # SOURCE LINE 11
-            __M_writer('        <a href="')
-            __M_writer(str(link))
-            __M_writer('#isso-thread">Comments</a>\n')
         return ''
     finally:
         context.caller_stack._pop_frame()

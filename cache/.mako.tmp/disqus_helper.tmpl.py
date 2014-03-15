@@ -4,12 +4,12 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394911883.5481522
+_modified_time = 1394912236.2875335
 _enable_loop = True
 _template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/disqus_helper.tmpl'
 _template_uri = 'disqus_helper.tmpl'
 _source_encoding = 'utf-8'
-_exports = ['comment_link', 'comment_form', 'html_disqus', 'html_disqus_script', 'comment_link_script', 'html_disqus_link']
+_exports = ['comment_link', 'comment_form', 'html_disqus_link', 'html_disqus_script', 'comment_link_script', 'html_disqus']
 
 
 # SOURCE LINE 2
@@ -67,8 +67,8 @@ def render_comment_link(context,link,identifier):
 def render_comment_form(context,url,title,identifier):
     __M_caller = context.caller_stack._push_frame()
     try:
-        lang = context.get('lang', UNDEFINED)
         comment_system_id = context.get('comment_system_id', UNDEFINED)
+        lang = context.get('lang', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 9
         __M_writer('\n')
@@ -100,16 +100,16 @@ def render_comment_form(context,url,title,identifier):
         context.caller_stack._pop_frame()
 
 
-def render_html_disqus(context,url,title,identifier):
+def render_html_disqus_link(context,link,identifier):
     __M_caller = context.caller_stack._push_frame()
     try:
-        def comment_form(url,title,identifier):
-            return render_comment_form(context,url,title,identifier)
+        def comment_link(link,identifier):
+            return render_comment_link(context,link,identifier)
         __M_writer = context.writer()
-        # SOURCE LINE 48
+        # SOURCE LINE 52
         __M_writer('\n    ')
-        # SOURCE LINE 49
-        __M_writer(str(comment_form(url, title, identifier)))
+        # SOURCE LINE 53
+        __M_writer(str(comment_link(link, identifier)))
         __M_writer('\n')
         return ''
     finally:
@@ -150,16 +150,16 @@ def render_comment_link_script(context):
         context.caller_stack._pop_frame()
 
 
-def render_html_disqus_link(context,link,identifier):
+def render_html_disqus(context,url,title,identifier):
     __M_caller = context.caller_stack._push_frame()
     try:
-        def comment_link(link,identifier):
-            return render_comment_link(context,link,identifier)
+        def comment_form(url,title,identifier):
+            return render_comment_form(context,url,title,identifier)
         __M_writer = context.writer()
-        # SOURCE LINE 52
+        # SOURCE LINE 48
         __M_writer('\n    ')
-        # SOURCE LINE 53
-        __M_writer(str(comment_link(link, identifier)))
+        # SOURCE LINE 49
+        __M_writer(str(comment_form(url, title, identifier)))
         __M_writer('\n')
         return ''
     finally:
