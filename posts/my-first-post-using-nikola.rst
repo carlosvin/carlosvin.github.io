@@ -1,11 +1,13 @@
-.. title: My first post using Nikola
-.. slug: my-first-post-using-nikola
+.. title: Mi primer post usando nikola
+.. slug: my-first-post-using-nikola-es
 .. date: 2014/03/15 20:05:55
 .. tags: nikola
 .. link: 
-.. description: My first impressions using Nikola
+.. description: Mis primeras impresiones usando nikola
 .. type: text
 
-Today I've officially moved from my old blog carlosvin.alwaysdata.net to here, carlosvin.github.io. 
+Hoy es mi primer día, cambio mi sitio web de sitio y de gestor de contenidos o de blogs. 
 
-My old blog system was supported by Django and MySQL, I didn't really need a framework like Django and a database server. I had 2 or 3 visits per day. I wrote a post by month.
+Mi antiguo sitio estaba basado en Django y MySQL, algo desproporcionado, sobre todo teniendo en cuenta que recibía un par de visitas al día y que escribía un post una vez al mes. 
+
+He optado por utilizar Nikola, aunque he estado apunto de utilizar Pelican o Mynt. 

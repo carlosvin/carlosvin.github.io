@@ -4,12 +4,12 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394912236.3405273
+_modified_time = 1394928574.655427
 _enable_loop = True
 _template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/facebook_helper.tmpl'
 _template_uri = 'facebook_helper.tmpl'
 _source_encoding = 'utf-8'
-_exports = ['comment_link', 'comment_link_script', 'comment_form']
+_exports = ['comment_link_script', 'comment_link', 'comment_form']
 
 
 def render_body(context,**pageargs):
@@ -28,20 +28,6 @@ def render_body(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
-def render_comment_link(context,link,identifier):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        __M_writer = context.writer()
-        # SOURCE LINE 28
-        __M_writer('\n<span class="fb-comments-count" data-url="')
-        # SOURCE LINE 29
-        __M_writer(str(link))
-        __M_writer('">\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
 def render_comment_link_script(context):
     __M_caller = context.caller_stack._push_frame()
     try:
@@ -52,6 +38,20 @@ def render_comment_link_script(context):
         # SOURCE LINE 46
         __M_writer(str(comment_system_id))
         __M_writer('\',\n      status     : true,\n      xfbml      : true\n    });\n\n  };\n\n  // Load the SDK asynchronously\n  (function(d, s, id){\n     var js, fjs = d.getElementsByTagName(s)[0];\n     if (d.getElementById(id)) {return;}\n     js = d.createElement(s); js.id = id;\n     js.src = "//connect.facebook.net/en_US/all.js";\n     fjs.parentNode.insertBefore(js, fjs);\n   }(document, \'script\', \'facebook-jssdk\'));\n</script>\n')
+        return ''
+    finally:
+        context.caller_stack._pop_frame()
+
+
+def render_comment_link(context,link,identifier):
+    __M_caller = context.caller_stack._push_frame()
+    try:
+        __M_writer = context.writer()
+        # SOURCE LINE 28
+        __M_writer('\n<span class="fb-comments-count" data-url="')
+        # SOURCE LINE 29
+        __M_writer(str(link))
+        __M_writer('">\n')
         return ''
     finally:
         context.caller_stack._pop_frame()

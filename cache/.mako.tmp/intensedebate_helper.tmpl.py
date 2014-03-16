@@ -4,12 +4,12 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394912236.315355
+_modified_time = 1394928574.63001
 _enable_loop = True
 _template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/intensedebate_helper.tmpl'
 _template_uri = 'intensedebate_helper.tmpl'
 _source_encoding = 'utf-8'
-_exports = ['comment_link', 'comment_link_script', 'comment_form']
+_exports = ['comment_link_script', 'comment_link', 'comment_form']
 
 
 def render_body(context,**pageargs):
@@ -22,6 +22,17 @@ def render_body(context,**pageargs):
         # SOURCE LINE 22
         __M_writer('\n\n')
         # SOURCE LINE 25
+        __M_writer('\n')
+        return ''
+    finally:
+        context.caller_stack._pop_frame()
+
+
+def render_comment_link_script(context):
+    __M_caller = context.caller_stack._push_frame()
+    try:
+        __M_writer = context.writer()
+        # SOURCE LINE 24
         __M_writer('\n')
         return ''
     finally:
@@ -49,17 +60,6 @@ def render_comment_link(context,link,identifier):
         # SOURCE LINE 18
         __M_writer(str(link))
         __M_writer('";\n</script>\n<script type="text/javascript" src="http://www.intensedebate.com/js/genericLinkWrapperV2.js"></script>\n</a>\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
-def render_comment_link_script(context):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        __M_writer = context.writer()
-        # SOURCE LINE 24
-        __M_writer('\n')
         return ''
     finally:
         context.caller_stack._pop_frame()
