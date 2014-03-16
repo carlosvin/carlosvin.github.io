@@ -86,6 +86,11 @@ TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
 # You should provide a key-value pair for each used language.
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
+        ('/archive.html', 'Archivos'),
+        ('/categories/index.html', 'Categorías'),
+        ('/rss.xml', 'RSS'),
+    ),
+    "en": (
         ('/archive.html', 'Archives'),
         ('/categories/index.html', 'Tags'),
         ('/rss.xml', 'RSS'),
@@ -332,8 +337,7 @@ COMPILERS = {
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-#THEME = "bootstrap3"
-THEME = "monospace"
+THEME = "bootstrap3-jinja"
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.

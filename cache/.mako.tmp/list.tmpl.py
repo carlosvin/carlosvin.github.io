@@ -4,9 +4,9 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 9
-_modified_time = 1394928574.7693207
+_modified_time = 1394999601.840119
 _enable_loop = True
-_template_filename = '/usr/lib/python3.3/site-packages/nikola/data/themes/base/templates/list.tmpl'
+_template_filename = 'themes/blogtxt/templates/list.tmpl'
 _template_uri = 'list.tmpl'
 _source_encoding = 'utf-8'
 _exports = ['content']
@@ -27,10 +27,10 @@ def render_body(context,**pageargs):
     __M_caller = context.caller_stack._push_frame()
     try:
         __M_locals = __M_dict_builtin(pageargs=pageargs)
+        title = context.get('title', UNDEFINED)
+        items = context.get('items', UNDEFINED)
         def content():
             return render_content(context._locals(__M_locals))
-        items = context.get('items', UNDEFINED)
-        title = context.get('title', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 2
         __M_writer('\n')
@@ -38,7 +38,7 @@ def render_body(context,**pageargs):
             context['self'].content(**pageargs)
         
 
-        # SOURCE LINE 16
+        # SOURCE LINE 12
         __M_writer('\n')
         return ''
     finally:
@@ -48,32 +48,26 @@ def render_body(context,**pageargs):
 def render_content(context,**pageargs):
     __M_caller = context.caller_stack._push_frame()
     try:
+        title = context.get('title', UNDEFINED)
+        items = context.get('items', UNDEFINED)
         def content():
             return render_content(context)
-        items = context.get('items', UNDEFINED)
-        title = context.get('title', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 3
-        __M_writer('\n        <!--Body content-->\n        <div class="postbox">\n        <h1>')
-        # SOURCE LINE 6
+        __M_writer('\n        <!--Body content-->\n        <h1>')
+        # SOURCE LINE 5
         __M_writer(str(title))
-        __M_writer('</h1>\n')
+        __M_writer('</h1>\n        <ul class="unstyled">\n')
         # SOURCE LINE 7
-        if items:
+        for text, link in items:
             # SOURCE LINE 8
-            __M_writer('        <ul class="unstyled">\n')
-            # SOURCE LINE 9
-            for text, link in items:
-                # SOURCE LINE 10
-                __M_writer('            <li><a href="')
-                __M_writer(str(link))
-                __M_writer('">')
-                __M_writer(str(text))
-                __M_writer('</a>\n')
-            # SOURCE LINE 12
-            __M_writer('        </ul>\n')
-        # SOURCE LINE 14
-        __M_writer('        </div>\n        <!--End of body content-->\n')
+            __M_writer('            <li><a href="')
+            __M_writer(str(link))
+            __M_writer('">')
+            __M_writer(str(text))
+            __M_writer('</a>\n')
+        # SOURCE LINE 10
+        __M_writer('        </ul>\n        <!--End of body content-->\n')
         return ''
     finally:
         context.caller_stack._pop_frame()
