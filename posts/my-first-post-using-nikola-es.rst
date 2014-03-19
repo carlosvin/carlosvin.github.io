@@ -6,6 +6,8 @@
 .. description: Mis primeras impresiones usando Nikola
 .. type: text
 
+.. contents::
+
 Cambio a Nikola
 ---------------
 Hoy es mi primer día, cambio mi sitio web de sitio y de gestor de contenidos o de blogs. 
@@ -20,8 +22,8 @@ Primeras impresiones con Nikola
 -------------------------------
 Por ahora todo ha sido bastante fácil. Ha sido más que suficiente con seguir la documentación. 
 
-.. error:: No ha funcionado el script para importar mis feeds en formato rss.
-.. warning:: No me acabo de enterar del rst
+.. attention:: 
+	- No ha funcionado el script para importar mis feeds en formato rss.
 
 .. _Nikola: http://www.getnikola.com/
 .. _Django: https://www.djangoproject.com/
