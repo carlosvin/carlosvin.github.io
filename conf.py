@@ -5,7 +5,7 @@ import time
 
 #!! This is the configuration of Nikola. !!#
 #!!  You should edit it to your liking.  !!#
-OUTPUT_FOLDER="../output"
+OUTPUT_FOLDER="output"
 
 # Data about this site
 BLOG_AUTHOR = "Carlos Martín Sánchez"
