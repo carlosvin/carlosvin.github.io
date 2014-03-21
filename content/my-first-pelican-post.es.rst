@@ -12,10 +12,9 @@ Mi primer post usando Pelican
 
 Aquí solo haré algunas pruebas de cómo funciona :abbr:`RST (restructuredtext)`.
 
-Un ejemplo de python::
-	def hola():
-		print "hello"
 
-.. code:: python
+..code:: python
 	def hola2():
 		print "hello2"
+
+``print "hello2"`` es la salida.
