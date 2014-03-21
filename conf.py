@@ -15,7 +15,7 @@ DISQUS_SITENAME = u"carlosvin"
 #REVERSE_CATEGORY_ORDER = True
 DEFAULT_PAGINATION = 5
 
-LOCALE = ['es_ES', 'en_US', 'es', 'usa']
+#LOCALE = ['es_ES', 'en_US', 'es', 'usa']
 DEFAULT_LANG = 'es'
 
 FEED_ALL_RSS = 'feeds/all.rss.xml'
