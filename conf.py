@@ -25,9 +25,6 @@ SOCIAL = (('twitter', 'http://twitter.com/' + TWITTER_USERNAME),
           ('lastfm', 'http://lastfm.com/user/carlcms'),
           ('github', 'http://github.com/carlosvin'),)
 
-# global metadata to all the contents
-DEFAULT_METADATA = (('author', AUTHOR),)
-
 # path-specific metadata
 EXTRA_PATH_METADATA = {
     'extra/robots.txt': {'path': 'robots.txt'},
