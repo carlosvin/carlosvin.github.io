@@ -18,3 +18,17 @@ Aquí solo haré algunas pruebas de cómo funciona :abbr:`RST (restructuredtext)
 		print "hello2"
 
 ``print "hello2"`` es la salida.
+
+.. toctree::
+    :glob:
+
+*****
+Title
+*****
+
+subtitle
+########
+
+subsubtitle
+***********
+and so on
