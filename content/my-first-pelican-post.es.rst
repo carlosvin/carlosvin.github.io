@@ -12,12 +12,6 @@ Mi primer post usando Pelican
 
 Aquí solo haré algunas pruebas de cómo funciona :abbr:`RST (restructuredtext)`.
 
-.. This is a comment
-..
-   _so: is this!
-..
-   [and] this!
-..
-   this:: too!
-..
-   |even| this:: !
+Un ejemplo de python::
+	def hola():
+		print "hello"
