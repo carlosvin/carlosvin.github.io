@@ -48,3 +48,5 @@ STATIC_PATHS = [
 # code blocks with line numbers
 PYGMENTS_RST_OPTIONS = {'linenos': 'table'}
 
+GOOGLE_ANALYTICS = "UA-1328360-9"
+
