@@ -13,9 +13,11 @@ GITHUB_URL = 'http://github.com/carlosvin/'
 DISQUS_SITENAME = "carlosvin"
 PDF_GENERATOR = True
 REVERSE_CATEGORY_ORDER = True
-LOCALE = "C"
 DEFAULT_PAGINATION = 5
+
+LOCALE = ('es_ES', 'en_US', 'es', 'usa')
 DEFAULT_LANG = 'es'
+
 FEED_ALL_RSS = 'feeds/all.rss.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
 
