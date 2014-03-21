@@ -12,7 +12,6 @@ Mi primer post usando Pelican
 
 Aquí solo haré algunas pruebas de cómo funciona :abbr:`RST (restructuredtext)`.
 
-
 .. code:: python
 	def hola2():
 		print "hello2"
@@ -22,13 +21,16 @@ Aquí solo haré algunas pruebas de cómo funciona :abbr:`RST (restructuredtext)
 .. toctree::
     :glob:
 
-*****
-Title
-*****
-
-subtitle
-########
 
 subsubtitle
+***********
+and so on
+
+
+subsubtitle1
+***********
+and so on
+
+subsubtitle3
 ***********
 and so on
