@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-AUTHOR = u'carlosvin'
-SITENAME = u"Vin's Blog"
+AUTHOR = u"Carlos Martín Sánchez"
+SITENAME = u"Carlosvin's Blog"
 SITEURL = 'http://carlosvin.github.io'
-TIMEZONE = "Europe/Madrid"
+TIMEZONE = u"Europe/Madrid"
 
 # can be useful in development, but set to False when you're ready to publish
 RELATIVE_URLS = True
 
 GITHUB_URL = 'http://github.com/carlosvin/'
-DISQUS_SITENAME = "carlosvin"
+DISQUS_SITENAME = u"carlosvin"
 PDF_GENERATOR = True
 REVERSE_CATEGORY_ORDER = True
 DEFAULT_PAGINATION = 5
@@ -48,5 +48,5 @@ STATIC_PATHS = [
 # code blocks with line numbers
 PYGMENTS_RST_OPTIONS = {'linenos': 'table'}
 
-GOOGLE_ANALYTICS = "UA-1328360-9"
+GOOGLE_ANALYTICS = u"UA-1328360-9"
 
