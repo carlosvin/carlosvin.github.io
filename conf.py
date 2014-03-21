@@ -29,7 +29,7 @@ SOCIAL = (('twitter', 'http://twitter.com/' + TWITTER_USERNAME),
           ('github', 'http://github.com/carlosvin'),)
 
 # global metadata to all the contents
-#DEFAULT_METADATA = (('Author', AUTHOR),)
+DEFAULT_METADATA = (('author', AUTHOR),)
 
 # path-specific metadata
 EXTRA_PATH_METADATA = {
