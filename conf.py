@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-AUTHOR = 'Carlos Martín Sánchez'
-SITENAME = "Vin's Blog"
+AUTHOR = u'Carlos Martín Sánchez'
+SITENAME = u"Vin's Blog"
 SITEURL = 'http://carlosvin.github.io'
 TIMEZONE = "Europe/Madrid"
 
