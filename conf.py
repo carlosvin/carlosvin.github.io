@@ -14,18 +14,13 @@ DISQUS_SITENAME = "carlosvin"
 PDF_GENERATOR = True
 REVERSE_CATEGORY_ORDER = True
 LOCALE = "C"
-DEFAULT_PAGINATION = 4
+DEFAULT_PAGINATION = 5
 DEFAULT_DATE = (2014, 3, 21, 12, 0, 0)
 
 FEED_ALL_RSS = 'feeds/all.rss.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
 
-LINKS = (('Biologeek', 'http://biologeek.org'),
-         ('Filyb', "http://filyb.info/"),
-         ('Libert-fr', "http://www.libert-fr.com"),
-         ('N1k0', "http://prendreuncafe.com/blog/"),
-         ('Tarek ZiadÃ©', "http://ziade.org/blog"),
-         ('Zubin Mithra', "http://zubin71.wordpress.com/"),)
+LINKS = (('Biblioln', 'http://biblioln.es'),)
 
 SOCIAL = (('twitter', 'http://twitter.com/carlosvin'),
           ('lastfm', 'http://lastfm.com/user/carlcms'),
