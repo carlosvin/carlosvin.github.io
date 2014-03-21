@@ -6,7 +6,7 @@ Mi primer post usando Pelican
 :tags: static, python, cms, blog
 :category: cms
 :slug: my-first-pelican-post
-:authors: Carlos Martín Sánchez
+:authors: carlosvin
 :summary: Primeras impresiones con Pelican
 :lang: es
 
