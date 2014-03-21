@@ -23,7 +23,8 @@ CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
 
 LINKS = (('Biblioln', 'http://biblioln.es'),)
 
-SOCIAL = (('twitter', 'http://twitter.com/carlosvin'),
+TWITTER_USERNAME = 'carlosvin'
+SOCIAL = (('twitter', 'http://twitter.com/' + TWITTER_USERNAME),
           ('lastfm', 'http://lastfm.com/user/carlcms'),
           ('github', 'http://github.com/carlosvin'),)
 
