@@ -15,3 +15,7 @@ Aquí solo haré algunas pruebas de cómo funciona :abbr:`RST (restructuredtext)
 Un ejemplo de python::
 	def hola():
 		print "hello"
+
+.. code:: python
+	def hola2():
+		print "hello2"
