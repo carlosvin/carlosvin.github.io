@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-AUTHOR = 'Alexis MÃ©taireau'
-SITENAME = "Alexis' log"
-SITEURL = 'http://blog.notmyidea.org'
-TIMEZONE = "Europe/Paris"
+AUTHOR = 'Carlos Martín'
+SITENAME = "Vin's Blog"
+SITEURL = 'http://carlosvin.github.io'
+TIMEZONE = "Europe/Madrid"
 
 # can be useful in development, but set to False when you're ready to publish
 RELATIVE_URLS = True
