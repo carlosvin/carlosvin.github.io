@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-AUTHOR = 'Carlos Martín'
+AUTHOR = 'Carlos Martín Sánchez'
 SITENAME = "Vin's Blog"
 SITEURL = 'http://carlosvin.github.io'
 TIMEZONE = "Europe/Madrid"
@@ -15,8 +15,7 @@ PDF_GENERATOR = True
 REVERSE_CATEGORY_ORDER = True
 LOCALE = "C"
 DEFAULT_PAGINATION = 5
-DEFAULT_DATE = (2014, 3, 21, 12, 0, 0)
-DEFAULT_LANG = 'en'
+DEFAULT_LANG = 'es'
 FEED_ALL_RSS = 'feeds/all.rss.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
 
@@ -26,8 +25,9 @@ SOCIAL = (('twitter', 'http://twitter.com/carlosvin'),
           ('lastfm', 'http://lastfm.com/user/carlcms'),
           ('github', 'http://github.com/carlosvin'),)
 
+TYPOGRIFY = True
 # global metadata to all the contents
-DEFAULT_METADATA = (('yeah', 'it is'),)
+DEFAULT_METADATA = (('Author', AUTHOR),)
 
 # path-specific metadata
 EXTRA_PATH_METADATA = {
