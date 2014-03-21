@@ -28,9 +28,8 @@ SOCIAL = (('twitter', 'http://twitter.com/' + TWITTER_USERNAME),
           ('lastfm', 'http://lastfm.com/user/carlcms'),
           ('github', 'http://github.com/carlosvin'),)
 
-TYPOGRIFY = True
 # global metadata to all the contents
-DEFAULT_METADATA = (('Author', AUTHOR),)
+#DEFAULT_METADATA = (('Author', AUTHOR),)
 
 # path-specific metadata
 EXTRA_PATH_METADATA = {
