@@ -46,7 +46,7 @@ STATIC_PATHS = [
     ]
 
 # custom page generated with a jinja2 template
-TEMPLATE_PAGES = {'pages/jinja2_template.html': 'jinja2_template.html'}
+#TEMPLATE_PAGES = {'pages/jinja2_template.html': 'jinja2_template.html'}
 
 # code blocks with line numbers
 PYGMENTS_RST_OPTIONS = {'linenos': 'table'}
