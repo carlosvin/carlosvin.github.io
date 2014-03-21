@@ -10,4 +10,14 @@ Mi primer post usando Pelican
 :summary: Primeras impresiones con Pelican
 :lang: es
 
-Este texto será convertido a :abbr:`HTML (HyperText Markup Language)`.
+Aquí solo haré algunas pruebas de cómo funciona :abbr:`RST (restructuredtext)`.
+
+.. This is a comment
+..
+   _so: is this!
+..
+   [and] this!
+..
+   this:: too!
+..
+   |even| this:: !
