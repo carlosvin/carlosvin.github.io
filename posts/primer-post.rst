@@ -1,9 +1,9 @@
 .. title: Primer Post
 .. slug: primer-post
 .. date: 2014/03/27 13:30:02
-.. tags: 
+.. tags: python, static, site
 .. link: 
-.. description: 
+.. description: Mi primer post usando Nikola
 .. type: text
 
-Write your post here.
+Escribe el post aquí.
