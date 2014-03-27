@@ -1,9 +1,7 @@
-.. title: Primer Post
+.. title: First post
 .. slug: primer-post
 .. date: 2014/03/27 13:30:02
-.. tags: 
-.. link: 
-.. description: 
+.. description: My first post with Nikola
 .. type: text
 
 Write your post here.
