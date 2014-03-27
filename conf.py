@@ -607,7 +607,20 @@ SEARCH_FORM = """
 # EXTRA_HEAD_DATA = ""
 # Google Analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
-# BODY_END = ""
+BODY_END = """<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=6592954; 
+var sc_invisible=1; 
+var sc_security="9be57b92"; 
+</script>
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script>
+<noscript><div class="statcounter"><a title="web statistics"
+href="http://statcounter.com/free-web-stats/"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/6592954/0/9be57b92/1/"
+alt="web statistics"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->"""
 
 # The possibility to extract metadata from the filename by using a
 # regular expression.
