@@ -607,20 +607,16 @@ SEARCH_FORM = """
 # EXTRA_HEAD_DATA = ""
 # Google Analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
-BODY_END = """<!-- Start of StatCounter Code for Default Guide -->
-<script type="text/javascript">
-var sc_project=6592954; 
-var sc_invisible=1; 
-var sc_security="9be57b92"; 
-</script>
-<script type="text/javascript"
-src="http://www.statcounter.com/counter/counter.js"></script>
-<noscript><div class="statcounter"><a title="web statistics"
-href="http://statcounter.com/free-web-stats/"
-target="_blank"><img class="statcounter"
-src="http://c.statcounter.com/6592954/0/9be57b92/1/"
-alt="web statistics"></a></div></noscript>
-<!-- End of StatCounter Code for Default Guide -->"""
+BODY_END = """<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1328360-9', 'carlosvin.github.io');
+  ga('send', 'pageview');
+
+</script>"""
 
 # The possibility to extract metadata from the filename by using a
 # regular expression.
