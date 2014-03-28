@@ -23,7 +23,6 @@ Esta es una descripción más o menos genérica de como hacer que git utilice un
   
   #para deshabilitar el uso del proxy
   git config --global --unset http.proxy
-  
 
-[protocolo] Suele ser http o https
-  
+
+.. [protocolo] Suele ser http o https
