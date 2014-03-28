@@ -17,7 +17,7 @@ Supongo que, como la mayoría, vengo del concepto de software de gestión de blo
 De todo este proceso se encarga un software instalado en el servidor, nuestro gestor de contenidos.
 
 Ahora he cambiado al paradigma de "generador de sitios web estáticos", en concreto voy a utilizar Nikola_, aunque esta vez no lo voy a instalar en ningún servidor. 
-En otro post os contaré cómo he montado esto con Github_, donde alojo el sitio generado, y Travis_, para automatizar el despliegue.
+En otro post os contaré cómo he montado esto con Github_ y Travis_.
 
 Mi camino para llegar hasta los generadores de sitios web estáticos ha pasado por las etapas que os cuento abajo (me he saltado alguna menos importante).
 
@@ -63,6 +63,8 @@ Tengo que decir que quería un generador de sitios estáticos, porque están de 
 
 
 
+.. [#] En Github_ alojo el sitio generado, toda la parte estática (las páginas en HTML, imágenes, etc.)
+.. [#] Travis_ es un software the integración contínua (como Jenkins_), yo lo utilizo para automatizar el despliegue del sitio, esto es, para descargar el sitio cada vez que lo cambie en Github_, volver a generarlo y publicarlo otra vez.
 .. [#] Don't Repeat Yourself (En español, "no te repitas")
 .. [#] Content Management System ("Sistema de gestión de contenidos")
 
