@@ -8,6 +8,7 @@
 .. type: text
 
 Trabajando con libtool_ [#]_, cuando vamos a depurar un ejecutable que utiliza una librería generada con libtool_, es posible que nos encontremos con el siguiente error:
+
 .. code-block:: bash
   
   $ gdb ./tests-mylib 
