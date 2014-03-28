@@ -16,10 +16,10 @@ Esta es una descripción más o menos genérica de como hacer que git utilice un
 .. code-block:: bash
   
   #para http
-  git config --global http.proxy <[protocolo]_>://<nombre de usuario>:<password>@<direccion_ip>:<puerto>
+  git config --global http.proxy <protocolo>://<nombre de usuario>:<password>@<direccion_ip>:<puerto>
   
   #para https
-  git config --global https.proxy <[protocolo]_>://<nombre de usuario>:<password>@<direccion_ip>:<puerto>
+  git config --global https.proxy <protocolo>://<nombre de usuario>:<password>@<direccion_ip>:<puerto>
   
   #para deshabilitar el uso del proxy
   git config --global --unset http.proxy
