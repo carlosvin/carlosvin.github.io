@@ -11,7 +11,8 @@ Supongo que, como la mayoría, vengo del concepto de software de gestión de blo
 * enviar información desde un navegador a un servidor 
 * procesar y almacenar la información en una base de datos o en ficheros
 * el servidor genera una respuesta dinámicamente que se envía al navegador en forma de HTML
-- para generar esta respuesta se suele leer de la base de datos o de los ficheros
+   
+   * para generar esta respuesta se suele leer de la base de datos o de los ficheros
 
 De todo este proceso se encarga un software instalado en el servidor, nuestro gestor de contenidos.
 
