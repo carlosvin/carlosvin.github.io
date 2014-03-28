@@ -22,7 +22,7 @@ El funcionamiento es muy sencillo:
 
 Debian_
 ======
-En distribuciones basadas en Debian_, pasa lo mismo que en Archlinux_ (bueno para ser justos en Archlinux_ pasa lo mismo que en Debian, un respeto a la edad). Para eliminar estos paquetes que lo único que hacen es ocupar espacio en disco, simplemente hay que ejecutar el siguiente comando.
+En distribuciones basadas en Debian_, pasa lo mismo que en Archlinux_ (bueno para ser justos en Archlinux_ pasa lo mismo que en Debian_, un respeto a la edad). Para eliminar estos paquetes que lo único que hacen es ocupar espacio en disco, simplemente hay que ejecutar el siguiente comando.
 
 .. code-block:: bash
    
