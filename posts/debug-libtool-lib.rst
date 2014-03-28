@@ -1,6 +1,6 @@
 .. title: Depurar librería generada con libtool
 .. slug: debug-libtool-lib
-.. date: 2013/02/01
+.. date: 2013/02/01 15:30:00
 .. update: 2014/03/28 15:30:00
 .. tags: C++, autotools, gnu
 .. link: 
