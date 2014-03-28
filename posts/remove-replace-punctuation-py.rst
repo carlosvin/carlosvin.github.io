@@ -9,7 +9,7 @@
 
 A continuación muestro una forma de eliminar los signos de puntuación de una cadena de caractéres en Python. Los signos de puntuación son reemplazados por caractéres en blanco.
 
-.. code-block:: python
+.. code-block:: Python, Tips and Tricks
   
   import re, string
   
