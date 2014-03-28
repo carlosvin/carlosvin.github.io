@@ -2,14 +2,14 @@
 .. slug: remove-replace-punctuation-py
 .. date: 2012/10/23 15:00:00
 .. update: 2014/03/28 15:00:00
-.. tags: python
+.. tags: Python, Tips and Tricks
 .. link: 
 .. description: Un pequeño ejemplo de cómo eliminar signos de puntuación de una cadena de caractéres en Python
 .. type: text
 
 A continuación muestro una forma de eliminar los signos de puntuación de una cadena de caractéres en Python. Los signos de puntuación son reemplazados por caractéres en blanco.
 
-.. code-block:: Python, Tips and Tricks
+.. code-block:: python
   
   import re, string
   
@@ -18,6 +18,7 @@ A continuación muestro una forma de eliminar los signos de puntuación de una c
 
 
 Ejecutando:
+
 .. code-block:: bash
   
   >>> remove_punctuation ("El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido.")
@@ -25,6 +26,7 @@ Ejecutando:
 
 
 Si queremos hacer la función más general, para reemplazar los signos de puntuación por cualquier otra cadena, simplemente hay que hacer la siguiente modificación en la función.
+
 .. code-block:: python
   
   import re, string
@@ -34,6 +36,7 @@ Si queremos hacer la función más general, para reemplazar los signos de puntua
 
 
 Ejecutando el código de arriba:
+
 .. code-block:: bash
   
   >>> replace_punctuation ("El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido.", '[stop]')
