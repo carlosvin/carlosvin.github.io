@@ -1,7 +1,7 @@
 .. title: Primer Post utilizando Nikola
 .. slug: primer-post
 .. date: 2014/03/27 13:30:02
-.. tags: python, static, site
+.. tags: Python, Static Sites
 .. link: 
 .. description: Cómo he llegado hasta Nikola
 .. type: text
