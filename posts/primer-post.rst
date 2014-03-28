@@ -21,6 +21,8 @@ En otro post os contaré cómo he montado esto con Github_, donde alojo el sitio
 
 Mi camino hasta llegar aquí ha sido tortuoso, pasando por las fases que os cuento abajo (y algunas más, pero menos importantes).
 
+.. contents:: Camino hasta Nikola_
+
 PhpNuke_
 ===============
 Sí, sigue existiendo. Aquí entramos un gestor de contenido basado PHP+MySQL, multi-idioma, gestión de usuarios, grupos de usuarios, ampliable con temas, plugins, etc. 
