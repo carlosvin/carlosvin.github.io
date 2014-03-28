@@ -337,7 +337,7 @@ COMPILERS = {
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-THEME = "bootstrap3"
+THEME = "custom"
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
@@ -543,13 +543,13 @@ COMMENT_SYSTEM_ID = "carlosvin"
 SEARCH_FORM = """
 <!-- Custom search -->
 <form method="get" id="search" action="http://duckduckgo.com/"
- class="navbar-form pull-left">
+ class="navbar-form pull-right">
 <input type="hidden" name="sites" value="%s"/>
 <input type="hidden" name="k8" value="#444444"/>
 <input type="hidden" name="k9" value="#D51920"/>
 <input type="hidden" name="kt" value="h"/>
-<input type="text" name="q" maxlength="255"
- placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
+<input type="text" class="form-control" name="q" maxlength="255"
+ placeholder="Search&hellip;"/>
 <input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
 </form>
 <!-- End of custom search -->
