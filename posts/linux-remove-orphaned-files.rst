@@ -2,7 +2,7 @@
 .. slug: linux-remove-orphaned-files
 .. date: 2012/10/02 13:30:02
 .. update: 2014/03/28 10:00:00
-.. tags: linux, archlinux
+.. tags: linux, archlinux, debian
 .. link: 
 .. description: Cómo eliminar los paquetes que se han instalado automáticamente y que ya no se utilizan
 .. type: text
