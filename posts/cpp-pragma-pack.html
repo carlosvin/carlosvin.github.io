@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="es"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Cómo configurar git para que funcione a través de un proxy"><meta name="author" content="Carlos Martín Sánchez"><title>Configuración de proxy para Git | Vin's Blog</title><link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css"><link rel="canonical" href="http://carlosvin.github.io/posts/git-proxy-config.html"><!--[if lt IE 9]>
+<!DOCTYPE html><html lang="es"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Descripción del comportamiento de la directiva pragma pack de C++"><meta name="author" content="Carlos Martín Sánchez"><title>Mapeo de un struct C++ en Memoria | Vin's Blog</title><link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css"><link rel="canonical" href="http://carlosvin.github.io/posts/cpp-pragma-pack.html"><!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
     <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../en/rss.xml"><link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../rss.xml"></head><body>
 <!-- Menubar -->
@@ -29,7 +29,7 @@
                 
                     
     <li>
-    <a href="git-proxy-config.rst" id="sourcelink">Código</a>
+    <a href="cpp-pragma-pack.rst" id="sourcelink">Código</a>
     </li>
 
             </ul></div><!-- /.navbar-collapse -->
@@ -41,54 +41,55 @@
             
     <article class="postbox post-text"><div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     
-    <h1 class="p-name" itemprop="headline name">Configuración de proxy para Git</h1>
+    <h1 class="p-name" itemprop="headline name">Mapeo de un struct C++ en Memoria</h1>
 
     <hr><small>
-        Publicado: <time class="published dt-published" datetime="2012-11-15T12:00:00+01:00" itemprop="datePublished">2012-11-15 12:00</time>
+        Publicado: <time class="published dt-published" datetime="2012-11-26T12:00:00+01:00" itemprop="datePublished">2012-11-26 12:00</time>
         
 
         
           |  
         Más posts sobre 
     <span itemprop="keywords">
-        <a class="tag p-category" href="../categories/git.html"><span class="badge badge-info">Git</span></a>
-        <a class="tag p-category" href="../categories/proxy.html"><span class="badge badge-info">Proxy</span></a>
-        <a class="tag p-category" href="../categories/tips-and-tricks.html"><span class="badge badge-info">Tips and Tricks</span></a>
+        <a class="tag p-category" href="../categories/c.html"><span class="badge badge-info">C++</span></a>
     </span>
 
 
     </small>
     <hr><div class="e-content" itemprop="articleBody text">
-    <div><p>Es muy tedioso trabajar desde una red con proxy, al menos para mí, pierdo un montón de tiempo configurando software para que se actualice y funcione correctamente.</p>
-<p>Vamos a ver cómo configurar git para que utilice un proxy determinado.</p>
-<p>Esta es una descripción más o menos genérica de como hacer que git utilice un proxy determinado:</p>
-<pre class="code bash literal-block">
-<span class="c">#para http
-</span>git config --global http.proxy &lt;protocolo&gt;://&lt;nombre de usuario&gt;:&lt;password&gt;@&lt;direccion_ip&gt;:&lt;puerto&gt;
-
-<span class="c">#para https
-</span>git config --global https.proxy &lt;protocolo&gt;://&lt;nombre de usuario&gt;:&lt;password&gt;@&lt;direccion_ip&gt;:&lt;puerto&gt;
-
-<span class="c">#para deshabilitar el uso del proxy
-</span>git config --global --unset http.proxy
+    <div><p>Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia.</p>
+<p>Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.</p>
+<p>Para comprender esto vamos a trabajar con una estructura de ejemplo.</p>
+<div class="section" id="estructura-de-ejemplo">
+<h2>Estructura de ejemplo</h2>
+<p>Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un booleano (un byte). En C++ queda de la siguiente forma:</p>
+<pre class="code c++ literal-block">
+<span class="k">struct</span> <span class="n">SampleStruct</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
 </pre>
-<p>Más información en <a class="reference external" href="http://git-scm.com/book/es/Personalizando-Git-Configuraci%C3%B3n-de-Git">la configuración oficial de Git</a>.</p>
-<table class="docutils citation" frame="void" id="protocolo" rules="none"><colgroup><col class="label"><col></colgroup><tbody valign="top"><tr><td class="label">[protocolo]</td><td>Suele ser http o https</td></tr></tbody></table></div>
+<p>Si hacemos un <code>sizeof</code> de la una instancia de la estructura deberíamos obtener un tamaño de 5 bytes. Y la memoria quedaría de la siguiente forma:</p>
+<img alt="/images/c-mem-struct-5b.png" src="../images/c-mem-struct-5b.png"><p>Pero no es tan sencillo, a continuación veremos que no nos podemos olvidar de la alineación de la memoria que hace el compilador en ese sistema y veremos cómo controlarlo para no encontrarnos con tamaños inesperados, ya que esto depende del compilador del sistema.</p>
+<p>Por ejemplo, si en mi máquina hago un <code>sizeof</code> de la estructura, obtengo un tamaño de 8 bytes. Lo que está sucediendo es que el compilador reserva más memoria al final de la estructura para que cuadre en bloques de 2n bytes. La memoria queda de la siguiente forma:</p>
+<img alt="/images/c-mem-struct-8b.png" src="../images/c-mem-struct-8b.png"><p>Continuará...</p>
+</div></div>
     </div>
-        <meta content="Cómo configurar git para que funcione a través de un proxy" itemprop="description"></div>
+        <meta content="Descripción del comportamiento de la directiva pragma pack de C++" itemprop="description"></div>
     
         <ul class="pager"><li class="previous">
-                <a href="remove-replace-punctuation-py.html" rel="prev">← Post anterior</a>
+                <a href="git-proxy-config.html" rel="prev">← Post anterior</a>
             </li>
             <li class="next">
-                <a href="cpp-pragma-pack.html" rel="next">Siguiente post →</a>
+                <a href="debug-libtool-lib.html" rel="next">Siguiente post →</a>
             </li>
         </ul><div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="carlosvin",
-            disqus_url="http://carlosvin.github.io/posts/git-proxy-config.html",
-        disqus_title="Configuraci\u00f3n de proxy para Git",
-        disqus_identifier="cache/posts/git-proxy-config.html",
+            disqus_url="http://carlosvin.github.io/posts/cpp-pragma-pack.html",
+        disqus_title="Mapeo de un struct C++ en Memoria",
+        disqus_identifier="cache/posts/cpp-pragma-pack.html",
         disqus_config = function () {
             this.language = "es_ES";
         };
