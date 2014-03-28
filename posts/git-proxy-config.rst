@@ -13,7 +13,7 @@ Vamos a ver cómo configurar git para que utilice un proxy determinado.
 
 Esta es una descripción más o menos genérica de como hacer que git utilice un proxy determinado:
 
-.. code-block: bash
+.. code-block:: bash
   
   #para http
   git config --global http.proxy <[protocolo]_>://<nombre de usuario>:<password>@<direccion_ip>:<puerto>
@@ -24,5 +24,7 @@ Esta es una descripción más o menos genérica de como hacer que git utilice un
   #para deshabilitar el uso del proxy
   git config --global --unset http.proxy
 
+Más información en `la configuración oficial de Git`_. 
 
 .. [protocolo] Suele ser http o https
+.. _`la configuración oficial de Git`: http://git-scm.com/book/es/Personalizando-Git-Configuraci%C3%B3n-de-Git
