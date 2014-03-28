@@ -2,7 +2,7 @@
 .. slug: android-studio-portable-download
 .. date: 2013/10/20 13:00:00
 .. update: 2014/03/28 13:00:00
-.. tags: android, java
+.. tags: Android, Java
 .. link: 
 .. description: Enlace para descargar la última versión portable de Android Studio 
 .. type: text
