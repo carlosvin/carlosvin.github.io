@@ -16,5 +16,5 @@ Cuando instalamos un paquete en Archlinux :code:`pacman -S nombre_paquete` se no
 
 El funcionamiento es muy sencillo:
 
-* la sentencia :code:`pacman -Qdt` lista todos los paquetes huérfanos 
+* la sentencia :code:`pacman -Qdt` da un listado de todos los paquetes huérfanos 
 * :code:`pacman -Rsn` elimina los paquetes listados
