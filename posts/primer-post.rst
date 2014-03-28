@@ -17,7 +17,7 @@ Supongo que, como la mayoría, vengo del concepto de software de gestión de blo
 De todo este proceso se encarga un software instalado en el servidor, nuestro gestor de contenidos.
 
 Ahora he cambiado al paradigma de "generador de sitios web estáticos", en concreto voy a utilizar Nikola_, aunque esta vez no lo voy a instalar en ningún servidor. 
-En otro post os contaré cómo he montado esto con Github_ y Travis_.
+En otro post os contaré cómo he montado esto con Github_ [#]_ y Travis_ [#]_.
 
 Mi camino para llegar hasta los generadores de sitios web estáticos ha pasado por las etapas que os cuento abajo (me he saltado alguna menos importante).
 
