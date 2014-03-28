@@ -6,8 +6,17 @@
 .. description: Cómo he llegado hasta Nikola
 .. type: text
 
-Como la mayoría vengo de otro concepto de software de gestión de blogs o gestores de contenidos dinámicos.
+Supongo que, como la mayoría, vengo del concepto de software de gestión de blogs o gestores de contenidos dinámicos, basados en:
 
+* enviar información desde un navegador a un servidor 
+* procesar y almacenar la información en una base de datos o en ficheros
+* el servidor genera una respuesta dinámicamente que se envía al navegador en forma de HTML
+
+ - para generar esta respuesta se suele leer de la base de datos o de los ficheros
+
+De todo este proceso se encarga un software instalado en el servidor, nuestro gestor de contenidos.
+
+Ahora he cambiado al paradigma de "generador de sitios web estáticos", en concreto voy a utilizar Nikola_, aunque esta vez no lo voy a instalar en ningún servidor. 
 En otro post os contaré cómo he montado esto con Github_, donde alojo el sitio generado, y Travis_, para automatizar el despliegue.
 
 Mi camino hasta llegar aquí ha sido tortuoso, pasando por las fases que os cuento abajo (y algunas más, pero menos importantes).
