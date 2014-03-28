@@ -90,9 +90,14 @@ libtool --mode<span class="o">=</span>execute gdb tests-mylib
         <hr><div class="e-content">
         <div><p>Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia.</p>
 <p>Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.</p>
-<p>Para comprender esto vamos a trabajar con una estructura de ejemplo.</p>
+<div class="contents topic" id="tabla-de-contenidos">
+<p class="topic-title first">Tabla de Contenidos</p>
+<ul class="simple"><li><a class="reference internal" href="posts/cpp-pragma-pack.html#estructura-de-ejemplo" id="id1">Estructura de ejemplo</a></li>
+<li><a class="reference internal" href="posts/cpp-pragma-pack.html#la-directiva-pragma-pack-en-struct-c" id="id2">La directiva #pragma pack en struct C++</a></li>
+<li><a class="reference internal" href="posts/cpp-pragma-pack.html#rendimiento" id="id3">Rendimiento</a></li>
+</ul></div>
 <div class="section" id="estructura-de-ejemplo">
-<h2>Estructura de ejemplo</h2>
+<h2><a class="toc-backref" href="posts/cpp-pragma-pack.html#id1">Estructura de ejemplo</a></h2>
 <p>Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un booleano (un byte). En C++ queda de la siguiente forma:</p>
 <pre class="code c++ literal-block">
 <span class="k">struct</span> <span class="n">SampleStruct</span>
@@ -108,9 +113,279 @@ libtool --mode<span class="o">=</span>execute gdb tests-mylib
 <p>Pero no es tan sencillo, a continuación veremos que no nos podemos olvidar de la alineación de la memoria que hace el compilador en ese sistema y veremos cómo controlarlo para no encontrarnos con tamaños inesperados, ya que esto depende del compilador del sistema.</p>
 <p>Por ejemplo, si en mi máquina hago un <code>sizeof</code> de la estructura, obtengo un tamaño de 8 bytes. Lo que está sucediendo es que el compilador reserva más memoria al final de la estructura para que cuadre en bloques de 2n bytes. La memoria queda de la siguiente forma:</p>
 <div class="figure" style="width: 50%">
-<img alt="/galleries/c-mem-struct/8b.png" src="../galleries/c-mem-struct/8b.png" style="width: 30%;"><p class="caption">Estructura de 5 bytes que realmente ocupa 8 bytes en memoria.</p>
+<img alt="/galleries/c-mem-struct/8b.png" src="../galleries/c-mem-struct/8b.png" style="width: 30%;"><p class="caption">Estructura de 5 bytes que realmente ocupa 8 bytes en memoria. Para ser más precisos, debería haber dibujado la memoria no usada a continuación del atributo flag.</p>
 </div>
-<p>Continuará...</p>
+<p>Vamos a ver un fragmento de código que imprime el tamaño de la estructura y el de cada uno de sus atributos y verificar, en este caso 4 + 1 no es 5.</p>
+<pre class="code c++ literal-block">
+<span class="cp">#include  &lt;iostream&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">SampleStruct</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">print</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">sz</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_flag</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_timeout</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">flag: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">+"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">timeout: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">="</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">+</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"sizeof struct:  "</span> <span class="o">&lt;&lt;</span> <span class="n">sz</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStruct"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/c7deb3df49bebd40">Ejecutando el código de sin la directiva pragma</a>, tenemos que nuestra estructura ocupa 8 bytes y no 5 bytes.</p>
+<pre class="code bash literal-block">
+SampleStruct
+flag: 1 Bytes
++
+timeout: 4 <span class="nv">Bytes</span>
+<span class="o">=</span>
+5 Bytes
+sizeof struct:  8 Bytes
+--
+</pre>
+<div class="tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">Si queremos conocer el tamaño exacto de las estructuras que vamos a utilizar, tenemos que especificar al compilador la forma de alinear la estructura en memoria, para ello utilizaremos la directiva <code>#pragma pack(n)</code>.</p>
+</div>
+</div>
+<div class="section" id="la-directiva-pragma-pack-en-struct-c">
+<h2><a class="toc-backref" href="posts/cpp-pragma-pack.html#id2">La directiva #pragma pack en struct C++</a></h2>
+<p>Se trata de una directiva del preprocesador que indica al compilador cómo debe realizar la alineación de la memoria. Vamos a ver como se comporta con un ejemplo:</p>
+<pre class="code c++ literal-block">
+<span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">print</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">sz</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_flag</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_timeout</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" flag: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span><span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" +"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" timeout: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">&lt;&lt;</span> <span class="s">"Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" ="</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">+</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">"Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" sizeof struct:  "</span> <span class="o">&lt;&lt;</span> <span class="n">sz</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma pack (1)
+</span><span class="k">struct</span> <span class="n">SampleStructPack1</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#pragma pack(0)
+</span>
+<span class="cp">#pragma pack (2)
+</span><span class="k">struct</span> <span class="n">SampleStructPack2</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#pragma pack(0)
+</span>
+<span class="cp">#pragma pack (4)
+</span><span class="k">struct</span> <span class="n">SampleStructPack4</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#pragma pack(0)
+</span>
+
+<span class="k">struct</span> <span class="n">SampleStruct</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack4"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStruct"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/7c18ee6585e57366">Ejecutando el código de con las directivas pragma</a>, tenemos distintos resultados dependiendo del valor de pragma.</p>
+<pre class="code bash literal-block">
+SampleStructPack1
+ flag: 1 Bytes
+ +
+ timeout: <span class="nv">4Bytes</span>
+ <span class="o">=</span>
+ 5Bytes
+ sizeof struct:  5 Bytes
+ --
+
+SampleStructPack2
+ flag: 1 Bytes
+ +
+ timeout: <span class="nv">4Bytes</span>
+ <span class="o">=</span>
+ 5Bytes
+ sizeof struct:  6 Bytes
+
+SampleStructPack4
+ flag: 1 Bytes
+ +
+ timeout: <span class="nv">4Bytes</span>
+ <span class="o">=</span>
+ 5Bytes
+ sizeof struct:  8 Bytes
+
+SampleStruct
+ flag: 1 Bytes
+ +
+ timeout: <span class="nv">4Bytes</span>
+ <span class="o">=</span>
+ 5Bytes
+ sizeof struct:  8 Bytes
+ --
+</pre>
+<p>Veamos caso por caso:</p>
+<dl class="docutils"><dt>SampleStructPack1 <code>#pragma pack (1)</code></dt>
+<dd>Reserva bloques de memoria de un byte, nuestra estructura se ha ajustado perfectamente; en este caso sí que <code>4 + 1 = 5</code>.</dd>
+<dt>SampleStructPack2 <code>#pragma pack (2)</code></dt>
+<dd>Ahora el mínimo tamaño del bloque de memoria es de 2 bytes. Para el entero, hay un ajuste exacto porque necesita 2 bloques que 2 bytes para alojar sus 4 bytes.
+Para el caso del booleano, necesita un bloque de 1 byte, pero como mínimo tiene que asignar un bloque de 2 bytes, por eso en total reserva 6 bytes, <code>4 + 2 = 6</code>.</dd>
+<dt>SampleStructPack4 <code>#pragma pack (4)</code></dt>
+<dd>Es el mismo caso que el anterior, aunque  en el caso del booleano, hay un mayor "desperdicio" de memoria. Necesita 1 byte, pero reserva 4 bytes que es tamaño mínimo de bloque de memoria que puede asignar el compilador.</dd>
+<dt>SampleStruct (alineación por defecto del compilador)</dt>
+<dd>Como vemos se comporta exactamente igual que <code>#pragma pack (4)</code>, podemos deducir que la alineación por defecto del compilador que estamos utilizando es de 4 bytes.</dd>
+</dl><div class="important">
+<p class="first admonition-title">Important</p>
+<p>¿Por qué no utilizamos siempre la alineación de memoria más ajustada (<code>#pragma pack (1)</code>) para aprovechar mejor la memoria?</p>
+<div class="warning last">
+<p class="first admonition-title">Warning</p>
+<p class="last">Porque perderemos rendimiento.</p>
+</div>
+</div>
+</div>
+<div class="section" id="rendimiento">
+<h2><a class="toc-backref" href="posts/cpp-pragma-pack.html#id3">Rendimiento</a></h2>
+<p>Vamos a hacer una prueba simple de rendimiento, en la que se va a reservar el mismo número de elementos en arrays para cada tipo de estructura.</p>
+<p>Este es el resultado:</p>
+<pre class="code bash literal-block">
+SampleStructPack1: 500000000000000000 bytes allocated in 94311 nanoseconds
+SampleStructPack2: 600000000000000000 bytes allocated in 1777 nanoseconds
+SampleStructPack4: 800000000000000000 bytes allocated in 1519 nanoseconds
+</pre>
+<p>Como vemos cuanto más ajustada es la alineación de memoria, más tiempo se tarda en reservar y liberar. Puedes <a class="reference external" href="http://coliru.stacked-crooked.com/a/954ad542659c7591">ejecutar la prueba de rendimiento en este enlace</a>.</p>
+<p>A continuación pego el código de la prueba de rendimiento.</p>
+<pre class="code c++ literal-block">
+<span class="cp">#include &lt;iostream&gt;
+#include &lt;chrono&gt;
+</span>
+<span class="cp">#pragma pack (1)
+</span><span class="k">struct</span> <span class="n">SampleStructPack1</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#pragma pack(0)
+</span>
+<span class="cp">#pragma pack (2)
+</span><span class="k">struct</span> <span class="n">SampleStructPack2</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#pragma pack(0)
+</span>
+<span class="cp">#pragma pack (4)
+</span><span class="k">struct</span> <span class="n">SampleStructPack4</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#pragma pack(0)
+</span>
+
+<span class="k">struct</span> <span class="n">SampleStruct</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">static</span> <span class="k">const</span> <span class="kt">long</span> <span class="n">MAX_ELEMENTS</span> <span class="o">=</span> <span class="mi">100000000000000000</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">allocate1</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">SampleStructPack1</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack1: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">allocate2</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">SampleStructPack2</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack2: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">allocate4</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">SampleStructPack4</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack4: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">chrono1</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
+    <span class="n">allocate1</span><span class="p">();</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">chrono2</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
+    <span class="n">allocate2</span><span class="p">();</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">chrono4</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
+    <span class="n">allocate4</span><span class="p">();</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="n">chrono1</span><span class="p">();</span>
+    <span class="n">chrono2</span><span class="p">();</span>
+    <span class="n">chrono4</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
 </div></div>
         </div>
             
