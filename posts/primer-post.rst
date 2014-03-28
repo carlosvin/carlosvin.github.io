@@ -19,7 +19,7 @@ De todo este proceso se encarga un software instalado en el servidor, nuestro ge
 Ahora he cambiado al paradigma de "generador de sitios web estáticos", en concreto voy a utilizar Nikola_, aunque esta vez no lo voy a instalar en ningún servidor. 
 En otro post os contaré cómo he montado esto con Github_, donde alojo el sitio generado, y Travis_, para automatizar el despliegue.
 
-Mi camino hasta llegar aquí ha sido tortuoso, pasando por las fases que os cuento abajo (y algunas más, pero menos importantes).
+Mi camino para llegar hasta los generadores de sitios web estáticos ha pasado por las etapas que os cuento abajo (me he saltado alguna menos importante).
 
 .. contents:: Camino hasta Nikola_
 
