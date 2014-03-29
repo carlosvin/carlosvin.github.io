@@ -8,9 +8,9 @@ I guess that the most people come from dynamic content management systems based 
 
 * send data from browser to server 
 * process the received data, then it stores the processed info into database or filesystem
-* the server generate dinamically an answer that is sent to browser as HTML
+* the server generate dynamically an answer that is sent to browser as HTML
 
-  * the asnwer is usually built reading info from database or files.
+  * the answer is usually built reading info from database or files.
 
 This process is managed by a software installed in server, this is our content management system.
 
@@ -33,7 +33,7 @@ It wasn't a full [CMS]_, because actually it was a blogging system. I can publis
 * Publish posts (with several problems). 
 * I realized that a developer needs a designer. 
 * I don't like the PHP_ syntax. 
-* I began to understand  a entender importance of [DRY]_.
+* I began to understand importance of [DRY]_.
 
 Drupal_
 ========
@@ -45,7 +45,7 @@ I don't know if it is better or worse than Drupal_, there are many discussions i
 
 CMSdj_
 =======
-It is my second attemp to create my own [CMS]_. I had an idea in my mind about how to be the core design (the datamodel), I still believe in that design. I had also discovered Django_, I liked this framework developed in Python_, who can resist to create your own [CMS]_? 
+It is my second attempt to create my own [CMS]_. I had an idea in my mind about how to be the core design (the data model), I still believe in that design. I had also discovered Django_, I liked this framework developed in Python_, who can resist to create your own [CMS]_? 
 CMSdj_ is in Bitbucket_ and is working, it has its internal search engine, theming, comments system, voting system,HTML5_ + CSS3_ views, but: 
 
 * I haven't enough time to develop, two hours by week at most. 
@@ -62,7 +62,7 @@ I tried Jekyll_ because it's the most famous, but I prefer one written in Python
 
 
 .. [#] Github_ hosts the generated site, the static files (html, css, images, js).
-.. [#] Travis_ is a continous integration software (like Jenkins_). I use it to automate the site deployment: download the files when they change from Github_, re-generate and re-publish the static files.
+.. [#] Travis_ is a continuous integration software (like Jenkins_). I use it to automate the site deployment: download the files when they change from Github_, re-generate and re-publish the static files.
 
 .. [DRY] Don't Repeat Yourself, ´DRY in wiki´_
 .. [CMS] Content Management System
