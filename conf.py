@@ -337,7 +337,7 @@ COMPILERS = {
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-THEME = "custom"
+THEME = "yeti"
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
@@ -616,7 +616,25 @@ BODY_END = """<script>
   ga('create', 'UA-1328360-9', 'carlosvin.github.io');
   ga('send', 'pageview');
 
-</script>"""
+</script>
+
+<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=9708205; 
+var sc_invisible=1; 
+var sc_security="4998d447"; 
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script>
+<noscript><div class="statcounter"><a title="web analytics"
+href="http://statcounter.com/" target="_blank"><img
+class="statcounter"
+src="http://c.statcounter.com/9708205/0/4998d447/1/"
+alt="web analytics"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->"""
 
 # The possibility to extract metadata from the filename by using a
 # regular expression.
