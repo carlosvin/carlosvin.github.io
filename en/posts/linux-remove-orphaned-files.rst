@@ -1,28 +1,30 @@
-.. title: Eliminar paquetes huérfanos en Linux
+.. title: Remove orphaned packages (Linux)
 .. slug: linux-remove-orphaned-files
 .. date: 2012/10/02 13:30:02
-.. update: 2014/03/28 10:00:00
-.. tags: Linux, Archlinux, Debian, Tips and Tricks
-.. link: 
-.. description: Cómo eliminar los paquetes que se han instalado automáticamente y que ya no se utilizan
+.. update: 2014/03/30 14:00:00
+.. description: How to remove unused packages in Linux
 .. type: text
+
+When we install a package in most of Linux distributions, the package system installs other packages needed by the package that we actually want to install. 
+If we uninstall the package, its dependencies won't be uninstalled, these unused dependencies are called orphaned packages. 
+
+.. contents:: Remove orphaned packages
+
 
 Archlinux_
 ==========
-Cuando instalamos un paquete en Archlinux :code:`pacman -S nombre_paquete` se nos descargan automáticamente las dependencias de este paquete. Esto resulta muy cómo, pero cuando eliminamos el paquete que instalamos con :code:`pacman -R nombre_paquete`, se nos quedan instaladas las dependencias de éste. Para evitar ésto, podemos desinstalar los paquetes con :code:`pacman -Rscn nombre_paquete`, pero si preferimos desinstalar normalmente solo con la opción -R, después podemos eliminar todos los paquetes huérfanos de la siguiente forma:
-
+ 
 .. code-block:: bash
    
    pacman -Rsn $(pacman -Qdtq)
 
-El funcionamiento es muy sencillo:
+How does the command work?
 
-* la sentencia :code:`pacman -Qdt` da un listado de todos los paquetes huérfanos 
-* :code:`pacman -Rsn` elimina los paquetes listados
+* :code:`pacman -Qdt` list all orphaned packages 
+* :code:`pacman -Rsn` uninstall the listed packages
 
 Debian_
 =======
-En distribuciones basadas en Debian_, pasa lo mismo que en Archlinux_ (bueno para ser justos en Archlinux_ pasa lo mismo que en Debian_, un respeto a la edad). Para eliminar estos paquetes que lo único que hacen es ocupar espacio en disco, simplemente hay que ejecutar el siguiente comando.
 
 .. code-block:: bash
    

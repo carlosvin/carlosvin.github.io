@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog</title><link>http://carlosvin.github.io/</link><description>Empezando con el blog</description><atom:link href="http://carlosvin.github.io/en/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 29 Mar 2014 13:50:13 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>First post with Nikola</title><link>http://carlosvin.github.io/en/posts/primer-post.html</link><description>&lt;div&gt;&lt;p&gt;I guess that the most people come from dynamic content management systems based on:&lt;/p&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog</title><link>http://carlosvin.github.io/</link><description>Empezando con el blog</description><atom:link href="http://carlosvin.github.io/en/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sun, 30 Mar 2014 13:32:18 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>First post with Nikola</title><link>http://carlosvin.github.io/en/posts/primer-post.html</link><description>&lt;div&gt;&lt;p&gt;I guess that the most people come from dynamic content management systems based on:&lt;/p&gt;
 &lt;ul class="simple"&gt;&lt;li&gt;send data from browser to server&lt;/li&gt;
 &lt;li&gt;process the received data, then it stores the processed info into a database (or files)&lt;/li&gt;
 &lt;li&gt;the server generate dynamically an answer that is sent to the browser as HTML&lt;ul&gt;&lt;li&gt;the answer is usually built reading info from a database or files.&lt;/li&gt;
@@ -399,20 +399,25 @@ SampleStructPack4: 800000000000000000 bytes allocated in 1519 nanoseconds
 &lt;pre class="code bash literal-block"&gt;
 &amp;gt;&amp;gt;&amp;gt; replace_punctuation &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido."&lt;/span&gt;, &lt;span class="s1"&gt;'[stop]'&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="s1"&gt;'El perro[stop] de San Roque[stop] no tiene rabo[stop] ni nunca lo ha tenido[stop]'&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/remove-replace-punctuation-py.html</guid><pubDate>Tue, 23 Oct 2012 13:00:00 GMT</pubDate></item><item><title>Eliminar paquetes huérfanos en Linux</title><link>http://carlosvin.github.io/en/posts/linux-remove-orphaned-files.html</link><description>&lt;div&gt;&lt;div class="section" id="archlinux"&gt;
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/remove-replace-punctuation-py.html</guid><pubDate>Tue, 23 Oct 2012 13:00:00 GMT</pubDate></item><item><title>Remove orphaned packages (Linux)</title><link>http://carlosvin.github.io/en/posts/linux-remove-orphaned-files.html</link><description>&lt;div&gt;&lt;p&gt;When we install a package in most of Linux distributions, the package system installs other packages needed by the package that we actually want to install.
+If we uninstall the package, its dependencies won't be uninstalled, these unused dependencies are called orphaned packages.&lt;/p&gt;
+&lt;div class="contents topic" id="remove-orphaned-packages"&gt;
+&lt;p class="topic-title first"&gt;Remove orphaned packages&lt;/p&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/linux-remove-orphaned-files.html#archlinux" id="id3"&gt;Archlinux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/linux-remove-orphaned-files.html#debian" id="id4"&gt;Debian&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;
+&lt;div class="section" id="archlinux"&gt;
 &lt;h2&gt;&lt;a class="reference external" href="http://archlinux.org/"&gt;Archlinux&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Cuando instalamos un paquete en Archlinux &lt;code&gt;pacman -S nombre_paquete&lt;/code&gt; se nos descargan automáticamente las dependencias de este paquete. Esto resulta muy cómo, pero cuando eliminamos el paquete que instalamos con &lt;code&gt;pacman -R nombre_paquete&lt;/code&gt;, se nos quedan instaladas las dependencias de éste. Para evitar ésto, podemos desinstalar los paquetes con &lt;code&gt;pacman -Rscn nombre_paquete&lt;/code&gt;, pero si preferimos desinstalar normalmente solo con la opción -R, después podemos eliminar todos los paquetes huérfanos de la siguiente forma:&lt;/p&gt;
 &lt;pre class="code bash literal-block"&gt;
 pacman -Rsn &lt;span class="k"&gt;$(&lt;/span&gt;pacman -Qdtq&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
-&lt;p&gt;El funcionamiento es muy sencillo:&lt;/p&gt;
-&lt;ul class="simple"&gt;&lt;li&gt;la sentencia &lt;code&gt;pacman -Qdt&lt;/code&gt; da un listado de todos los paquetes huérfanos&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;pacman -Rsn&lt;/code&gt; elimina los paquetes listados&lt;/li&gt;
+&lt;p&gt;How does the command work?&lt;/p&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;&lt;code&gt;pacman -Qdt&lt;/code&gt; list all orphaned packages&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pacman -Rsn&lt;/code&gt; uninstall the listed packages&lt;/li&gt;
 &lt;/ul&gt;&lt;/div&gt;
 &lt;div class="section" id="debian"&gt;
 &lt;h2&gt;&lt;a class="reference external" href="http://debian.org/"&gt;Debian&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;En distribuciones basadas en &lt;a class="reference external" href="http://debian.org/"&gt;Debian&lt;/a&gt;, pasa lo mismo que en &lt;a class="reference external" href="http://archlinux.org/"&gt;Archlinux&lt;/a&gt; (bueno para ser justos en &lt;a class="reference external" href="http://archlinux.org/"&gt;Archlinux&lt;/a&gt; pasa lo mismo que en &lt;a class="reference external" href="http://debian.org/"&gt;Debian&lt;/a&gt;, un respeto a la edad). Para eliminar estos paquetes que lo único que hacen es ocupar espacio en disco, simplemente hay que ejecutar el siguiente comando.&lt;/p&gt;
 &lt;pre class="code bash literal-block"&gt;
 apt-get remove --purge &lt;span class="k"&gt;$(&lt;/span&gt;deborphan&lt;span class="k"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
-&lt;/div&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/linux-remove-orphaned-files.html</guid><pubDate>Tue, 02 Oct 2012 11:30:02 GMT</pubDate></item></channel></rss>
+&lt;/div&gt;&lt;/div&gt;</description><category>Linux</category><category>Archlinux</category><category>Debian</category><category>Tips and Tricks</category><guid>http://carlosvin.github.io/en/posts/linux-remove-orphaned-files.html</guid><pubDate>Tue, 02 Oct 2012 11:30:02 GMT</pubDate></item></channel></rss>
