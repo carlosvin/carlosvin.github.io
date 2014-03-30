@@ -369,7 +369,7 @@ THEME = "yeti"
 # }
 
 # Show only teasers in the index pages? Defaults to False.
-# INDEX_TEASERS = False
+#INDEX_TEASERS = True
 
 # A HTML fragment with the Read more... link.
 # The following tags exist and are replaced for you:
