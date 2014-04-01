@@ -17,7 +17,7 @@ SITE_URL = "http://carlosvin.github.io/"
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://getnikola.com/"
 BLOG_EMAIL = "carlosvin@gmail.com"
-BLOG_DESCRIPTION = "Empezando con el blog"
+BLOG_DESCRIPTION = "Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza."
 
 # Nikola is multilingual!
 #
