@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="es"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Cómo eliminar los paquetes que se han instalado automáticamente y que ya no se utilizan"><meta name="author" content="Carlos Martín Sánchez"><title>Eliminar paquetes huérfanos en Linux | Vin's Blog</title><link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css"><link rel="canonical" href="http://carlosvin.github.io/posts/linux-remove-orphaned-files.html"><!--[if lt IE 9]>
+<!DOCTYPE html><html lang="es"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Cómo eliminar etiquetas HTML utilizando Python o más fácil aún, utilizando Django."><meta name="author" content="Carlos Martín Sánchez"><title>Eliminar etiquetas HTML | Vin's Blog</title><link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css"><link rel="canonical" href="http://carlosvin.github.io/posts/delete-html-tags-py-django.html"><!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../en/rss.xml"><link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../rss.xml"><link rel="alternate" hreflang="en" href="../en/posts/linux-remove-orphaned-files.html"></head><body>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../en/rss.xml"><link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../rss.xml"></head><body>
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container-fluid"><!-- This keeps the margins nice -->
@@ -29,7 +29,7 @@
                 
                     
     <li>
-    <a href="linux-remove-orphaned-files.rst" id="sourcelink">Código</a>
+    <a href="delete-html-tags-py-django.rst" id="sourcelink">Código</a>
     </li>
 
             </ul></div><!-- /.navbar-collapse -->
@@ -41,66 +41,106 @@
             
     <article class="postbox post-text"><div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     
-    <h1 class="p-name" itemprop="headline name">Eliminar paquetes huérfanos en Linux</h1>
+    <h1 class="p-name" itemprop="headline name">Eliminar etiquetas HTML</h1>
 
     <hr><small>
-        Publicado: <time class="published dt-published" datetime="2012-10-02T13:30:02+02:00" itemprop="datePublished">2012-10-02 13:30</time>
+        Publicado: <time class="published dt-published" datetime="2012-10-02T11:30:00+02:00" itemprop="datePublished">2012-10-02 11:30</time>
         
-                  |  
-                <a href="../en/posts/linux-remove-orphaned-files.html" rel="alternate" hreflang="en">Read in English</a>
 
         
           |  
         Más posts sobre 
     <span itemprop="keywords">
-        <a class="tag p-category" href="../categories/linux.html"><span class="badge badge-info">Linux</span></a>
-        <a class="tag p-category" href="../categories/archlinux.html"><span class="badge badge-info">Archlinux</span></a>
-        <a class="tag p-category" href="../categories/debian.html"><span class="badge badge-info">Debian</span></a>
-        <a class="tag p-category" href="../categories/tips-and-tricks.html"><span class="badge badge-info">Tips and Tricks</span></a>
+        <a class="tag p-category" href="../categories/python.html"><span class="badge badge-info">Python</span></a>
+        <a class="tag p-category" href="../categories/django.html"><span class="badge badge-info">Django</span></a>
+        <a class="tag p-category" href="../categories/html.html"><span class="badge badge-info">HTML</span></a>
     </span>
 
 
     </small>
     <hr><div class="e-content" itemprop="articleBody text">
-    <div><p>Cuando instalamos un paquete en las distribuciones Linux (en las que yo conozco), se instalan otros paquetes (dependencias).
-Si en el futuro desinstalas ese paquete, esas dependencias quedarán instaladas en el sistema, aunque no serán usadas por nadie, simplemente ocuparán espacio en disco. Estas dependencias son llamadas paquetes huérfanos.</p>
-<div class="contents topic" id="desinstalar-paquetes-huerfanos">
-<p class="topic-title first">Desinstalar paquetes huérfanos</p>
-<ul class="simple"><li><a class="reference internal" href="linux-remove-orphaned-files.html#archlinux" id="id3">Archlinux</a></li>
-<li><a class="reference internal" href="linux-remove-orphaned-files.html#debian" id="id4">Debian</a></li>
-</ul></div>
-<div class="section" id="archlinux">
-<h2><a class="reference external" href="http://archlinux.org/">Archlinux</a></h2>
-<p>Cuando instalamos un paquete en Archlinux <code>pacman -S nombre_paquete</code> se nos descargan automáticamente las dependencias de este paquete. Esto resulta muy cómo, pero cuando eliminamos el paquete que instalamos con <code>pacman -R nombre_paquete</code>, se nos quedan instaladas las dependencias de éste. Para evitar ésto, podemos desinstalar los paquetes con <code>pacman -Rscn nombre_paquete</code>, pero si preferimos desinstalar normalmente solo con la opción -R, después podemos eliminar todos los paquetes huérfanos de la siguiente forma:</p>
-<pre class="code bash literal-block">
-pacman -Rsn <span class="k">$(</span>pacman -Qdtq<span class="k">)</span>
+    <div><div class="section" id="python">
+<h2><a class="reference external" href="https://www.python.org/">Python</a></h2>
+<p>Función encargada de eliminar las etiquetas HTML:</p>
+<pre class="code python literal-block">
+<span class="c">#main.py</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">def</span> <span class="nf">strip_tags</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">r'&lt;[^&gt;]*?&gt;'</span><span class="p">,</span> <span class="s">''</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre>
-<p>El funcionamiento es muy sencillo:</p>
-<ul class="simple"><li>la sentencia <code>pacman -Qdt</code> da un listado de todos los paquetes huérfanos</li>
-<li><code>pacman -Rsn</code> elimina los paquetes listados</li>
-</ul></div>
-<div class="section" id="debian">
-<h2><a class="reference external" href="http://debian.org/">Debian</a></h2>
-<p>En distribuciones basadas en <a class="reference external" href="http://debian.org/">Debian</a>, pasa lo mismo que en <a class="reference external" href="http://archlinux.org/">Archlinux</a> (bueno para ser justos en <a class="reference external" href="http://archlinux.org/">Archlinux</a> pasa lo mismo que en <a class="reference external" href="http://debian.org/">Debian</a>, un respeto a la edad). Para eliminar estos paquetes, que solamente están ocupando espacio en disco, simplemente hay que ejecutar el siguiente comando.</p>
-<pre class="code bash literal-block">
-apt-get remove --purge <span class="k">$(</span>deborphan<span class="k">)</span>
+<p>Suponiendo que tenemos el siguiente HTML</p>
+<pre class="code html literal-block">
+<span class="cp">&lt;!DOCTYPE HTML&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+        <span class="nt">&lt;head&gt;</span>
+                <span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+        <span class="nt">&lt;/head&gt;</span>
+        <span class="nt">&lt;body&gt;</span>
+                <span class="nt">&lt;p&gt;</span>Paragraph<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
 </pre>
+<p>Vamos a hacer una prueba pasandolo como parámetro de la función strip_tags:</p>
+<pre class="code python literal-block">
+<span class="c">#main.py</span>
+
+<span class="n">html_text</span> <span class="o">=</span> <span class="s">"""
+        &lt;!DOCTYPE HTML&gt;
+        &lt;html&gt;
+                &lt;head&gt;
+                        &lt;title&gt;Title&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                        &lt;p&gt;Paragraph&lt;/p&gt;
+                &lt;/body&gt;
+        &lt;/html&gt;"""</span>
+
+<span class="k">print</span> <span class="n">strip_tags</span><span class="p">(</span><span class="n">html_text</span><span class="p">)</span>
+</pre>
+<p>Si ejecutamos el script tenemos como resultado:</p>
+<pre class="code bash literal-block">
+Title
+
+Paragraph
+</pre>
+<p>Y si con <a class="reference external" href="https://www.python.org/">Python</a> ha sido fácil, vamos a ver con <a class="reference external" href="https://www.djangoproject.com/">Django</a></p>
+</div>
+<div class="section" id="django">
+<h2><a class="reference external" href="https://www.djangoproject.com/">Django</a></h2>
+<pre class="code python literal-block">
+<span class="c">#main.py</span>
+
+<span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">strip_tags</span>
+
+<span class="n">html_text</span> <span class="o">=</span> <span class="s">"""
+        &lt;!DOCTYPE HTML&gt;
+        &lt;html&gt;
+                &lt;head&gt;
+                        &lt;title&gt;Title&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                        &lt;p&gt;Paragraph&lt;/p&gt;
+                &lt;/body&gt;
+        &lt;/html&gt;"""</span>
+
+<span class="k">print</span> <span class="n">strip_tags</span><span class="p">(</span> <span class="n">html_text</span> <span class="p">)</span>
+</pre>
+<p>Mucho más sencillo, porque la función ya está escrita.</p>
 </div></div>
     </div>
-        <meta content="Cómo eliminar los paquetes que se han instalado automáticamente y que ya no se utilizan" itemprop="description"></div>
+        <meta content="Cómo eliminar etiquetas HTML utilizando Python o más fácil aún, utilizando Django." itemprop="description"></div>
     
-        <ul class="pager"><li class="previous">
-                <a href="delete-html-tags-py-django.html" rel="prev">← Post anterior</a>
-            </li>
-            <li class="next">
-                <a href="remove-replace-punctuation-py.html" rel="next">Siguiente post →</a>
+        <ul class="pager"><li class="next">
+                <a href="linux-remove-orphaned-files.html" rel="next">Siguiente post →</a>
             </li>
         </ul><div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="carlosvin",
-            disqus_url="http://carlosvin.github.io/posts/linux-remove-orphaned-files.html",
-        disqus_title="Eliminar paquetes hu\u00e9rfanos en Linux",
-        disqus_identifier="cache/posts/linux-remove-orphaned-files.html",
+            disqus_url="http://carlosvin.github.io/posts/delete-html-tags-py-django.html",
+        disqus_title="Eliminar etiquetas HTML",
+        disqus_identifier="cache/posts/delete-html-tags-py-django.html",
         disqus_config = function () {
             this.language = "es_ES";
         };
