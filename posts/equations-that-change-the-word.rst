@@ -10,7 +10,7 @@ He visto en `Google Science Fair`_ una colección de ecuaciones que han cambiado
 En mi opinión, comprender algunas de estas ecuaciones debería entrar en lo que llamamos "Cultura General".
 
 .. image:: https://lh4.googleusercontent.com/-FHTLwqgD_9Y/Uzw9gQoOzWI/AAAAAAAAzPo/wYMfpR33uqM/w319-h417-no/10013908_458548124276223_2085950828_n.jpg
-   :width: 600 px
+   :width: 400 px
    :alt: Ecuaciones que cambiaron el mundo
    :align: center
    :target: https://plus.google.com/+GoogleScienceFair/posts/MQ6e6NXNGTf
