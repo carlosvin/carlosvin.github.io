@@ -78,7 +78,7 @@ Vamos a ver un fragmento de código que imprime el tamaño de la estructura y el
 	    return 0;
 	}
 
-`Ejecutando el código de sin la directiva pragma`_, tenemos que nuestra estructura ocupa 8 bytes y no 5 bytes.
+`Ejecutando el código de sin la directiva pragma`_, tenemos que nuestra estructura ocupa 8 bytes en lugar de 5 bytes.
 
 .. code-block:: bash
 	
