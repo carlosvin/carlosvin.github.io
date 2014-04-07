@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Un pequeño ejemplo de cómo eliminar signos de puntuación de una cadena de caractéres en Python"><meta name="author" content="Carlos Martín Sánchez"><title>Eliminar/Reemplazar signos de puntuación en Python | Vin's Blog</title><link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css"><link rel="canonical" href="http://carlosvin.github.io/en/posts/remove-replace-punctuation-py.html"><!--[if lt IE 9]>
+<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Evitar problemas con textos que contienen caractéres no ASCII"><meta name="author" content="Carlos Martín Sánchez"><title>Normalizar texto en Python | Vin's Blog</title><link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css"><link rel="canonical" href="http://carlosvin.github.io/en/posts/normalize-text-py.html"><!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml"><link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../../rss.xml"><link rel="alternate" hreflang="es" href="../../posts/remove-replace-punctuation-py.html"></head><body>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml"><link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../../rss.xml"><link rel="alternate" hreflang="es" href="../../posts/normalize-text-py.html"></head><body>
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container-fluid"><!-- This keeps the margins nice -->
@@ -29,7 +29,7 @@
                 
                     
     <li>
-    <a href="../.././en/posts/remove-replace-punctuation-py.rst" id="sourcelink">Source</a>
+    <a href="../.././en/posts/normalize-text-py.rst" id="sourcelink">Source</a>
     </li>
 
             </ul></div><!-- /.navbar-collapse -->
@@ -41,13 +41,13 @@
             
     <article class="postbox post-text"><div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     
-    <h1 class="p-name" itemprop="headline name">Eliminar/Reemplazar signos de puntuación en Python</h1>
+    <h1 class="p-name" itemprop="headline name">Normalizar texto en Python</h1>
 
     <hr><small>
-        Posted: <time class="published dt-published" datetime="2012-10-23T15:00:00+02:00" itemprop="datePublished">2012-10-23 15:00</time>
+        Posted: <time class="published dt-published" datetime="2012-10-02T18:00:00+02:00" itemprop="datePublished">2012-10-02 18:00</time>
         
                   |  
-                <a href="../../posts/remove-replace-punctuation-py.html" rel="alternate" hreflang="es">Leer en español</a>
+                <a href="../../posts/normalize-text-py.html" rel="alternate" hreflang="es">Leer en español</a>
 
         
           |  
@@ -60,45 +60,36 @@
 
     </small>
     <hr><div class="e-content" itemprop="articleBody text">
-    <div><p>A continuación muestro una forma de eliminar los signos de puntuación de una cadena de caractéres en Python. Los signos de puntuación son reemplazados por caractéres en blanco.</p>
+    <div><p>En muchos idiomas, como es el caso del español, hay caracteres que no tienen representación <a class="reference external" href="http://es.wikipedia.org/wiki/ASCII">ASCII</a>, como por ejemplo la á (que sí que tiene representación en <a class="reference external" href="http://es.wikipedia.org/wiki/Unicode">Unicode</a>).</p>
+<p>Para evitar problemas o por simplificar, se ha dado una equivalencia entre los caracteres <a class="reference external" href="http://es.wikipedia.org/wiki/Unicode">Unicode</a> y los <a class="reference external" href="http://es.wikipedia.org/wiki/ASCII">ASCII</a>.
+A continuación os pondré un trozo de código en <a class="reference external" href="http://www.python.org">Python</a> que hace esta conversión.</p>
 <pre class="code python literal-block">
-<span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">string</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">unicodedata</span> <span class="kn">import</span> <span class="n">normalize</span>
 
-<span class="k">def</span> <span class="nf">remove_punctuation</span> <span class="p">(</span> <span class="n">text</span> <span class="p">):</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">'[</span><span class="si">%s</span><span class="s">]'</span> <span class="o">%</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">),</span> <span class="s">' '</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">normalize_text</span> <span class="p">(</span> <span class="n">text</span> <span class="p">):</span>
+  <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="s">'NFKD'</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'ASCII'</span><span class="p">,</span> <span class="s">'ignore'</span><span class="p">)</span>
 </pre>
-<p>Ejecutando:</p>
-<pre class="code bash literal-block">
-&gt;&gt;&gt; remove_punctuation <span class="o">(</span><span class="s2">"El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido."</span><span class="o">)</span>
-<span class="s1">'El perro  de San Roque  no tiene rabo  ni nunca lo ha tenido '</span>
-</pre>
-<p>Si queremos hacer la función más general, para reemplazar los signos de puntuación por cualquier otra cadena, simplemente hay que hacer la siguiente modificación en la función.</p>
+<p>Ejecutando el ejemplo:</p>
 <pre class="code python literal-block">
-<span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">string</span>
-
-<span class="k">def</span> <span class="nf">replace_punctuation</span> <span class="p">(</span> <span class="n">text</span><span class="p">,</span> <span class="n">replace</span> <span class="p">):</span>
-  <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">'[</span><span class="si">%s</span><span class="s">]'</span> <span class="o">%</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">),</span> <span class="n">replace</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-</pre>
-<p>Ejecutando el código de arriba:</p>
-<pre class="code bash literal-block">
-&gt;&gt;&gt; replace_punctuation <span class="o">(</span><span class="s2">"El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido."</span>, <span class="s1">'[stop]'</span><span class="o">)</span>
-<span class="s1">'El perro[stop] de San Roque[stop] no tiene rabo[stop] ni nunca lo ha tenido[stop]'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">normalize_text</span> <span class="p">(</span> <span class="s">'aáaá eéeé iíií oóoó ñnñn AÀAÀ'</span> <span class="p">)</span>
+<span class="n">b</span><span class="s">'aaaa eeee iiii oooo nnnn AAAA'</span>
 </pre></div>
     </div>
-        <meta content="Un pequeño ejemplo de cómo eliminar signos de puntuación de una cadena de caractéres en Python" itemprop="description"></div>
+        <meta content="Evitar problemas con textos que contienen caractéres no ASCII" itemprop="description"></div>
     
         <ul class="pager"><li class="previous">
-                <a href="normalize-text-py.html" rel="prev">← Previous post</a>
+                <a href="cheat-sheets-for-developers.html" rel="prev">← Previous post</a>
             </li>
             <li class="next">
-                <a href="git-proxy-config.html" rel="next">Next post →</a>
+                <a href="remove-replace-punctuation-py.html" rel="next">Next post →</a>
             </li>
         </ul><div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="carlosvin",
-            disqus_url="http://carlosvin.github.io/en/posts/remove-replace-punctuation-py.html",
-        disqus_title="Eliminar/Reemplazar signos de puntuaci\u00f3n en Python",
-        disqus_identifier="cache/posts/remove-replace-punctuation-py.html",
+            disqus_url="http://carlosvin.github.io/en/posts/normalize-text-py.html",
+        disqus_title="Normalizar texto en Python",
+        disqus_identifier="cache/posts/normalize-text-py.html",
         disqus_config = function () {
             this.language = "en";
         };
