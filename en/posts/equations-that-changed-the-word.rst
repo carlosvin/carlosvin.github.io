@@ -12,7 +12,7 @@ In my opinion, everybody must understand some of these equations.
    :width: 400 px
    :alt: Equations that changed the world
    :align: center
-   :target: https://plus.google.com/+GoogleScienceFair/posts/MQ6e6NXNGTf
+   :target: https://plus.google.com/108818810955465968635/posts/MQ6e6NXNGTf
 
 .. _`Google Science Fair`: https://plus.google.com/+GoogleScienceFair
 

@@ -13,7 +13,7 @@ En mi opinión, comprender algunas de estas ecuaciones debería entrar en lo que
    :width: 400 px
    :alt: Ecuaciones que cambiaron el mundo
    :align: center
-   :target: https://plus.google.com/+GoogleScienceFair/posts/MQ6e6NXNGTf
+   :target: https://plus.google.com/108818810955465968635/posts/MQ6e6NXNGTf
 
 .. _`Google Science Fair`: https://plus.google.com/+GoogleScienceFair
 
