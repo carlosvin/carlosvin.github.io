@@ -7,7 +7,7 @@
 
 I've been listening a `A. Jesse Jiryu Davis`_ talk about the library Python_'s asycnio_ library. 
 
-asyncio_ is a librery added to Python_ 3.4. that provides infrastructure for writing single-threaded concurrent code and many other things (+info asyncio_).
+asyncio_ is a librery added to Python_ 3.4. that provides infrastructure for writing single-threaded concurrent code which let us to save memory. 
 
 .. youtube:: 9WV7juNmyE8
 
