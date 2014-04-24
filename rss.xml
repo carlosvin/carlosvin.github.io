@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog</title><link>http://carlosvin.github.io/</link><description>Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.</description><atom:link href="http://carlosvin.github.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>es</language><lastBuildDate>Thu, 24 Apr 2014 15:42:51 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python asyncio: Qué, Cómo, Cúando</title><link>http://carlosvin.github.io/posts/async-what-how-when.html</link><description>&lt;div&gt;&lt;p&gt;He estado escuchando una charla de &lt;a class="reference external" href="http://emptysqua.re/blog/"&gt;A. Jesse Jiryu Davis&lt;/a&gt; sobre la librería &lt;a class="reference external" href="https://docs.python.org/3.4/library/asyncio.html"&gt;asycnio&lt;/a&gt; de &lt;a class="reference external" href="http://www.python.org"&gt;Python&lt;/a&gt;.&lt;/p&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog</title><link>http://carlosvin.github.io/</link><description>Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.</description><atom:link href="http://carlosvin.github.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>es</language><lastBuildDate>Thu, 24 Apr 2014 16:17:39 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Mutex C++</title><link>http://carlosvin.github.io/posts/cpp-mutex.html</link><description>&lt;div&gt;&lt;p&gt;En C++11_ se han introducido muchas mejoras que nos ayudan a desarrollar sistemas multi-hilo. Voy a centrarme en los &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Exclusi%C3%B3n_mutua_(inform%C3%A1tica)"&gt;mutex&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;En las versiones anteriores a C++11_ una forma de obtener un &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Exclusi%C3%B3n_mutua_(inform%C3%A1tica)"&gt;mutex&lt;/a&gt; es el que nos proporciona la librería &lt;a class="reference external" href="http://en.wikipedia.org/wiki/POSIX_Threads"&gt;pthread&lt;/a&gt;, pero para utilizarlo debíabos inicializarlo y destruirlo en estilo &lt;a class="reference external" href="http://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)"&gt;C&lt;/a&gt;, en definitiva, tienes que hacer algo más que lock/unlock cada vez que trabajas con un mutex.&lt;/p&gt;
+&lt;p&gt;C++11_ nos proporciona una &lt;a class="reference external" href="http://es.cppreference.com/w/cpp/thread/mutex"&gt;clase mutex&lt;/a&gt;, que nos abstrae de cosas que no son lock/unclock. Os recomiendo que echéis un vistazo y veáis lo limpio que queda el código: &lt;a class="reference external" href="http://es.cppreference.com/w/cpp/thread/mutex"&gt;Clase mutex de C++11&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Si sigues trabajando con &lt;cite&gt;versiones de compiladores previos a C++11&lt;/cite&gt;, hace tiempo me hice un wrapper que te ayuda a abstraerte del mutex de pthread, lo dejo aquí abajo por si a alguien le resulta útil.&lt;/p&gt;
+&lt;script src="https://gist.github.com/11257689.js"&gt;&lt;/script&gt;&lt;noscript&gt;&lt;pre class="literal-block"&gt;
+
+#include "Mutex.h"
+#include &amp;lt;exception&amp;gt;
+
+
+Mutex::Mutex()
+{
+    if ( pthread_mutex_init(&amp;amp;_mutex, NULL) )
+    {
+        throw "Error: Initializing _mutex";
+    }
+}
+
+Mutex::~Mutex()
+{
+
+    pthread_mutex_destroy(&amp;amp;_mutex);
+}
+
+Mutex::Mutex(const Mutex &amp;amp; obj)
+{
+	_mutex = obj._mutex;
+}
+
+Mutex &amp;amp; Mutex::operator=(const Mutex &amp;amp; obj)
+{
+	_mutex = obj._mutex;
+	return *this;
+}
+
+void Mutex::lock ()
+{
+    pthread_mutex_lock( &amp;amp;_mutex );
+}
+
+void Mutex::unlock ()
+{
+    pthread_mutex_unlock( &amp;amp;_mutex );
+}
+
+void Mutex::lock ( int lock, Mutex * mtx)
+{
+	if (lock)
+	{
+		mtx-&amp;gt;lock();
+	}
+	else
+	{
+		mtx-&amp;gt;unlock();
+	}
+}
+
+
+&lt;/pre&gt;
+&lt;/noscript&gt;&lt;p&gt;He vuelto a escribir el código de cabeza y puede ser que haya algún error, lo revisaré, pero lo importante es la idea de hacer una clase que envuelva la inicialización del mutex de pthread.&lt;/p&gt;&lt;/div&gt;</description><category>C++</category><category>pthread</category><guid>http://carlosvin.github.io/posts/cpp-mutex.html</guid><pubDate>Thu, 24 Apr 2014 15:50:00 GMT</pubDate></item><item><title>Python asyncio: Qué, Cómo, Cúando</title><link>http://carlosvin.github.io/posts/async-what-how-when.html</link><description>&lt;div&gt;&lt;p&gt;He estado escuchando una charla de &lt;a class="reference external" href="http://emptysqua.re/blog/"&gt;A. Jesse Jiryu Davis&lt;/a&gt; sobre la librería &lt;a class="reference external" href="https://docs.python.org/3.4/library/asyncio.html"&gt;asycnio&lt;/a&gt; de &lt;a class="reference external" href="http://www.python.org"&gt;Python&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Se trata de una librería introducida en la versión 3.4 de &lt;a class="reference external" href="http://www.python.org"&gt;Python&lt;/a&gt; que da soporte a programación concurrente sobre un solo hilo, lo cual supone un ahorro muy importante de memoria.&lt;/p&gt;
 &lt;p&gt;En la charla nos cuenta qué es, cómo funciona, cuándo utilizarlo y cuándo no.&lt;/p&gt;
 &lt;iframe width="425" height="344" src="http://www.youtube.com/embed/9WV7juNmyE8?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;/div&gt;</description><category>Python</category><category>Programming</category><guid>http://carlosvin.github.io/posts/async-what-how-when.html</guid><pubDate>Sun, 20 Apr 2014 11:35:00 GMT</pubDate></item><item><title>Ecuaciones que han cambiado el Mundo</title><link>http://carlosvin.github.io/posts/equations-that-changed-the-word.html</link><description>&lt;div&gt;&lt;p&gt;He visto en &lt;a class="reference external" href="https://plus.google.com/+GoogleScienceFair"&gt;Google Science Fair&lt;/a&gt; una colección de ecuaciones que han cambiado el mundo.
@@ -417,4 +476,4 @@ A continuación os pondré un trozo de código en &lt;a class="reference externa
 &lt;pre class="code python literal-block"&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;normalize_text&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="s"&gt;'aáaá eéeé iíií oóoó ñnñn AÀAÀ'&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s"&gt;'aaaa eeee iiii oooo nnnn AAAA'&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><category>Python</category><category>Tips and Tricks</category><guid>http://carlosvin.github.io/posts/normalize-text-py.html</guid><pubDate>Tue, 02 Oct 2012 16:00:00 GMT</pubDate></item><item><title>Chuletas para desarrolladores</title><link>http://carlosvin.github.io/posts/cheat-sheets-for-developers.html</link><description>&lt;p&gt;No se cómo no conocía este sitio, con la cabeza que tengo y lo bien que me habría venido. Se trata de &lt;a class="reference external" href="http://www.cheat-sheets.org/"&gt;cheat-sheets.org&lt;/a&gt;, agrupa tarjetas, guías de referencia rápidas, chuletas, etc. de muchísimos lenguajes de programación y software.&lt;/p&gt;</description><category>Tips and Tricks</category><category>Cheat Sheet</category><guid>http://carlosvin.github.io/posts/cheat-sheets-for-developers.html</guid><pubDate>Tue, 02 Oct 2012 13:30:00 GMT</pubDate></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;</description><category>Python</category><category>Tips and Tricks</category><guid>http://carlosvin.github.io/posts/normalize-text-py.html</guid><pubDate>Tue, 02 Oct 2012 16:00:00 GMT</pubDate></item></channel></rss>
