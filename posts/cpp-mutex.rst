@@ -14,9 +14,10 @@ C++11_ nos proporciona una `clase mutex`_, que nos abstrae de cosas que no son l
 
 Si sigues trabajando con `versiones de compiladores previos a C++11`, hace tiempo me hice un wrapper que te ayuda a abstraerte del mutex de pthread, lo dejo aquí abajo por si a alguien le resulta útil. 
 
+Abajo está un `Gist del Código`_, he vuelto a escribir el código de cabeza y puede ser que haya algún error, lo revisaré, pero lo importante es la idea de hacer una clase que envuelva la inicialización del mutex de pthread. 
+
 .. gist:: 11257689
 
-He vuelto a escribir el código de cabeza y puede ser que haya algún error, lo revisaré, pero lo importante es la idea de hacer una clase que envuelva la inicialización del mutex de pthread. 
 
 
 .. _mutex: http://es.wikipedia.org/wiki/Exclusi%C3%B3n_mutua_(inform%C3%A1tica)
@@ -26,3 +27,4 @@ He vuelto a escribir el código de cabeza y puede ser que haya algún error, lo 
 .. _`clase mutex de C++11`: http://es.cppreference.com/w/cpp/thread/mutex
 .. _pthread: http://en.wikipedia.org/wiki/POSIX_Threads
 .. _`versiones de compiladores previos a C++11`: http://clang.llvm.org/cxx_status.html
+.. _`Gist del Código`: https://gist.github.com/carlosvin/11257689
