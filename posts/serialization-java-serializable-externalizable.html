@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="es"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Un capa que facilita el uso de los mutex de pthread en C++98 y una mejor solución en C++11_"><meta name="author" content="Carlos Martín Sánchez"><title>Mutex C++ | Vin's Blog</title><link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css"><link rel="canonical" href="http://carlosvin.github.io/posts/cpp-mutex.html"><!--[if lt IE 9]>
+<!DOCTYPE html><html lang="es"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Comparación de rendimientos entre distintas formas de serialización en Java"><meta name="author" content="Carlos Martín Sánchez"><title>Comparación de rendimientos entre distintas formas de serialización en Java | Vin's Blog</title><link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css"><link rel="canonical" href="http://carlosvin.github.io/posts/serialization-java-serializable-externalizable.html"><!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../en/rss.xml"><link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../rss.xml"><link rel="alternate" hreflang="en" href="../en/posts/cpp-mutex.html"></head><body>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../en/rss.xml"><link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../rss.xml"></head><body>
 <!-- Menubar -->
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container-fluid"><!-- This keeps the margins nice -->
@@ -29,7 +29,7 @@
                 
                     
     <li>
-    <a href="cpp-mutex.rst" id="sourcelink">Código</a>
+    <a href="serialization-java-serializable-externalizable.rst" id="sourcelink">Código</a>
     </li>
 
             </ul></div><!-- /.navbar-collapse -->
@@ -41,107 +41,43 @@
             
     <article class="postbox post-text"><div class="h-entry" itemscope="itemscope" itemtype="http://schema.org/Article">
     
-    <h1 class="p-name" itemprop="headline name">Mutex C++</h1>
+    <h1 class="p-name" itemprop="headline name">Comparación de rendimientos entre distintas formas de serialización en Java</h1>
 
     <hr><small>
-        Publicado: <time class="published dt-published" datetime="2014-04-24T17:50:00+02:00" itemprop="datePublished">2014-04-24 17:50</time>
+        Publicado: <time class="published dt-published" datetime="2014-05-14T17:00:00+02:00" itemprop="datePublished">2014-05-14 17:00</time>
         
-                  |  
-                <a href="../en/posts/cpp-mutex.html" rel="alternate" hreflang="en">Read in English</a>
 
         
           |  
         Más posts sobre 
     <span itemprop="keywords">
-        <a class="tag p-category" href="../categories/c.html"><span class="badge badge-info">C++</span></a>
-        <a class="tag p-category" href="../categories/pthread.html"><span class="badge badge-info">pthread</span></a>
+        <a class="tag p-category" href="../categories/java.html"><span class="badge badge-info">Java</span></a>
     </span>
 
 
     </small>
     <hr><div class="e-content" itemprop="articleBody text">
-    <div><p>En <a class="reference external" href="http://es.wikipedia.org/wiki/C%2B%2B11">C++11</a> se han introducido muchas mejoras que nos ayudan a desarrollar sistemas multi-hilo. Voy a centrarme en los <a class="reference external" href="http://es.wikipedia.org/wiki/Exclusi%C3%B3n_mutua_(inform%C3%A1tica)">mutex</a>.</p>
-<p>En las versiones anteriores a <a class="reference external" href="http://es.wikipedia.org/wiki/C%2B%2B11">C++11</a> una forma de obtener un <a class="reference external" href="http://es.wikipedia.org/wiki/Exclusi%C3%B3n_mutua_(inform%C3%A1tica)">mutex</a> es el que nos proporciona la librería <a class="reference external" href="http://en.wikipedia.org/wiki/POSIX_Threads">pthread</a>, pero para utilizarlo debíabos inicializarlo y destruirlo en estilo <a class="reference external" href="http://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)">C</a>, en definitiva, tienes que hacer algo más que lock/unlock cada vez que trabajas con un mutex.</p>
-<p><a class="reference external" href="http://es.wikipedia.org/wiki/C%2B%2B11">C++11</a> nos proporciona una <a class="reference external" href="http://es.cppreference.com/w/cpp/thread/mutex">clase mutex</a>, que nos abstrae de cosas que no son lock/unclock. Os recomiendo que echéis un vistazo y veáis lo limpio que queda el código: <a class="reference external" href="http://es.cppreference.com/w/cpp/thread/mutex">Clase mutex de C++11</a>.</p>
-<p>Si sigues trabajando con <a class="reference external" href="http://clang.llvm.org/cxx_status.html">versiones de compiladores previos a C++11</a>, hace tiempo me hice un wrapper que te ayuda a abstraerte del mutex de pthread, lo dejo aquí abajo por si a alguien le resulta útil.</p>
-<p>Abajo está un <a class="reference external" href="https://gist.github.com/carlosvin/11257689">Gist del Código</a>, he vuelto a escribir el código de cabeza y puede ser que haya algún error, lo revisaré, pero lo importante es la idea de hacer una clase que envuelva la inicialización del mutex de pthread.</p>
-<script src="https://gist.github.com/11257689.js"></script><noscript><pre class="literal-block">
-#include "Mutex.h"
-#include &lt;exception&gt;
-
-
-Mutex::Mutex()
-{
-    if ( pthread_mutex_init(&amp;_mutex, NULL) )
-    {
-        throw "Error: Initializing _mutex";
-    }
-}
-
-Mutex::~Mutex()
-{
-
-    pthread_mutex_destroy(&amp;_mutex);
-}
-
-Mutex::Mutex(const Mutex &amp; obj)
-{
-	_mutex = obj._mutex;
-}
-
-Mutex &amp; Mutex::operator=(const Mutex &amp; obj)
-{
-	_mutex = obj._mutex;
-	return *this;
-}
-
-bool Mutex::operator==(const Mutex &amp; obj)
-{
-	return _mutex == obj._mutex;
-}
-
-bool Mutex::operator!=(const Mutex &amp; obj)
-{
-	return !(*this == obj);
-}
-
-void Mutex::lock ()
-{
-    pthread_mutex_lock( &amp;_mutex );
-}
-
-void Mutex::unlock ()
-{
-    pthread_mutex_unlock( &amp;_mutex );
-}
-
-void Mutex::lock ( int lock, Mutex * mtx)
-{
-	if (lock)
-	{
-		mtx-&gt;lock();
-	}
-	else
-	{
-		mtx-&gt;unlock();
-	}
-}
-
-
-</pre>
-</noscript></div>
+    <div><p>Hace poco, he tenido que serializar/deserializar unos datos en <a class="reference external" href="http://www.java.com/">Java</a>, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado <a class="reference external" href="http://www.json.org/">JSON</a> o <a class="reference external" href="http://en.wikipedia.org/wiki/XML">XML</a>). Recordaba haber serializado objetos implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>, pero había visto por Internet otra forma implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo:</p>
+<div class="section" id="serializable">
+<h2><a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a></h2>
+<blockquote>
+<ul class="simple"><li>Cuando quieras serializar algo programamndo poco, es la forma fácil.</li>
+<li>Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.</li>
+</ul></blockquote>
+<a class="reference external image-reference" href="https://travis-ci.org/carlosvin/serializations-performance-java"><img alt="https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master" src="https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master"></a>
+</div></div>
     </div>
-        <meta content="Un capa que facilita el uso de los mutex de pthread en C++98 y una mejor solución en C++11_" itemprop="description"></div>
+        <meta content="Comparación de rendimientos entre distintas formas de serialización en Java" itemprop="description"></div>
     
-        <ul class="pager"><li class="previous">
-                <a href="async-what-how-when.html" rel="prev">← Post anterior</a>
-            </li>
-        </ul><div id="disqus_thread"></div>
+
+        
+        
+        <div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="carlosvin",
-            disqus_url="http://carlosvin.github.io/posts/cpp-mutex.html",
-        disqus_title="Mutex C++",
-        disqus_identifier="cache/posts/cpp-mutex.html",
+            disqus_url="http://carlosvin.github.io/posts/serialization-java-serializable-externalizable.html",
+        disqus_title="Comparaci\u00f3n de rendimientos entre distintas formas de serializaci\u00f3n en Java",
+        disqus_identifier="cache/posts/serialization-java-serializable-externalizable.html",
         disqus_config = function () {
             this.language = "es_ES";
         };

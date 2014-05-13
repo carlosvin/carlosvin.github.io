@@ -45,7 +45,6 @@
 <p>Si sigues trabajando con <a class="reference external" href="http://clang.llvm.org/cxx_status.html">versiones de compiladores previos a C++11</a>, hace tiempo me hice un wrapper que te ayuda a abstraerte del mutex de pthread, lo dejo aquí abajo por si a alguien le resulta útil.</p>
 <p>Abajo está un <a class="reference external" href="https://gist.github.com/carlosvin/11257689">Gist del Código</a>, he vuelto a escribir el código de cabeza y puede ser que haya algún error, lo revisaré, pero lo importante es la idea de hacer una clase que envuelva la inicialización del mutex de pthread.</p>
 <script src="https://gist.github.com/11257689.js"></script><noscript><pre class="literal-block">
-
 #include "Mutex.h"
 #include &lt;exception&gt;
 
@@ -73,6 +72,16 @@ Mutex &amp; Mutex::operator=(const Mutex &amp; obj)
 {
 	_mutex = obj._mutex;
 	return *this;
+}
+
+bool Mutex::operator==(const Mutex &amp; obj)
+{
+	return _mutex == obj._mutex;
+}
+
+bool Mutex::operator!=(const Mutex &amp; obj)
+{
+	return !(*this == obj);
 }
 
 void Mutex::lock ()
