@@ -59,10 +59,13 @@ Para saber cuánto es la diferencia de rendimiento, he escrito un `pequeño ejem
 
 
 
-`Resultados de los test`_.
+`Resultados de los tests`_.
+
 `Código en github`_.
+
 .. image:: https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master
     :target: https://travis-ci.org/carlosvin/serializations-performance-java
+
 
 .. _`Código en github`: https://github.com/carlosvin/serializations-performance-java/
 .. _`Resultados de los tests`: http://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html
