@@ -57,7 +57,17 @@
 
     </small>
     <hr><div class="e-content" itemprop="articleBody text">
-    <div><p>Hace poco, he tenido que serializar/deserializar unos datos en <a class="reference external" href="http://www.java.com/">Java</a>, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado <a class="reference external" href="http://www.json.org/">JSON</a> o <a class="reference external" href="http://en.wikipedia.org/wiki/XML">XML</a>). Recordaba haber serializado objetos implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>, pero había visto por Internet otra forma implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo:</p>
+    <div><p>Hace poco, he tenido que serializar/deserializar unos datos en <a class="reference external" href="http://www.java.com/">Java</a>, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado <a class="reference external" href="http://www.json.org/">JSON</a> o <a class="reference external" href="http://en.wikipedia.org/wiki/XML">XML</a>). Recordaba haber serializado objetos implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>, pero había visto por Internet otra forma implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo.</p>
+<div class="contents topic" id="tabla-de-contenidos">
+<p class="topic-title first">Tabla de contenidos</p>
+<ul class="simple"><li><a class="reference internal" href="serialization-java-serializable-externalizable.html#serializable" id="id3">Serializable</a></li>
+<li><a class="reference internal" href="serialization-java-serializable-externalizable.html#externalizable" id="id4">Externalizable</a></li>
+<li><a class="reference internal" href="serialization-java-serializable-externalizable.html#pruebas-de-rendimiento-serializable-vs-externalizable" id="id5">Pruebas de Rendimiento (Serializable vs Externalizable)</a><ul><li><a class="reference internal" href="serialization-java-serializable-externalizable.html#utilizando-el-interfaz-serializable" id="id6">Utilizando el interfaz Serializable</a></li>
+<li><a class="reference internal" href="serialization-java-serializable-externalizable.html#utilizando-el-interfaz-externalizable-mal" id="id7">Utilizando el interfaz Externalizable (mal)</a></li>
+<li><a class="reference internal" href="serialization-java-serializable-externalizable.html#utilizando-el-interfaz-externalizable-bien" id="id8">Utilizando el interfaz Externalizable (bien)</a></li>
+<li><a class="reference internal" href="serialization-java-serializable-externalizable.html#analizando-los-resultados" id="id9">Analizando los resultados</a></li>
+</ul></li>
+</ul></div>
 <div class="section" id="serializable">
 <h2><a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a></h2>
 <ul class="simple"><li>Cuando quieras serializar algo programamndo poco, es la forma fácil.</li>
@@ -76,18 +86,16 @@
 </pre>
 </div>
 <div class="section" id="pruebas-de-rendimiento-serializable-vs-externalizable">
-<h2>Pruebas de Rendimiento (Serializable vs Externalizable)</h2>
+<h2><a class="toc-backref" href="serialization-java-serializable-externalizable.html#id5">Pruebas de Rendimiento (Serializable vs Externalizable)</a></h2>
 <p>El interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> utilizando la introspección de <a class="reference external" href="http://www.java.com/">Java</a>, adivina los tipos de los atributos de las clases que va a serializar/deserializar, pero esta "magia" tiene una penalización en el rendimiento.</p>
 <p>Al utilizar el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> somos nosotros los que decidimos como serializar/deserializar los objetos, es decir, tenemos que escribir nosotros el código que hace esto. Hemos perdido comodidad, pero evitamos que <a class="reference external" href="http://www.java.com/">Java</a> haga algunas tareas y, si sobrescribimos correctamente los métodos del interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, conseguiremos una mejora de rendimiento.</p>
 <p>Para saber cuánto es la diferencia de rendimiento, he escrito un <cite>pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos</cite>. He contemplado 3 casos:</p>
 <div class="section" id="utilizando-el-interfaz-serializable">
 <h3>Utilizando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a></h3>
 <p>Como dijimos más arriba, utilizando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> <a class="reference external" href="http://www.java.com/">Java</a> tiene que adivinar ciertas cosas, en este proceso sacrifica algo de rendimiento (es el que más tarda), a cambio ĺo único que tenemos que hacer es que nuestra clase implemente el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>.</p>
-<blockquote>
 <pre class="code java literal-block">
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Contacts</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
 </pre>
-</blockquote>
 <ul class="simple"><li>1133 milisegundos en serializar</li>
 <li>506  milisegundos en deserializar</li>
 </ul></div>
@@ -145,15 +153,28 @@
 </ul><p>Hemos ganado rendimiento a costa de escribir un poco más de código.</p>
 </div>
 <div class="section" id="analizando-los-resultados">
-<h3>Analizando los resultados</h3>
-<p>Por el hecho de utilizar un interfaz u otro, no ganamos rendimiento. Ganamos rendimiento porque el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> nos "obliga" a implementar parte de la serialización y quitamos esta carga a <a class="reference external" href="http://www.java.com/">Java</a>. Aunque como hemos visto en <a class="reference internal" href="serialization-java-serializable-externalizable.html#utilizando-el-interfaz-externalizable-bien">Utilizando el interfaz Externalizable (bien)</a> si no tenemos cuidado conseguiremos una mejora muy pequeña.</p>
+<h3><a class="toc-backref" href="serialization-java-serializable-externalizable.html#id9">Analizando los resultados</a></h3>
+<div class="caution">
+<p class="first admonition-title">Caution!</p>
+<p class="last">Por el hecho de utilizar un interfaz u otro, no ganamos rendimiento.</p>
+</div>
+<div class="tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">Ganamos rendimiento porque el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> nos "obliga" a implementar parte de la serialización y quitamos esta carga a <a class="reference external" href="http://www.java.com/">Java</a>.</p>
+</div>
+<p>Aunque como hemos visto en <a class="reference internal" href="serialization-java-serializable-externalizable.html#utilizando-el-interfaz-externalizable-bien">Utilizando el interfaz Externalizable (bien)</a>, si no tenemos cuidado, conseguiremos una mejora muy pequeña.</p>
+<p>A continuación podéis ver un <a class="reference external" href="https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/gviz/chartiframe?oid=2110613848">gráfico</a> con los resultados de los tests.</p>
 <div class="figure">
-<img alt="Gráfico con los resultados" src="https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&amp;oid=2110613848&amp;zx=t87gu6ve3lan" style="width: 80%;"><p class="caption"><a class="reference external" href="https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/gviz/chartiframe?oid=2110613848">Abrir el gráfico interactivo</a> | <a class="reference external" href="https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&amp;oid=2110613848&amp;zx=t87gu6ve3lan">Abrir imágen</a></p>
+<img alt="Gráfico con los resultados" src="https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&amp;oid=2110613848&amp;zx=t87gu6ve3lan" style="width: 80%;"><p class="caption">Abrir el <a class="reference external" href="https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/gviz/chartiframe?oid=2110613848">gráfico</a> interactivo | <a class="reference external" href="https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&amp;oid=2110613848&amp;zx=t87gu6ve3lan">Abrir imágen</a></p>
 </div>
-<p><a class="reference external" href="http://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html">Resultados de los tests</a>.</p>
-<p><a class="reference external" href="https://github.com/carlosvin/serializations-performance-java/">Código en github</a>.</p>
-<a class="reference external image-reference" href="https://travis-ci.org/carlosvin/serializations-performance-java"><img alt="https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master" src="https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master"></a>
-</div>
+<p>A continuación os dejo los enlaces a:</p>
+<ul><li><p class="first"><a class="reference external" href="http://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html">Resultados de los tests</a>.</p>
+</li>
+<li><p class="first"><a class="reference external" href="https://github.com/carlosvin/serializations-performance-java/">Código en github</a>.</p>
+</li>
+<li><p class="first">Estado de la <a class="reference external" href="https://travis-ci.org/carlosvin/serializations-performance-java">Construcción en travis</a></p>
+<img alt="https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master" src="https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master"></li>
+</ul></div>
 </div></div>
     </div>
         <meta content="Comparación de rendimientos entre distintas formas de serialización en Java" itemprop="description"></div>
