@@ -12,23 +12,24 @@ Hace poco, he tenido que serializar/deserializar unos datos en Java_, hacía muc
 Serializable_
 =======================
 
-  * Cuando quieras serializar algo programamndo poco, es la forma fácil. 
-  * Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.
-  * Cuando no te importe mucho el rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_.
+ - Cuando quieras serializar algo programamndo poco, es la forma fácil. 
+ - Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.
+ - Cuando no te importe mucho el rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_.
 
 Externalizable_
 =======================
 
-   * Vas a tener que implementar tú mismo los métodos de serialización. 
-   * Cuando no puedas utilizar Serializable_.
-   * Cuando quieras obtener un mejor rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_
-   * Si tienes que encargarte de la serialización de los atributos de la clase padre, te recomiendo utilizar Externalizable_, porque evitamos una sobrescritura extraña de métodos privados.
+ - Vas a tener que implementar tú mismo los métodos de serialización. 
+ - Cuando no puedas utilizar Serializable_.
+ - Cuando quieras obtener un mejor rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_
+ - Si tienes que encargarte de la serialización de los atributos de la clase padre, te recomiendo utilizar Externalizable_, porque evitamos una sobrescritura extraña de métodos privados.
    
 .. code-block:: java
 
-   private void writeObject(ObjectOutputStream oos)
-   private void readObject(ObjectInputStream ois)
-   
+  private void writeObject(ObjectOutputStream oos)
+  private void readObject(ObjectInputStream ois)
+
+
 Pruebas de Rendimiento (Serializable vs Externalizable)
 ========================================================
 
@@ -38,21 +39,21 @@ Al utilizar el interfaz Externalizable_ somos nosotros los que decidimos como se
 
 Para saber cuánto es la diferencia de rendimiento, he escrito un `pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos`. He contemplado 3 casos:
 
-   * Utilizando el interfaz Serializable_ tarda:
-      * 1133 milisegundos en serializar
-      * 506  milisegundos en deserializar
+ - Utilizando el interfaz Serializable_ tarda:
+  -1133 milisegundos en serializar
+  - 506  milisegundos en deserializar
+  
+  Como dijimos más arriba, utilizando el interfaz Serializable_ Java_ tiene que adivinar ciertas cosas, en este proceso sacrifica algo de rendimiento (es el que más tarda).
       
-      Como dijimos más arriba, utilizando el interfaz Serializable_ Java_ tiene que adivinar ciertas cosas, en este proceso sacrifica algo de rendimiento (es el que más tarda).
+ - Utilizando el interfaz Externalizable_ (mal) tarda:
+  - 204 milisegundos en serializar
+  - 92  milisegundos en deserializar
       
-   * Utilizando el interfaz Externalizable_ (mal) tarda:
-      * 204 milisegundos en serializar
-      * 92  milisegundos en deserializar
+  Si simplemente serializamos/deserializamos los atributos de la clase, y estos son atributos complejos, Java_ también tiene que adivinar bastantes cosas y también sacrificamos algo de rendimiento. 
       
-      Si simplemente serializamos/deserializamos los atributos de la clase, y estos son atributos complejos, Java_ también tiene que adivinar bastantes cosas y también sacrificamos algo de rendimiento. 
-      
-   * Utilizando el interfaz Externalizable_ (bien).
-      * 737 milisegundos en serializar
-      * 367 milisegundos en deserializar
+  - Utilizando el interfaz Externalizable_ (bien).
+   - 737 milisegundos en serializar
+   - 367 milisegundos en deserializar
       
       Si serializamos/deserializamos uno por uno los elementos de las colecciones, ahorramos aún más tiempo, porque Java_ está serializando tipos más simples (java.lang.String). 
 
