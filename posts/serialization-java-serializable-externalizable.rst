@@ -11,9 +11,25 @@ Hace poco, he tenido que serializar/deserializar unos datos en Java_, hacía muc
 
 Serializable_
 =======================
-   * Cuando quieras serializar algo programamndo poco, es la forma fácil. 
-   * Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.
 
+  * Cuando quieras serializar algo programamndo poco, es la forma fácil. 
+  * Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.
+  * Cuando no te importe mucho el rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_.
+
+Externalizable_
+=======================
+
+   * Vas a tener que implementar tú mismo los métodos de serialización. 
+   * Cuando no puedas utilizar Serializable_.
+   * Si tienes que encargarte de la serialización de los atributos de la clase padre, te recomiendo utilizar Externalizable_, porque evitamos una sobrescritura extraña de métodos privados.
+   
+.. code-block:: java
+
+   private void writeObject(ObjectOutputStream oos)
+   private void readObject(ObjectInputStream ois)
+   
+
+   * Cuando quieras obtener un mejor rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_
 
 .. image:: https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master
     :target: https://travis-ci.org/carlosvin/serializations-performance-java
