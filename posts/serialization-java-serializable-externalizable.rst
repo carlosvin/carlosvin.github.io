@@ -1,6 +1,6 @@
 .. title: Comparación de rendimientos entre distintas formas de serialización en Java
 .. slug: serialization-java-serializable-externalizable
-.. date: 2014/05/14 17:00:00
+.. date: 2014/05/13 17:00:00
 .. tags: Java
 .. link: 
 .. description: Comparación de rendimientos entre distintas formas de serialización en Java 
@@ -38,9 +38,25 @@ Al utilizar el interfaz Externalizable_ somos nosotros los que decidimos como se
 
 Para saber cuánto es la diferencia de rendimiento, he escrito un `pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos`. He contemplado 3 casos:
 
-   * Utilizando el interfaz Serializable_.
-   * Utilizando el interfaz Externalizable_ (mal).
+   * Utilizando el interfaz Serializable_ tarda:
+      * 1133 milisegundos en serializar
+      * 506  milisegundos en deserializar
+      
+      Como dijimos más arriba, utilizando el interfaz Serializable_ Java_ tiene que adivinar ciertas cosas, en este proceso sacrifica algo de rendimiento (es el que más tarda).
+      
+   * Utilizando el interfaz Externalizable_ (mal) tarda:
+      * 204 milisegundos en serializar
+      * 92  milisegundos en deserializar
+      
+      Si simplemente serializamos/deserializamos los atributos de la clase, y estos son atributos complejos, Java_ también tiene que adivinar bastantes cosas y también sacrificamos algo de rendimiento. 
+      
    * Utilizando el interfaz Externalizable_ (bien).
+      * 737 milisegundos en serializar
+      * 367 milisegundos en deserializar
+      
+      Si serializamos/deserializamos uno por uno los elementos de las colecciones, ahorramos aún más tiempo, porque Java_ está serializando tipos más simples (java.lang.String). 
+
+
 
 `Resultados de los test`_.
 `Código en github`_.

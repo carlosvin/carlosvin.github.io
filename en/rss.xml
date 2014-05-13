@@ -1,5 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog</title><link>http://carlosvin.github.io/</link><description>Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.</description><atom:link href="http://carlosvin.github.io/en/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 13 May 2014 16:38:12 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Mutex C++</title><link>http://carlosvin.github.io/en/posts/cpp-mutex.html</link><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://en.wikipedia.org/wiki/C%2B%2B11"&gt;C++11&lt;/a&gt; has added many improvements to help us developing multi-thread systems. I'm going to talk about &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Mutex"&gt;mutex&lt;/a&gt;.&lt;/p&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog</title><link>http://carlosvin.github.io/</link><description>Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.</description><atom:link href="http://carlosvin.github.io/en/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 13 May 2014 16:45:49 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Comparación de rendimientos entre distintas formas de serialización en Java</title><link>http://carlosvin.github.io/en/posts/serialization-java-serializable-externalizable.html</link><description>&lt;div&gt;&lt;p&gt;Hace poco, he tenido que serializar/deserializar unos datos en &lt;a class="reference external" href="http://www.java.com/"&gt;Java&lt;/a&gt;, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado &lt;a class="reference external" href="http://www.json.org/"&gt;JSON&lt;/a&gt; o &lt;a class="reference external" href="http://en.wikipedia.org/wiki/XML"&gt;XML&lt;/a&gt;). Recordaba haber serializado objetos implementando el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html"&gt;Serializable&lt;/a&gt;, pero había visto por Internet otra forma implementando el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html"&gt;Externalizable&lt;/a&gt;, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo:&lt;/p&gt;
+&lt;div class="section" id="serializable"&gt;
+&lt;h2&gt;&lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html"&gt;Serializable&lt;/a&gt;&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;Cuando quieras serializar algo programamndo poco, es la forma fácil.&lt;/li&gt;
+&lt;li&gt;Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.&lt;/li&gt;
+&lt;li&gt;Cuando no te importe mucho el rendimiento, como veremos en la sección &lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/serialization-java-serializable-externalizable.html#pruebas-de-rendimiento-serializable-vs-externalizable"&gt;Pruebas de Rendimiento (Serializable vs Externalizable)&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="externalizable"&gt;
+&lt;h2&gt;&lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html"&gt;Externalizable&lt;/a&gt;&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;Vas a tener que implementar tú mismo los métodos de serialización.&lt;/li&gt;
+&lt;li&gt;Cuando no puedas utilizar &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html"&gt;Serializable&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Cuando quieras obtener un mejor rendimiento, como veremos en la sección &lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/serialization-java-serializable-externalizable.html#pruebas-de-rendimiento-serializable-vs-externalizable"&gt;Pruebas de Rendimiento (Serializable vs Externalizable)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Si tienes que encargarte de la serialización de los atributos de la clase padre, te recomiendo utilizar &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html"&gt;Externalizable&lt;/a&gt;, porque evitamos una sobrescritura extraña de métodos privados.&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;pre class="code java literal-block"&gt;
+&lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;writeObject&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ObjectOutputStream&lt;/span&gt; &lt;span class="n"&gt;oos&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;readObject&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ObjectInputStream&lt;/span&gt; &lt;span class="n"&gt;ois&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="pruebas-de-rendimiento-serializable-vs-externalizable"&gt;
+&lt;h2&gt;Pruebas de Rendimiento (Serializable vs Externalizable)&lt;/h2&gt;
+&lt;p&gt;El interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html"&gt;Serializable&lt;/a&gt; utilizando la introspección de &lt;a class="reference external" href="http://www.java.com/"&gt;Java&lt;/a&gt;, adivina los tipos de los atributos de las clases que va a serializar/deserializar, pero esta "magia" tiene una penalización en el rendimiento.&lt;/p&gt;
+&lt;p&gt;Al utilizar el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html"&gt;Externalizable&lt;/a&gt; somos nosotros los que decidimos como serializar/deserializar los objetos, es decir, tenemos que escribir nosotros el código que hace esto. Hemos perdido comodidad, pero evitamos que &lt;a class="reference external" href="http://www.java.com/"&gt;Java&lt;/a&gt; haga algunas tareas y, si sobrescribimos correctamente los métodos del interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html"&gt;Externalizable&lt;/a&gt;, conseguiremos una mejora de rendimiento.&lt;/p&gt;
+&lt;p&gt;Para saber cuánto es la diferencia de rendimiento, he escrito un &lt;cite&gt;pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos&lt;/cite&gt;. He contemplado 3 casos:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;&lt;li&gt;&lt;dl class="first docutils"&gt;&lt;dt&gt;Utilizando el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html"&gt;Serializable&lt;/a&gt; tarda:&lt;/dt&gt;
+&lt;dd&gt;&lt;ul class="first simple"&gt;&lt;li&gt;1133 milisegundos en serializar&lt;/li&gt;
+&lt;li&gt;506  milisegundos en deserializar&lt;/li&gt;
+&lt;/ul&gt;&lt;p class="last"&gt;Como dijimos más arriba, utilizando el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html"&gt;Serializable&lt;/a&gt; &lt;a class="reference external" href="http://www.java.com/"&gt;Java&lt;/a&gt; tiene que adivinar ciertas cosas, en este proceso sacrifica algo de rendimiento (es el que más tarda).&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;&lt;/li&gt;
+&lt;li&gt;&lt;dl class="first docutils"&gt;&lt;dt&gt;Utilizando el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html"&gt;Externalizable&lt;/a&gt; (mal) tarda:&lt;/dt&gt;
+&lt;dd&gt;&lt;ul class="first simple"&gt;&lt;li&gt;204 milisegundos en serializar&lt;/li&gt;
+&lt;li&gt;92  milisegundos en deserializar&lt;/li&gt;
+&lt;/ul&gt;&lt;p class="last"&gt;Si simplemente serializamos/deserializamos los atributos de la clase, y estos son atributos complejos, &lt;a class="reference external" href="http://www.java.com/"&gt;Java&lt;/a&gt; también tiene que adivinar bastantes cosas y también sacrificamos algo de rendimiento.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;&lt;/li&gt;
+&lt;li&gt;&lt;dl class="first docutils"&gt;&lt;dt&gt;Utilizando el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html"&gt;Externalizable&lt;/a&gt; (bien).&lt;/dt&gt;
+&lt;dd&gt;&lt;ul class="first simple"&gt;&lt;li&gt;737 milisegundos en serializar&lt;/li&gt;
+&lt;li&gt;367 milisegundos en deserializar&lt;/li&gt;
+&lt;/ul&gt;&lt;p class="last"&gt;Si serializamos/deserializamos uno por uno los elementos de las colecciones, ahorramos aún más tiempo, porque &lt;a class="reference external" href="http://www.java.com/"&gt;Java&lt;/a&gt; está serializando tipos más simples (java.lang.String).&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="http://carlosvin.github.io/en/posts/serialization-java-serializable-externalizable.html#id3"&gt;&lt;span class="problematic" id="id4"&gt;`Resultados de los test`_&lt;/span&gt;&lt;/a&gt;.
+&lt;a class="reference external" href="https://github.com/carlosvin/serializations-performance-java/"&gt;Código en github&lt;/a&gt;.
+.. image:: &lt;a class="reference external" href="https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master"&gt;https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master&lt;/a&gt;&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 56)&lt;/p&gt;
+Unexpected indentation.&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;table class="docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;target:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;a class="reference external" href="https://travis-ci.org/carlosvin/serializations-performance-java"&gt;https://travis-ci.org/carlosvin/serializations-performance-java&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="system-messages section"&gt;
+&lt;h2&gt;Docutils System Messages&lt;/h2&gt;
+&lt;div class="system-message" id="id3"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 53); &lt;em&gt;&lt;a href="http://carlosvin.github.io/en/posts/serialization-java-serializable-externalizable.html#id4"&gt;backlink&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+Unknown target name: "resultados de los test".&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/serialization-java-serializable-externalizable.html</guid><pubDate>Tue, 13 May 2014 15:00:00 GMT</pubDate></item><item><title>Mutex C++</title><link>http://carlosvin.github.io/en/posts/cpp-mutex.html</link><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://en.wikipedia.org/wiki/C%2B%2B11"&gt;C++11&lt;/a&gt; has added many improvements to help us developing multi-thread systems. I'm going to talk about &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Mutex"&gt;mutex&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In &lt;a class="reference external" href="http://clang.llvm.org/cxx_status.html"&gt;previous C++11 compiler versions&lt;/a&gt;, we can get a &lt;a class="reference external" href="http://en.wikipedia.org/wiki/POSIX_Threads"&gt;pthread&lt;/a&gt; &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Mutex"&gt;mutex&lt;/a&gt;, but we must initialize and destroy in &lt;a class="reference external" href="http://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)"&gt;C&lt;/a&gt; style; in the end you must do more things than just lock/unlock.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://en.wikipedia.org/wiki/C%2B%2B11"&gt;C++11&lt;/a&gt; provides &lt;a class="reference external" href="http://en.cppreference.com/w/cpp/thread/mutex"&gt;mutex class&lt;/a&gt;, we just do lock/unclock. I recommend you take a look at &lt;a class="reference external" href="http://en.cppreference.com/w/cpp/thread/mutex"&gt;C++11 mutex class&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you still work with &lt;a class="reference external" href="http://clang.llvm.org/cxx_status.html"&gt;previous C++11 compiler versions&lt;/a&gt;, a time ago, I made a wrapper class that helps to work with &lt;a class="reference external" href="http://en.wikipedia.org/wiki/POSIX_Threads"&gt;pthread&lt;/a&gt; &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Mutex"&gt;mutex&lt;/a&gt;. You just lock/unlock the Mutex object.&lt;/p&gt;
@@ -472,18 +534,4 @@ SampleStructPack4: 800000000000000000 bytes allocated in 1519 nanoseconds
 &lt;pre class="code bash literal-block"&gt;
 &amp;gt;&amp;gt;&amp;gt; replace_punctuation &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido."&lt;/span&gt;, &lt;span class="s1"&gt;'[stop]'&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="s1"&gt;'El perro[stop] de San Roque[stop] no tiene rabo[stop] ni nunca lo ha tenido[stop]'&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/remove-replace-punctuation-py.html</guid><pubDate>Tue, 23 Oct 2012 13:00:00 GMT</pubDate></item><item><title>Normalizar texto en Python</title><link>http://carlosvin.github.io/en/posts/normalize-text-py.html</link><description>&lt;div&gt;&lt;p&gt;En muchos idiomas, como es el caso del español, hay caracteres que no tienen representación &lt;a class="reference external" href="http://es.wikipedia.org/wiki/ASCII"&gt;ASCII&lt;/a&gt;, como por ejemplo la á (que sí que tiene representación en &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Unicode"&gt;Unicode&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;Para evitar problemas o por simplificar, se ha dado una equivalencia entre los caracteres &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Unicode"&gt;Unicode&lt;/a&gt; y los &lt;a class="reference external" href="http://es.wikipedia.org/wiki/ASCII"&gt;ASCII&lt;/a&gt;.
-A continuación os pondré un trozo de código en &lt;a class="reference external" href="http://www.python.org"&gt;Python&lt;/a&gt; que hace esta conversión.&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="c"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;unicodedata&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;normalize_text&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="p"&gt;):&lt;/span&gt;
-  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'NFKD'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'ASCII'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'ignore'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;Ejecutando el ejemplo:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;normalize_text&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="s"&gt;'aáaá eéeé iíií oóoó ñnñn AÀAÀ'&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s"&gt;'aaaa eeee iiii oooo nnnn AAAA'&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/normalize-text-py.html</guid><pubDate>Tue, 02 Oct 2012 16:00:00 GMT</pubDate></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/remove-replace-punctuation-py.html</guid><pubDate>Tue, 23 Oct 2012 13:00:00 GMT</pubDate></item></channel></rss>

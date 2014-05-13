@@ -35,7 +35,81 @@
         <!--Body content-->
         <div class="row">
             
-        <article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/cpp-mutex.html" class="u-url">Mutex C++</a>
+        <article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/serialization-java-serializable-externalizable.html" class="u-url">Comparación de rendimientos entre distintas formas de serialización en Java</a>
+        <small>  
+             Posted: <time class="published dt-published" datetime="2014-05-13T17:00:00+02:00">2014-05-13 17:00</time></small></h1>
+        <hr><div class="e-content">
+        <div><p>Hace poco, he tenido que serializar/deserializar unos datos en <a class="reference external" href="http://www.java.com/">Java</a>, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado <a class="reference external" href="http://www.json.org/">JSON</a> o <a class="reference external" href="http://en.wikipedia.org/wiki/XML">XML</a>). Recordaba haber serializado objetos implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>, pero había visto por Internet otra forma implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo:</p>
+<div class="section" id="serializable">
+<h2><a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a></h2>
+<blockquote>
+<ul class="simple"><li>Cuando quieras serializar algo programamndo poco, es la forma fácil.</li>
+<li>Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.</li>
+<li>Cuando no te importe mucho el rendimiento, como veremos en la sección <a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#pruebas-de-rendimiento-serializable-vs-externalizable">Pruebas de Rendimiento (Serializable vs Externalizable)</a>.</li>
+</ul></blockquote>
+</div>
+<div class="section" id="externalizable">
+<h2><a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a></h2>
+<blockquote>
+<ul class="simple"><li>Vas a tener que implementar tú mismo los métodos de serialización.</li>
+<li>Cuando no puedas utilizar <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>.</li>
+<li>Cuando quieras obtener un mejor rendimiento, como veremos en la sección <a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#pruebas-de-rendimiento-serializable-vs-externalizable">Pruebas de Rendimiento (Serializable vs Externalizable)</a></li>
+<li>Si tienes que encargarte de la serialización de los atributos de la clase padre, te recomiendo utilizar <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, porque evitamos una sobrescritura extraña de métodos privados.</li>
+</ul></blockquote>
+<pre class="code java literal-block">
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">writeObject</span><span class="o">(</span><span class="n">ObjectOutputStream</span> <span class="n">oos</span><span class="o">)</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">readObject</span><span class="o">(</span><span class="n">ObjectInputStream</span> <span class="n">ois</span><span class="o">)</span>
+</pre>
+</div>
+<div class="section" id="pruebas-de-rendimiento-serializable-vs-externalizable">
+<h2>Pruebas de Rendimiento (Serializable vs Externalizable)</h2>
+<p>El interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> utilizando la introspección de <a class="reference external" href="http://www.java.com/">Java</a>, adivina los tipos de los atributos de las clases que va a serializar/deserializar, pero esta "magia" tiene una penalización en el rendimiento.</p>
+<p>Al utilizar el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> somos nosotros los que decidimos como serializar/deserializar los objetos, es decir, tenemos que escribir nosotros el código que hace esto. Hemos perdido comodidad, pero evitamos que <a class="reference external" href="http://www.java.com/">Java</a> haga algunas tareas y, si sobrescribimos correctamente los métodos del interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, conseguiremos una mejora de rendimiento.</p>
+<p>Para saber cuánto es la diferencia de rendimiento, he escrito un <cite>pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos</cite>. He contemplado 3 casos:</p>
+<blockquote>
+<ul><li><dl class="first docutils"><dt>Utilizando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> tarda:</dt>
+<dd><ul class="first simple"><li>1133 milisegundos en serializar</li>
+<li>506  milisegundos en deserializar</li>
+</ul><p class="last">Como dijimos más arriba, utilizando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> <a class="reference external" href="http://www.java.com/">Java</a> tiene que adivinar ciertas cosas, en este proceso sacrifica algo de rendimiento (es el que más tarda).</p>
+</dd>
+</dl></li>
+<li><dl class="first docutils"><dt>Utilizando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> (mal) tarda:</dt>
+<dd><ul class="first simple"><li>204 milisegundos en serializar</li>
+<li>92  milisegundos en deserializar</li>
+</ul><p class="last">Si simplemente serializamos/deserializamos los atributos de la clase, y estos son atributos complejos, <a class="reference external" href="http://www.java.com/">Java</a> también tiene que adivinar bastantes cosas y también sacrificamos algo de rendimiento.</p>
+</dd>
+</dl></li>
+<li><dl class="first docutils"><dt>Utilizando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> (bien).</dt>
+<dd><ul class="first simple"><li>737 milisegundos en serializar</li>
+<li>367 milisegundos en deserializar</li>
+</ul><p class="last">Si serializamos/deserializamos uno por uno los elementos de las colecciones, ahorramos aún más tiempo, porque <a class="reference external" href="http://www.java.com/">Java</a> está serializando tipos más simples (java.lang.String).</p>
+</dd>
+</dl></li>
+</ul></blockquote>
+<p><a href="posts/serialization-java-serializable-externalizable.html#id3"><span class="problematic" id="id4">`Resultados de los test`_</span></a>.
+<a class="reference external" href="https://github.com/carlosvin/serializations-performance-java/">Código en github</a>.
+.. image:: <a class="reference external" href="https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master">https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master</a></p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 56)</p>
+Unexpected indentation.</div>
+<blockquote>
+<table class="docutils field-list" frame="void" rules="none"><col class="field-name"><col class="field-body"><tbody valign="top"><tr class="field"><th class="field-name">target:</th><td class="field-body"><a class="reference external" href="https://travis-ci.org/carlosvin/serializations-performance-java">https://travis-ci.org/carlosvin/serializations-performance-java</a></td>
+</tr></tbody></table></blockquote>
+</div>
+<div class="system-messages section">
+<h2>Docutils System Messages</h2>
+<div class="system-message" id="id3">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 53); <em><a href="posts/serialization-java-serializable-externalizable.html#id4">backlink</a></em></p>
+Unknown target name: "resultados de los test".</div>
+</div></div>
+        </div>
+            
+        
+    <p>
+        <a href="posts/serialization-java-serializable-externalizable.html#disqus_thread" data-disqus-identifier="cache/posts/serialization-java-serializable-externalizable.html">Comments</a>
+
+
+        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/cpp-mutex.html" class="u-url">Mutex C++</a>
         <small>  
              Posted: <time class="published dt-published" datetime="2014-04-24T17:50:00+02:00">2014-04-24 17:50</time></small></h1>
         <hr><div class="e-content">
@@ -614,32 +688,6 @@ SampleStructPack4: 800000000000000000 bytes allocated in 1519 nanoseconds
         
     <p>
         <a href="posts/remove-replace-punctuation-py.html#disqus_thread" data-disqus-identifier="cache/posts/remove-replace-punctuation-py.html">Comments</a>
-
-
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/normalize-text-py.html" class="u-url">Normalizar texto en Python</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-10-02T18:00:00+02:00">2012-10-02 18:00</time></small></h1>
-        <hr><div class="e-content">
-        <div><p>En muchos idiomas, como es el caso del español, hay caracteres que no tienen representación <a class="reference external" href="http://es.wikipedia.org/wiki/ASCII">ASCII</a>, como por ejemplo la á (que sí que tiene representación en <a class="reference external" href="http://es.wikipedia.org/wiki/Unicode">Unicode</a>).</p>
-<p>Para evitar problemas o por simplificar, se ha dado una equivalencia entre los caracteres <a class="reference external" href="http://es.wikipedia.org/wiki/Unicode">Unicode</a> y los <a class="reference external" href="http://es.wikipedia.org/wiki/ASCII">ASCII</a>.
-A continuación os pondré un trozo de código en <a class="reference external" href="http://www.python.org">Python</a> que hace esta conversión.</p>
-<pre class="code python literal-block">
-<span class="c"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">unicodedata</span> <span class="kn">import</span> <span class="n">normalize</span>
-
-<span class="k">def</span> <span class="nf">normalize_text</span> <span class="p">(</span> <span class="n">text</span> <span class="p">):</span>
-  <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="s">'NFKD'</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'ASCII'</span><span class="p">,</span> <span class="s">'ignore'</span><span class="p">)</span>
-</pre>
-<p>Ejecutando el ejemplo:</p>
-<pre class="code python literal-block">
-<span class="o">&gt;&gt;&gt;</span> <span class="n">normalize_text</span> <span class="p">(</span> <span class="s">'aáaá eéeé iíií oóoó ñnñn AÀAÀ'</span> <span class="p">)</span>
-<span class="n">b</span><span class="s">'aaaa eeee iiii oooo nnnn AAAA'</span>
-</pre></div>
-        </div>
-            
-        
-    <p>
-        <a href="posts/normalize-text-py.html#disqus_thread" data-disqus-identifier="cache/posts/normalize-text-py.html">Comments</a>
 
 
         </p></article><div>
