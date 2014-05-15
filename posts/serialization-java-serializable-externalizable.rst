@@ -9,7 +9,7 @@
 
 Hace poco, he tenido que serializar/deserializar unos datos en Java_, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado JSON_ o XML_). Recordaba haber serializado objetos implementando el interfaz Serializable_, pero había visto por Internet otra forma implementando el interfaz Externalizable_, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo.
 
-.. contents:: Tabla de contenidos
+.. contents:: Cuándo utilizar Serializable o Externalizable
 
 
 Serializable_
