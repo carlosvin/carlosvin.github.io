@@ -1,4 +1,4 @@
-.. title: Comparación de rendimientos entre distintas formas de serialización en Java
+.. title: Distintas formas de serialización en Java: Comparación de rendimiento
 .. slug: serialization-java-serializable-externalizable
 .. date: 2014/05/13 17:00:00
 .. tags: Java

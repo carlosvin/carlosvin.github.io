@@ -1,4 +1,4 @@
-.. title: Java serialization ways, performance comparison
+.. title: Java serialization ways: Performance Comparison
 .. slug: serialization-java-serializable-externalizable
 .. date: 2014/05/13 17:00:00
 .. description:  Java serialization ways, performance comparison
