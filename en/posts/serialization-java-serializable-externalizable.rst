@@ -1,31 +1,31 @@
-.. title: Comparación de rendimientos entre distintas formas de serialización en Java
+.. title: Java serialization ways, performance comparison
 .. slug: serialization-java-serializable-externalizable
 .. date: 2014/05/13 17:00:00
-.. tags: Java
-.. link: 
-.. description: Comparación de rendimientos entre distintas formas de serialización en Java 
+.. description:  Java serialization ways, performance comparison
 .. type: text
 
 
-Hace poco, he tenido que serializar/deserializar unos datos en Java_, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado JSON_ o XML_). Recordaba haber serializado objetos implementando el interfaz Serializable_, pero había visto por Internet otra forma implementando el interfaz Externalizable_, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo.
+Recently I've  had to serialize/deserialize some data in Java_ binary format. Lately I use JSON_ or XML_ formats. 
 
-.. contents:: Cuándo utilizar Serializable o Externalizable
+I remember that to serialize Java_ objects they must implement the  Serializable_ interface, but I had also read in Internet other way, implementing the Externalizable_ interface, then, which interface must I implement? It depends on what you want such as everything in the life.
+
+.. contents:: When to use Serializable_ or Externalizable_
 
 
 Serializable_
 =======================
 
-- Cuando quieras serializar algo programamndo poco, es la forma fácil. 
-- Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.
-- Cuando no te importe mucho el rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_.
+- To serialize easily. You have to write less code.
+- This way has some restrictions: The object to serialize must implement the default constructor (0 args). It must be responsible to manage the parent class attributes.
+- The performance is not as important, we will see more about that in `Preformance tests (Serializable vs Externalizable)`_.
 
 Externalizable_
 =======================
 
-- Vas a tener que implementar tú mismo los métodos de serialización. 
-- Cuando no puedas utilizar Serializable_.
-- Cuando quieras obtener un mejor rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_
-- Si tienes que encargarte de la serialización de los atributos de la clase padre, te recomiendo utilizar Externalizable_, porque evitamos una sobrescritura extraña de métodos privados.
+- You must implement the serialization/deserialization methods, so you have to write more code. 
+- When you cannot use Serializable_.
+- When you want to improve (tunning) the performance, as we'll see in `Preformance tests (Serializable vs Externalizable)`_
+- If you have to manage the serialization of parent class attributes, then I recommend you use Externalizable_, because we'll avoid a weird overriding of private methods.
    
 .. code-block:: java
 
@@ -33,14 +33,16 @@ Externalizable_
   private void readObject(ObjectInputStream ois)
 
 
-Pruebas de Rendimiento (Serializable vs Externalizable)
+Preformance tests (Serializable vs Externalizable)
 ========================================================
 
-El interfaz Serializable_ utilizando la introspección de Java_, adivina los tipos de los atributos de las clases que va a serializar/deserializar, pero esta "magia" tiene una penalización en el rendimiento. 
+Serializable_: Java through introspection, it guess the types of class attributes to know how to serialize/deserialize them, but this "magic" is not free, it has a performance penalty.
 
-Al utilizar el interfaz Externalizable_ somos nosotros los que decidimos como serializar/deserializar los objetos, es decir, tenemos que escribir nosotros el código que hace esto. Hemos perdido comodidad, pero evitamos que Java_ haga algunas tareas y, si sobrescribimos correctamente los métodos del interfaz Externalizable_, conseguiremos una mejora de rendimiento. 
+When we use Externalizable_ interface, we decide how to serialize/deserialize, namely we have to write the code that does it. We've lost ease, but also we avoid that Java_ does some tasks, so if we override the methods properly, we'll get a performance improvement.
 
-Para saber cuánto es la diferencia de rendimiento, he escrito un `pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos`. He contemplado 3 casos:
+To know how much is the performance difference between both interfaces, I've written a `tiny example in which we serialize an object with 2 collections with 100000 elements each one`_, 3 cases:
+
+TODO: Translation pending->
 
 Utilizando el interfaz Serializable_
 -------------------------------------
@@ -148,7 +150,7 @@ A continuación os dejo los enlaces a:
 
 .. _`Código en github`: https://github.com/carlosvin/serializations-performance-java/
 .. _`Resultados de los tests`: http://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html
-.. _`pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos`: http://carlosvin.github.io/serializations-performance-java/
+.. _`tiny example in which we serialize an object with 2 collections with 100000 elements each one`: http://carlosvin.github.io/serializations-performance-java/
 .. _Java: http://www.java.com/
 .. _JSON: http://www.json.org/
 .. _XML: http://en.wikipedia.org/wiki/XML
