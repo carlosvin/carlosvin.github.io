@@ -15,7 +15,7 @@ Hace poco, he tenido que serializar/deserializar unos datos en Java_, hacía muc
 Serializable_
 =======================
 
-- Cuando quieras serializar algo programamndo poco, es la forma fácil. 
+- Cuando quieras serializar algo programando poco, es la forma fácil. 
 - Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.
 - Cuando no te importe mucho el rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_.
 
