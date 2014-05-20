@@ -24,7 +24,7 @@ Externalizable_
 
 - You must implement the serialization/deserialization methods, so you have to write more code. 
 - When you cannot use Serializable_.
-- When you want to improve (tunning) the performance, as we'll see in `Performance tests (Serializable vs. Externalizable)`_
+- When you want to improve the performance, as we'll see in `Performance tests (Serializable vs. Externalizable)`_
 - If you have to manage the serialization of parent class attributes, then I recommend you use Externalizable_, because we'll avoid a weird overriding of private methods.
    
 .. code-block:: java
