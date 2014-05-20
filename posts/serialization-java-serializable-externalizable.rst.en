@@ -17,14 +17,14 @@ Serializable_
 
 - To serialize easily. You have to write less code.
 - This way has some restrictions: The object to serialize must implement the default constructor (0 args). It must be responsible to manage the parent class attributes.
-- The performance is not as important, we will see more about that in `Preformance tests (Serializable vs Externalizable)`_.
+- The performance is not as important, we will see more about that in `Performance tests (Serializable vs Externalizable)`_.
 
 Externalizable_
 =======================
 
 - You must implement the serialization/deserialization methods, so you have to write more code. 
 - When you cannot use Serializable_.
-- When you want to improve (tunning) the performance, as we'll see in `Preformance tests (Serializable vs Externalizable)`_
+- When you want to improve (tunning) the performance, as we'll see in `Performance tests (Serializable vs Externalizable)`_
 - If you have to manage the serialization of parent class attributes, then I recommend you use Externalizable_, because we'll avoid a weird overriding of private methods.
    
 .. code-block:: java
@@ -33,7 +33,7 @@ Externalizable_
   private void readObject(ObjectInputStream ois)
 
 
-Preformance tests (Serializable vs Externalizable)
+Performance tests (Serializable vs Externalizable)
 ========================================================
 
 Serializable_: Java, through introspection, guesses the types of class attributes to know how to serialize/deserialize them, but this "magic" is not free, it has a performance penalty.
