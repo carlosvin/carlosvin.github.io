@@ -138,13 +138,12 @@ Following you can see a graph_ with `Tests results`_.
    :alt: Gráfico con los resultados
    :width: 80%
 
-   Abrir el graph_ interactivo | `Open image`_
-
+   Open interactive graph_ | `Open image`_
 
 
 - `Tests results`_.
 - `Code in Github`_.
-- Estado de la `Travis CI build status`_
+- `Travis CI build status`_
   
   .. image:: https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master
 
