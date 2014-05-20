@@ -113,8 +113,7 @@ If we serialize one by one the collection elements, then we'll save more time, b
     }
   }
 
-- 204 milisegundos en serializar
-- 92  milisegundos en deserializar
+
 - serializing:   204 millisecond 
 - deserializing: 92  millisecond
 
