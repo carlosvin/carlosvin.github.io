@@ -541,10 +541,8 @@ COMMENT_SYSTEM_ID = "carlosvin"
 # it appears on the navigation bar:
 #
 SEARCH_FORM = """
-<span class="navbar-form navbar-right" role="search">
-  <div class="form-group">
-    <input type="text" class="form-control" placeholder="Search" id="tipue_search_input">
-  </div>
+<span class="navbar-form navbar-right">
+  <input type="text" class="form-control" placeholder="Search" id="tipue_search_input">
   <button type="button" class="btn btn-default" id="tipue_search_input">
     <span class="glyphicon glyphicon-search"> </span>
   </button>
