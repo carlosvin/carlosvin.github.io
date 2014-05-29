@@ -545,77 +545,11 @@ SEARCH_FORM = """
 <input type="text" id="tipue_search_input">
 </span>"""
 
-BODY_END = """
-<script src="/assets/js/tipuesearch_set.js"></script>
-<script src="/assets/js/tipuesearch.js"></script>
-<script>
-$(document).ready(function() {
-    $('#tipue_search_input').tipuesearch({
-        'mode': 'json',
-        'contentLocation': '/assets/js/tipuesearch_content.json',
-        'showUrl': false
-    });
-});
-</script>
-"""
-
 EXTRA_HEAD_DATA = """
 <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
 <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
 """
-#
-# If you prefer a google search form, here's an example that should just work:
-#SEARCH_FORM = """
-#<!-- Custom search with google-->
-#<form id="search" action="http://google.com/search" method="get" class="navbar-form pull-left">
-#<input type="hidden" name="q" value="site:%s" />
-#<input type="text" name="q" maxlength="255" results="0" placeholder="Search"/>
-#</form>
-#<!-- End of custom search -->
-#""" % SITE_URL
 
-# Also, there is a local search plugin you can use, based on Tipue, but it requires setting several
-# options:
-
-# SEARCH_FORM = """
-# <span class="navbar-form pull-left">
-# <input type="text" id="tipue_search_input">
-# </span>"""
-#
-# BODY_END = """
-# <script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
-# <script type="text/javascript" src="/assets/js/tipuesearch.js"></script>
-# <script type="text/javascript">
-# $(document).ready(function() {
-    # $('#tipue_search_input').tipuesearch({
-        # 'mode': 'json',
-        # 'contentLocation': '/assets/js/tipuesearch_content.json',
-        # 'showUrl': false
-    # });
-# });
-# </script>
-# """
-
-# EXTRA_HEAD_DATA = """
-# <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
-# <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
-# """
-# ENABLED_EXTRAS = ['local_search']
-#
-
-
-# Use content distribution networks for jquery and twitter-bootstrap css and js
-# If this is True, jquery is served from the Google CDN and twitter-bootstrap
-# is served from the NetDNA CDN
-# Set this to False if you want to host your site without requiring access to
-# external resources.
-# USE_CDN = False
-
-# Extra things you want in the pages HEAD tag. This will be added right
-# before </head>
-# EXTRA_HEAD_DATA = ""
-# Google Analytics or whatever else you use. Added to the bottom of <body>
-# in the default template (base.tmpl).
 BODY_END = """<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -643,7 +577,21 @@ href="http://statcounter.com/" target="_blank"><img
 class="statcounter"
 src="http://c.statcounter.com/9708205/0/4998d447/1/"
 alt="web analytics"></a></div></noscript>
-<!-- End of StatCounter Code for Default Guide -->"""
+<!-- End of StatCounter Code for Default Guide -->
+
+<!-- Tipue search -->
+<script src="/assets/js/tipuesearch_set.js"></script>
+<script src="/assets/js/tipuesearch.js"></script>
+<script>
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        'mode': 'json',
+        'contentLocation': '/assets/js/tipuesearch_content.json',
+        'showUrl': false
+    });
+});
+</script>"""
+
 
 # The possibility to extract metadata from the filename by using a
 # regular expression.
