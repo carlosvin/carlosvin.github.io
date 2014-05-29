@@ -541,12 +541,14 @@ COMMENT_SYSTEM_ID = "carlosvin"
 # it appears on the navigation bar:
 #
 SEARCH_FORM = """
-<form class="navbar-form navbar-left" role="search">
+<span class="navbar-form navbar-right" role="search">
   <div class="form-group">
     <input type="text" class="form-control" placeholder="Search" id="tipue_search_input">
   </div>
-  <button type="submit" class="btn btn-default" id="tipue_search_input"><span class="glyphicon glyphicon-search"></span></button>
-</form>"""
+  <button type="button" class="btn btn-default" id="tipue_search_input">
+    <span class="glyphicon glyphicon-search"> </span>
+  </button>
+</span>"""
 
 EXTRA_HEAD_DATA = """
 <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
