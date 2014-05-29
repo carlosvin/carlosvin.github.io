@@ -541,8 +541,8 @@ COMMENT_SYSTEM_ID = "carlosvin"
 # it appears on the navigation bar:
 #
 SEARCH_FORM = """
-<span class="navbar-form pull-left">
-<input type="text" id="tipue_search_input">
+<span class="navbar-form pull-right">
+<input type="text" id="tipue_search_input"><input type="button" id="tipue_search_button">
 </span>"""
 
 EXTRA_HEAD_DATA = """
