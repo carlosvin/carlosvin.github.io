@@ -541,19 +541,28 @@ COMMENT_SYSTEM_ID = "carlosvin"
 # it appears on the navigation bar:
 #
 SEARCH_FORM = """
-<!-- Custom search -->
-<form method="get" id="search" action="http://duckduckgo.com/"
- class="navbar-form pull-right">
-<input type="hidden" name="sites" value="%s"/>
-<input type="hidden" name="k8" value="#444444"/>
-<input type="hidden" name="k9" value="#D51920"/>
-<input type="hidden" name="kt" value="h"/>
-<input type="text" class="form-control" name="q" maxlength="255"
- placeholder="Search&hellip;"/>
-<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
-</form>
-<!-- End of custom search -->
-""" % SITE_URL
+<span class="navbar-form pull-left">
+<input type="text" id="tipue_search_input">
+</span>"""
+
+BODY_END = """
+<script src="/assets/js/tipuesearch_set.js"></script>
+<script src="/assets/js/tipuesearch.js"></script>
+<script>
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        'mode': 'json',
+        'contentLocation': '/assets/js/tipuesearch_content.json',
+        'showUrl': false
+    });
+});
+</script>
+"""
+
+EXTRA_HEAD_DATA = """
+<link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
+<div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+"""
 #
 # If you prefer a google search form, here's an example that should just work:
 #SEARCH_FORM = """
