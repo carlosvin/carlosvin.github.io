@@ -1,7 +1,7 @@
 .. title: Bases de Datos Embebidas Java: Performance comparison
 .. slug: java-embedded-db-performance-comparison
 .. date: 2014/06/07 18:09:00
-.. tags: Java, database, embedded
+.. tags: Java, database, embedded, draft
 .. description: Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB 
 .. type: text
 
@@ -102,9 +102,13 @@ Si a esta facilidad de uso, le unimos en los `Resultados de los tests`_ de rendi
 
 Los Tests
 =========
-Simplemente consisten en realizar repetidamente una serie operaciones CRUD_. Para cada base de datos el test realiza una seria de inserciones, selects, actualizaciones y borrado de objetos de la clase Precio. 
+
+Simplemente consisten en realizar repetidamente una serie operaciones CRUD_. Para cada base de datos el test realiza una serie de inserciones, selects, actualizaciones y borrado de objetos de la clase Precio. 
+
+He utilizado 100000 instancias de la clase Precio, las mismas para cada tipo de base de datos.
 
 Para esto he creado una interfaz DB que compartirán cada una de las implementaciones para cada base de datos.
+
 
 Interfaz DB
 ------------
@@ -144,11 +148,25 @@ Se trata de un proyecto Gradle_ por lo que para ejecutar los tests solo tenéis 
 
 Gradle_ se descargará automáticamente las librerías necesarias, compilará y ejecutará los tests.
 
+También podéis ver directamente la ejecución en https://travis-ci.org/carlosvin/java_embedded_databases.
+
+.. image:: https://travis-ci.org/carlosvin/java_embedded_databases.svg
+	:target: https://travis-ci.org/carlosvin/java_embedded_databases
 
 
 Resultados de los tests
 ------------------------
 
+A continuación podéis ver un con los resultados de los tests.
+
+.. figure:: https://docs.google.com/spreadsheets/d/1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE/embed/oimg?id=1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE&oid=1952366256&zx=vovadjcmpie1
+   :alt: Gráfico con los resultados
+   :width: 80%
+
+   `Abrir el gráfico interactivo`_ | `Abrir imágen`_
+
+.. _`Abrir el gráfico interactivo`: https://docs.google.com/spreadsheets/d/1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE/gviz/chartiframe?oid=1952366256
+.. _`Abrir imágen`: https://docs.google.com/spreadsheets/d/1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE/embed/oimg?id=1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE&oid=1952366256&zx=vovadjcmpie1
 .. _Gradle: http://www.gradle.org
 .. _DerbyDB: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java
 .. _SqliteDB: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java
