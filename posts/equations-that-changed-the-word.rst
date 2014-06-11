@@ -3,7 +3,7 @@
 .. date: 2014/04/03 11:30:00
 .. tags: Math, Pysics, Science, G+
 .. description: Una imagen que resume algunas de las ecuaciones más relevantes
-.. type: text
+.. type: micro
 
 
 He visto en `Google Science Fair`_ una colección de ecuaciones que han cambiado el mundo. 
