@@ -11,6 +11,7 @@ Hace poco, he tenido que serializar/deserializar unos datos en Java_, hacía muc
 
 .. contents:: Cuándo utilizar Serializable o Externalizable
 
+.. TEASER_END
 
 Serializable_
 =======================
