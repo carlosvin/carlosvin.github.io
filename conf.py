@@ -76,7 +76,7 @@ TRANSLATIONS = {
 # this pattern is also used for metadata:
 #     something.meta -> something.meta.pl
 
-TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
+TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
 
 # If you don't want your Polish files to be considered Perl code, use this:
 # TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
