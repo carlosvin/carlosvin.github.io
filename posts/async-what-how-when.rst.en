@@ -3,7 +3,6 @@
 .. date: 2014/04/20 13:35
 .. link: 
 .. description: A. Jesse Jiryu Davis talk about asyncio Python library
-.. type: text
 
 I've been listening a `A. Jesse Jiryu Davis`_ talk about the library Python_'s asycnio_ library. 
 
