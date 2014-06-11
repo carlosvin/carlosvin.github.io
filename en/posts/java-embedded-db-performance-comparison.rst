@@ -167,10 +167,10 @@ A continuación podéis ver un con los resultados de los tests.
    :alt: Gráfico con los resultados
    :width: 80%
 
-   `Abrir el gráfico interactivo`_ | `Abrir imágen`_
+   `Abrir el gráfico interactivo`_ | `Abrir imagen`_
 
 .. _`Abrir el gráfico interactivo`: https://docs.google.com/spreadsheets/d/1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE/gviz/chartiframe?oid=1952366256
-.. _`Abrir imágen`: https://docs.google.com/spreadsheets/d/1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE/embed/oimg?id=1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE&oid=1952366256&zx=vovadjcmpie1
+.. _`Abrir imagen`: https://docs.google.com/spreadsheets/d/1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE/embed/oimg?id=1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE&oid=1952366256&zx=vovadjcmpie1
 .. _Gradle: http://www.gradle.org
 .. _DerbyDB: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java
 .. _SqliteDB: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java
