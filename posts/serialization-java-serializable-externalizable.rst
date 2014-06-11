@@ -135,7 +135,7 @@ A continuación podéis ver un `gráfico`_ con los resultados de los tests.
    :alt: Gráfico con los resultados
    :width: 80%
 
-   Abrir el `gráfico`_ interactivo | `Abrir imágen`_
+   Abrir el `gráfico`_ interactivo | `Abrir imagen`_
 
 
 A continuación os dejo los enlaces a:
@@ -156,5 +156,5 @@ A continuación os dejo los enlaces a:
 .. _Serializable: http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
 .. _Externalizable: http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html
 .. _`gráfico`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/gviz/chartiframe?oid=2110613848
-.. _`Abrir imágen`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&oid=2110613848&zx=t87gu6ve3lan
+.. _`Abrir imagen`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&oid=2110613848&zx=t87gu6ve3lan
 .. _`Construcción en travis`:  https://travis-ci.org/carlosvin/serializations-performance-java
