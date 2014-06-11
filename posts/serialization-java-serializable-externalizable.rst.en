@@ -11,6 +11,7 @@ I remember that to serialize Java_ objects they must implement the  Serializable
 
 .. contents:: When to use Serializable_ or Externalizable_
 
+.. TEASER_END
 
 Serializable_
 =======================
