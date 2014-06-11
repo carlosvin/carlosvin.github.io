@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vin's Blog | Vin's Blog</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../rss.xml">
+<link rel="canonical" href="http://carlosvin.github.io/en/index.html">
+<!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><link rel="stylesheet" type="text/css" href="../assets/css/tipuesearch.css">
+</head>
+<body>
+<div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+
+
+
+
+
+
+
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://carlosvin.github.io/">
+
+                <span id="blog-title">Vin's Blog</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="archive.html">Archives</a>
+                </li>
+<li>
+<a href="categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="rss.xml">RSS</a>
+
+                
+            </li>
+</ul>
+<span class="navbar-form navbar-right">
+  <input type="text" class="form-control" placeholder="Search" id="tipue_search_input"><button type="button" id="tipue_search_button">
+    <span class="glyphicon glyphicon-search"> </span>
+  </button>
+</span>
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+            </li>
+<li><a href="../index.html" rel="alternate" hreflang="es">Español</a></li>
+
+                
+                    
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<div class="postindex">
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/serialization-java-serializable-externalizable.html" class="u-url">Java serialization ways: Performance Comparison</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/serialization-java-serializable-externalizable.html" rel="bookmark"><time class="published dt-published" datetime="2014-05-13T17:00:00+02:00" itemprop="datePublished" title="Publication date">2014-05-13 17:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/serialization-java-serializable-externalizable.html#disqus_thread" data-disqus-identifier="cache/posts/serialization-java-serializable-externalizable.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>Recently I've  had to serialize/deserialize some data in <a class="reference external" href="http://www.java.com/">Java</a> binary format. Lately I use <a class="reference external" href="http://www.json.org/">JSON</a> or <a class="reference external" href="http://en.wikipedia.org/wiki/XML">XML</a> formats.</p>
+<p>I remember that to serialize <a class="reference external" href="http://www.java.com/">Java</a> objects they must implement the  <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> interface, but I had also read in Internet other way, implementing the <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> interface, then, which interface must I implement? It depends on what you want such as everything in the life.</p>
+<div class="contents topic" id="when-to-use-serializable-or-externalizable">
+<p class="topic-title first">When to use <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> or <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a></p>
+<ul class="simple">
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#serializable" id="id3">Serializable</a></li>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#externalizable" id="id4">Externalizable</a></li>
+<li>
+<a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#performance-tests-serializable-vs-externalizable" id="id5">Performance tests (Serializable vs. Externalizable)</a><ul>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#implementing-serializable" id="id6">Implementing Serializable</a></li>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#implementing-externalizable-wrong-way" id="id7">Implementing Externalizable (wrong way)</a></li>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#implementing-externalizable-right-way" id="id8">Implementing Externalizable (right way)</a></li>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable.html#result-analysis" id="id9">Result Analysis</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p class="more"><a href="posts/serialization-java-serializable-externalizable.html">Read more…</a></p>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/cpp-mutex.html" class="u-url">Mutex C++</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/cpp-mutex.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-24T17:50:00+02:00" itemprop="datePublished" title="Publication date">2014-04-24 17:50</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/cpp-mutex.html#disqus_thread" data-disqus-identifier="cache/posts/cpp-mutex.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p><a class="reference external" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> has added many improvements to help us developing multi-thread systems. I'm going to talk about <a class="reference external" href="http://en.wikipedia.org/wiki/Mutex">mutex</a>.</p>
+<p>In <a class="reference external" href="http://clang.llvm.org/cxx_status.html">previous C++11 compiler versions</a>, we can get a <a class="reference external" href="http://en.wikipedia.org/wiki/POSIX_Threads">pthread</a> <a class="reference external" href="http://en.wikipedia.org/wiki/Mutex">mutex</a>, but we must initialize and destroy in <a class="reference external" href="http://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)">C</a> style; in the end you must do more things than just lock/unlock.</p>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> provides <a class="reference external" href="http://en.cppreference.com/w/cpp/thread/mutex">mutex class</a>, we just do lock/unclock. I recommend you take a look at <a class="reference external" href="http://en.cppreference.com/w/cpp/thread/mutex">C++11 mutex class</a>.</p>
+<p>If you still work with <a class="reference external" href="http://clang.llvm.org/cxx_status.html">previous C++11 compiler versions</a>, a time ago, I made a wrapper class that helps to work with <a class="reference external" href="http://en.wikipedia.org/wiki/POSIX_Threads">pthread</a> <a class="reference external" href="http://en.wikipedia.org/wiki/Mutex">mutex</a>. You just lock/unlock the Mutex object.</p>
+<p>Then I leave my code proposal (<a class="reference external" href="https://gist.github.com/carlosvin/11257689">Gist code</a>).</p>
+<p class="more"><a href="posts/cpp-mutex.html">Read more…</a></p>
+    </div>
+    </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/async-what-how-when.html" class="u-url">Python's asyncio: What, How, When</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/async-what-how-when.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-20T13:35:00+02:00" itemprop="datePublished" title="Publication date">2014-04-20 13:35</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/async-what-how-when.html#disqus_thread" data-disqus-identifier="cache/posts/async-what-how-when.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>I've been listening a <a class="reference external" href="http://emptysqua.re/blog/">A. Jesse Jiryu Davis</a> talk about the library <a class="reference external" href="http://www.python.org">Python</a>'s <a class="reference external" href="https://docs.python.org/3.4/library/asyncio.html">asycnio</a> library.</p>
+<p><a class="reference external" href="https://docs.python.org/3.4/library/asyncio.html">Asycnio</a> is a library added to <a class="reference external" href="http://www.python.org">Python</a> 3.4. that provides infrastructure for writing single-threaded concurrent code which let us to save memory.</p>
+<iframe width="425" height="344" src="//www.youtube.com/embed/9WV7juNmyE8?rel=0&amp;hd=1&amp;wmode=transparent"></iframe>
+    </div>
+    </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/equations-that-changed-the-word.html" class="u-url">Equations that changed the world</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/equations-that-changed-the-word.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-03T11:30:00+02:00" itemprop="datePublished" title="Publication date">2014-04-03 11:30</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/equations-that-changed-the-word.html#disqus_thread" data-disqus-identifier="cache/posts/equations-that-changed-the-word.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>I've seen in <a class="reference external" href="https://plus.google.com/+GoogleScienceFair">Google Science Fair</a> a collection of equations that changed the world.
+In my opinion, everybody must understand some of these equations.</p>
+<a class="reference external image-reference" href="https://plus.google.com/108818810955465968635/posts/MQ6e6NXNGTf"><img alt="Equations that changed the world" class="align-center" src="https://lh4.googleusercontent.com/-FHTLwqgD_9Y/Uzw9gQoOzWI/AAAAAAAAzPo/wYMfpR33uqM/w319-h417-no/10013908_458548124276223_2085950828_n.jpg" style="width: 400px;"></a>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/primer-post.html" class="u-url">First post with Nikola</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/primer-post.html" rel="bookmark"><time class="published dt-published" datetime="2014-03-27T13:30:02+01:00" itemprop="datePublished" title="Publication date">2014-03-27 13:30</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/primer-post.html#disqus_thread" data-disqus-identifier="cache/posts/primer-post.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>I guess that the most people come from dynamic content management systems based on:</p>
+<ul class="simple">
+<li>send data from browser to server</li>
+<li>process the received data, then it stores the processed info into a database (or files)</li>
+<li>the server generate dynamically an answer that is sent to the browser as HTML<ul>
+<li>the answer is usually built reading info from a database or files.</li>
+</ul>
+</li>
+</ul>
+<p>This process is managed by a software installed on server, this is our content management system.</p>
+<p>Now I've changed the paradigm to "static web site generator", specifically I'm going to use <a class="reference external" href="http://getnikola.com/">Nikola</a>,
+although this time, I'm not going to install on a remote server.</p>
+<p>In a next post I'll tell you how I've automated the publication process using <a class="reference external" href="http://www.github.com">Github</a> <a class="footnote-reference" href="posts/primer-post.html#id9" id="id1">[1]</a> and <a class="reference external" href="https://travis-ci.org/">Travis</a> <a class="footnote-reference" href="posts/primer-post.html#id10" id="id2">[2]</a>.</p>
+<div class="contents topic" id="path-to-nikola">
+<p class="topic-title first">Path to <a class="reference external" href="http://getnikola.com/">Nikola</a></p>
+<ul class="simple">
+<li><a class="reference internal" href="posts/primer-post.html#phpnuke" id="id16">PhpNuke</a></li>
+<li>
+<a class="reference internal" href="posts/primer-post.html#my-own-content-management-system" id="id17">My Own Content Management System</a><ul>
+<li><a class="reference internal" href="posts/primer-post.html#drupal" id="id18">Drupal</a></li>
+<li><a class="reference internal" href="posts/primer-post.html#wordpress" id="id19">Wordpress</a></li>
+<li><a class="reference internal" href="posts/primer-post.html#cmsdj" id="id20">CMSdj</a></li>
+<li><a class="reference internal" href="posts/primer-post.html#nikola" id="id21">Nikola</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p class="more"><a href="posts/primer-post.html">Read more…</a></p>
+    </div>
+    </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/android-studio-portable-download.html" class="u-url">Android Studio Portable Download</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/android-studio-portable-download.html" rel="bookmark"><time class="published dt-published" datetime="2013-10-20T13:00:00+02:00" itemprop="datePublished" title="Publication date">2013-10-20 13:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/android-studio-portable-download.html#disqus_thread" data-disqus-identifier="cache/posts/android-studio-portable-download.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    If you want to use <a class="reference external" href="http://developer.android.com/sdk/installing/studio.html">Android Studio</a> without installation, as a portable software, here you have the link to <a class="reference external" href="http://tools.android.com/download/studio/canary/latest">last portable version of Android Studio</a>.
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/debug-libtool-lib.html" class="u-url">Depurar librería generada con libtool</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/debug-libtool-lib.html" rel="bookmark"><time class="published dt-published" datetime="2013-02-01T15:30:00+01:00" itemprop="datePublished" title="Publication date">2013-02-01 15:30</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/debug-libtool-lib.html#disqus_thread" data-disqus-identifier="cache/posts/debug-libtool-lib.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>Trabajando con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a> <a class="footnote-reference" href="posts/debug-libtool-lib.html#id3" id="id1">[1]</a>, cuando vamos a depurar un ejecutable que utiliza una librería generada con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>, es posible que nos encontremos con el siguiente error:</p>
+<pre class="code bash literal-block">
+<span class="nv">$ </span>gdb ./tests-mylib
+<span class="s2">"tests-mylib"</span>: not in executable format: File format not recognized
+</pre>
+<p><code>libmylib.so</code> es una librería dinámica generada con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>
+<code>tests-mylib</code> es un ejecutable que utiliza la librería mylib</p>
+<p>Para los que estéis pensando que se me ha olvidado poner la opción de compilación <code>-g</code>, lo siento, pero este error ocurre aunque utilicemos <code>-g</code>.</p>
+<p>El error es debido a que estamos intentando ejecutar un script generado por <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>, es una envoltura sobre el programa real, para facilitar la ejecución de éste <a class="citation-reference" href="posts/debug-libtool-lib.html#libtooldoc" id="id2">[libtooldoc]</a>.</p>
+<p>Para poder depurar nuestro programa de prueba <code>tests-mylib</code></p>
+<pre class="code bash literal-block">
+libtool --mode<span class="o">=</span>execute gdb tests-mylib
+</pre>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="posts/debug-libtool-lib.html#id1">[1]</a></td>
+<td>Herramienta que pertenece a la <a class="reference external" href="http://es.wikipedia.org/wiki/GNU_build_system">Autotools</a> usada para crear bibliotecas de software portables.</td>
+</tr></tbody>
+</table>
+<table class="docutils citation" frame="void" id="libtooldoc" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="posts/debug-libtool-lib.html#id2">[libtooldoc]</a></td>
+<td>Esta información la he sacado de <a class="reference external" href="http://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables">http://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables</a>
+</td>
+</tr></tbody>
+</table>
+</div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/cpp-pragma-pack.html" class="u-url">Mapeo de un struct C++ en Memoria</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/cpp-pragma-pack.html" rel="bookmark"><time class="published dt-published" datetime="2012-11-26T12:00:00+01:00" itemprop="datePublished" title="Publication date">2012-11-26 12:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/cpp-pragma-pack.html#disqus_thread" data-disqus-identifier="cache/posts/cpp-pragma-pack.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia.</p>
+<p>Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.</p>
+<div class="contents topic" id="tabla-de-contenidos">
+<p class="topic-title first">Tabla de Contenidos</p>
+<ul class="simple">
+<li><a class="reference internal" href="posts/cpp-pragma-pack.html#estructura-de-ejemplo" id="id1">Estructura de ejemplo</a></li>
+<li><a class="reference internal" href="posts/cpp-pragma-pack.html#la-directiva-pragma-pack-en-struct-c" id="id2">La directiva #pragma pack en struct C++</a></li>
+<li><a class="reference internal" href="posts/cpp-pragma-pack.html#rendimiento" id="id3">Rendimiento</a></li>
+</ul>
+</div>
+<p class="more"><a href="posts/cpp-pragma-pack.html">Read more…</a></p>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/git-proxy-config.html" class="u-url">Configuración de proxy para Git</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/git-proxy-config.html" rel="bookmark"><time class="published dt-published" datetime="2012-11-15T12:00:00+01:00" itemprop="datePublished" title="Publication date">2012-11-15 12:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/git-proxy-config.html#disqus_thread" data-disqus-identifier="cache/posts/git-proxy-config.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>Es muy tedioso trabajar desde una red con proxy, al menos para mí, pierdo un montón de tiempo configurando software para que se actualice y funcione correctamente.</p>
+<p>Vamos a ver cómo configurar git para que utilice un proxy determinado.</p>
+<p>Esta es una descripción más o menos genérica de como hacer que git utilice un proxy determinado:</p>
+<pre class="code bash literal-block">
+<span class="c">#para http
+</span>git config --global http.proxy &lt;protocolo&gt;://&lt;nombre de usuario&gt;:&lt;password&gt;@&lt;direccion_ip&gt;:&lt;puerto&gt;
+
+<span class="c">#para https
+</span>git config --global https.proxy &lt;protocolo&gt;://&lt;nombre de usuario&gt;:&lt;password&gt;@&lt;direccion_ip&gt;:&lt;puerto&gt;
+
+<span class="c">#para deshabilitar el uso del proxy
+</span>git config --global --unset http.proxy
+</pre>
+<p>Más información en <a class="reference external" href="http://git-scm.com/book/es/Personalizando-Git-Configuraci%C3%B3n-de-Git">la configuración oficial de Git</a>.</p>
+<table class="docutils citation" frame="void" id="protocolo" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label">[protocolo]</td>
+<td>Suele ser http o https</td>
+</tr></tbody>
+</table>
+</div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/remove-replace-punctuation-py.html" class="u-url">Eliminar/Reemplazar signos de puntuación en Python</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/remove-replace-punctuation-py.html" rel="bookmark"><time class="published dt-published" datetime="2012-10-23T15:00:00+02:00" itemprop="datePublished" title="Publication date">2012-10-23 15:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/remove-replace-punctuation-py.html#disqus_thread" data-disqus-identifier="cache/posts/remove-replace-punctuation-py.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>A continuación muestro una forma de eliminar los signos de puntuación de una cadena de caractéres en Python. Los signos de puntuación son reemplazados por caractéres en blanco.</p>
+<pre class="code python literal-block">
+<span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">string</span>
+
+<span class="k">def</span> <span class="nf">remove_punctuation</span> <span class="p">(</span> <span class="n">text</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">'[</span><span class="si">%s</span><span class="s">]'</span> <span class="o">%</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">),</span> <span class="s">' '</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</pre>
+<p>Ejecutando:</p>
+<pre class="code bash literal-block">
+&gt;&gt;&gt; remove_punctuation <span class="o">(</span><span class="s2">"El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido."</span><span class="o">)</span>
+<span class="s1">'El perro  de San Roque  no tiene rabo  ni nunca lo ha tenido '</span>
+</pre>
+<p>Si queremos hacer la función más general, para reemplazar los signos de puntuación por cualquier otra cadena, simplemente hay que hacer la siguiente modificación en la función.</p>
+<pre class="code python literal-block">
+<span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">string</span>
+
+<span class="k">def</span> <span class="nf">replace_punctuation</span> <span class="p">(</span> <span class="n">text</span><span class="p">,</span> <span class="n">replace</span> <span class="p">):</span>
+  <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">'[</span><span class="si">%s</span><span class="s">]'</span> <span class="o">%</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">),</span> <span class="n">replace</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</pre>
+<p>Ejecutando el código de arriba:</p>
+<pre class="code bash literal-block">
+&gt;&gt;&gt; replace_punctuation <span class="o">(</span><span class="s2">"El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido."</span>, <span class="s1">'[stop]'</span><span class="o">)</span>
+<span class="s1">'El perro[stop] de San Roque[stop] no tiene rabo[stop] ni nunca lo ha tenido[stop]'</span>
+</pre>
+    </div>
+    </article>
+</div>
+
+        <nav class="postindexpager"><ul class="pager">
+<li class="next">
+                <a href="index-1.html" rel="next">Older posts</a>
+            </li>
+        </ul></nav><script>var disqus_shortname="carlosvin";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
+</div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2014         <a href="mailto:carlosvin@gmail.com">Carlos Martín Sánchez</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><!-- Social buttons --><div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+<a class="addthis_button_more">Share</a>
+<ul>
+<li>
+<a class="addthis_button_facebook"></a>
+</li>
+<li>
+<a class="addthis_button_google_plusone_share"></a>
+</li>
+<li>
+<a class="addthis_button_linkedin"></a>
+</li>
+<li>
+<a class="addthis_button_twitter"></a>
+</li>
+</ul>
+</div>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1328360-9', 'carlosvin.github.io');
+  ga('send', 'pageview');
+
+</script><!-- Start of StatCounter Code for Default Guide --><script type="text/javascript">
+var sc_project=9708205; 
+var sc_invisible=1; 
+var sc_security="4998d447"; 
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script><noscript><div class="statcounter"><a title="web analytics" href="http://statcounter.com/" target="_blank"><img class="statcounter" src="http://c.statcounter.com/9708205/0/4998d447/1/" alt="web analytics"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+
+<!-- Tipue search -->
+<script src="../assets/js/tipuesearch_set.js"></script><script src="../assets/js/tipuesearch.js"></script><script>
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        'mode': 'json',
+        'contentLocation': '/assets/js/tipuesearch_content.json',
+        'showUrl': false
+    });
+});
+</script>
+</body>
+</html>
