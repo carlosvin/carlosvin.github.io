@@ -3,7 +3,7 @@
 .. date: 2012/10/02 15:30:00
 .. tags: Tips and Tricks, Cheat Sheet
 .. description: Cheat sheets, round-ups, quick references
-.. type: text
+
 
 cheat-sheets.org_
 
