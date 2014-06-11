@@ -10,6 +10,7 @@ If we uninstall the package, its dependencies won't be uninstalled, these unused
 
 .. contents:: Remove orphaned packages
 
+.. TEASER_END
 
 Archlinux_
 ==========
