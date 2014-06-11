@@ -16,6 +16,10 @@ Otra gran ventaja es que no tenemos que encargarnos de mantener y gestionar un s
 
 Yo voy a hacer una comparativa de rendimiento entre 3 bases de datos embebidas ACID_ (transaccionales), las NoSQL_ no entran en esta comparativa que están en otra liga de rendimiento. También tienen modo de funcionamiento con datos en memoria. 
 
+.. contents:: Contenidos
+
+.. TEASER_END
+
 
 SQLite_
 --------
@@ -142,7 +146,7 @@ Podéis descargar el código fuente de https://github.com/carlosvin/java_embedde
 
 Se trata de un proyecto Gradle_ por lo que para ejecutar los tests solo tenéis que escribir (y tener instalado Gradle_ claro):
 	
-	.. code-block:: gradle
+	.. code-block:: bash
 
 		grade test
 
@@ -186,3 +190,4 @@ A continuación podéis ver un con los resultados de los tests.
 .. _JPA: http://es.wikipedia.org/wiki/Java_Persistence_API
 .. _Java: http://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)
 .. _SQL: http://es.wikipedia.org/wiki/SQL
+.. _CRUD: http://es.wikipedia.org/wiki/CRUD
