@@ -22,6 +22,8 @@ In a next post I'll tell you how I've automated the publication process using Gi
 
 .. contents:: Path to Nikola_
 
+.. TEASER_END
+
 PhpNuke_
 --------
 My first content management system, yes it still exists. It based on PHP+MySQL, multi-lang, user management, user groups, theming, plugins, etc. 

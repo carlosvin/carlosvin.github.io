@@ -15,6 +15,8 @@ If you still work with `previous C++11 compiler versions`_, a time ago, I made a
 
 Then I leave my code proposal (`Gist code`_).
 
+.. TEASER_END
+
 .. gist:: 11257689
 
 

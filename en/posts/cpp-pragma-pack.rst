@@ -12,6 +12,7 @@ Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar út
 
 .. contents:: Tabla de Contenidos
 
+.. TEASER_END
 
 Estructura de ejemplo
 =====================

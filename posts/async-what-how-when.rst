@@ -4,7 +4,7 @@
 .. tags: Python, Programming
 .. link: 
 .. description: Una charla de A. Jesse Jiryu Davis sobre la librería asyncio de Python
-.. type: text
+.. type: micro
 
 
 He estado escuchando una charla de `A. Jesse Jiryu Davis`_ sobre la librería asycnio_ de Python_. 

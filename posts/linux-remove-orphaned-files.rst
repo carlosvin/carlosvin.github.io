@@ -14,6 +14,7 @@ Si en el futuro desinstalas ese paquete, esas dependencias quedarán instaladas 
 
 .. contents:: Desinstalar paquetes huérfanos
 
+.. TEASER_END
 
 Archlinux_
 ==========

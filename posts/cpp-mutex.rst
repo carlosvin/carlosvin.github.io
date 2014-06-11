@@ -16,6 +16,8 @@ Si sigues trabajando con `versiones de compiladores previos a C++11`_, hace tiem
 
 Abajo está un `Gist del Código`_, he vuelto a escribir el código de cabeza y puede ser que haya algún error, lo revisaré, pero lo importante es la idea de hacer una clase que envuelva la inicialización del mutex de pthread. 
 
+.. TEASER_END
+
 .. gist:: 11257689
 
 
