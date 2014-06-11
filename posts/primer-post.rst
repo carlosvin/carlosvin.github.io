@@ -23,6 +23,8 @@ Mi camino para llegar hasta los generadores de sitios web estáticos ha pasado p
 
 .. contents:: Camino hasta Nikola_
 
+.. TEASER_END
+
 PhpNuke_
 ===============
 Sí, sigue existiendo. Aquí entramos un gestor de contenido basado PHP+MySQL, multi-idioma, gestión de usuarios, grupos de usuarios, ampliable con temas, plugins, etc. 
