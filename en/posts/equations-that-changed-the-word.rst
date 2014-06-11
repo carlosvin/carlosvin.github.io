@@ -2,7 +2,6 @@
 .. slug: equations-that-changed-the-word
 .. date: 2014/04/03 11:30:00
 .. description: An image that resumes some equations that changed the world 
-.. type: text
 
 
 I've seen in `Google Science Fair`_ a collection of equations that changed the world. 
