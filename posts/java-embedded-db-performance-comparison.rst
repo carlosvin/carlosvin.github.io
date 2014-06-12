@@ -12,9 +12,9 @@ Se trata de bases de datos que carecen de servidor, están inscrustadas en la pr
 
 Eso sí, este gran grado acoplamiento a la aplicación, hace que tengan peor rendimiento cuando se comparten entre varias aplicaciones debido a colisiones de acceso. 
 
-Otra gran ventaja es que no tenemos que encargarnos de mantener y gestionar un servidor de bases de datos. 
+Otra ventaja es que no tenemos que encargarnos de mantener y gestionar un servidor de bases de datos. 
 
-Yo voy a hacer una comparativa de rendimiento entre 3 bases de datos embebidas ACID_ (transaccionales), las NoSQL_ no entran en esta comparativa que están en otra liga de rendimiento. También tienen modo de funcionamiento con datos en memoria. 
+Voy a hacer una comparativa de rendimiento entre 3 bases de datos embebidas ACID_ (transaccionales), las NoSQL_ no entran en esta comparativa que están en otra liga de rendimiento.
 
 .. contents:: Contenidos
 
@@ -27,11 +27,11 @@ Se trata de una librería escrita en `ANSI C`_, de menos de 500KB, multi-platafo
 
 Es la que da mejor rendimiento en los `Resultados de los tests`_.
 
-Se puede utilizar desde C y C++, pero también ´desde otros lenguajes de programación (PHP, Python, Java, .NET y otros)`_.
+Se puede utilizar desde C y C++, pero también `desde otros lenguajes de programación (PHP, Python, Java, .NET ...)`_.
 
 En el caso de Java_ podemos gestionar esta base de datos a través de JDBC_. Podemos obtener la librería de https://bitbucket.org/xerial/sqlite-jdbc. 
 
-Veamos un ejemplo de la inserción de una serie de objetos de la clase Precio.
+Veamos un ejemplo de la inserción de una serie de objetos de la clase Price_.
 
 .. code-block:: java
 		
@@ -75,7 +75,7 @@ Veamos un ejemplo de la inserción de una serie de objetos de la clase Precio.
 
 Derby_ o JavaDB_
 ------------------
-Java DB es una distribución de Oracle de la base de datos open source Derby_. Soporta el estándar `ANSI/ISO SQL`_  a través de JDBC_ y `Java EE`_. Estas librerías están incluidas en el JDK_. 
+JavaDB_ es una distribución de Oracle de la base de datos de código libre Derby_. Soporta el estándar `ANSI/ISO SQL`_  a través de JDBC_ y `Java EE`_. Estas librerías están incluidas en el JDK_. 
 
 Almacena la base de datos en multiples archivos, lo que puede resultar útil para escalar el almacenamiento.
 
@@ -83,12 +83,12 @@ Solo podemos utilizarlo en Java_, no desde otros lenguajes.
 
 Como veremos más adelante ha sido la más lenta en los `Resultados de los tests`_.
 
-La implementación de ejemplo de una inserción de una serie de objetos de la clase precio, es exactamente la misma que la que hemos hecho más arriba en SQLite_, esto es gracias a una de las bondades de JDBC_, que nos permite obtener una conexión para una base de datos específica, pero a partir de ahí casi siempre nos podemos olvidar de la base de datos con la que trabajamos, siempre y cuando soporte nuestras consultas SQL_. 
+La implementación de ejemplo de una inserción de una serie de objetos de la clase Price_, es exactamente la misma que la que hemos hecho más arriba en SQLite_, esto es una de las bondades de JDBC_, que nos permite obtener una conexión para una base de datos específica, pero a partir de ahí casi siempre nos podemos olvidar de la base de datos con la que trabajamos, siempre y cuando soporte nuestras consultas SQL_. 
 
 
 ObjectDB_
 ----------
-Es una `base de datos orientada a objetos`_ que nos permite acceso JPA_, un estándar de Java que persigue no perder las ventajas de la orientación a objetos que se suele perder cuando nos acercamos a la capa de persistencia. 
+Es una `base de datos orientada a objetos`_ que nos permite acceso JPA_, un estándar de Java que persigue no perder las ventajas de la orientación a objetos; esto se suele perder cuando nos acercamos a la capa de persistencia. 
 
 Resulta realmente sencillo realizar acciones típicas de una base de datos, abstrayéndonos del SQL, por ejemplo veamos cómo quedaría una inserción de un array de objetos de la clase Price con ObjectDB_.
 
@@ -102,16 +102,16 @@ Resulta realmente sencillo realizar acciones típicas de una base de datos, abst
 		em.getTransaction().commit();
 	}
 
-Si a esta facilidad de uso, le unimos en los `Resultados de los tests`_ de rendimiento ha obtenido unos resultados muy buenos, cerca de SQLite_, he descubierto una base de datos embebida a tener muy en cuenta en futuros proyectos Java_, eso sí, solo nos sirve si vamos a programar en Java_. 
+Si a esta facilidad de uso, le unimos que los `Resultados de los tests`_ de rendimiento han sido muy buenos (cerca de SQLite_), puedo decir que he descubierto una base de datos embebida a tener muy en cuenta en futuros proyectos Java_, eso sí, al igual que con JavaDB_, solo nos sirve si vamos a programar en Java_. 
 
 Los Tests
 =========
 
-Simplemente consisten en realizar repetidamente una serie operaciones CRUD_. Para cada base de datos el test realiza una serie de inserciones, selects, actualizaciones y borrado de objetos de la clase Precio. 
+Simplemente consisten en realizar repetidamente una serie operaciones CRUD_. Para cada base de datos, el test realiza una serie de inserciones, selects, actualizaciones y borrado de objetos de la clase Precio. 
 
-He utilizado 100000 instancias de la clase Precio, las mismas para cada tipo de base de datos.
+He utilizado 100000 instancias de la clase Price_, las mismas para cada tipo de base de datos.
 
-Para esto he creado una interfaz DB que compartirán cada una de las implementaciones para cada base de datos.
+Para esto he creado una interfaz DB_ que compartirán cada una de las implementaciones para cada base de datos.
 
 
 Interfaz DB
@@ -191,3 +191,5 @@ A continuación podéis ver un con los resultados de los tests.
 .. _Java: http://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)
 .. _SQL: http://es.wikipedia.org/wiki/SQL
 .. _CRUD: http://es.wikipedia.org/wiki/CRUD
+.. _Price: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java
+.. _DB: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DB.java
