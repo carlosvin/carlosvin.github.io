@@ -1,7 +1,7 @@
 .. title: Bases de Datos Embebidas Java: Performance comparison
 .. slug: java-embedded-db-performance-comparison
 .. date: 2014/06/07 18:09:00
-.. tags: Java, database, embedded, draft
+.. tags: Java, database, embedded
 .. description: Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB 
 .. type: text
 
