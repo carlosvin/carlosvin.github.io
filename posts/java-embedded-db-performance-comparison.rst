@@ -27,7 +27,7 @@ Se trata de una librería escrita en `ANSI C`_, de menos de 500KB, multi-platafo
 
 Es la que da mejor rendimiento en los `Resultados de los tests`_.
 
-Se puede utilizar desde C y C++, pero también `desde otros lenguajes de programación (PHP, Python, Java, .NET ...)`_.
+Se puede utilizar desde C y C++, pero también `desde otros lenguajes de programación`_  (PHP, Python, Java, .NET ...).
 
 En el caso de Java_ podemos gestionar esta base de datos a través de JDBC_. Podemos obtener la librería de https://bitbucket.org/xerial/sqlite-jdbc. 
 
@@ -185,7 +185,7 @@ A continuación podéis ver un con los resultados de los tests.
 .. _`ANSI/ISO SQL`: http://es.wikipedia.org/wiki/SQL
 .. _`SQL-92`: http://en.wikipedia.org/wiki/SQL-92
 .. _`ANSI C`: http://es.wikipedia.org/wiki/ANSI_C
-.. _`desde otros lenguajes de programación (PHP, Python, Java, .NET y otros)`: http://es.wikipedia.org/wiki/Sqlite#Lenguajes_de_programaci.C3.B3n
+.. _`desde otros lenguajes de programación`: http://es.wikipedia.org/wiki/Sqlite#Lenguajes_de_programaci.C3.B3n
 .. _`base de datos orientada a objetos`: http://es.wikipedia.org/wiki/Base_de_datos_orientada_a_objetos
 .. _JPA: http://es.wikipedia.org/wiki/Java_Persistence_API
 .. _Java: http://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)
