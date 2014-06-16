@@ -5,7 +5,7 @@
 .. tags: Git, Proxy, Tips and Tricks
 .. link: 
 .. description: Cómo configurar git para que funcione a través de un proxy
-.. type: text
+.. type: micro
 
 Es muy tedioso trabajar desde una red con proxy, al menos para mí, pierdo un montón de tiempo configurando software para que se actualice y funcione correctamente.
 

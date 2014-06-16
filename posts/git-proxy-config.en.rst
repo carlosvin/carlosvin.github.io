@@ -4,7 +4,6 @@
 .. update: 2014/06/15 00:00:00
 .. link: 
 .. description: How to configure git to work through a proxy
-.. type: text
 
 Sometimes working through a proxy is pretty tedious.
 
