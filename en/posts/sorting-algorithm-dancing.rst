@@ -1,18 +1,15 @@
-.. title: Cómo funcionan los algoritmos de ordenación (Bailando)
+.. title: How sorting algorithms work (Dancing)
 .. slug: sorting-algorithm-dancing
-.. date: 2014/06/16 20:09:00
-.. update: 2014/06/16 20:09:00
-.. tags: Algorithm, Sorting, Programming
-.. link: 
-.. description: Representación del funcionamiento de los algoritmos de ordenación más conocidos, bailando.
-.. type: micro
+.. date: 2014/06/16 20:45:00
+.. update: 2014/06/16 20:45:00
+.. description: How sorting algorithms work, dancing and sorting
 
-He encontrado por ahí un grupo tecnológico-artístico llamados AlgoRythmics_, que enseñan cómo funcionan los algoritmos de ordenación más conocidos.
+I've found out a artistic-technological group named AlgoRythmics_, they teach how the most popular sorting algorithms work.
 
-Siempre puedes consultar en la wikipedia `Algoritmos de ordenamiento`_, aunque no creo que sea tan rápido ni tan divertido para aprender como con AlgoRythmics_, os dejo el ejemplo del Quicksort_.
+You can read `the wikipedia topic Popular sorting algorithms`_, although I think it isn't as funny to learn as the AlgoRythmics_ way. Following the Quicksort_, judge for yourself.
 
 .. youtube:: ywWBy6J5gz8
 
-.. _Quicksort: http://es.wikipedia.org/wiki/Quicksort
+.. _Quicksort: http://en.wikipedia.org/wiki/Quicksort
 .. _AlgoRythmics: https://www.youtube.com/user/AlgoRythmics/videos
-.. _`Algoritmos de ordenamiento`: http://es.wikipedia.org/wiki/Algoritmo_de_ordenamiento#Lista_de_algoritmos_de_ordenamiento
+.. _`the wikipedia topic Popular sorting algorithms`: http://en.wikipedia.org/wiki/Sorting_algorithm#Popular_sorting_algorithms
