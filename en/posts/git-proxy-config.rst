@@ -14,19 +14,29 @@ A generic description, how to make git uses a specific proxy:
 .. code-block:: bash
   
   #http
-  git config --global http.proxy <protocol>://<user_name>:<password>@<ip_host>:<port>
+  git config --global http.proxy <protocol>://<username>:<password>@<ip_host>:<port>
   
   #https
-  git config --global https.proxy [protocol]_://[username]_:[password]_@[ip_host]_:[port]_
+  git config --global https.proxy <protocol>://<username>:<password>@<ip_host>:<port>
   
   #to disable using proxy
   git config --global --unset http.proxy
 
+protocol
+	Use to be http or https
+
+username
+	The proxy user name
+
+ip_host
+	Proxy host address
+
+port
+	Proxy listening port
+
+password
+	Your proxy password
+
 More info in `official Git configuration`_. 
 
-.. [protocol] Use to be http or https
-.. [username] The proxy user name
-.. [ip_host] Proxy host address
-.. [port] Proxy listening port
-.. [password] Your proxy password
 .. _`official Git configuration`: http://git-scm.com/docs/git-config
