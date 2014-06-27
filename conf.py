@@ -547,7 +547,6 @@ SEARCH_FORM = """
 EXTRA_HEAD_DATA = """
 <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
 <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
-<meta name="google-site-verification" content="XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc" />
 """
 
 BODY_END = """<script>
