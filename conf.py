@@ -608,7 +608,10 @@ $(document).ready(function() {
 # FILE_METADATA_REGEXP = None
 
 # Additional metadata that is added to a post when creating a new_post
-# ADDITIONAL_METADATA = {}
+ADDITIONAL_METADATA = { 
+    'google-site-verification' : 'XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc',
+    'author': 'Carlos Martín Sánchez',
+}
 
 # Nikola supports Twitter Card summaries / Open Graph.
 # Twitter cards make it possible for you to attach media to Tweets
