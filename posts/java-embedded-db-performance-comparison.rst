@@ -1,4 +1,4 @@
-.. title: Bases de Datos Embebidas Java: Performance comparison
+.. title: Bases de Datos Embebidas Java: Comparación de Rendimiento
 .. slug: java-embedded-db-performance-comparison
 .. date: 2014/06/07 18:09:00
 .. tags: Java, database, embedded
