@@ -7,7 +7,7 @@
 I guess that most people come from dynamic content management systems based on:
 
 * send data from browser to server 
-* process the received data, then it stores the processed info into a database (or files) 
+* process the received data, then it stores the info into a database (or files) 
 * the server generate dynamically an answer that is sent to the browser as HTML
 
   * the answer is usually built reading info from a database or files.
@@ -39,7 +39,7 @@ It wasn't a full [CMS]_, because actually it was a blogging system. I can publis
 
 Drupal_
 ========
-A full [CMS]_, I liked it until things began to "break" (I shared the blame with Drupal_). But Drupal_ has everything you expect from a [CMS]_ and more. 
+A full [CMS]_,  I liked it until things began to "break" (Maybe I broke some of them). But Drupal_ has everything you expect from a [CMS]_ and more. 
 
 Wordpress_
 ==========
@@ -50,7 +50,7 @@ CMSdj_
 It is my second attempt to create my own [CMS]_. I had an idea in my mind about how to make the core design (the data model), I still believe in that design. I had also discovered Django_, I liked this framework developed in Python_, who can resist creating their own [CMS]_? 
 CMSdj_ is in Bitbucket_ and is working, it has its internal search engine, theming, comment system, voting system,HTML5_ + CSS3_ views, but: 
 
-* I haven't enough time to develop it, two hours per week at most. 
+* I didn't have enough time to develop it, two hours per week at most. 
 * I still needed a designer.
 
 So, I declared the project CMSdj_ dead out of boredom, although it was supporting my old blog, when I went to write something, I saw my unfinished project, I didn't like it, so I decided to close it and begin a new one.
@@ -60,7 +60,7 @@ Nikola_
 I wanted a static website generator because they are trendy. 
 I tried Jekyll_ because it's the most famous, but I prefer one written in Python_. So, after a quick search I had three finalists: Nikola_, Mynt_ and Pelican_. I chose Nikola_  because I discarded the others:
 * Pelican_ throws some multi-lang problems with the categories. I didn't want to spend time researching about how to fix them. 
-* I love the simplicity of Mynt_, but you have to create your own themes, I never want to miss a designer. 
+* I love the simplicity of Mynt_, but you have to create your own themes. 
 
 
 .. [#] Github_ hosts the generated site, the static files (html, css, images, js).
