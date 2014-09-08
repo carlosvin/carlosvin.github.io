@@ -9,7 +9,7 @@
 
 In `previous C++11 compiler versions`_, we can get a pthread_ mutex_, but we must initialize and destroy in C_ style; in the end you must do more things than just lock/unlock.
 
-`C++11`_ provides `mutex class`_, we just do lock/unclock. I recommend you take a look at `C++11 mutex class`_.
+`C++11`_ provides `mutex class`_, we just lock/unclock the object. I recommend you take a look at `C++11 mutex class`_.
 
 If you still work with `previous C++11 compiler versions`_, a time ago, I made a wrapper class that helps to work with pthread_ mutex_. You just lock/unlock the Mutex object.
 
