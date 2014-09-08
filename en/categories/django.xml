@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog (Django)</title><link>http://carlosvin.github.io/</link><description></description><language>en</language><lastBuildDate>Mon, 08 Sep 2014 13:20:30 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Eliminar etiquetas HTML</title><link>http://carlosvin.github.io/en/posts/delete-html-tags-py-django.html</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;div class="section" id="python"&gt;
+&lt;h2&gt;&lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Función encargada de eliminar las etiquetas HTML:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="c"&gt;#main.py&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;strip_tags&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sub&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r'&amp;lt;[^&amp;gt;]*?&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;''&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Suponiendo que tenemos el siguiente HTML&lt;/p&gt;
+&lt;pre class="code html literal-block"&gt;
+&lt;span class="cp"&gt;&amp;lt;!DOCTYPE HTML&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Title&lt;span class="nt"&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;lt;p&amp;gt;&lt;/span&gt;Paragraph&lt;span class="nt"&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Vamos a hacer una prueba pasandolo como parámetro de la función strip_tags:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="c"&gt;#main.py&lt;/span&gt;
+
+&lt;span class="n"&gt;html_text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"""
+        &amp;lt;!DOCTYPE HTML&amp;gt;
+        &amp;lt;html&amp;gt;
+                &amp;lt;head&amp;gt;
+                        &amp;lt;title&amp;gt;Title&amp;lt;/title&amp;gt;
+                &amp;lt;/head&amp;gt;
+                &amp;lt;body&amp;gt;
+                        &amp;lt;p&amp;gt;Paragraph&amp;lt;/p&amp;gt;
+                &amp;lt;/body&amp;gt;
+        &amp;lt;/html&amp;gt;"""&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;strip_tags&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;html_text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Si ejecutamos el script tenemos como resultado:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+Title
+
+Paragraph
+&lt;/pre&gt;
+&lt;p&gt;Y si con &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; ha sido fácil, vamos a ver con &lt;a class="reference external" href="https://www.djangoproject.com/"&gt;Django&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="django"&gt;
+&lt;h2&gt;&lt;a class="reference external" href="https://www.djangoproject.com/"&gt;Django&lt;/a&gt;&lt;/h2&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="c"&gt;#main.py&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.utils.html&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;strip_tags&lt;/span&gt;
+
+&lt;span class="n"&gt;html_text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"""
+        &amp;lt;!DOCTYPE HTML&amp;gt;
+        &amp;lt;html&amp;gt;
+                &amp;lt;head&amp;gt;
+                        &amp;lt;title&amp;gt;Title&amp;lt;/title&amp;gt;
+                &amp;lt;/head&amp;gt;
+                &amp;lt;body&amp;gt;
+                        &amp;lt;p&amp;gt;Paragraph&amp;lt;/p&amp;gt;
+                &amp;lt;/body&amp;gt;
+        &amp;lt;/html&amp;gt;"""&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;strip_tags&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;html_text&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Mucho más sencillo, porque la función ya está escrita.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/delete-html-tags-py-django.html</guid><pubDate>Tue, 02 Oct 2012 09:30:00 GMT</pubDate></item></channel></rss>
