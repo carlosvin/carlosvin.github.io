@@ -131,14 +131,20 @@
 <li>
 <a class="reference internal" href="gradle-cpp.html#construyendo-con-gradle" id="id11">Construyendo con Gradle</a><ul>
 <li><a class="reference internal" href="gradle-cpp.html#caso-basico" id="id12">Caso básico</a></li>
-<li><a class="reference internal" href="gradle-cpp.html#distintos-sabores" id="id13">Distintos “Sabores”</a></li>
-<li><a class="reference internal" href="gradle-cpp.html#release-o-debug" id="id14">Release o Debug</a></li>
-<li><a class="reference internal" href="gradle-cpp.html#multi-plataforma" id="id15">Multi-plataforma</a></li>
+<li>
+<a class="reference internal" href="gradle-cpp.html#distintos-sabores" id="id13">Distintos “Sabores”</a><ul>
+<li><a class="reference internal" href="gradle-cpp.html#community" id="id14">Community</a></li>
+<li><a class="reference internal" href="gradle-cpp.html#enterprise" id="id15">Enterprise</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="gradle-cpp.html#release-o-debug" id="id16">Release o Debug</a></li>
+<li><a class="reference internal" href="gradle-cpp.html#multi-plataforma" id="id17">Multi-plataforma</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="gradle-cpp.html#conclusiones" id="id16">Conclusiones</a></li>
+<li><a class="reference internal" href="gradle-cpp.html#pruebalo-tu-mism" id="id18">Pruébalo tú mism@</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="gradle-cpp.html#conclusiones" id="id19">Conclusiones</a></li>
 </ul>
 </div>
 <!-- TEASER_END -->
@@ -312,7 +318,7 @@
 <p>Con este fichero tan simple, conseguiremos compilar e instalar nuestra aplicación, en modo Debug para la plataforma donde estamos ejecutando <a class="reference external" href="http://www.gradle.org">Gradle</a>, en mi caso es Linux X64.</p>
 <p>Si ejecutamos desde la raíz de nuestro proyecto <code>gradle task</code>, podremos ver todas las tareas que podemos hacer.</p>
 <p>En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: <code>gradle installMainExecutable</code>.</p>
-<p>Una vez que ha terminado, podemos ejecutar el programa llamando al script  <a class="footnote-reference" href="gradle-cpp.html#id5" id="id2">[2]</a>.</p>
+<p>Una vez que ha terminado, podemos ejecutar el programa llamando al script <code>build/install/mainExecutable/main</code> <a class="footnote-reference" href="gradle-cpp.html#id5" id="id2">[2]</a>.</p>
 <pre class="code bash literal-block">
 <span class="nv">$ </span>build/install/mainExecutable/main
 1.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
@@ -370,8 +376,8 @@
 </span>
 </pre>
 <p>De esta forma se utiliza una cadena u otra en función del “sabor” con que compilemos.</p>
-<p>Si ahora ejecutamos gradle clean task en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos <cite>installMainExecutable</cite> y ahora ha sido reemplazada por <cite>installCommunityMainExecutable</cite> y <cite>installEnterpriseMainExecutable</cite>.</p>
-<p>Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los dos sabores.</p>
+<p>Si ahora ejecutamos <code>gradle clean task</code> en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos <code>installMainExecutable</code> y ahora ha sido reemplazada por <code>installCommunityMainExecutable</code> y <code>installEnterpriseMainExecutable</code>.</p>
+<p>Si ejecutamos estas dos tareas, tendremos nuestra aplicación instalada en los dos sabores.</p>
 <pre class="code bash literal-block">
 <span class="nv">$gradle</span> installEnterpriseMainExecutable installCommunityMainExecutable
 
@@ -394,7 +400,8 @@ BUILD SUCCESSFUL
 Total <span class="nb">time</span>: 9.414 secs
 </pre>
 <p>Ahora podemos ejecutar nuestra aplicación en los dos sabores:</p>
-<p>Community</p>
+<div class="section" id="community">
+<h5><a class="toc-backref" href="gradle-cpp.html#id14">Community</a></h5>
 <pre class="code bash literal-block">
 <span class="nv">$ </span>build/install/mainExecutable/community/main
 1.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
@@ -408,7 +415,9 @@ Total <span class="nb">time</span>: 9.414 secs
 9.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
 10.     Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
 </pre>
-<p>Enterprise</p>
+</div>
+<div class="section" id="enterprise">
+<h5><a class="toc-backref" href="gradle-cpp.html#id15">Enterprise</a></h5>
 <pre class="code bash literal-block">
 <span class="nv">$ </span>build/install/mainExecutable/enterprise/main
 1.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
@@ -423,8 +432,9 @@ Total <span class="nb">time</span>: 9.414 secs
 10.     Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
 </pre>
 </div>
+</div>
 <div class="section" id="release-o-debug">
-<h4><a class="toc-backref" href="gradle-cpp.html#id14">Release o Debug</a></h4>
+<h4><a class="toc-backref" href="gradle-cpp.html#id16">Release o Debug</a></h4>
 <p>Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añadir el modo Release para que active algunas optimizaciones <a class="footnote-reference" href="gradle-cpp.html#id6" id="id3">[3]</a>.</p>
 <pre class="code groovy literal-block">
 <span class="c1">// build.gradle
@@ -438,12 +448,12 @@ Total <span class="nb">time</span>: 9.414 secs
 
 <span class="c1">// ... the rest of file below doesn't change</span>
 </pre>
-<p>Si ahora ejecutamos gradle clean task veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo <cite>installCommunityMainExecutable</cite> se habrá desdoblado en <cite>installDebugCommunityMainExecutable</cite> y <cite>installReleaseCommunityMainExecutable</cite>.</p>
+<p>Si ahora ejecutamos <code>gradle clean task</code> veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo <code>installCommunityMainExecutable</code> se habrá desdoblado en <code>installDebugCommunityMainExecutable</code> y <code>installReleaseCommunityMainExecutable</code>.</p>
 </div>
 <div class="section" id="multi-plataforma">
-<h4><a class="toc-backref" href="gradle-cpp.html#id15">Multi-plataforma</a></h4>
-<p>También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras aplicaciones. El proceso es el mismo, simplemente tenemos que dar te alta las aplicaciones con las que vamos a trabajar.</p>
-<p>Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( <a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas">Toolchains</a> ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias en 32 bits.</p>
+<h4><a class="toc-backref" href="gradle-cpp.html#id17">Multi-plataforma</a></h4>
+<p>También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras plataformas. El proceso es el mismo, simplemente tenemos que dar te alta las plataformas que vamos a soportar.</p>
+<p>Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( <a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas">Toolchains</a> ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias para 32 bits.</p>
 <pre class="code groovy literal-block">
 <span class="c1">// build.gradle
 </span>
@@ -486,12 +496,31 @@ Total <span class="nb">time</span>: 9.414 secs
     <span class="o">}</span>
 <span class="o">}</span>
 </pre>
-<p>Ejecutando <cite>gradle clean task</cite> podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.</p>
+<p>Ejecutando <code>gradle clean task</code> podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.</p>
 </div>
+</div>
+<div class="section" id="pruebalo-tu-mism">
+<h3><a class="toc-backref" href="gradle-cpp.html#id18">Pruébalo tú mism@</a></h3>
+<p>El proyecto se encuentra en <a class="reference external" href="https://github.com/carlosvin/cpp_gradle">https://github.com/carlosvin/cpp_gradle</a>.</p>
+<p>Para poder probar necesitas:</p>
+<ul class="simple">
+<li>Tener instalado <a class="reference external" href="http://www.java.com">Java</a> a partir de la versión 6.</li>
+<li>Tener algún compilador instalado (por ejemplo <a class="reference external" href="https://gcc.gnu.org/">GCC</a>)</li>
+</ul>
+<p>Solo tienes que seguir los siguientes pasos:</p>
+<ol class="arabic simple">
+<li><code>git clone git@github.com:carlosvin/cpp_gradle.git</code></li>
+<li><code>cd cpp_gradle</code></li>
+<li>
+<code>./gradlew task</code> o <cite>./gradlew.bat task</cite> si estás en Windows. De esta forma verás todas las tareas que te ofrece <a class="reference external" href="http://www.gradle.org">Gradle</a> para este proyecto. La primera vez tardará un poco porque se descarga una versión de <a class="reference external" href="http://www.gradle.org">Gradle</a>.</li>
+<li>Si estás en una máquina de 64 bits, por ejemplo utiliza este comando para compilar e instalar la aplicación <code>./gradlew installX64ReleaseEnterpriseMainExecutable</code>.</li>
+<li>Ejecuta la aplicación que acabas de construir <code>build/install/mainExecutable/x64ReleaseEnterprise/main</code>
+</li>
+</ol>
 </div>
 </div>
 <div class="section" id="conclusiones">
-<h2><a class="toc-backref" href="gradle-cpp.html#id16">Conclusiones</a></h2>
+<h2><a class="toc-backref" href="gradle-cpp.html#id19">Conclusiones</a></h2>
 <p>Con una configuración mínima, tenemos muchas posibilidades de construcción de aplicaciones nativas multi-plataforma.</p>
 <p>Tiene un futuro prometedor, veremos como termina. Aunque si sigue los pasos del soporte para <a class="reference external" href="http://www.java.com">Java</a> o <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a>, seguro que llega a buen puerto.</p>
 <p>Podemos utilizar otras características de <a class="reference external" href="http://www.gradle.org">Gradle</a> y aplicarlas a nuestros proyectos C++, como análisis estáticos de código, generación de informes (pruebas, cobertura, calidad, etc.), fácil incorporación a sistemas de integración continua.</p>
@@ -500,7 +529,8 @@ Total <span class="nb">time</span>: 9.414 secs
 <li>No debemos utilizar en entornos reales de desarrollo, puede acarrear muchos dolores de cabeza.</li>
 <li>La forma de definir el fichero build.gradle para esta característica puede cambiar.</li>
 </ul>
-<p>Todo el ejemplo se encuentra en <a class="reference external" href="https://github.com/carlosvin/cpp_gradle">https://github.com/carlosvin/cpp_gradle</a>.</p>
+<p>Todo el ejemplo se encuentra en <a class="reference external" href="https://github.com/carlosvin/cpp_gradle">https://github.com/carlosvin/cpp_gradle</a>.
+Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.</p>
 <table class="docutils citation" frame="void" id="n" rules="none">
 <colgroup>
 <col class="label">

@@ -144,7 +144,7 @@ Si ejecutamos desde la raíz de nuestro proyecto :code:`gradle task`, podremos v
 
 En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: :code:`gradle installMainExecutable`.
 
-Una vez que ha terminado, podemos ejecutar el programa llamando al script  [2]_.
+Una vez que ha terminado, podemos ejecutar el programa llamando al script :code:`build/install/mainExecutable/main` [2]_.
 
 .. code-block:: bash
 
@@ -211,9 +211,9 @@ Además tenemos que preparar nuestra aplicación para utilizar estos parámetros
 
 De esta forma se utiliza una cadena u otra en función del “sabor” con que compilemos.
 
-Si ahora ejecutamos gradle clean task en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos `installMainExecutable` y ahora ha sido reemplazada por `installCommunityMainExecutable` y `installEnterpriseMainExecutable`.
+Si ahora ejecutamos :code:`gradle clean task` en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos :code:`installMainExecutable` y ahora ha sido reemplazada por :code:`installCommunityMainExecutable` y :code:`installEnterpriseMainExecutable`.
 
-Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los dos sabores.
+Si ejecutamos estas dos tareas, tendremos nuestra aplicación instalada en los dos sabores.
 
 .. code-block:: bash
 
@@ -240,6 +240,7 @@ Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los 
 Ahora podemos ejecutar nuestra aplicación en los dos sabores:
 
 Community
++++++++++
 
 .. code-block:: bash
 
@@ -257,6 +258,7 @@ Community
 
 
 Enterprise
+++++++++++
 
 .. code-block:: bash
 
@@ -290,14 +292,14 @@ Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añad
     
     // ... the rest of file below doesn't change 
 
-Si ahora ejecutamos gradle clean task veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo `installCommunityMainExecutable` se habrá desdoblado en `installDebugCommunityMainExecutable` y `installReleaseCommunityMainExecutable`.
+Si ahora ejecutamos :code:`gradle clean task` veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo :code:`installCommunityMainExecutable` se habrá desdoblado en :code:`installDebugCommunityMainExecutable` y :code:`installReleaseCommunityMainExecutable`.
 
 Multi-plataforma
 ~~~~~~~~~~~~~~~~
 
-También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras aplicaciones. El proceso es el mismo, simplemente tenemos que dar te alta las aplicaciones con las que vamos a trabajar.
+También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras plataformas. El proceso es el mismo, simplemente tenemos que dar te alta las plataformas que vamos a soportar.
 
-Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( Toolchains_ ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias en 32 bits.
+Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( Toolchains_ ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias para 32 bits.
 
 
 .. code-block:: groovy
@@ -343,7 +345,25 @@ Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herra
         }
     }
 
-Ejecutando `gradle clean task` podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.
+Ejecutando :code:`gradle clean task` podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.
+
+Pruébalo tú mism@
+-----------------
+
+El proyecto se encuentra en https://github.com/carlosvin/cpp_gradle. 
+
+Para poder probar necesitas:
+
+- Tener instalado Java_ a partir de la versión 6.
+- Tener algún compilador instalado (por ejemplo GCC_)
+
+Solo tienes que seguir los siguientes pasos:
+
+1. :code:`git clone git@github.com:carlosvin/cpp_gradle.git`
+2. :code:`cd cpp_gradle`
+3. :code:`./gradlew task` o `./gradlew.bat task` si estás en Windows. De esta forma verás todas las tareas que te ofrece Gradle_ para este proyecto. La primera vez tardará un poco porque se descarga una versión de Gradle_.
+4. Si estás en una máquina de 64 bits, por ejemplo utiliza este comando para compilar e instalar la aplicación :code:`./gradlew installX64ReleaseEnterpriseMainExecutable`.
+5. Ejecuta la aplicación que acabas de construir :code:`build/install/mainExecutable/x64ReleaseEnterprise/main`
 
 Conclusiones
 ============
@@ -360,6 +380,7 @@ Gradle_ para C++ es una característica que actualmente está en desarrollo, por
 -  La forma de definir el fichero build.gradle para esta característica puede cambiar.
 
 Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
+Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
 
 .. _SCons: http://www.scons.org
 .. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
@@ -372,6 +393,8 @@ Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 .. _Java: http://www.java.com
 .. _Makefile: http://es.wikipedia.org/wiki/Make
 .. _Android: http://developer.android.com/sdk/installing/studio-build.html
+.. _`Instala Gradle`: http://www.gradle.org/docs/current/userguide/installation.html
+.. _GCC: https://gcc.gnu.org/
 
 .. [n] 'n' es un número entero positivo
 
