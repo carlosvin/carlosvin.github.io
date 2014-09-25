@@ -142,9 +142,7 @@ En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcio
 
 Una vez que ha terminado, podemos ejecutar el programa llamando al script  [2]_.
 
-[H]
-
-::
+.. code-block:: bash
 
     $ build/install/mainExecutable/main.bat
     1. Hello Mr. Pepito (Community) 
