@@ -137,7 +137,9 @@
 <col class="field-body">
 <tbody valign="top"><tr class="field">
 <th class="field-name">gradle-cpp:</th>
-<td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<td class="field-body">
+<p class="first">Directorio raíz.</p>
+<table class="last docutils field-list" frame="void" rules="none">
 <col class="field-name">
 <col class="field-body">
 <tbody valign="top">
@@ -172,7 +174,7 @@
 <col class="field-body">
 <tbody valign="top"><tr class="field">
 <th class="field-name">Hello.cpp:</th>
-<td class="field-body"></td>
+<td class="field-body">Implementación de la clase Hello.</td>
 </tr></tbody>
 </table>
 </td>
@@ -187,11 +189,11 @@
 <tbody valign="top">
 <tr class="field">
 <th class="field-name">Hello.h:</th>
-<td class="field-body"></td>
+<td class="field-body">Declaración de la Clase Hello</td>
 </tr>
 <tr class="field">
 <th class="field-name">Msg.h:</th>
-<td class="field-body"></td>
+<td class="field-body">Declaración de constantes.</td>
 </tr>
 </tbody>
 </table>
@@ -217,7 +219,7 @@
 <col class="field-body">
 <tbody valign="top"><tr class="field">
 <th class="field-name">main.cpp:</th>
-<td class="field-body"></td>
+<td class="field-body">Código fuente con la función main.</td>
 </tr></tbody>
 </table>
 </td>
@@ -236,16 +238,17 @@
 </td>
 </tr>
 </tbody>
-</table></td>
+</table>
+</td>
 </tr></tbody>
 </table>
 </div>
 <div class="section" id="la-aplicacion-c">
-<h3>La aplicación C++</h3>
+<h3>La Aplicación C++</h3>
 <p>Va a consistir en un ejecutable que hará uso de la funcionalidad de la librería ’hello’.</p>
-<p>[H]</p>
 <pre class="code cpp literal-block">
-<span class="cp">#include "Hello.h"
+<span class="c1">// main.cpp
+</span><span class="cp">#include "Hello.h"
 </span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">Hello</span> <span class="n">hello</span> <span class="p">(</span><span class="s">"Pepito"</span><span class="p">);</span>
@@ -254,9 +257,9 @@
 <span class="p">}</span>
 </pre>
 <p>Esta librería permite saludar <span class="math">\(n\)</span> veces a una persona especificada en su constructor.</p>
-<p>[H]</p>
 <pre class="code cpp literal-block">
-<span class="k">class</span> <span class="nc">Hello</span>
+<span class="c1">// Hello.h
+</span><span class="k">class</span> <span class="nc">Hello</span>
 <span class="p">{</span>
     <span class="nl">private:</span>
         <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">who</span><span class="p">;</span>
@@ -271,9 +274,9 @@
 <div class="section" id="caso-basico">
 <h4>Caso básico</h4>
 <p>Lo único que necesitamos para construir nuestra aplicación con <a class="reference external" href="http://www.gradle.org">Gradle</a> es: tener <a class="reference external" href="http://www.gradle.org">Gradle</a> <a class="footnote-reference" href="gradle-cpp.html#id4" id="id1">[1]</a> y el fichero build.gradle.</p>
-<p>[H]</p>
 <pre class="code groovy literal-block">
-<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
+<span class="c1">// build.gradle
+</span><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
 
 <span class="n">libraries</span> <span class="o">{</span>
     <span class="n">hello</span> <span class="o">{}</span>
@@ -291,7 +294,7 @@
 <p>En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: gradle installMainExecutable.</p>
 <p>Una vez que ha terminado, podemos ejecutar el programa llamando al script  <a class="footnote-reference" href="gradle-cpp.html#id5" id="id2">[2]</a>.</p>
 <pre class="code bash literal-block">
-<span class="nv">$ </span>build/install/mainExecutable/main.bat
+<span class="nv">$ </span>build/install/mainExecutable/main
 1.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
 2.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
 3.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
@@ -307,66 +310,50 @@
 <div class="section" id="distintos-sabores">
 <h4>Distintos “Sabores”</h4>
 <p>Con unas pocas líneas más, podemos generar distintas versiones de la misma aplicación, en nuestro ejemplo vamos a generar una versión “Community” y otra “Enterprise”.</p>
-<div class="system-message">
-<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 157)</p>
-<p>Error in "code-block" directive:
-maximum 1 argument(s) allowed, 3 supplied.</p>
-<pre class="literal-block">
-.. code-block:: groovy
-        :name: build.gradle
-
-    apply plugin: 'cpp'
-    model {
-        flavors {
-            community
-            enterprise
-        }
-    }
-    libraries {
-        hello {
-            binaries.all {
-                if (flavor == flavors.enterprise) {
-                        cppCompiler.define "ENTERPRISE"
-                }
-            }
-        }
-    }
-    executables {
-        main {
-            binaries.all {
-                lib libraries.hello.shared
-            }
-        }
-    }
-
+<pre class="code groovy literal-block">
+<span class="c1">//build.gradle
+</span><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
+<span class="n">model</span> <span class="o">{</span>
+    <span class="n">flavors</span> <span class="o">{</span>
+        <span class="n">community</span>
+        <span class="n">enterprise</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="n">libraries</span> <span class="o">{</span>
+    <span class="n">hello</span> <span class="o">{</span>
+        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">flavor</span> <span class="o">==</span> <span class="n">flavors</span><span class="o">.</span><span class="na">enterprise</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">cppCompiler</span><span class="o">.</span><span class="na">define</span> <span class="s2">"ENTERPRISE"</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="n">executables</span> <span class="o">{</span>
+    <span class="n">main</span> <span class="o">{</span>
+        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+            <span class="n">lib</span> <span class="n">libraries</span><span class="o">.</span><span class="na">hello</span><span class="o">.</span><span class="na">shared</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre>
-</div>
 <p>Además tenemos que preparar nuestra aplicación para utilizar estos parámetros de compilación.</p>
-<div class="system-message">
-<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 187)</p>
-<p>Error in "code-block" directive:
-maximum 1 argument(s) allowed, 3 supplied.</p>
-<pre class="literal-block">
-.. code-block:: cpp
-        :name: Msg.h
+<pre class="code cpp literal-block">
+<span class="c1">// Msg.h
+</span>
+<span class="cp">#ifdef ENTERPRISE
+</span><span class="k">static</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">EDITION</span> <span class="o">=</span> <span class="s">"Enterprise"</span><span class="p">;</span>
 
-    #ifdef ENTERPRISE
-    static const char * EDITION = "Enterprise";
+<span class="cp">#else
+</span><span class="k">static</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">EDITION</span> <span class="o">=</span> <span class="s">"Community"</span><span class="p">;</span>
 
-    #else
-    static const char * EDITION = "Community";
-
-    #endif
-
-
+<span class="cp">#endif
+</span>
 </pre>
-</div>
 <p>De esta forma se utiliza una cadena u otra en función del “sabor” con que compilemos.</p>
 <p>Si ahora ejecutamos gradle clean task en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos <cite>installMainExecutable</cite> y ahora ha sido reemplazada por <cite>installCommunityMainExecutable</cite> y <cite>installEnterpriseMainExecutable</cite>.</p>
 <p>Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los dos sabores.</p>
-<p>[H]</p>
-<pre class="literal-block">
-$gradle installEnterpriseMainExecutable installCommunityMainExecutable
+<pre class="code bash literal-block">
+<span class="nv">$gradle</span> installEnterpriseMainExecutable installCommunityMainExecutable
 
 :compileEnterpriseHelloSharedLibraryHelloCpp
 :linkEnterpriseHelloSharedLibrary
@@ -384,11 +371,12 @@ $gradle installEnterpriseMainExecutable installCommunityMainExecutable
 :installCommunityMainExecutable
 
 BUILD SUCCESSFUL
-Total time: 9.414 secs
+Total <span class="nb">time</span>: 9.414 secs
 </pre>
 <p>Ahora podemos ejecutar nuestra aplicación en los dos sabores:</p>
+<p>Community</p>
 <pre class="code bash literal-block">
-<span class="nv">$ </span>build/install/mainExecutable/community/main.bat
+<span class="nv">$ </span>build/install/mainExecutable/community/main
 1.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
 2.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
 3.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
@@ -400,8 +388,9 @@ Total time: 9.414 secs
 9.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
 10.     Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
 </pre>
+<p>Enterprise</p>
 <pre class="code bash literal-block">
-<span class="nv">$ </span>build/install/mainExecutable/enterprise/main.bat
+<span class="nv">$ </span>build/install/mainExecutable/enterprise/main
 1.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
 2.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
 3.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
@@ -417,80 +406,66 @@ Total time: 9.414 secs
 <div class="section" id="release-o-debug">
 <h4>Release o Debug</h4>
 <p>Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añadir el modo Release para que active algunas optimizaciones <a class="footnote-reference" href="gradle-cpp.html#id6" id="id3">[3]</a>.</p>
-<div class="system-message">
-<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 264)</p>
-<p>Error in "code-block" directive:
-maximum 1 argument(s) allowed, 3 supplied.</p>
-<pre class="literal-block">
-.. code-block:: groovy
-        :name: build.gradle
+<pre class="code groovy literal-block">
+<span class="c1">// build.gradle
+</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
+<span class="n">model</span> <span class="o">{</span>
+    <span class="n">buildTypes</span> <span class="o">{</span>
+        <span class="n">debug</span>
+        <span class="n">release</span>
+    <span class="o">}</span>
 
-    apply plugin: 'cpp'
-    model {
-        buildTypes {
-            debug
-            release
-        }
-    // ... the rest of file below doesn't change
-
+<span class="c1">// ... the rest of file below doesn't change</span>
 </pre>
-</div>
 <p>Si ahora ejecutamos gradle clean task veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo <cite>installCommunityMainExecutable</cite> se habrá desdoblado en <cite>installDebugCommunityMainExecutable</cite> y <cite>installReleaseCommunityMainExecutable</cite>.</p>
 </div>
 <div class="section" id="multi-plataforma">
 <h4>Multi-plataforma</h4>
 <p>También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras aplicaciones. El proceso es el mismo, simplemente tenemos que dar te alta las aplicaciones con las que vamos a trabajar.</p>
 <p>Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( <a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas">Toolchains</a> ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias en 32 bits.</p>
-<div class="system-message">
-<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 285)</p>
-<p>Error in "code-block" directive:
-maximum 1 argument(s) allowed, 3 supplied.</p>
-<pre class="literal-block">
-.. code-block:: groovy
-        :name: build.gradle
-
-
-    apply plugin: 'cpp'
-    model {
-        buildTypes {
-            debug
-            release
-        }
-             platforms {
-            x86 {
-                architecture "x86"
-            }
-            x64 {
-                architecture "x86_64"
-            }
-            itanium {
-                architecture "ia-64"
-            }
-        }
-        flavors {
-            community
-            enterprise
-        }
-    }
-    libraries {
-        hello {
-            binaries.all {
-                if (flavor == flavors.enterprise) {
-                    cppCompiler.define "ENTERPRISE"
-                }
-            }
-        }
-    }
-    executables {
-        main {
-            binaries.all {
-                lib libraries.hello.shared
-            }
-        }
-    }
-
+<pre class="code groovy literal-block">
+<span class="c1">// build.gradle
+</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
+<span class="n">model</span> <span class="o">{</span>
+    <span class="n">buildTypes</span> <span class="o">{</span>
+        <span class="n">debug</span>
+        <span class="n">release</span>
+    <span class="o">}</span>
+         <span class="n">platforms</span> <span class="o">{</span>
+        <span class="n">x86</span> <span class="o">{</span>
+            <span class="n">architecture</span> <span class="s2">"x86"</span>
+        <span class="o">}</span>
+        <span class="n">x64</span> <span class="o">{</span>
+            <span class="n">architecture</span> <span class="s2">"x86_64"</span>
+        <span class="o">}</span>
+        <span class="n">itanium</span> <span class="o">{</span>
+            <span class="n">architecture</span> <span class="s2">"ia-64"</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="n">flavors</span> <span class="o">{</span>
+        <span class="n">community</span>
+        <span class="n">enterprise</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="n">libraries</span> <span class="o">{</span>
+    <span class="n">hello</span> <span class="o">{</span>
+        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">flavor</span> <span class="o">==</span> <span class="n">flavors</span><span class="o">.</span><span class="na">enterprise</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">cppCompiler</span><span class="o">.</span><span class="na">define</span> <span class="s2">"ENTERPRISE"</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="n">executables</span> <span class="o">{</span>
+    <span class="n">main</span> <span class="o">{</span>
+        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+            <span class="n">lib</span> <span class="n">libraries</span><span class="o">.</span><span class="na">hello</span><span class="o">.</span><span class="na">shared</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre>
-</div>
 <p>Ejecutando <cite>gradle clean task</cite> podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.</p>
 </div>
 </div>

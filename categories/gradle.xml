@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog (Gradle)</title><link>http://carlosvin.github.io/</link><description></description><language>es</language><lastBuildDate>Thu, 25 Sep 2014 18:34:45 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Construir un proyecto C++ con Gradle</title><link>http://carlosvin.github.io/posts/gradle-cpp.html</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;div class="section" id="introduccion"&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog (Gradle)</title><link>http://carlosvin.github.io/</link><description></description><language>es</language><lastBuildDate>Thu, 25 Sep 2014 18:49:34 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Construir un proyecto C++ con Gradle</title><link>http://carlosvin.github.io/posts/gradle-cpp.html</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;div class="section" id="introduccion"&gt;
 &lt;h2&gt;Introducción&lt;/h2&gt;
 &lt;p&gt;La construcción, gestión de dependencias y distribución de mis proyectos es algo que cada vez me preocupa más, me gustaría encontrar una herramienta que unificara este proceso y fuese independiente del lenguaje, lo más parecido con lo que he trabajado ha sido &lt;a class="reference external" href="http://www.scons.org"&gt;SCons&lt;/a&gt;, &lt;a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction"&gt;Autotools&lt;/a&gt;, &lt;a class="reference external" href="http://ant.apache.org"&gt;Ant&lt;/a&gt;, &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt; y últimamente &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Llevo un tiempo haciendo algunas cosas con &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;, pero siempre centrado en proyectos &lt;a class="reference external" href="http://www.java.com"&gt;Java&lt;/a&gt; utilizándolo como reemplazo a &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt;, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos &lt;a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html"&gt;Android&lt;/a&gt; y he sufrido la pareja &lt;a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html"&gt;Android Studio + Gradle&lt;/a&gt; en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.&lt;/p&gt;
@@ -19,21 +19,22 @@
 &lt;div class="section" id="estructura-del-proyecto"&gt;
 &lt;h3&gt;Estructura del proyecto&lt;/h3&gt;
 &lt;p&gt;Podemos crear la estructura que queramos, pero resulta más fácil seguir la que espera &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;, para no tener que especificar donde está el códigofuente. Esta es la estructura del proyecto:&lt;/p&gt;
-&lt;table class="docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;gradle-cpp:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;table class="first last docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;build.gradle:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Fichero donde se configura el proyecto Gradle, el equivalente al build.xml de &lt;a class="reference external" href="http://ant.apache.org"&gt;Ant&lt;/a&gt;, al &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Make"&gt;Makefile&lt;/a&gt; de C/C++ o al pom.xml de &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt;.&lt;/p&gt;
+&lt;table class="docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;gradle-cpp:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Directorio raíz.&lt;/p&gt;
+&lt;table class="last docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;build.gradle:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Fichero donde se configura el proyecto Gradle, el equivalente al build.xml de &lt;a class="reference external" href="http://ant.apache.org"&gt;Ant&lt;/a&gt;, al &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Make"&gt;Makefile&lt;/a&gt; de C/C++ o al pom.xml de &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt;.&lt;/p&gt;
 &lt;/td&gt;
 &lt;/tr&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;src:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Carpeta donde va todo el código fuente&lt;/p&gt;
 &lt;table class="docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;hello:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Carpeta que contiene el módulo que va a ser la librería hello.&lt;/p&gt;
 &lt;table class="docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;cpp:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Carpeta donde van los fuentes C++.&lt;/p&gt;
-&lt;table class="docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Hello.cpp:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;/td&gt;
+&lt;table class="docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Hello.cpp:&lt;/th&gt;&lt;td class="field-body"&gt;Implementación de la clase Hello.&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;headers:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Carpeta donde van los ficheros de cabeceras.&lt;/p&gt;
-&lt;table class="last docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Hello.h:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Msg.h:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;/td&gt;
+&lt;table class="last docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Hello.h:&lt;/th&gt;&lt;td class="field-body"&gt;Declaración de la Clase Hello&lt;/td&gt;
+&lt;/tr&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Msg.h:&lt;/th&gt;&lt;td class="field-body"&gt;Declaración de constantes.&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;main:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Carpeta que contiene el módulo que será el ejecutable que utilice la librería hello.&lt;/p&gt;
 &lt;table class="last docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;cpp:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;p class="first"&gt;Carpeta donde van los fuentes C++.&lt;/p&gt;
-&lt;table class="last docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;main.cpp:&lt;/th&gt;&lt;td class="field-body"&gt;&lt;/td&gt;
+&lt;table class="last docutils field-list" frame="void" rules="none"&gt;&lt;col class="field-name"&gt;&lt;col class="field-body"&gt;&lt;tbody valign="top"&gt;&lt;tr class="field"&gt;&lt;th class="field-name"&gt;main.cpp:&lt;/th&gt;&lt;td class="field-body"&gt;Código fuente con la función main.&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;
@@ -42,11 +43,11 @@
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;
 &lt;div class="section" id="la-aplicacion-c"&gt;
-&lt;h3&gt;La aplicación C++&lt;/h3&gt;
+&lt;h3&gt;La Aplicación C++&lt;/h3&gt;
 &lt;p&gt;Va a consistir en un ejecutable que hará uso de la funcionalidad de la librería ’hello’.&lt;/p&gt;
-&lt;p&gt;[H]&lt;/p&gt;
 &lt;pre class="code cpp literal-block"&gt;
-&lt;span class="cp"&gt;#include "Hello.h"
+&lt;span class="c1"&gt;// main.cpp
+&lt;/span&gt;&lt;span class="cp"&gt;#include "Hello.h"
 &lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;Hello&lt;/span&gt; &lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Pepito"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -55,9 +56,9 @@
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;
 &lt;p&gt;Esta librería permite saludar &lt;span class="math"&gt;\(n\)&lt;/span&gt; veces a una persona especificada en su constructor.&lt;/p&gt;
-&lt;p&gt;[H]&lt;/p&gt;
 &lt;pre class="code cpp literal-block"&gt;
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Hello&lt;/span&gt;
+&lt;span class="c1"&gt;// Hello.h
+&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Hello&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nl"&gt;private:&lt;/span&gt;
         &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;who&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -72,9 +73,9 @@
 &lt;div class="section" id="caso-basico"&gt;
 &lt;h4&gt;Caso básico&lt;/h4&gt;
 &lt;p&gt;Lo único que necesitamos para construir nuestra aplicación con &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt; es: tener &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt; &lt;a class="footnote-reference" href="http://carlosvin.github.io/posts/gradle-cpp.html#id4" id="id1"&gt;[1]&lt;/a&gt; y el fichero build.gradle.&lt;/p&gt;
-&lt;p&gt;[H]&lt;/p&gt;
 &lt;pre class="code groovy literal-block"&gt;
-&lt;span class="n"&gt;apply&lt;/span&gt; &lt;span class="nl"&gt;plugin:&lt;/span&gt; &lt;span class="s1"&gt;'cpp'&lt;/span&gt;
+&lt;span class="c1"&gt;// build.gradle
+&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt; &lt;span class="nl"&gt;plugin:&lt;/span&gt; &lt;span class="s1"&gt;'cpp'&lt;/span&gt;
 
 &lt;span class="n"&gt;libraries&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="o"&gt;{}&lt;/span&gt;
@@ -92,7 +93,7 @@
 &lt;p&gt;En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: gradle installMainExecutable.&lt;/p&gt;
 &lt;p&gt;Una vez que ha terminado, podemos ejecutar el programa llamando al script  &lt;a class="footnote-reference" href="http://carlosvin.github.io/posts/gradle-cpp.html#id5" id="id2"&gt;[2]&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;build/install/mainExecutable/main.bat
+&lt;span class="nv"&gt;$ &lt;/span&gt;build/install/mainExecutable/main
 1.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
 2.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
 3.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
@@ -108,66 +109,50 @@
 &lt;div class="section" id="distintos-sabores"&gt;
 &lt;h4&gt;Distintos “Sabores”&lt;/h4&gt;
 &lt;p&gt;Con unas pocas líneas más, podemos generar distintas versiones de la misma aplicación, en nuestro ejemplo vamos a generar una versión “Community” y otra “Enterprise”.&lt;/p&gt;
-&lt;div class="system-message"&gt;
-&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 157)&lt;/p&gt;
-&lt;p&gt;Error in "code-block" directive:
-maximum 1 argument(s) allowed, 3 supplied.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. code-block:: groovy
-        :name: build.gradle
-
-    apply plugin: 'cpp'
-    model {
-        flavors {
-            community
-            enterprise
-        }
-    }
-    libraries {
-        hello {
-            binaries.all {
-                if (flavor == flavors.enterprise) {
-                        cppCompiler.define "ENTERPRISE"
-                }
-            }
-        }
-    }
-    executables {
-        main {
-            binaries.all {
-                lib libraries.hello.shared
-            }
-        }
-    }
-
+&lt;pre class="code groovy literal-block"&gt;
+&lt;span class="c1"&gt;//build.gradle
+&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt; &lt;span class="nl"&gt;plugin:&lt;/span&gt; &lt;span class="s1"&gt;'cpp'&lt;/span&gt;
+&lt;span class="n"&gt;model&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;flavors&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;community&lt;/span&gt;
+        &lt;span class="n"&gt;enterprise&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;libraries&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;binaries&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;all&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;flavor&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;flavors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;enterprise&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+                    &lt;span class="n"&gt;cppCompiler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;define&lt;/span&gt; &lt;span class="s2"&gt;"ENTERPRISE"&lt;/span&gt;
+            &lt;span class="o"&gt;}&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;executables&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;main&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;binaries&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;all&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;lib&lt;/span&gt; &lt;span class="n"&gt;libraries&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;hello&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;shared&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;
-&lt;/div&gt;
 &lt;p&gt;Además tenemos que preparar nuestra aplicación para utilizar estos parámetros de compilación.&lt;/p&gt;
-&lt;div class="system-message"&gt;
-&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 187)&lt;/p&gt;
-&lt;p&gt;Error in "code-block" directive:
-maximum 1 argument(s) allowed, 3 supplied.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. code-block:: cpp
-        :name: Msg.h
+&lt;pre class="code cpp literal-block"&gt;
+&lt;span class="c1"&gt;// Msg.h
+&lt;/span&gt;
+&lt;span class="cp"&gt;#ifdef ENTERPRISE
+&lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;EDITION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"Enterprise"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    #ifdef ENTERPRISE
-    static const char * EDITION = "Enterprise";
+&lt;span class="cp"&gt;#else
+&lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;EDITION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"Community"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-    #else
-    static const char * EDITION = "Community";
-
-    #endif
-
-
+&lt;span class="cp"&gt;#endif
+&lt;/span&gt;
 &lt;/pre&gt;
-&lt;/div&gt;
 &lt;p&gt;De esta forma se utiliza una cadena u otra en función del “sabor” con que compilemos.&lt;/p&gt;
 &lt;p&gt;Si ahora ejecutamos gradle clean task en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos &lt;cite&gt;installMainExecutable&lt;/cite&gt; y ahora ha sido reemplazada por &lt;cite&gt;installCommunityMainExecutable&lt;/cite&gt; y &lt;cite&gt;installEnterpriseMainExecutable&lt;/cite&gt;.&lt;/p&gt;
 &lt;p&gt;Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los dos sabores.&lt;/p&gt;
-&lt;p&gt;[H]&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-$gradle installEnterpriseMainExecutable installCommunityMainExecutable
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$gradle&lt;/span&gt; installEnterpriseMainExecutable installCommunityMainExecutable
 
 :compileEnterpriseHelloSharedLibraryHelloCpp
 :linkEnterpriseHelloSharedLibrary
@@ -185,11 +170,12 @@ $gradle installEnterpriseMainExecutable installCommunityMainExecutable
 :installCommunityMainExecutable
 
 BUILD SUCCESSFUL
-Total time: 9.414 secs
+Total &lt;span class="nb"&gt;time&lt;/span&gt;: 9.414 secs
 &lt;/pre&gt;
 &lt;p&gt;Ahora podemos ejecutar nuestra aplicación en los dos sabores:&lt;/p&gt;
+&lt;p&gt;Community&lt;/p&gt;
 &lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;build/install/mainExecutable/community/main.bat
+&lt;span class="nv"&gt;$ &lt;/span&gt;build/install/mainExecutable/community/main
 1.      Hello Mr. Pepito        &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
 2.      Hello Mr. Pepito        &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
 3.      Hello Mr. Pepito        &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
@@ -201,8 +187,9 @@ Total time: 9.414 secs
 9.      Hello Mr. Pepito        &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
 10.     Hello Mr. Pepito        &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
+&lt;p&gt;Enterprise&lt;/p&gt;
 &lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;build/install/mainExecutable/enterprise/main.bat
+&lt;span class="nv"&gt;$ &lt;/span&gt;build/install/mainExecutable/enterprise/main
 1.      Hello Mr. Pepito        &lt;span class="o"&gt;(&lt;/span&gt;Enterprise&lt;span class="o"&gt;)&lt;/span&gt;
 2.      Hello Mr. Pepito        &lt;span class="o"&gt;(&lt;/span&gt;Enterprise&lt;span class="o"&gt;)&lt;/span&gt;
 3.      Hello Mr. Pepito        &lt;span class="o"&gt;(&lt;/span&gt;Enterprise&lt;span class="o"&gt;)&lt;/span&gt;
@@ -218,80 +205,66 @@ Total time: 9.414 secs
 &lt;div class="section" id="release-o-debug"&gt;
 &lt;h4&gt;Release o Debug&lt;/h4&gt;
 &lt;p&gt;Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añadir el modo Release para que active algunas optimizaciones &lt;a class="footnote-reference" href="http://carlosvin.github.io/posts/gradle-cpp.html#id6" id="id3"&gt;[3]&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="system-message"&gt;
-&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 264)&lt;/p&gt;
-&lt;p&gt;Error in "code-block" directive:
-maximum 1 argument(s) allowed, 3 supplied.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. code-block:: groovy
-        :name: build.gradle
+&lt;pre class="code groovy literal-block"&gt;
+&lt;span class="c1"&gt;// build.gradle
+&lt;/span&gt;
+&lt;span class="n"&gt;apply&lt;/span&gt; &lt;span class="nl"&gt;plugin:&lt;/span&gt; &lt;span class="s1"&gt;'cpp'&lt;/span&gt;
+&lt;span class="n"&gt;model&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;buildTypes&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;debug&lt;/span&gt;
+        &lt;span class="n"&gt;release&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
 
-    apply plugin: 'cpp'
-    model {
-        buildTypes {
-            debug
-            release
-        }
-    // ... the rest of file below doesn't change
-
+&lt;span class="c1"&gt;// ... the rest of file below doesn't change&lt;/span&gt;
 &lt;/pre&gt;
-&lt;/div&gt;
 &lt;p&gt;Si ahora ejecutamos gradle clean task veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo &lt;cite&gt;installCommunityMainExecutable&lt;/cite&gt; se habrá desdoblado en &lt;cite&gt;installDebugCommunityMainExecutable&lt;/cite&gt; y &lt;cite&gt;installReleaseCommunityMainExecutable&lt;/cite&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="multi-plataforma"&gt;
 &lt;h4&gt;Multi-plataforma&lt;/h4&gt;
 &lt;p&gt;También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras aplicaciones. El proceso es el mismo, simplemente tenemos que dar te alta las aplicaciones con las que vamos a trabajar.&lt;/p&gt;
 &lt;p&gt;Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas"&gt;Toolchains&lt;/a&gt; ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias en 32 bits.&lt;/p&gt;
-&lt;div class="system-message"&gt;
-&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 285)&lt;/p&gt;
-&lt;p&gt;Error in "code-block" directive:
-maximum 1 argument(s) allowed, 3 supplied.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. code-block:: groovy
-        :name: build.gradle
-
-
-    apply plugin: 'cpp'
-    model {
-        buildTypes {
-            debug
-            release
-        }
-             platforms {
-            x86 {
-                architecture "x86"
-            }
-            x64 {
-                architecture "x86_64"
-            }
-            itanium {
-                architecture "ia-64"
-            }
-        }
-        flavors {
-            community
-            enterprise
-        }
-    }
-    libraries {
-        hello {
-            binaries.all {
-                if (flavor == flavors.enterprise) {
-                    cppCompiler.define "ENTERPRISE"
-                }
-            }
-        }
-    }
-    executables {
-        main {
-            binaries.all {
-                lib libraries.hello.shared
-            }
-        }
-    }
-
+&lt;pre class="code groovy literal-block"&gt;
+&lt;span class="c1"&gt;// build.gradle
+&lt;/span&gt;
+&lt;span class="n"&gt;apply&lt;/span&gt; &lt;span class="nl"&gt;plugin:&lt;/span&gt; &lt;span class="s1"&gt;'cpp'&lt;/span&gt;
+&lt;span class="n"&gt;model&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;buildTypes&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;debug&lt;/span&gt;
+        &lt;span class="n"&gt;release&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+         &lt;span class="n"&gt;platforms&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;x86&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;architecture&lt;/span&gt; &lt;span class="s2"&gt;"x86"&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;x64&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;architecture&lt;/span&gt; &lt;span class="s2"&gt;"x86_64"&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;itanium&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;architecture&lt;/span&gt; &lt;span class="s2"&gt;"ia-64"&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;flavors&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;community&lt;/span&gt;
+        &lt;span class="n"&gt;enterprise&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;libraries&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;binaries&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;all&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;flavor&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;flavors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;enterprise&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+                &lt;span class="n"&gt;cppCompiler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;define&lt;/span&gt; &lt;span class="s2"&gt;"ENTERPRISE"&lt;/span&gt;
+            &lt;span class="o"&gt;}&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;executables&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;main&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;binaries&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;all&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;lib&lt;/span&gt; &lt;span class="n"&gt;libraries&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;hello&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;shared&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;
-&lt;/div&gt;
 &lt;p&gt;Ejecutando &lt;cite&gt;gradle clean task&lt;/cite&gt; podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
