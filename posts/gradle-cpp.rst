@@ -38,6 +38,7 @@ Estructura del proyecto
 Podemos crear la estructura que queramos, pero resulta más fácil seguir la que espera Gradle_, para no tener que especificar donde está el códigofuente. Esta es la estructura del proyecto:
 
 :gradle-cpp:
+    Directorio raíz.
 
     :build.gradle:
         Fichero donde se configura el proyecto Gradle, el equivalente al build.xml de Ant_, al Makefile_ de C/C++ o al pom.xml de Maven_.
@@ -52,15 +53,16 @@ Podemos crear la estructura que queramos, pero resulta más fácil seguir la que
                 Carpeta donde van los fuentes C++.
 
                 :Hello.cpp:
-                     
+                     Implementación de la clase Hello.
 
             :headers:
                 Carpeta donde van los ficheros de cabeceras.
 
                 :Hello.h:
-                     
+                     Declaración de la Clase Hello
 
                 :Msg.h:
+                     Declaración de constantes.
                      
 
         :main:
@@ -70,20 +72,21 @@ Podemos crear la estructura que queramos, pero resulta más fácil seguir la que
                 Carpeta donde van los fuentes C++.
 
                 :main.cpp:
+                    Código fuente con la función main. 
                      
 
     :build:
         Carpeta que crea Gradle automáticamente donde deja todos los resultados sus ejecuciones, en ella encontraremos informes de resultados de pruebas, binarios compilados, paquetes para distribuir, etc.
 
-La aplicación C++
+La Aplicación C++
 -----------------
 
 Va a consistir en un ejecutable que hará uso de la funcionalidad de la librería ’hello’.
 
-[H]
 
 .. code-block:: cpp
 
+    // main.cpp
     #include "Hello.h"
     int main(int argc, char ** argv) 
     {   
@@ -94,10 +97,9 @@ Va a consistir en un ejecutable que hará uso de la funcionalidad de la librerí
 
 Esta librería permite saludar :math:`n` veces a una persona especificada en su constructor.
 
-[H]
-
 .. code-block:: cpp
 
+    // Hello.h
     class Hello  
     {
         private:
@@ -116,10 +118,9 @@ Caso básico
 
 Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: tener Gradle_ [1]_ y el fichero build.gradle.
 
-[H]
-
 .. code-block:: groovy
 
+    // build.gradle
     apply plugin: 'cpp'
 
     libraries {     
@@ -143,7 +144,7 @@ Una vez que ha terminado, podemos ejecutar el programa llamando al script  [2]_.
 
 .. code-block:: bash
 
-    $ build/install/mainExecutable/main.bat
+    $ build/install/mainExecutable/main
     1.  Hello Mr. Pepito (Community) 
     2.  Hello Mr. Pepito (Community) 
     3.  Hello Mr. Pepito (Community) 
@@ -162,8 +163,8 @@ Distintos “Sabores”
 Con unas pocas líneas más, podemos generar distintas versiones de la misma aplicación, en nuestro ejemplo vamos a generar una versión “Community” y otra “Enterprise”.
 
 .. code-block:: groovy
-	:name: build.gradle
 
+    //build.gradle
     apply plugin: 'cpp'
     model {
         flavors {
@@ -192,8 +193,9 @@ Además tenemos que preparar nuestra aplicación para utilizar estos parámetros
 
 
 .. code-block:: cpp
-	:name: Msg.h
 
+    // Msg.h
+    
     #ifdef ENTERPRISE
     static const char * EDITION = "Enterprise";
 
@@ -209,9 +211,7 @@ Si ahora ejecutamos gradle clean task en la raíz de nuestro proyecto, veremos q
 
 Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los dos sabores.
 
-[H]
-
-::
+.. code-block:: bash
 
     $gradle installEnterpriseMainExecutable installCommunityMainExecutable
 
@@ -235,9 +235,11 @@ Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los 
 
 Ahora podemos ejecutar nuestra aplicación en los dos sabores:
 
+Community
+
 .. code-block:: bash
 
-    $ build/install/mainExecutable/community/main.bat
+    $ build/install/mainExecutable/community/main
     1.      Hello Mr. Pepito        (Community)
     2.      Hello Mr. Pepito        (Community) 
     3.      Hello Mr. Pepito        (Community) 
@@ -249,9 +251,12 @@ Ahora podemos ejecutar nuestra aplicación en los dos sabores:
     9.      Hello Mr. Pepito        (Community) 
     10.     Hello Mr. Pepito        (Community)
 
+
+Enterprise
+
 .. code-block:: bash
 
-    $ build/install/mainExecutable/enterprise/main.bat 
+    $ build/install/mainExecutable/enterprise/main
     1.      Hello Mr. Pepito        (Enterprise) 
     2.      Hello Mr. Pepito        (Enterprise) 
     3.      Hello Mr. Pepito        (Enterprise) 
@@ -269,7 +274,8 @@ Release o Debug
 Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añadir el modo Release para que active algunas optimizaciones [3]_.
 
 .. code-block:: groovy
-	:name: build.gradle
+
+    // build.gradle
 
     apply plugin: 'cpp'
     model {
@@ -277,6 +283,7 @@ Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añad
             debug         
             release
         }
+    
     // ... the rest of file below doesn't change 
 
 Si ahora ejecutamos gradle clean task veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo `installCommunityMainExecutable` se habrá desdoblado en `installDebugCommunityMainExecutable` y `installReleaseCommunityMainExecutable`.
@@ -290,8 +297,8 @@ Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herra
 
 
 .. code-block:: groovy
-	:name: build.gradle
 
+    // build.gradle
 
     apply plugin: 'cpp'
     model {
