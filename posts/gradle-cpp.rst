@@ -116,8 +116,7 @@ Construyendo con Gradle
 Caso básico
 ~~~~~~~~~~~
 
-Lo único que necesitamos para construir nuestra aplicación con Gradle_
-es: tener Gradle_ [1]_ y el fichero build.gradle.
+Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: tener Gradle_ [1]_ y el fichero build.gradle.
 
 [H]
 
