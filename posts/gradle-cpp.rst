@@ -76,16 +76,12 @@ gradle-cpp
                      
 
     build
-        Carpeta que crea Gradle automáticamente donde deja todos los
-        resultados sus ejecuciones, en ella encontraremos informes de
-        resultados de pruebas, binarios compilados, paquetes para
-        distribuir, etc.
+        Carpeta que crea Gradle automáticamente donde deja todos los resultados sus ejecuciones, en ella encontraremos informes de resultados de pruebas, binarios compilados, paquetes para distribuir, etc.
 
 La aplicación C++
 -----------------
 
-Va a consistir en un ejecutable que hará uso de la funcionalidad de la
-librería ’hello’.
+Va a consistir en un ejecutable que hará uso de la funcionalidad de la librería ’hello’.
 
 [H]
 
