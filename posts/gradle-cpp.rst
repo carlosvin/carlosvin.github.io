@@ -145,15 +145,15 @@ Una vez que ha terminado, podemos ejecutar el programa llamando al script  [2]_.
 .. code-block:: bash
 
     $ build/install/mainExecutable/main.bat
-    1. Hello Mr. Pepito (Community) 
-    2. Hello Mr. Pepito (Community) 
-    3. Hello Mr. Pepito (Community) 
-    4. Hello Mr. Pepito (Community) 
-    5. Hello Mr. Pepito (Community) 
-    6. Hello Mr. Pepito (Community) 
-    7. Hello Mr. Pepito (Community) 
-    8. Hello Mr. Pepito (Community) 
-    9. Hello Mr. Pepito (Community) 
+    1.  Hello Mr. Pepito (Community) 
+    2.  Hello Mr. Pepito (Community) 
+    3.  Hello Mr. Pepito (Community) 
+    4.  Hello Mr. Pepito (Community) 
+    5.  Hello Mr. Pepito (Community) 
+    6.  Hello Mr. Pepito (Community) 
+    7.  Hello Mr. Pepito (Community) 
+    8.  Hello Mr. Pepito (Community) 
+    9.  Hello Mr. Pepito (Community) 
     10. Hello Mr. Pepito (Community) 
 
 Distintos “sabores”
