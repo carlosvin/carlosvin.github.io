@@ -12,17 +12,9 @@ La construcción, gestión de dependencias y distribución de mis proyectos
 es algo que cada vez me preocupa más, me gustaría encontrar una
 herramienta que unificara este proceso y fuese independiente del
 lenguaje, lo más parecido con lo que he trabajado ha sido SCons_,
-Autotools_,
-`Ant <http://ant.apache.org/>`__, `Maven <http://maven.apache.org/>`__ y
-últimamente `Gradle <http://www.gradle.org/>`__.
+Autotools_, Ant_, Maven_ y últimamente Gradle_.
 
-Llevo un tiempo haciendo algunas cosas con
-`Gradle <http://www.gradle.org/>`__, pero siempre centrado en proyectos
-Java utilizándolo como reemplazo a Maven, porque que es más sencillo de
-usar y más rápido. También lo he utilizado `en projectos
-Android <http://developer.android.com/sdk/installing/studio-build.html>`__
-y he sufrido la pareja `Android Studio +
-Gradle <http://developer.android.com/sdk/installing/studio-build.html>`__
+Llevo un tiempo haciendo algunas cosas con Gradle_, pero siempre centrado en proyectos Java_ utilizándolo como reemplazo a Maven_, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos Android_ y he sufrido la pareja `Android Studio + Gradle`_ <http://developer.android.com/sdk/installing/studio-build.html>`__
 en sus primeros matrimonios (porque yo he querido), actualmente está
 todo mucho más documentado y funciona muy bien.
 
@@ -444,6 +436,7 @@ Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 .. _Ant: http://ant.apache.org
 .. _Maven: http://maven.apache.org
 .. _Gradle: http://www.gradle.org
+.. _`Android Studio + Gradle`: http://developer.android.com/sdk/installing/studio-build.html
 
 .. [1]
    Realmente no es necesario tener instalado Gradle, si utilizamos el
