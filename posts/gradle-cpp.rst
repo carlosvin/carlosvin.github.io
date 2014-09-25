@@ -175,7 +175,8 @@ Con unas pocas líneas más, podemos generar distintas versiones de la misma apl
     libraries {
         hello {
             binaries.all {             
-                if (flavor == flavors.enterprise) {                         cppCompiler.define "ENTERPRISE"
+                if (flavor == flavors.enterprise) {
+			cppCompiler.define "ENTERPRISE"
                 }
             }
         }
@@ -188,12 +189,11 @@ Con unas pocas líneas más, podemos generar distintas versiones de la misma apl
         }
     }
 
-Además tenemos que preparar nuestra aplicación para utilizar estos
-parámetros de compilación.
+Además tenemos que preparar nuestra aplicación para utilizar estos parámetros de compilación.
 
-[H]
 
-::
+.. code-block:: cpp
+	:name: Msg.h
 
     #ifdef ENTERPRISE
     static const char * EDITION = "Enterprise";
@@ -203,18 +203,12 @@ parámetros de compilación.
 
     #endif
 
-encuentra en Todo el proyecto se
 
-De esta forma se utiliza una cadena u otra en función del “sabor” con
-que compilemos.
+De esta forma se utiliza una cadena u otra en función del “sabor” con que compilemos.
 
-Si ahora ejecutamos gradle clean task en la raíz de nuestro proyecto,
-veremos que tenemos más tareas disponibles, antes teníamos
-installMainExecutable y ahora ha sido reemplazada por
-installCommunityMainExecutable y installEnterpriseMainExecutable.
+Si ahora ejecutamos gradle clean task en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos `installMainExecutable` y ahora ha sido reemplazada por `installCommunityMainExecutable` y `installEnterpriseMainExecutable`.
 
-Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada
-en los dos sabores.
+Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los dos sabores.
 
 [H]
 
