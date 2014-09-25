@@ -24,15 +24,9 @@ Como decía todavía tiene limitaciones, aunque están trabajando en ello y `si 
 Un caso práctico
 ================
 
-Básicamente he sacado todo el ejemplo de
-`aquí <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__
-y lo he adaptado a un caso en el que hay varias plataformas y quiero
-generar dos versiones distintas de mi software “Community” y
-“Enterprise”.
+Básicamente he sacado todo el ejemplo de `aquí <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__ y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.
 
-La aplicación es un ejecutable y una librería dinámica. El ejecutable
-hace uso de esta librería. Ya está, solo quiero mostrar lo que nos
-permite hacer `Gradle <http://www.gradle.org/>`__.
+La aplicación es un ejecutable y una librería dinámica. El ejecutable hace uso de esta librería. Ya está, solo quiero mostrar lo que nos permite hacer Gradle_.
 
 También nos permitirá generar una versión para distribuir y otra para
 depurar.
