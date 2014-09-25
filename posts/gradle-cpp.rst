@@ -441,6 +441,10 @@ Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 
 .. _SCons: http://www.scons.org
 .. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
+.. _Ant: http://ant.apache.org
+.. _Maven: http://maven.apache.org
+.. _Gradle: http://www.gradle.org
+
 .. [1]
    Realmente no es necesario tener instalado Gradle, si utilizamos el
    wrapper, pero esto no lo vamos a tratar hoy,\ `si queréis más
