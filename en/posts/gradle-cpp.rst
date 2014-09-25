@@ -37,43 +37,42 @@ Estructura del proyecto
 
 Podemos crear la estructura que queramos, pero resulta más fácil seguir la que espera Gradle_, para no tener que especificar donde está el códigofuente. Esta es la estructura del proyecto:
 
-gradle-cpp
+:gradle-cpp:
 
-    build.gradle
+    :build.gradle:
         Fichero donde se configura el proyecto Gradle, el equivalente al build.xml de Ant_, al Makefile_ de C/C++ o al pom.xml de Maven_.
 
-    src
+    :src:
         Carpeta donde va todo el código fuente
 
-        hello
-            Carpeta que contiene el módulo que va a ser la librería
-            hello.
+        :hello:
+            Carpeta que contiene el módulo que va a ser la librería hello.
 
-            cpp
+            :cpp:
                 Carpeta donde van los fuentes C++.
 
-                Hello.cpp
+                :Hello.cpp:
                      
 
-            headers
-                Carpeta donde val los ficheros de cabeceras.
+            :headers:
+                Carpeta donde van los ficheros de cabeceras.
 
-                Hello.h
+                :Hello.h:
                      
 
-                Msg.h
+                :Msg.h:
                      
 
-        main
+        :main:
             Carpeta que contiene el módulo que será el ejecutable que utilice la librería hello.
 
-            cpp
+            :cpp:
                 Carpeta donde van los fuentes C++.
 
-                main.cpp
+                :main.cpp:
                      
 
-    build
+    :build:
         Carpeta que crea Gradle automáticamente donde deja todos los resultados sus ejecuciones, en ella encontraremos informes de resultados de pruebas, binarios compilados, paquetes para distribuir, etc.
 
 La aplicación C++
@@ -236,9 +235,7 @@ Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los 
 
 Ahora podemos ejecutar nuestra aplicación en los dos sabores:
 
-[H]
-
-::
+.. code-block:: bash
 
     $ build/install/mainExecutable/community/main.bat
     1.      Hello Mr. Pepito        (Community)
@@ -252,9 +249,7 @@ Ahora podemos ejecutar nuestra aplicación en los dos sabores:
     9.      Hello Mr. Pepito        (Community) 
     10.     Hello Mr. Pepito        (Community)
 
-[H]
-
-::
+.. code-block:: bash
 
     $ build/install/mainExecutable/enterprise/main.bat 
     1.      Hello Mr. Pepito        (Enterprise) 
@@ -271,13 +266,10 @@ Ahora podemos ejecutar nuestra aplicación en los dos sabores:
 Release o Debug
 ~~~~~~~~~~~~~~~
 
-Por defecto Gradle compila nuestra aplicación en modo Debug, pero
-podemos añadir el modo Release para que active algunas
-optimizaciones [3]_.
+Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añadir el modo Release para que active algunas optimizaciones [3]_.
 
-[H]
-
-::
+.. code-block:: groovy
+	:name: build.gradle
 
     apply plugin: 'cpp'
     model {
@@ -287,31 +279,19 @@ optimizaciones [3]_.
         }
     // ... the rest of file below doesn't change 
 
-Si ahora ejecutamos gradle clean task veremos que tenemos más tareas, se
-habrán desdoblado las que teníamos, por ejemplo
-installCommunityMainExecutable se habrá desdoblado en
-installDebugCommunityMainExecutable y
-installReleaseCommunityMainExecutable.
+Si ahora ejecutamos gradle clean task veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo `installCommunityMainExecutable` se habrá desdoblado en `installDebugCommunityMainExecutable` y `installReleaseCommunityMainExecutable`.
 
 Multi-plataforma
 ~~~~~~~~~~~~~~~~
 
-También tenemos las posibilidad de utilizar las características de
-compilación cruzada que nos ofrecen los compiladores y generar
-componentes nativos para otras aplicaciones. El proceso es el mismo,
-simplemente tenemos que dar te alta las aplicaciones con las que vamos a
-trabajar.
+También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras aplicaciones. El proceso es el mismo, simplemente tenemos que dar te alta las aplicaciones con las que vamos a trabajar.
 
-Esto solo funcionará si en nuestro sistema tenemos instalada la cadena
-de herramientas
-(`Toolchains <http://es.wikipedia.org/wiki/Cadena_de_herramientas>`__)
-necesaria, es decir, si en un sistema de 64 bits queremos compilar para
-32 bits, tendremos que tener instaladas las librerías necesarias en en
-32 bits.
+Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( Toolchains_ ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias en 32 bits.
 
-[H]
 
-::
+.. code-block:: groovy
+	:name: build.gradle
+
 
     apply plugin: 'cpp'
     model {
@@ -352,29 +332,21 @@ necesaria, es decir, si en un sistema de 64 bits queremos compilar para
         }
     }
 
-Ejecutando gradle clean task podremos generar distintas versiones de
-nuestra aplicación en distintos sabores, para distintas aplicaciones en
-Debug o Release.
+Ejecutando `gradle clean task` podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.
 
 Conclusiones
 ============
 
-Con una configuración mínima, tenemos muchas posibilidades de
-construcción de aplicaciones nativas multi-plataforma.
+Con una configuración mínima, tenemos muchas posibilidades de construcción de aplicaciones nativas multi-plataforma.
 
-Tiene un futuro prometedor, veremos como termina.
+Tiene un futuro prometedor, veremos como termina. Aunque si sigue los pasos del soporte para Java_ o Android_, seguro que llega a buen puerto. 
 
-Podemos utilizar otras características de Gradle y aplicarlas a nuestros
-proyectos C++, como análisis estáticos de código, generación de informes
-de prueba, fácil incorporación a sistemas de integración continua.
+Podemos utilizar otras características de Gradle_ y aplicarlas a nuestros proyectos C++, como análisis estáticos de código, generación de informes (pruebas, cobertura, calidad, etc.), fácil incorporación a sistemas de integración continua.
 
-Gradle para C++ es una característica que actualmente está en
-desarrollo, por lo que:
+Gradle_ para C++ es una característica que actualmente está en desarrollo, por lo que no hay que olvidar que:
 
--  No debemos utilizar en entornos reales de desarrollo, puede acarrear
-   muchos dolores de cabeza.
-
--  La forma de definir el fichero build.gradle puede cambiar.
+-  No debemos utilizar en entornos reales de desarrollo, puede acarrear muchos dolores de cabeza.
+-  La forma de definir el fichero build.gradle para esta característica puede cambiar.
 
 Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 
@@ -388,15 +360,14 @@ Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 .. _Toolchains: http://es.wikipedia.org/wiki/Cadena_de_herramientas
 .. _Java: http://www.java.com
 .. _Makefile: http://es.wikipedia.org/wiki/Make
+.. _Android: http://developer.android.com/sdk/installing/studio-build.html
 
 .. [1]
-   Realmente no es necesario tener instalado Gradle, si utilizamos el
-   wrapper, pero esto no lo vamos a tratar hoy,\ `si queréis más
-   información <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
+   Realmente no es necesario tener instalado Gradle, si utilizamos el wrapper, pero esto no lo vamos a tratar hoy, `si queréis más información <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
 
 .. [2]
-   .bat en Windows y .sh en Linux
+   .bat en Windows y sin extensión en Linux
 
 .. [3]
-   También podemos definir el tipo de optimizaciones que vamos a
-   utilizar.
+   También podemos definir el tipo de optimizaciones que vamos a utilizar.
+
