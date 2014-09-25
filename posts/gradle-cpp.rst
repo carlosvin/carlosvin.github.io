@@ -14,13 +14,10 @@ herramienta que unificara este proceso y fuese independiente del
 lenguaje, lo más parecido con lo que he trabajado ha sido SCons_,
 Autotools_, Ant_, Maven_ y últimamente Gradle_.
 
-Llevo un tiempo haciendo algunas cosas con Gradle_, pero siempre centrado en proyectos Java_ utilizándolo como reemplazo a Maven_, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos Android_ y he sufrido la pareja `Android Studio + Gradle`_ <http://developer.android.com/sdk/installing/studio-build.html>`__
-en sus primeros matrimonios (porque yo he querido), actualmente está
-todo mucho más documentado y funciona muy bien.
+Llevo un tiempo haciendo algunas cosas con Gradle_, pero siempre centrado en proyectos Java_ utilizándolo como reemplazo a Maven_, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos Android_ y he sufrido la pareja `Android Studio + Gradle`_ en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.
 
 Antes de nada hay que decir que la construcción de proyectos C/C++ y
-Objective-C con `Gradle <http://www.gradle.org/>`__ se encuentra en fase
-de incubación, aunque ya permite hacer algunas tareas avanzadas como:
+Objective-C con Gradle_ se encuentra en fase de incubación_, aunque ya permite hacer algunas tareas avanzadas como:
 
 -  Generación de múltiples artefactos dentro del mismo proyecto, esto es
    varias librerías o ejecutables.
@@ -33,7 +30,7 @@ de incubación, aunque ya permite hacer algunas tareas avanzadas como:
 
 -  Permite generar binarios para distintas plataformas, esto depende de
    las cadenas de herramientas
-   (`Toolchains <http://es.wikipedia.org/wiki/Cadena_de_herramientas>`__)
+   (Toolchains_)
    que tengamos instaladas en la máquina de compilación.
 
 Como decía todavía tiene limitaciones, aunque están trabajando en ello y
@@ -437,6 +434,9 @@ Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 .. _Maven: http://maven.apache.org
 .. _Gradle: http://www.gradle.org
 .. _`Android Studio + Gradle`: http://developer.android.com/sdk/installing/studio-build.html
+.. _incubación: http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating
+.. _Toolchains: http://es.wikipedia.org/wiki/Cadena_de_herramientas
+.. _Java: http://www.java.com
 
 .. [1]
    Realmente no es necesario tener instalado Gradle, si utilizamos el
