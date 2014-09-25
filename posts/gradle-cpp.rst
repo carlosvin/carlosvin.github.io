@@ -2,8 +2,7 @@
 .. slug: gradle-cpp
 .. date: 2014/09/25 19:00:00
 .. tags: Gradle, C++, Build Construction Systems
-.. link: 
-.. description: Cómo configurar git para que funcione a través de un proxy
+.. description: Cómo construir un proyecto típico C++ utilizando Gradle.
 .. type: text
 
 ====================================
