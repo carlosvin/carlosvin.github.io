@@ -1,5 +1,336 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog</title><link>http://carlosvin.github.io/</link><description>Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.</description><language>en</language><lastBuildDate>Wed, 10 Sep 2014 14:05:26 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>How sorting algorithms work (Dancing)</title><link>http://carlosvin.github.io/en/posts/sorting-algorithm-dancing.html</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I've found out a artistic-technological group named &lt;a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos"&gt;AlgoRythmics&lt;/a&gt;, they teach how the most popular sorting algorithms work.&lt;/p&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Vin's Blog</title><link>http://carlosvin.github.io/</link><description>Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.</description><language>en</language><lastBuildDate>Thu, 25 Sep 2014 18:20:11 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Construir un proyecto C++ con Gradle</title><link>http://carlosvin.github.io/en/posts/gradle-cpp.html</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;div class="section" id="introduccion"&gt;
+&lt;h2&gt;Introducción&lt;/h2&gt;
+&lt;p&gt;La construcción, gestión de dependencias y distribución de mis proyectos es algo que cada vez me preocupa más, me gustaría encontrar una herramienta que unificara este proceso y fuese independiente del lenguaje, lo más parecido con lo que he trabajado ha sido &lt;a class="reference external" href="http://www.scons.org"&gt;SCons&lt;/a&gt;, &lt;a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction"&gt;Autotools&lt;/a&gt;, &lt;a class="reference external" href="http://ant.apache.org"&gt;Ant&lt;/a&gt;, &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt; y últimamente &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Llevo un tiempo haciendo algunas cosas con &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;, pero siempre centrado en proyectos &lt;a class="reference external" href="http://www.java.com"&gt;Java&lt;/a&gt; utilizándolo como reemplazo a &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt;, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos &lt;a href="http://carlosvin.github.io/en/posts/gradle-cpp.html#id7"&gt;&lt;span class="problematic" id="id8"&gt;Android_&lt;/span&gt;&lt;/a&gt; y he sufrido la pareja &lt;a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html"&gt;Android Studio + Gradle&lt;/a&gt; en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.&lt;/p&gt;
+&lt;p&gt;Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-C con &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt; se encuentra en fase de &lt;a class="reference external" href="http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating"&gt;incubación&lt;/a&gt;, aunque ya permite hacer algunas tareas avanzadas como:&lt;/p&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.&lt;/li&gt;
+&lt;li&gt;Gestionar las dependencias entre estos artefactos (sin versiones).&lt;/li&gt;
+&lt;li&gt;Generar distintos “sabores” de aplicaciones, por ejemplo: podremos generar una aplicación “Community” y otra con más características habilitadas llamada “Enterprise”.&lt;/li&gt;
+&lt;li&gt;Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas ( &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas"&gt;Toolchains&lt;/a&gt; ) que tengamos instaladas en la máquina de compilación.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Como decía todavía tiene limitaciones, aunque están trabajando en ello y &lt;a class="reference external" href="http://www.gradleware.com/resources/cpp/"&gt;si consiguen lo que tienen planeado&lt;/a&gt; dejaré &lt;a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction"&gt;Autotools&lt;/a&gt; (me arrepentiré de haber dicho esto).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="un-caso-practico"&gt;
+&lt;h2&gt;Un caso práctico&lt;/h2&gt;
+&lt;p&gt;Básicamente he sacado todo el ejemplo de &lt;a class="reference external" href="http://www.gradle.org/docs/current/userguide/nativeBinaries.html"&gt;aquí&lt;/a&gt; y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.&lt;/p&gt;
+&lt;p&gt;La aplicación es un ejecutable y una librería dinámica. El ejecutable hace uso de esta librería. Ya está, solo quiero mostrar lo que nos permite hacer &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;También nos permitirá generar una versión para distribuir y otra para depurar.&lt;/p&gt;
+&lt;p&gt;Todo el código se encuentra en &lt;cite&gt;https://github.com/carlosvin/cpp_gradle&lt;/cite&gt;.&lt;/p&gt;
+&lt;div class="section" id="estructura-del-proyecto"&gt;
+&lt;h3&gt;Estructura del proyecto&lt;/h3&gt;
+&lt;p&gt;Podemos crear la estructura que queramos, pero resulta más fácil seguir la que espera &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;, para no tener que especificar donde está el códigofuente. Esta es la estructura del proyecto:&lt;/p&gt;
+&lt;p&gt;gradle-cpp&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;dl class="docutils"&gt;&lt;dt&gt;build.gradle&lt;/dt&gt;
+&lt;dd&gt;Fichero donde se configura el proyecto Gradle, el equivalente al build.xml de &lt;a class="reference external" href="http://ant.apache.org"&gt;Ant&lt;/a&gt;, al &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Make"&gt;Makefile&lt;/a&gt; de C/C++ o al pom.xml de &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt;.&lt;/dd&gt;
+&lt;dt&gt;src&lt;/dt&gt;
+&lt;dd&gt;&lt;p class="first"&gt;Carpeta donde va todo el código fuente&lt;/p&gt;
+&lt;dl class="last docutils"&gt;&lt;dt&gt;hello&lt;/dt&gt;
+&lt;dd&gt;&lt;p class="first"&gt;Carpeta que contiene el módulo que va a ser la librería
+hello.&lt;/p&gt;
+&lt;dl class="last docutils"&gt;&lt;dt&gt;cpp&lt;/dt&gt;
+&lt;dd&gt;&lt;p class="first"&gt;Carpeta donde van los fuentes C++.&lt;/p&gt;
+&lt;p class="last"&gt;Hello.cpp&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt&gt;headers&lt;/dt&gt;
+&lt;dd&gt;&lt;p class="first"&gt;Carpeta donde val los ficheros de cabeceras.&lt;/p&gt;
+&lt;p&gt;Hello.h&lt;/p&gt;
+&lt;p class="last"&gt;Msg.h&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;&lt;/dd&gt;
+&lt;dt&gt;main&lt;/dt&gt;
+&lt;dd&gt;&lt;p class="first"&gt;Carpeta que contiene el módulo que será el ejecutable que utilice la librería hello.&lt;/p&gt;
+&lt;dl class="last docutils"&gt;&lt;dt&gt;cpp&lt;/dt&gt;
+&lt;dd&gt;&lt;p class="first"&gt;Carpeta donde van los fuentes C++.&lt;/p&gt;
+&lt;p class="last"&gt;main.cpp&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;&lt;/dd&gt;
+&lt;/dl&gt;&lt;/dd&gt;
+&lt;dt&gt;build&lt;/dt&gt;
+&lt;dd&gt;Carpeta que crea Gradle automáticamente donde deja todos los resultados sus ejecuciones, en ella encontraremos informes de resultados de pruebas, binarios compilados, paquetes para distribuir, etc.&lt;/dd&gt;
+&lt;/dl&gt;&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="la-aplicacion-c"&gt;
+&lt;h3&gt;La aplicación C++&lt;/h3&gt;
+&lt;p&gt;Va a consistir en un ejecutable que hará uso de la funcionalidad de la librería ’hello’.&lt;/p&gt;
+&lt;p&gt;[H]&lt;/p&gt;
+&lt;pre class="code cpp literal-block"&gt;
+&lt;span class="cp"&gt;#include "Hello.h"
+&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;Hello&lt;/span&gt; &lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Pepito"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sayHello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Esta librería permite saludar &lt;span class="math"&gt;\(n\)&lt;/span&gt; veces a una persona especificada en su constructor.&lt;/p&gt;
+&lt;p&gt;[H]&lt;/p&gt;
+&lt;pre class="code cpp literal-block"&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Hello&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nl"&gt;private:&lt;/span&gt;
+        &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;who&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nl"&gt;public:&lt;/span&gt;
+        &lt;span class="n"&gt;Hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;who&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;sayHello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="construyendo-con-gradle"&gt;
+&lt;h3&gt;Construyendo con Gradle&lt;/h3&gt;
+&lt;div class="section" id="caso-basico"&gt;
+&lt;h4&gt;Caso básico&lt;/h4&gt;
+&lt;p&gt;Lo único que necesitamos para construir nuestra aplicación con &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt; es: tener &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt; &lt;a class="footnote-reference" href="http://carlosvin.github.io/en/posts/gradle-cpp.html#id4" id="id1"&gt;[1]&lt;/a&gt; y el fichero build.gradle.&lt;/p&gt;
+&lt;p&gt;[H]&lt;/p&gt;
+&lt;pre class="code groovy literal-block"&gt;
+&lt;span class="n"&gt;apply&lt;/span&gt; &lt;span class="nl"&gt;plugin:&lt;/span&gt; &lt;span class="s1"&gt;'cpp'&lt;/span&gt;
+
+&lt;span class="n"&gt;libraries&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="o"&gt;{}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;executables&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;main&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;binaries&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;all&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;lib&lt;/span&gt; &lt;span class="n"&gt;libraries&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;hello&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;shared&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Con este fichero tan simple, conseguiremos compilar e instalar nuestra aplicación, en modo Debug para la plataforma donde estamos ejecutando &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;, en mi caso es Linux X64.&lt;/p&gt;
+&lt;p&gt;Si ejecutamos desde la raíz de nuestro proyecto gradle task, podremos ver todas las tareas que podemos hacer.&lt;/p&gt;
+&lt;p&gt;En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: gradle installMainExecutable.&lt;/p&gt;
+&lt;p&gt;Una vez que ha terminado, podemos ejecutar el programa llamando al script  &lt;a class="footnote-reference" href="http://carlosvin.github.io/en/posts/gradle-cpp.html#id5" id="id2"&gt;[2]&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;build/install/mainExecutable/main.bat
+1.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+2.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+3.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+4.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+5.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+6.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+7.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+8.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+9.  Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+10. Hello Mr. Pepito &lt;span class="o"&gt;(&lt;/span&gt;Community&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="distintos-sabores"&gt;
+&lt;h4&gt;Distintos “Sabores”&lt;/h4&gt;
+&lt;p&gt;Con unas pocas líneas más, podemos generar distintas versiones de la misma aplicación, en nuestro ejemplo vamos a generar una versión “Community” y otra “Enterprise”.&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 158)&lt;/p&gt;
+&lt;p&gt;Error in "code-block" directive:
+maximum 1 argument(s) allowed, 3 supplied.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+.. code-block:: groovy
+        :name: build.gradle
+
+    apply plugin: 'cpp'
+    model {
+        flavors {
+            community
+            enterprise
+        }
+    }
+    libraries {
+        hello {
+            binaries.all {
+                if (flavor == flavors.enterprise) {
+                        cppCompiler.define "ENTERPRISE"
+                }
+            }
+        }
+    }
+    executables {
+        main {
+            binaries.all {
+                lib libraries.hello.shared
+            }
+        }
+    }
+
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Además tenemos que preparar nuestra aplicación para utilizar estos parámetros de compilación.&lt;/p&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 188)&lt;/p&gt;
+&lt;p&gt;Error in "code-block" directive:
+maximum 1 argument(s) allowed, 3 supplied.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+.. code-block:: cpp
+        :name: Msg.h
+
+    #ifdef ENTERPRISE
+    static const char * EDITION = "Enterprise";
+
+    #else
+    static const char * EDITION = "Community";
+
+    #endif
+
+
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;De esta forma se utiliza una cadena u otra en función del “sabor” con que compilemos.&lt;/p&gt;
+&lt;p&gt;Si ahora ejecutamos gradle clean task en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos &lt;cite&gt;installMainExecutable&lt;/cite&gt; y ahora ha sido reemplazada por &lt;cite&gt;installCommunityMainExecutable&lt;/cite&gt; y &lt;cite&gt;installEnterpriseMainExecutable&lt;/cite&gt;.&lt;/p&gt;
+&lt;p&gt;Si ejecutamos estas dos tareas , tendremos nuestra aplicación instalada en los dos sabores.&lt;/p&gt;
+&lt;p&gt;[H]&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$gradle installEnterpriseMainExecutable installCommunityMainExecutable
+
+:compileEnterpriseHelloSharedLibraryHelloCpp
+:linkEnterpriseHelloSharedLibrary
+:enterpriseHelloSharedLibrary
+:compileEnterpriseMainExecutableMainCpp
+:linkEnterpriseMainExecutable
+:enterpriseMainExecutable
+:installEnterpriseMainExecutable
+:compileCommunityHelloSharedLibraryHelloCpp
+:linkCommunityHelloSharedLibrary
+:communityHelloSharedLibrary
+:compileCommunityMainExecutableMainCpp
+:linkCommunityMainExecutable
+:communityMainExecutable
+:installCommunityMainExecutable
+
+BUILD SUCCESSFUL
+Total time: 9.414 secs
+&lt;/pre&gt;
+&lt;p&gt;Ahora podemos ejecutar nuestra aplicación en los dos sabores:&lt;/p&gt;
+&lt;p&gt;[H]&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$ build/install/mainExecutable/community/main.bat
+1.      Hello Mr. Pepito        (Community)
+2.      Hello Mr. Pepito        (Community)
+3.      Hello Mr. Pepito        (Community)
+4.      Hello Mr. Pepito        (Community)
+5.      Hello Mr. Pepito        (Community)
+6.      Hello Mr. Pepito        (Community)
+7.      Hello Mr. Pepito        (Community)
+8.      Hello Mr. Pepito        (Community)
+9.      Hello Mr. Pepito        (Community)
+10.     Hello Mr. Pepito        (Community)
+&lt;/pre&gt;
+&lt;p&gt;[H]&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$ build/install/mainExecutable/enterprise/main.bat
+1.      Hello Mr. Pepito        (Enterprise)
+2.      Hello Mr. Pepito        (Enterprise)
+3.      Hello Mr. Pepito        (Enterprise)
+4.      Hello Mr. Pepito        (Enterprise)
+5.      Hello Mr. Pepito        (Enterprise)
+6.      Hello Mr. Pepito        (Enterprise)
+7.      Hello Mr. Pepito        (Enterprise)
+8.      Hello Mr. Pepito        (Enterprise)
+9.      Hello Mr. Pepito        (Enterprise)
+10.     Hello Mr. Pepito        (Enterprise)
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="release-o-debug"&gt;
+&lt;h4&gt;Release o Debug&lt;/h4&gt;
+&lt;p&gt;Por defecto Gradle compila nuestra aplicación en modo Debug, pero
+podemos añadir el modo Release para que active algunas
+optimizaciones &lt;a class="footnote-reference" href="http://carlosvin.github.io/en/posts/gradle-cpp.html#id6" id="id3"&gt;[3]&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;[H]&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+apply plugin: 'cpp'
+model {
+    buildTypes {
+        debug
+        release
+    }
+// ... the rest of file below doesn't change
+&lt;/pre&gt;
+&lt;p&gt;Si ahora ejecutamos gradle clean task veremos que tenemos más tareas, se
+habrán desdoblado las que teníamos, por ejemplo
+installCommunityMainExecutable se habrá desdoblado en
+installDebugCommunityMainExecutable y
+installReleaseCommunityMainExecutable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="multi-plataforma"&gt;
+&lt;h4&gt;Multi-plataforma&lt;/h4&gt;
+&lt;p&gt;También tenemos las posibilidad de utilizar las características de
+compilación cruzada que nos ofrecen los compiladores y generar
+componentes nativos para otras aplicaciones. El proceso es el mismo,
+simplemente tenemos que dar te alta las aplicaciones con las que vamos a
+trabajar.&lt;/p&gt;
+&lt;p&gt;Esto solo funcionará si en nuestro sistema tenemos instalada la cadena
+de herramientas
+(&lt;a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas"&gt;Toolchains&lt;/a&gt;)
+necesaria, es decir, si en un sistema de 64 bits queremos compilar para
+32 bits, tendremos que tener instaladas las librerías necesarias en en
+32 bits.&lt;/p&gt;
+&lt;p&gt;[H]&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+apply plugin: 'cpp'
+model {
+    buildTypes {
+        debug
+        release
+    }
+         platforms {
+        x86 {
+            architecture "x86"
+        }
+        x64 {
+            architecture "x86_64"
+        }
+        itanium {
+            architecture "ia-64"
+        }
+    }
+    flavors {
+        community
+        enterprise
+    }
+}
+libraries {
+    hello {
+        binaries.all {
+            if (flavor == flavors.enterprise) {
+                cppCompiler.define "ENTERPRISE"
+            }
+        }
+    }
+}
+executables {
+    main {
+        binaries.all {
+            lib libraries.hello.shared
+        }
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Ejecutando gradle clean task podremos generar distintas versiones de
+nuestra aplicación en distintos sabores, para distintas aplicaciones en
+Debug o Release.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusiones"&gt;
+&lt;h2&gt;Conclusiones&lt;/h2&gt;
+&lt;p&gt;Con una configuración mínima, tenemos muchas posibilidades de
+construcción de aplicaciones nativas multi-plataforma.&lt;/p&gt;
+&lt;p&gt;Tiene un futuro prometedor, veremos como termina.&lt;/p&gt;
+&lt;p&gt;Podemos utilizar otras características de Gradle y aplicarlas a nuestros
+proyectos C++, como análisis estáticos de código, generación de informes
+de prueba, fácil incorporación a sistemas de integración continua.&lt;/p&gt;
+&lt;p&gt;Gradle para C++ es una característica que actualmente está en
+desarrollo, por lo que:&lt;/p&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;No debemos utilizar en entornos reales de desarrollo, puede acarrear
+muchos dolores de cabeza.&lt;/li&gt;
+&lt;li&gt;La forma de definir el fichero build.gradle puede cambiar.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Todo el ejemplo se encuentra en &lt;a class="reference external" href="https://github.com/carlosvin/cpp_gradle"&gt;https://github.com/carlosvin/cpp_gradle&lt;/a&gt;.&lt;/p&gt;
+&lt;table class="docutils footnote" frame="void" id="id4" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/gradle-cpp.html#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Realmente no es necesario tener instalado Gradle, si utilizamos el
+wrapper, pero esto no lo vamos a tratar hoy,&lt;a class="reference external" href="http://www.gradle.org/docs/current/userguide/nativeBinaries.html"&gt;si queréis más
+información&lt;/a&gt;.&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table class="docutils footnote" frame="void" id="id5" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/gradle-cpp.html#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;.bat en Windows y .sh en Linux&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table class="docutils footnote" frame="void" id="id6" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/gradle-cpp.html#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;También podemos definir el tipo de optimizaciones que vamos a
+utilizar.&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;
+&lt;div class="system-messages section"&gt;
+&lt;h2&gt;Docutils System Messages&lt;/h2&gt;
+&lt;div class="system-message" id="id7"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 6); &lt;em&gt;&lt;a href="http://carlosvin.github.io/en/posts/gradle-cpp.html#id8"&gt;backlink&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+Unknown target name: "android".&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/gradle-cpp.html</guid><pubDate>Thu, 25 Sep 2014 17:00:00 GMT</pubDate></item><item><title>How sorting algorithms work (Dancing)</title><link>http://carlosvin.github.io/en/posts/sorting-algorithm-dancing.html</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I've found out a artistic-technological group named &lt;a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos"&gt;AlgoRythmics&lt;/a&gt;, they teach how the most popular sorting algorithms work.&lt;/p&gt;
 &lt;p&gt;You can read &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Sorting_algorithm#Popular_sorting_algorithms"&gt;the wikipedia topic Popular sorting algorithms&lt;/a&gt;, although I think it isn't as funny to learn as the &lt;a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos"&gt;AlgoRythmics&lt;/a&gt; way. Following the &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Quicksort"&gt;Quicksort&lt;/a&gt;, judge for yourself.&lt;/p&gt;
 &lt;iframe width="425" height="344" src="//www.youtube.com/embed/ywWBy6J5gz8?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;/div&gt;</description><category>Algorithm</category><category>Programming</category><category>Sorting</category><guid>http://carlosvin.github.io/en/posts/sorting-algorithm-dancing.html</guid><pubDate>Mon, 16 Jun 2014 18:09:00 GMT</pubDate></item><item><title>Bases de Datos Embebidas Java: Comparación de Rendimiento</title><link>http://carlosvin.github.io/en/posts/java-embedded-db-performance-comparison.html</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div class="section" id="bases-de-datos-embebidas"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/java-embedded-db-performance-comparison.html#id1"&gt;Bases de datos embebidas&lt;/a&gt;&lt;/h2&gt;
@@ -71,12 +402,4 @@ although this time, I'm not going to install on a remote server.&lt;/p&gt;
 &lt;pre class="code bash literal-block"&gt;
 libtool --mode&lt;span class="o"&gt;=&lt;/span&gt;execute gdb tests-mylib
 &lt;/pre&gt;
-&lt;table class="docutils footnote" frame="void" id="id3" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/debug-libtool-lib.html#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Herramienta que pertenece a la &lt;a class="reference external" href="http://es.wikipedia.org/wiki/GNU_build_system"&gt;Autotools&lt;/a&gt; usada para crear bibliotecas de software portables.&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table class="docutils citation" frame="void" id="libtooldoc" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/debug-libtool-lib.html#id2"&gt;[libtooldoc]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Esta información la he sacado de &lt;a class="reference external" href="http://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables"&gt;http://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/debug-libtool-lib.html</guid><pubDate>Fri, 01 Feb 2013 14:30:00 GMT</pubDate></item><item><title>Mapeo de un struct C++ en Memoria</title><link>http://carlosvin.github.io/en/posts/cpp-pragma-pack.html</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia.&lt;/p&gt;
-&lt;p&gt;Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.&lt;/p&gt;
-&lt;div class="contents topic" id="tabla-de-contenidos"&gt;
-&lt;p class="topic-title first"&gt;Tabla de Contenidos&lt;/p&gt;
-&lt;ul class="simple"&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/cpp-pragma-pack.html#estructura-de-ejemplo" id="id1"&gt;Estructura de ejemplo&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/cpp-pragma-pack.html#la-directiva-pragma-pack-en-struct-c" id="id2"&gt;La directiva #pragma pack en struct C++&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/cpp-pragma-pack.html#rendimiento" id="id3"&gt;Rendimiento&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href="http://carlosvin.github.io/en/posts/cpp-pragma-pack.html"&gt;Read more…&lt;/a&gt; (5 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/cpp-pragma-pack.html</guid><pubDate>Mon, 26 Nov 2012 11:00:00 GMT</pubDate></item></channel></rss>
+&lt;table class="docutils footnote" frame="void" id="id3" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/debug-libtool-lib.html#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Herramienta que pertenece a la &lt;a class="reference external" href="http://es.wikipedia.org/wiki/GNU_build_system"&gt;Autotools&lt;/a&gt; usada para crear bibliotecas de software portables.&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table class="docutils citation" frame="void" id="libtooldoc" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/debug-libtool-lib.html#id2"&gt;[libtooldoc]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Esta información la he sacado de &lt;a class="reference external" href="http://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables"&gt;http://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/debug-libtool-lib.html</guid><pubDate>Fri, 01 Feb 2013 14:30:00 GMT</pubDate></item></channel></rss>
