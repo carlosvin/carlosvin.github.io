@@ -8,28 +8,16 @@
 Introducción
 ============
 
-La construcción, gestión de dependencias y distribución de mis proyectos
-es algo que cada vez me preocupa más, me gustaría encontrar una
-herramienta que unificara este proceso y fuese independiente del
-lenguaje, lo más parecido con lo que he trabajado ha sido SCons_,
-Autotools_, Ant_, Maven_ y últimamente Gradle_.
+La construcción, gestión de dependencias y distribución de mis proyectos es algo que cada vez me preocupa más, me gustaría encontrar una herramienta que unificara este proceso y fuese independiente del lenguaje, lo más parecido con lo que he trabajado ha sido SCons_, Autotools_, Ant_, Maven_ y últimamente Gradle_.
 
 Llevo un tiempo haciendo algunas cosas con Gradle_, pero siempre centrado en proyectos Java_ utilizándolo como reemplazo a Maven_, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos Android_ y he sufrido la pareja `Android Studio + Gradle`_ en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.
 
-Antes de nada hay que decir que la construcción de proyectos C/C++ y
-Objective-C con Gradle_ se encuentra en fase de incubación_, aunque ya permite hacer algunas tareas avanzadas como:
+Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-C con Gradle_ se encuentra en fase de incubación_, aunque ya permite hacer algunas tareas avanzadas como:
 
--  Generación de múltiples artefactos dentro del mismo proyecto, esto es
-   varias librerías o ejecutables.
-
+-  Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.
 -  Gestionar las dependencias entre estos artefactos (sin versiones).
-
--  Generar distintos “sabores” de aplicaciones, por ejemplo: podremos
-   generar una aplicación “Community” y otra con más características
-   habilitadas llamada “Enterprise”.
-
--  Permite generar binarios para distintas plataformas, esto depende de
-   las cadenas de herramientas
+-  Generar distintos “sabores” de aplicaciones, por ejemplo: podremos generar una aplicación “Community” y otra con más características habilitadas llamada “Enterprise”.
+-  Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas
    (Toolchains_)
    que tengamos instaladas en la máquina de compilación.
 
