@@ -136,14 +136,11 @@ Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: ten
 
 Con este fichero tan simple, conseguiremos compilar e instalar nuestra aplicación, en modo Debug para la plataforma donde estamos ejecutando Gradle_, en mi caso es Linux X64.
 
-Si ejecutamos desde la raíz de nuestro proyecto gradle task, podremos
-ver todas las tareas que podemos hacer.
+Si ejecutamos desde la raíz de nuestro proyecto gradle task, podremos ver todas las tareas que podemos hacer.
 
-En nuestro caso, solo queremos nuestra aplicación compilada y lista para
-funcionar, así que ejecutaremos: gradle installMainExecutable.
+En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: gradle installMainExecutable.
 
-Una vez que ha terminado, podemos ejecutar el programa llamando al
-script  [2]_.
+Una vez que ha terminado, podemos ejecutar el programa llamando al script  [2]_.
 
 [H]
 
