@@ -156,16 +156,14 @@ Una vez que ha terminado, podemos ejecutar el programa llamando al script  [2]_.
     9.  Hello Mr. Pepito (Community) 
     10. Hello Mr. Pepito (Community) 
 
-Distintos “sabores”
+
+Distintos “Sabores”
 ~~~~~~~~~~~~~~~~~~~
 
-Con unas pocas líneas más, podemos generar distintas versiones de la
-misma aplicación, en nuestro ejemplo vamos a generar una versión
-“Community” y otra “Enterprise”.
+Con unas pocas líneas más, podemos generar distintas versiones de la misma aplicación, en nuestro ejemplo vamos a generar una versión “Community” y otra “Enterprise”.
 
-[H]
-
-::
+.. code-block:: groovy
+	:name: build.gradle
 
     apply plugin: 'cpp'
     model {
