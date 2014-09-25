@@ -120,7 +120,7 @@ Construyendo con Gradle
 Caso básico
 ~~~~~~~~~~~
 
-Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: tener Gradle_ [1]_ y el fichero build.gradle.
+Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: tener Gradle_ [1]_ y el fichero :code:`build.gradle`.
 
 .. code-block:: groovy
 
@@ -140,9 +140,9 @@ Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: ten
 
 Con este fichero tan simple, conseguiremos compilar e instalar nuestra aplicación, en modo Debug para la plataforma donde estamos ejecutando Gradle_, en mi caso es Linux X64.
 
-Si ejecutamos desde la raíz de nuestro proyecto gradle task, podremos ver todas las tareas que podemos hacer.
+Si ejecutamos desde la raíz de nuestro proyecto :code:`gradle task`, podremos ver todas las tareas que podemos hacer.
 
-En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: gradle installMainExecutable.
+En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: :code:`gradle installMainExecutable`.
 
 Una vez que ha terminado, podemos ejecutar el programa llamando al script  [2]_.
 
