@@ -5,14 +5,6 @@
 .. description: Cómo construir un proyecto típico C++ utilizando Gradle.
 .. type: text
 
-====================================
-Construir un proyecto C++ con Gradle
-====================================
-
-.. role:: math(raw)
-   :format: html latex
-..
-
 Introducción
 ============
 
