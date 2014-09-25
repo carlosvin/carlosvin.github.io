@@ -17,8 +17,7 @@ Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-
 -  Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.
 -  Gestionar las dependencias entre estos artefactos (sin versiones).
 -  Generar distintos “sabores” de aplicaciones, por ejemplo: podremos generar una aplicación “Community” y otra con más características habilitadas llamada “Enterprise”.
--  Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas
-   (Toolchains_)
+-  Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas ( Toolchains_ )
    que tengamos instaladas en la máquina de compilación.
 
 Como decía todavía tiene limitaciones, aunque están trabajando en ello y
