@@ -12,7 +12,7 @@ La construcción, gestión de dependencias y distribución de mis proyectos
 es algo que cada vez me preocupa más, me gustaría encontrar una
 herramienta que unificara este proceso y fuese independiente del
 lenguaje, lo más parecido con lo que he trabajado ha sido SCons_,
-`Autotools <http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction>`__,
+Autotools_,
 `Ant <http://ant.apache.org/>`__, `Maven <http://maven.apache.org/>`__ y
 últimamente `Gradle <http://www.gradle.org/>`__.
 
@@ -440,7 +440,7 @@ desarrollo, por lo que:
 Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 
 .. _SCons: http://www.scons.org
-
+.. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
 .. [1]
    Realmente no es necesario tener instalado Gradle, si utilizamos el
    wrapper, pero esto no lo vamos a tratar hoy,\ `si queréis más
