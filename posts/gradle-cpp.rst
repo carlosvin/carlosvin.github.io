@@ -28,10 +28,9 @@ Básicamente he sacado todo el ejemplo de `aquí <http://www.gradle.org/docs/cur
 
 La aplicación es un ejecutable y una librería dinámica. El ejecutable hace uso de esta librería. Ya está, solo quiero mostrar lo que nos permite hacer Gradle_.
 
-También nos permitirá generar una versión para distribuir y otra para
-depurar.
+También nos permitirá generar una versión para distribuir y otra para depurar.
 
-Todo el código se encuentra en https://github.com/carlosvin/cpp_gradle.
+Todo el código se encuentra en `https://github.com/carlosvin/cpp_gradle`.
 
 Estructura del proyecto
 -----------------------
