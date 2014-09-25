@@ -34,7 +34,7 @@ La aplicación es un ejecutable y una librería dinámica. El ejecutable hace us
 
 También nos permitirá generar una versión para distribuir y otra para depurar.
 
-Todo el código se encuentra en `https://github.com/carlosvin/cpp_gradle`.
+Todo el código se encuentra en https://github.com/carlosvin/cpp_gradle.
 
 Estructura del proyecto
 -----------------------
@@ -45,7 +45,7 @@ Podemos crear la estructura que queramos, pero resulta más fácil seguir la que
     Directorio raíz.
 
     :build.gradle:
-        Fichero donde se configura el proyecto Gradle, el equivalente al build.xml de Ant_, al Makefile_ de C/C++ o al pom.xml de Maven_.
+        Fichero donde se configura el proyecto Gradle_, el equivalente al build.xml de Ant_, al Makefile_ de C/C++ o al pom.xml de Maven_.
 
     :src:
         Carpeta donde va todo el código fuente
@@ -99,7 +99,7 @@ Va a consistir en un ejecutable que hará uso de la funcionalidad de la librerí
         return 0; 
     }
 
-Esta librería permite saludar :math:`n` veces a una persona especificada en su constructor.
+Esta librería permite saludar n_ veces a una persona especificada en su constructor.
 
 .. code-block:: cpp
 
@@ -120,7 +120,7 @@ Construyendo con Gradle
 Caso básico
 ~~~~~~~~~~~
 
-Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: tener Gradle_ [1]_ y el fichero build.gradle.
+Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: tener Gradle_ [1]_ y el fichero :code:`build.gradle`.
 
 .. code-block:: groovy
 
@@ -140,9 +140,9 @@ Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: ten
 
 Con este fichero tan simple, conseguiremos compilar e instalar nuestra aplicación, en modo Debug para la plataforma donde estamos ejecutando Gradle_, en mi caso es Linux X64.
 
-Si ejecutamos desde la raíz de nuestro proyecto gradle task, podremos ver todas las tareas que podemos hacer.
+Si ejecutamos desde la raíz de nuestro proyecto :code:`gradle task`, podremos ver todas las tareas que podemos hacer.
 
-En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: gradle installMainExecutable.
+En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: :code:`gradle installMainExecutable`.
 
 Una vez que ha terminado, podemos ejecutar el programa llamando al script  [2]_.
 
@@ -372,6 +372,8 @@ Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 .. _Java: http://www.java.com
 .. _Makefile: http://es.wikipedia.org/wiki/Make
 .. _Android: http://developer.android.com/sdk/installing/studio-build.html
+
+.. [n] 'n' es un número entero positivo
 
 .. [1]
    Realmente no es necesario tener instalado Gradle, si utilizamos el wrapper, pero esto no lo vamos a tratar hoy, `si queréis más información <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
