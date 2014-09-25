@@ -109,14 +109,15 @@ en su constructor.
             void sayHello(unsigned n = 1);
     };
 
+
 Construyendo con Gradle
 -----------------------
 
 Caso básico
 ~~~~~~~~~~~
 
-Lo único que necesitamos para construir nuestra aplicación con Gradle
-es: tener Gradle [1]_ y el fichero build.gradle.
+Lo único que necesitamos para construir nuestra aplicación con Gradle_
+es: tener Gradle_ [1]_ y el fichero build.gradle_.
 
 [H]
 
