@@ -83,7 +83,7 @@ Va a consistir en un ejecutable que hará uso de la funcionalidad de la librerí
 
 [H]
 
-::
+.. code-block:: cpp
 
     #include "Hello.h"
     int main(int argc, char ** argv) 
@@ -98,7 +98,7 @@ en su constructor.
 
 [H]
 
-::
+.. code-block:: cpp
 
     class Hello  
     {
