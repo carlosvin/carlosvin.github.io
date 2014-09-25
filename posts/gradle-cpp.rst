@@ -35,9 +35,7 @@ Todo el código se encuentra en `https://github.com/carlosvin/cpp_gradle`.
 Estructura del proyecto
 -----------------------
 
-Podemos crear la estructura que queramos, pero resulta más fácil seguir
-la que espera Gradle, para no tener que especificar donde está el código
-fuente. Esta es la estructura del proyecto:
+Podemos crear la estructura que queramos, pero resulta más fácil seguir la que espera Gradle_, para no tener que especificar donde está el código fuente. Esta es la estructura del proyecto:
 
 gradle\_cpp
      
