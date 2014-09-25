@@ -17,14 +17,9 @@ Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-
 -  Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.
 -  Gestionar las dependencias entre estos artefactos (sin versiones).
 -  Generar distintos “sabores” de aplicaciones, por ejemplo: podremos generar una aplicación “Community” y otra con más características habilitadas llamada “Enterprise”.
--  Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas ( Toolchains_ )
-   que tengamos instaladas en la máquina de compilación.
+-  Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas ( Toolchains_ ) que tengamos instaladas en la máquina de compilación.
 
-Como decía todavía tiene limitaciones, aunque están trabajando en ello y
-`si consiguen lo que tienen
-planeado <http://www.gradleware.com/resources/cpp/>`__\ dejaré
-`Autotools <http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction>`__
-(me arrepentiré de haber dicho esto).
+Como decía todavía tiene limitaciones, aunque están trabajando en ello y `si consiguen lo que tienen planeado <http://www.gradleware.com/resources/cpp/>`__ dejaré Autotools_ (me arrepentiré de haber dicho esto).
 
 Un caso práctico
 ================
