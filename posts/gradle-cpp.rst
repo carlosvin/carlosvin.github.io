@@ -21,6 +21,10 @@ Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-
 
 Como decía todavía tiene limitaciones, aunque están trabajando en ello y `si consiguen lo que tienen planeado <http://www.gradleware.com/resources/cpp/>`__ dejaré Autotools_ (me arrepentiré de haber dicho esto).
 
+.. contents:: índice
+
+.. TEASER_END
+
 Un caso práctico
 ================
 
