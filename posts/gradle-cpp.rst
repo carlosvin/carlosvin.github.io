@@ -93,8 +93,7 @@ Va a consistir en un ejecutable que hará uso de la funcionalidad de la librerí
         return 0; 
     }
 
-Esta librería permite saludar :math:`n` veces a una persona especificada
-en su constructor.
+Esta librería permite saludar :math:`n` veces a una persona especificada en su constructor.
 
 [H]
 
