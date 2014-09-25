@@ -37,7 +37,7 @@ Estructura del proyecto
 
 Podemos crear la estructura que queramos, pero resulta más fácil seguir la que espera Gradle_, para no tener que especificar donde está el códigofuente. Esta es la estructura del proyecto:
 
-`gradle_cpp`
+gradle-cpp
 
     build.gradle
         Fichero donde se configura el proyecto Gradle, el equivalente al
