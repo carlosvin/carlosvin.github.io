@@ -361,7 +361,7 @@ Solo tienes que seguir los siguientes pasos:
 
 1. :code:`git clone git@github.com:carlosvin/cpp_gradle.git`
 2. :code:`cd cpp_gradle`
-3. :code:`./gradlew task` o `./gradlew.bat task` si estás en Windows. De esta forma verás todas las tareas que te ofrece Gradle_ para este proyecto. La primera vez tardará un poco porque se descarga una versión de Gradle_.
+3. :code:`./gradlew task` o :code:`./gradlew.bat task` si estás en Windows. De esta forma verás todas las tareas que te ofrece Gradle_ para este proyecto. La primera vez tardará un poco porque se descarga una versión de Gradle_.
 4. Si estás en una máquina de 64 bits, por ejemplo utiliza este comando para compilar e instalar la aplicación :code:`./gradlew installX64ReleaseEnterpriseMainExecutable`.
 5. Ejecuta la aplicación que acabas de construir :code:`build/install/mainExecutable/x64ReleaseEnterprise/main`
 
