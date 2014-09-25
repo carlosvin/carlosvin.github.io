@@ -121,7 +121,7 @@ es: tener Gradle_ [1]_ y el fichero build.gradle.
 
 [H]
 
-::
+.. code-block:: groovy
 
     apply plugin: 'cpp'
 
