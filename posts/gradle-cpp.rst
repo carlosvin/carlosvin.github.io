@@ -1,8 +1,7 @@
 .. title: Construir un proyecto C++ con Gradle
 .. slug: gradle-cpp
 .. date: 2014/09/25 19:00:00
-
-.. tags: Git, Proxy, Tips and Tricks
+.. tags: Gradle, C++, Build Construction Systems
 .. link: 
 .. description: Cómo configurar git para que funcione a través de un proxy
 .. type: text
