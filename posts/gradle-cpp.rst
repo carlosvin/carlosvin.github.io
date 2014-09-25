@@ -40,8 +40,7 @@ Podemos crear la estructura que queramos, pero resulta más fácil seguir la que
 gradle-cpp
 
     build.gradle
-        Fichero donde se configura el proyecto Gradle, el equivalente al
-        build.xml de Ant, al Makefile de C/C++ o al pom.xml de Maven.
+        Fichero donde se configura el proyecto Gradle, el equivalente al build.xml de Ant_, al Makefile_ de C/C++ o al pom.xml de Maven_.
 
     src
         Carpeta donde va todo el código fuente
@@ -66,8 +65,7 @@ gradle-cpp
                      
 
         main
-            Carpeta que contiene el módulo que será el ejecutable que
-            utilice la librería hello.
+            Carpeta que contiene el módulo que será el ejecutable que utilice la librería hello.
 
             cpp
                 Carpeta donde van los fuentes C++.
@@ -405,6 +403,7 @@ Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 .. _incubación: http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating
 .. _Toolchains: http://es.wikipedia.org/wiki/Cadena_de_herramientas
 .. _Java: http://www.java.com
+.. _Makefile: http://es.wikipedia.org/wiki/Make
 
 .. [1]
    Realmente no es necesario tener instalado Gradle, si utilizamos el
