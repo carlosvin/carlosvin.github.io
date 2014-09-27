@@ -2,9 +2,9 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="Cómo construir un proyecto típico C++ utilizando Gradle.">
+<meta name="description" content="How to build a C++ project using Gradle">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Construir un proyecto C++ con Gradle | Vin's Blog</title>
+<title>Build C++ project with Gradle | Vin's Blog</title>
 <link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml">
 <link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../../rss.xml">
@@ -18,12 +18,11 @@
 
     
 
-    <meta name="description" itemprop="description" content="Cómo construir un proyecto típico C++ utilizando Gradle.">
+    <meta name="description" itemprop="description" content="How to build a C++ project using Gradle">
 <meta name="author" content="Carlos Martín Sánchez">
-<link rel="prev" href="sorting-algorithm-dancing.html" title="How sorting algorithms work (Dancing)" type="text/html">
-<meta name="og:title" content="Construir un proyecto C++ con Gradle">
+<meta name="og:title" content="Build C++ project with Gradle">
 <meta name="og:url" content="http://carlosvin.github.io/en/posts/gradle-cpp.html">
-<meta name="og:description" content="Cómo construir un proyecto típico C++ utilizando Gradle.">
+<meta name="og:description" content="How to build a C++ project using Gradle">
 <meta name="og:site_name" content="Vin's Blog">
 <meta name="og:type" content="article">
 <link rel="alternate" hreflang="es" href="../../posts/gradle-cpp.html">
@@ -89,7 +88,7 @@
         <div class="row">
             
             
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Construir un proyecto C++ con Gradle</a></h1>
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Build C++ project with Gradle</a></h1>
 
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
@@ -100,7 +99,7 @@
 <div class="g-commentcount" data-href="/en/posts/gradle-cpp.html"></div>
 <script src="https://apis.google.com/js/plusone.js"></script><p class="sourceline"><a href="../.././en/posts/gradle-cpp.rst" id="sourcelink">Source</a></p>
 
-                <meta name="description" itemprop="description" content="Cómo construir un proyecto típico C++ utilizando Gradle.">
+                <meta name="description" itemprop="description" content="How to build a C++ project using Gradle">
 </div>
         
         <div class="metadata posttranslations translations">
@@ -110,11 +109,13 @@
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<div class="section" id="introduccion">
-<h2><a class="toc-backref" href="gradle-cpp.html#id7">Introducción</a></h2>
-<p>La construcción, gestión de dependencias y distribución de mis proyectos es algo que cada vez me preocupa más, me gustaría encontrar una herramienta que unificara este proceso y fuese independiente del lenguaje, lo más parecido con lo que he trabajado ha sido <a class="reference external" href="http://www.scons.org">SCons</a>, <a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction">Autotools</a>, <a class="reference external" href="http://ant.apache.org">Ant</a>, <a class="reference external" href="http://maven.apache.org">Maven</a> y últimamente <a class="reference external" href="http://www.gradle.org">Gradle</a>.</p>
-<p>Llevo un tiempo haciendo algunas cosas con <a class="reference external" href="http://www.gradle.org">Gradle</a>, pero siempre centrado en proyectos <a class="reference external" href="http://www.java.com">Java</a> utilizándolo como reemplazo a <a class="reference external" href="http://maven.apache.org">Maven</a>, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a> y he sufrido la pareja <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android Studio + Gradle</a> en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.</p>
-<p>Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-C con <a class="reference external" href="http://www.gradle.org">Gradle</a> se encuentra en fase de <a class="reference external" href="http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating">incubación</a>, aunque ya permite hacer algunas tareas avanzadas como:</p>
+<div class="section" id="introduction">
+<h2><a class="toc-backref" href="gradle-cpp.html#id7">Introduction</a></h2>
+<p>I am more and more worried about building, dependency management and distribution of my projects. I'd like to find a tool unifies those processes with independency of the languaje. I know several tools those almost fit to what I'm looking for, like I know several tools those almost fit to what I'm looking for, like <a class="reference external" href="http://www.scons.org">SCons</a>, <a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction">Autotools</a>, <a class="reference external" href="http://ant.apache.org">Ant</a>, <a class="reference external" href="http://maven.apache.org">Maven</a> and lately <a class="reference external" href="http://www.gradle.org">Gradle</a>.</p>
+<p>I've made several projects with Gradle, but always I was focused in <a class="reference external" href="http://www.java.com">Java</a> and <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a> projects.
+In <a class="reference external" href="http://www.java.com">Java</a> projects I've found a <a class="reference external" href="http://maven.apache.org">Maven</a> replacement, because it is faster, easier and less verbose.
+About <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a> projects I suffered the early adoption of <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android Studio + Gradle</a>, although currently I think the are more mature and they work fine.</p>
+<p>First of all, I have to say: building C/C++/Objective-C projects with <a class="reference external" href="http://www.gradle.org">Gradle</a> is in <a class="reference external" href="http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating">incubation</a> phase, although now we can perform advanced tasks like:</p>
 <ul class="simple">
 <li>Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.</li>
 <li>Gestionar las dependencias entre estos artefactos (sin versiones).</li>
@@ -125,7 +126,7 @@
 <div class="contents topic" id="indice">
 <p class="topic-title first">índice</p>
 <ul class="simple">
-<li><a class="reference internal" href="gradle-cpp.html#introduccion" id="id7">Introducción</a></li>
+<li><a class="reference internal" href="gradle-cpp.html#introduction" id="id7">Introduction</a></li>
 <li>
 <a class="reference internal" href="gradle-cpp.html#un-caso-practico" id="id8">Un caso práctico</a><ul>
 <li><a class="reference internal" href="gradle-cpp.html#estructura-del-proyecto" id="id9">Estructura del proyecto</a></li>
@@ -580,11 +581,6 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.</p>
 <li><a class="tag p-category" href="../categories/build-construction-systems.html" rel="tag">Build Construction Systems</a></li>
            <li><a class="tag p-category" href="../categories/c++.html" rel="tag">C++</a></li>
            <li><a class="tag p-category" href="../categories/gradle.html" rel="tag">Gradle</a></li>
-        </ul>
-<ul class="pager">
-<li class="previous">
-                <a href="sorting-algorithm-dancing.html" rel="prev" title="How sorting algorithms work (Dancing)">Previous post</a>
-            </li>
         </ul></nav></aside><section class="comments"><h2>Comments</h2>
         
         

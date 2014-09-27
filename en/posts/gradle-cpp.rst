@@ -1,18 +1,20 @@
-.. title: Construir un proyecto C++ con Gradle
+.. title: Build C++ project with Gradle
 .. slug: gradle-cpp
-.. date: 2014/09/25 19:00:00
-.. tags: Gradle, C++, Build Construction Systems
-.. description: Cómo construir un proyecto típico C++ utilizando Gradle.
+.. date: 2014/09/27 12:00:00
+.. tags: Gradle, C++, Build Construction Systems, draft
+.. description: How to build a C++ project using Gradle
 .. type: text
 
-Introducción
+Introduction
 ============
 
-La construcción, gestión de dependencias y distribución de mis proyectos es algo que cada vez me preocupa más, me gustaría encontrar una herramienta que unificara este proceso y fuese independiente del lenguaje, lo más parecido con lo que he trabajado ha sido SCons_, Autotools_, Ant_, Maven_ y últimamente Gradle_.
+I am more and more worried about building, dependency management and distribution of my projects. I'd like to find a tool unifies those processes with independency of the languaje. I know several tools those almost fit to what I'm looking for, like I know several tools those almost fit to what I'm looking for, like SCons_, Autotools_, Ant_, Maven_ and lately Gradle_.
 
-Llevo un tiempo haciendo algunas cosas con Gradle_, pero siempre centrado en proyectos Java_ utilizándolo como reemplazo a Maven_, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos Android_ y he sufrido la pareja `Android Studio + Gradle`_ en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.
+I've made several projects with Gradle, but always I was focused in Java_ and Android_ projects. 
+In Java_ projects I've found a Maven_ replacement, because it is faster, easier and less verbose.
+About Android_ projects I suffered the early adoption of `Android Studio + Gradle`_, although currently I think the are more mature and they work fine. 
 
-Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-C con Gradle_ se encuentra en fase de incubación_, aunque ya permite hacer algunas tareas avanzadas como:
+First of all, I have to say: building C/C++/Objective-C projects with Gradle_ is in incubation_ phase, although now we can perform advanced tasks like:
 
 -  Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.
 -  Gestionar las dependencias entre estos artefactos (sin versiones).
@@ -388,7 +390,7 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
 .. _Maven: http://maven.apache.org
 .. _Gradle: http://www.gradle.org
 .. _`Android Studio + Gradle`: http://developer.android.com/sdk/installing/studio-build.html
-.. _incubación: http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating
+.. _incubation: http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating
 .. _Toolchains: http://es.wikipedia.org/wiki/Cadena_de_herramientas
 .. _Java: http://www.java.com
 .. _Makefile: http://es.wikipedia.org/wiki/Make
