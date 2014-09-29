@@ -16,9 +16,9 @@ About Android_ projects I suffered the early adoption of `Android Studio + Gradl
 
 First of all, I have to say: building C/C++/Objective-C projects with Gradle_ is in incubation_ phase, although now we can perform advanced tasks like:
 
--  Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.
--  Gestionar las dependencias entre estos artefactos (sin versiones).
--  Generar distintos “sabores” de aplicaciones, por ejemplo: podremos generar una aplicación “Community” y otra con más características habilitadas llamada “Enterprise”.
+-  Generation several artifacts within same project (libraries and executables).
+-  Dependency management between artifacts (no versions).
+-  Different "flavors" of the same software, e.g: we can generate a “Community” release and other one with more enabled features called “Enterprise”.
 -  Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas ( Toolchains_ ) que tengamos instaladas en la máquina de compilación.
 
 Como decía todavía tiene limitaciones, aunque están trabajando en ello y `si consiguen lo que tienen planeado <http://www.gradleware.com/resources/cpp/>`__ dejaré Autotools_ (me arrepentiré de haber dicho esto).
