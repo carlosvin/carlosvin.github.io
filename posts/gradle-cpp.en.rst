@@ -21,7 +21,7 @@ First of all, I have to say: building C/C++/Objective-C projects with Gradle_ is
 -  Different "flavors" of the same software, e.g: we can generate a “Community” release and other one with more enabled features called “Enterprise”.
 -  It allows multi-platform binary generation.
 
-As I said, this plugin is still having limitations although they are working on it: `Gradle C++ roadmap <http://www.gradleware.com/resources/cpp/>`__ dejaré Autotools_ (me arrepentiré de haber dicho esto).
+As I said, this plugin is still having limitations although they are working on it: `Gradle C++ roadmap <http://www.gradleware.com/resources/cpp/>`__. If they achieve it I'll leave Autotools_ (I'm going to regret saying that).
 
 .. contents:: Index
 
@@ -30,7 +30,7 @@ As I said, this plugin is still having limitations although they are working on 
 Case study
 ==========
 
-Básicamente he sacado todo el ejemplo de `aquí <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__ y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.
+I've extract all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__ y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.
 
 La aplicación es un ejecutable y una librería dinámica. El ejecutable hace uso de esta librería. Ya está, solo quiero mostrar lo que nos permite hacer Gradle_.
 
