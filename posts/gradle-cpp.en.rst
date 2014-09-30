@@ -30,7 +30,7 @@ As I said, this plugin is still having limitations although they are working on 
 Case study
 ==========
 
-I've extract all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions “Community” and “Enterprise”.
+I've extracted all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions “Community” and “Enterprise”.
 
 The application consists on an executable and a dynamic library. The executable will use the library. 
 
