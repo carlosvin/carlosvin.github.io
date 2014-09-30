@@ -32,7 +32,7 @@ Case study
 
 I've extracted all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions “Community” and “Enterprise”.
 
-The application consists on an executable and a dynamic library. The executable will use the library. 
+The application consists of an executable and a dynamic library. The executable will use the library. 
 
 Gradle_ also is able to generate a distributable version and a debug version.
 
