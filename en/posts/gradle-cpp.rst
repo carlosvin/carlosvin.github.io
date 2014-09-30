@@ -217,7 +217,8 @@ Besides, we have to make our application ready to use compilation parameters.
 In this way it selects a string depending on used flavor. 
 
 
-If we execute :code:`gradle clean task` form the root of the rpoject, we'll get more available tasks, before we had :code:`installMainExecutable` and now it has been replaced by :code:`installCommunityMainExecutable` and :code:`installEnterpriseMainExecutable`.
+If we execute :code:`gradle clean task` in the root folder, we'll get more available tasks. 
+Before, we had :code:`installMainExecutable` which has been replaced by :code:`installCommunityMainExecutable` and :code:`installEnterpriseMainExecutable`.
 
 If we execute both tasks, we'll get the installed application in both flavors:
 
@@ -243,7 +244,7 @@ If we execute both tasks, we'll get the installed application in both flavors:
     BUILD SUCCESSFUL
     Total time: 9.414 secs 
 
-Now we can execute the application in both flavors:
+Now we can run the application in both flavors:
 
 Community
 +++++++++
@@ -351,7 +352,7 @@ This only works if we have installed the Toolchain_ for the target platform.
         }
     }
 
-Executing :code:`gradle clean task` we'll see the different building options we have. 
+When execute :code:`gradle clean task` we'll see the different building options we have. 
 In this example, we can build different versions of the application in different flavors for different platforms in Debug or Release mode.
 
 Try it yourself
@@ -379,13 +380,13 @@ With a tiny configuration file, we have many different build combinations.
 
 Gradle_ for C++ has a promising future,  I hope it follows the steps of Java_ and Android_ support.
 
-It is well supported by continous integration systems. 
+It is well supported by continuous integration systems.
 
 It has many plugins and features.  
 
-Gradle_ for C++ is a feature under develpoment, we have to be careful:
+Gradle_ for C++ is a feature under development, we have to be careful:
 
--  Don't use in production environments.
+-  Don't use it in production environments.
 -  Many things can change or disappear.
 
 The full example is on https://github.com/carlosvin/cpp_gradle.
@@ -408,7 +409,7 @@ I recommend you to `Try it yourself`_.
 .. [n] 'n' Positive integer
 
 .. [1]
-   Actually Gradle_ is not required if we use the "wrapper", but we aren't going to treat it here, `here you can get more info about Gradle wapper <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
+   Actually Gradle_ is not required if we use the "wrapper", but we aren't going to treat it here, `here you can get more info about Gradle Wrapper <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
 
 .. [2]
    .bat in Windows. Without extension in Linux
