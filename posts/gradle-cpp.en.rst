@@ -8,7 +8,7 @@
 Introduction
 ============
 
-I am more and more worried about building, dependency management and distribution of my projects. I'd like to find a tool unifies those processes with independency of the languaje. I know several tools those almost fit to what I'm looking for, like I know several tools those almost fit to what I'm looking for, like SCons_, Autotools_, Ant_, Maven_ and lately Gradle_.
+I am more and more worried about building, dependency management and distribution of my projects. I'd like to find a tool unifies those processes with  independence of the language. I know several tools those almost fit to what I'm looking for, like I know several tools those almost fit to what I'm looking for, like SCons_, Autotools_, Ant_, Maven_ and lately Gradle_.
 
 I've made several projects with Gradle, but always I was focused in Java_ and Android_ projects. 
 In Java_ projects I've found a Maven_ replacement, because it is faster, easier and less verbose.
