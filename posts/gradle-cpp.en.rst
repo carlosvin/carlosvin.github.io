@@ -30,13 +30,13 @@ As I said, this plugin is still having limitations although they are working on 
 Case study
 ==========
 
-I've extract all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__ y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.
+I've extract all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions “Community” and “Enterprise”.
 
-La aplicación es un ejecutable y una librería dinámica. El ejecutable hace uso de esta librería. Ya está, solo quiero mostrar lo que nos permite hacer Gradle_.
+The application consists on an executable and a dynamic library. The executable will use the library. 
 
-También nos permitirá generar una versión para distribuir y otra para depurar.
+Gradle_ also is able to generate a distributable version and a debug version.
 
-Todo el código se encuentra en https://github.com/carlosvin/cpp_gradle.
+You can fork the code on https://github.com/carlosvin/cpp_gradle.
 
 Estructura del proyecto
 -----------------------
