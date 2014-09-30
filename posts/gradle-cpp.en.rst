@@ -30,7 +30,7 @@ As I said, this plugin is still having limitations although they are working on 
 Case study
 ==========
 
-I've extracted all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions “Community” and “Enterprise”.
+I've extracted all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions "Community" and "Enterprise".
 
 The application consists of an executable and a dynamic library. The executable will use the library. 
 
@@ -39,7 +39,7 @@ Gradle_ also is able to generate a distributable version and a debug version.
 You can fork the code on https://github.com/carlosvin/cpp_gradle.
 
 Project Structure
------------------------
+-----------------
 
 We can create whichever directory structure, but it is easier using the proposed by Gradle, if not we'll have to specify where the code is located. 
 
@@ -89,7 +89,7 @@ This is the project structure:
 C++ Application
 ---------------
 
-It consits on an executable that uses the functionality implemented at :code:`hello` library.
+It consists of an executable that uses the functionality implemented at :code:`hello` library.
 
 
 .. code-block:: cpp
@@ -103,7 +103,7 @@ It consits on an executable that uses the functionality implemented at :code:`he
         return 0; 
     }
 
-:code:`hello` library allows greet n_ times to someone who is passed  as argument to constructor class.
+:code:`hello` library allows greet n_ times to someone who is passed as argument to constructor class.
 
 .. code-block:: cpp
 
