@@ -312,7 +312,7 @@ Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herra
             debug
             release
         }
-             platforms {
+        platforms {
             x86 {
                 architecture "x86"
             }

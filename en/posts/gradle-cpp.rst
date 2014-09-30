@@ -1,7 +1,7 @@
 .. title: Build C++ project with Gradle
 .. slug: gradle-cpp
 .. date: 2014/09/27 12:00:00
-.. tags: Gradle, C++, Build Construction Systems, draft
+.. tags: Gradle, C++, Build Construction Systems
 .. description: How to build a C++ project using Gradle
 .. type: text
 
@@ -30,64 +30,66 @@ As I said, this plugin is still having limitations although they are working on 
 Case study
 ==========
 
-I've extract all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__ y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.
+I've extract all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions “Community” and “Enterprise”.
 
-La aplicación es un ejecutable y una librería dinámica. El ejecutable hace uso de esta librería. Ya está, solo quiero mostrar lo que nos permite hacer Gradle_.
+The application consists on an executable and a dynamic library. The executable will use the library. 
 
-También nos permitirá generar una versión para distribuir y otra para depurar.
+Gradle_ also is able to generate a distributable version and a debug version.
 
-Todo el código se encuentra en https://github.com/carlosvin/cpp_gradle.
+You can fork the code on https://github.com/carlosvin/cpp_gradle.
 
-Estructura del proyecto
+Project Structure
 -----------------------
 
-Podemos crear la estructura que queramos, pero resulta más fácil seguir la que espera Gradle_, para no tener que especificar donde está el códigofuente. Esta es la estructura del proyecto:
+We can create whichever directory structure, but it is easier using the proposed by Gradle, if not we'll have to specify where the code is located. 
+
+This is the project structure:
 
 :gradle-cpp:
-    Directorio raíz.
+    Root directory.
 
     :build.gradle:
-        Fichero donde se configura el proyecto Gradle_, el equivalente al build.xml de Ant_, al Makefile_ de C/C++ o al pom.xml de Maven_.
+        File where is configured Gradle_ project, it is the equivalent to: build.xml for Ant_, Makefile_ for C/C++ or pom.xml for Maven_.
 
     :src:
-        Carpeta donde va todo el código fuente
+        Folder where the source code is located.
 
         :hello:
-            Carpeta que contiene el módulo que va a ser la librería hello.
+            This folder contains the module hello. This module will generate hello library.
 
             :cpp:
-                Carpeta donde van los fuentes C++.
+                This folder contains C++ source files.
 
                 :Hello.cpp:
-                     Implementación de la clase Hello.
+                     File with the implementation of Hello class.
 
             :headers:
-                Carpeta donde van los ficheros de cabeceras.
+                Folder with header files.
 
                 :Hello.h:
-                     Declaración de la Clase Hello
+                     Class Hello declaration.
 
                 :Msg.h:
-                     Declaración de constantes.
+                     File with constants declarations.
                      
 
         :main:
-            Carpeta que contiene el módulo que será el ejecutable que utilice la librería hello.
+            This folder contains the module which produces the executable that uses hello library.
 
             :cpp:
-                Carpeta donde van los fuentes C++.
+                This folder contains C++ source files.
 
                 :main.cpp:
-                    Código fuente con la función main. 
+                    Source code of main function.
                      
 
     :build:
-        Carpeta que crea Gradle automáticamente donde deja todos los resultados sus ejecuciones, en ella encontraremos informes de resultados de pruebas, binarios compilados, paquetes para distribuir, etc.
+        Folder created automatically by Gradle_ where it leaves all execution results like unit tests reports, compiled files, package distributions, etc. 
 
-La Aplicación C++
------------------
+C++ Application
+---------------
 
-Va a consistir en un ejecutable que hará uso de la funcionalidad de la librería ’hello’.
+It consits on an executable that uses the functionality implemented at :code:`hello` library.
 
 
 .. code-block:: cpp
@@ -101,7 +103,7 @@ Va a consistir en un ejecutable que hará uso de la funcionalidad de la librerí
         return 0; 
     }
 
-Esta librería permite saludar n_ veces a una persona especificada en su constructor.
+:code:`hello` library allows greet n_ times to someone who is passed  as argument to constructor class.
 
 .. code-block:: cpp
 
@@ -116,13 +118,13 @@ Esta librería permite saludar n_ veces a una persona especificada en su constru
     };
 
 
-Construyendo con Gradle
------------------------
+Building with Gradle_
+---------------------
 
-Caso básico
-~~~~~~~~~~~
+Base case
+~~~~~~~~~
 
-Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: tener Gradle_ [1]_ y el fichero :code:`build.gradle`.
+The only we need to build the application with Gradle_ is: having Gradle_ [1]_ and the file :code:`build.gradle`.
 
 .. code-block:: groovy
 
@@ -140,13 +142,13 @@ Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: ten
         }
     }
 
-Con este fichero tan simple, conseguiremos compilar e instalar nuestra aplicación, en modo Debug para la plataforma donde estamos ejecutando Gradle_, en mi caso es Linux X64.
+With this simple file, we'll be able to compile and install the application in Debug mode for the platform where we are executing Gradle_ (in my case X64).
 
-Si ejecutamos desde la raíz de nuestro proyecto :code:`gradle task`, podremos ver todas las tareas que podemos hacer.
+If we execute :code:`gradle task` from the root of the project, we'll get all the tasks we can do with Gradle_.
 
-En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: :code:`gradle installMainExecutable`.
+In our case, we just want our compiled application ready to run, so we have to execute: :code:`gradle installMainExecutable`.
 
-Una vez que ha terminado, podemos ejecutar el programa llamando al script :code:`build/install/mainExecutable/main` [2]_.
+Once execution has finished, we can run the program calling to :code:`build/install/mainExecutable/main` [2]_.
 
 .. code-block:: bash
 
@@ -163,10 +165,11 @@ Una vez que ha terminado, podemos ejecutar el programa llamando al script :code:
     10. Hello Mr. Pepito (Community) 
 
 
-Distintos “Sabores”
+Different "Flavors"
 ~~~~~~~~~~~~~~~~~~~
 
-Con unas pocas líneas más, podemos generar distintas versiones de la misma aplicación, en nuestro ejemplo vamos a generar una versión “Community” y otra “Enterprise”.
+With a few lines more we can generate different versions of same application. 
+In our example we are going to build "Community" and "Enterprise" flavors.
 
 .. code-block:: groovy
 
@@ -195,7 +198,7 @@ Con unas pocas líneas más, podemos generar distintas versiones de la misma apl
         }
     }
 
-Además tenemos que preparar nuestra aplicación para utilizar estos parámetros de compilación.
+Besides, we have to make our application ready to use compilation parameters.
 
 
 .. code-block:: cpp
@@ -211,11 +214,12 @@ Además tenemos que preparar nuestra aplicación para utilizar estos parámetros
     #endif
 
 
-De esta forma se utiliza una cadena u otra en función del “sabor” con que compilemos.
+In this way it selects a string depending on used flavor. 
 
-Si ahora ejecutamos :code:`gradle clean task` en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos :code:`installMainExecutable` y ahora ha sido reemplazada por :code:`installCommunityMainExecutable` y :code:`installEnterpriseMainExecutable`.
 
-Si ejecutamos estas dos tareas, tendremos nuestra aplicación instalada en los dos sabores.
+If we execute :code:`gradle clean task` form the root of the rpoject, we'll get more available tasks, before we had :code:`installMainExecutable` and now it has been replaced by :code:`installCommunityMainExecutable` and :code:`installEnterpriseMainExecutable`.
+
+If we execute both tasks, we'll get the installed application in both flavors:
 
 .. code-block:: bash
 
@@ -239,7 +243,7 @@ Si ejecutamos estas dos tareas, tendremos nuestra aplicación instalada en los d
     BUILD SUCCESSFUL
     Total time: 9.414 secs 
 
-Ahora podemos ejecutar nuestra aplicación en los dos sabores:
+Now we can execute the application in both flavors:
 
 Community
 +++++++++
@@ -276,10 +280,10 @@ Enterprise
     9.      Hello Mr. Pepito        (Enterprise) 
     10.     Hello Mr. Pepito        (Enterprise)
 
-Release o Debug
+Release or Debug
 ~~~~~~~~~~~~~~~
 
-Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añadir el modo Release para que active algunas optimizaciones [3]_.
+By default Gradle_ compiles in Debug mode, but we can add the Release mode which enables several optimizations and remove debug flags [3]_.
 
 .. code-block:: groovy
 
@@ -294,15 +298,15 @@ Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añad
     
     // ... the rest of file below doesn't change 
 
-Si ahora ejecutamos :code:`gradle clean task` veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo :code:`installCommunityMainExecutable` se habrá desdoblado en :code:`installDebugCommunityMainExecutable` y :code:`installReleaseCommunityMainExecutable`.
+If we execute :code:`gradle clean task` we'll get more tasks, they have been split, for example :code:`installCommunityMainExecutable` has been split in :code:`installDebugCommunityMainExecutable` and :code:`installReleaseCommunityMainExecutable`.
 
-Multi-plataforma
-~~~~~~~~~~~~~~~~
+Multi-platform
+~~~~~~~~~~~~~~
 
-También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras plataformas. El proceso es el mismo, simplemente tenemos que dar te alta las plataformas que vamos a soportar.
+Also we can use cross-compiling features provided by compilers and generate native components for other platforms. 
+To do that we just have to add the supported platforms.
 
-Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( Toolchains_ ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias para 32 bits.
-
+This only works if we have installed the Toolchain_ for the target platform.
 
 .. code-block:: groovy
 
@@ -314,7 +318,7 @@ Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herra
             debug
             release
         }
-             platforms {
+        platforms {
             x86 {
                 architecture "x86"
             }
@@ -347,42 +351,45 @@ Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herra
         }
     }
 
-Ejecutando :code:`gradle clean task` podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.
+Executing :code:`gradle clean task` we'll see the different building options we have. 
+In this example, we can build different versions of the application in different flavors for different platforms in Debug or Release mode.
 
-Pruébalo tú mism@
------------------
+Try it yourself
+---------------
 
-El proyecto se encuentra en https://github.com/carlosvin/cpp_gradle. 
+The project is on https://github.com/carlosvin/cpp_gradle. 
 
-Para poder probar necesitas:
+Requirements:
 
-- Tener instalado Java_ a partir de la versión 6.
-- Tener algún compilador instalado (por ejemplo GCC_)
+- Java_ 6 or higher.
+- An installed compiler (e.g GCC_)
 
-Solo tienes que seguir los siguientes pasos:
+You just have to follow next steps:
 
 1. :code:`git clone git@github.com:carlosvin/cpp_gradle.git`
 2. :code:`cd cpp_gradle`
-3. :code:`./gradlew task` o :code:`./gradlew.bat task` si estás en Windows. De esta forma verás todas las tareas que te ofrece Gradle_ para este proyecto. La primera vez tardará un poco porque se descarga una versión de Gradle_.
-4. Si estás en una máquina de 64 bits, por ejemplo utiliza este comando para compilar e instalar la aplicación :code:`./gradlew installX64ReleaseEnterpriseMainExecutable`.
-5. Ejecuta la aplicación que acabas de construir :code:`build/install/mainExecutable/x64ReleaseEnterprise/main`
+3. :code:`./gradlew task` or :code:`./gradlew.bat task` if you are in Windows. In this way you'll see available tasks for this project. The first execution will take more time, because it downloads Gradle_ runtime.
+4. If you are in a 64 bits platform, you can use this command to install the application: :code:`./gradlew installX64ReleaseEnterpriseMainExecutable`.
+5. Run the application you just built: :code:`build/install/mainExecutable/x64ReleaseEnterprise/main`
 
-Conclusiones
-============
+Conclusions
+===========
 
-Con una configuración mínima, tenemos muchas posibilidades de construcción de aplicaciones nativas multi-plataforma.
+With a tiny configuration file, we have many different build combinations.
 
-Tiene un futuro prometedor, veremos como termina. Aunque si sigue los pasos del soporte para Java_ o Android_, seguro que llega a buen puerto. 
+Gradle_ for C++ has a promising future,  I hope it follows the steps of Java_ and Android_ support.
 
-Podemos utilizar otras características de Gradle_ y aplicarlas a nuestros proyectos C++, como análisis estáticos de código, generación de informes (pruebas, cobertura, calidad, etc.), fácil incorporación a sistemas de integración continua.
+It is well supported by continous integration systems. 
 
-Gradle_ para C++ es una característica que actualmente está en desarrollo, por lo que no hay que olvidar que:
+It has many plugins and features.  
 
--  No debemos utilizar en entornos reales de desarrollo, puede acarrear muchos dolores de cabeza.
--  La forma de definir el fichero build.gradle para esta característica puede cambiar.
+Gradle_ for C++ is a feature under develpoment, we have to be careful:
 
-Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
-Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
+-  Don't use in production environments.
+-  Many things can change or disappear.
+
+The full example is on https://github.com/carlosvin/cpp_gradle.
+I recommend you to `Try it yourself`_.
 
 .. _SCons: http://www.scons.org
 .. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
@@ -391,21 +398,21 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
 .. _Gradle: http://www.gradle.org
 .. _`Android Studio + Gradle`: http://developer.android.com/sdk/installing/studio-build.html
 .. _incubation: http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating
-.. _Toolchains: http://es.wikipedia.org/wiki/Cadena_de_herramientas
+.. _Toolchain: http://en.wikipedia.org/wiki/Toolchain
 .. _Java: http://www.java.com
-.. _Makefile: http://es.wikipedia.org/wiki/Make
+.. _Makefile: https://www.gnu.org/software/make/manual/html_node/Makefiles.html
 .. _Android: http://developer.android.com/sdk/installing/studio-build.html
 .. _`Instala Gradle`: http://www.gradle.org/docs/current/userguide/installation.html
 .. _GCC: https://gcc.gnu.org/
 
-.. [n] 'n' es un número entero positivo
+.. [n] 'n' Positive integer
 
 .. [1]
-   Realmente no es necesario tener instalado Gradle, si utilizamos el wrapper, pero esto no lo vamos a tratar hoy, `si queréis más información <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
+   Actually Gradle_ is not required if we use the "wrapper", but we aren't going to treat it here, `here you can get more info about Gradle wapper <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
 
 .. [2]
-   .bat en Windows y sin extensión en Linux
+   .bat in Windows. Without extension in Linux
 
 .. [3]
-   También podemos definir el tipo de optimizaciones que vamos a utilizar.
+   We can also specify/modify the kind of optimizations.
 
