@@ -73,17 +73,101 @@
 <!-- /.navbar-collapse -->
     </div>
 <!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content">
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
     <div class="body-content">
         <!--Body content-->
         <div class="row">
             
             
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/software-maintenance.html" class="u-url">Software Maintenance</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/first-biicode-poco.html" class="u-url">Gestión de dependencias C++: Biicode</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/software-maintenance.html" rel="bookmark"><time class="published dt-published" datetime="2014-10-11T21:00:00+02:00" itemprop="datePublished" title="Publication date">2014-10-11 21:00</time></a></p>
+            <p class="dateline"><a href="posts/first-biicode-poco.html" rel="bookmark"><time class="published dt-published" datetime="2015-02-25T20:00:00+01:00" title="2015-02-25 20:00">2015-02-25 20:00</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/en/posts/first-biicode-poco.html"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Hace tiempo que estoy interesado la construcción, gestión de dependencias, empaquetado y despliegue de proyectos software. Para <a class="reference external" href="http://java.com/en/download/whatis_java.jsp">Java</a>, <a class="reference external" href="http://www.scala-lang.org/">Scala</a>, <a class="reference external" href="http://www.python.org/">Python</a>, etc. Es bastante sencillo ya que hay herramientas como <a class="reference external" href="http://maven.apache.org/">Maven</a>, <a class="reference external" href="http://www.gradle.org/">Gradle</a>, <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>, <a class="reference external" href="http://www.scala-sbt.org/">Sbt</a>, etc. Pero para C++_, lo más parecido que he encontrado es <a class="reference external" href="http://maven.apache.org/">Maven</a> con el plugin <a class="reference external" href="http://maven-nar.github.io/">Nar</a> o <a class="reference external" href="http://www.gradle.org/">Gradle</a> con su <a class="reference external" href="https://gradle.org/docs/current/userguide/nativeBinaries.html">plugin cpp</a> (que está en desarrollo).</p>
+<p>Hace tiempo que conozco <a class="reference external" href="https://www.biicode.org/">Biicode</a>, pero no había sacado nunca tiempo para probarlo, hasta hoy.</p>
+<p>El funcionamiento general es muy sencillo.</p>
+<p>Necesitamos <a class="reference external" href="http://docs.biicode.com/c++/installation.html">instalar biicode en nuestra máquina</a>.</p>
+<p>Yo he creado un pequeño ejemplo utilizando el sistema de log de la librería <a class="reference external" href="http://pocoproject.org/">Poco</a>.</p>
+<p>He ejecuta este comando para crear mi proyecto, al que he llamado bii_log. Eso sí, lo tengo que crear debajo de mi nombre de usuario en <a class="reference external" href="https://www.biicode.org/">Biicode</a>, por si posteriormente lo quiero publicar.</p>
+<pre class="code bash"><a name="rest_code_723fb8f8d0c3421ab893d5a6fe76f005-1"></a>bii new carlovin/bii_log --hello<span class="o">=</span>cpp
+</pre>
+<p>Se ha creado una estructura de directorios y ficheros con nuestro proyecto. Aunque los únicos ficheros que vamos a tocar son:</p>
+<pre class="code bash"><a name="rest_code_c75683cb7fdc4f08b9edd525abc8273d-1"></a>blocks/carlosvin/bii_log/main.cpp
+<a name="rest_code_c75683cb7fdc4f08b9edd525abc8273d-2"></a>blocks/carlosvin/bii_log/biicode.conf
+</pre>
+<p>En el fichero biicode.conf vamos a configurar nuestras dependencias, en nuestro caso la librería <a class="reference external" href="http://pocoproject.org/">Poco</a>.</p>
+<pre class="code yaml"><a name="rest_code_b797b9a839034fad81e62471b51e9845-1"></a><span class="c1"># Biicode configuration file</span>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-2"></a>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-3"></a><span class="p-Indicator">[</span><span class="nv">requirements</span><span class="p-Indicator">]</span>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-4"></a>    <span class="l-Scalar-Plain">fenix/poco(develop)</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-5"></a>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-6"></a><span class="p-Indicator">[</span><span class="nv">parent</span><span class="p-Indicator">]</span>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-7"></a>        <span class="l-Scalar-Plain">carlosvin/bii_log</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-8"></a>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-9"></a><span class="p-Indicator">[</span><span class="nv">includes</span><span class="p-Indicator">]</span>
+<a name="rest_code_b797b9a839034fad81e62471b51e9845-10"></a>    <span class="l-Scalar-Plain">Poco/*.h</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">fenix/poco/Foundation/include</span>
+</pre>
+<p>En la sección [includes], estamos redefiniendo la ruta a nuestros ficheros de cabeceras, porque si no lo hiciéramos tendríamos que hacer algo así:</p>
+<pre class="code cpp"><a name="rest_code_a958d585f64a474c93992827e164de28-1"></a><span class="cp">#include "fenix/poco/Foundation/include/Logger.h"</span>
+</pre>
+<p>Gracias a esta línea, en nuestro código tendremos includes más claros como:</p>
+<pre class="code cpp"><a name="rest_code_e49c1ade2a314f23b1b7b3520480e891-1"></a><span class="cp">#include "Poco/Logger.h"</span>
+</pre>
+<p>Así de fácil, ya podemos utilizar la librería <a class="reference external" href="http://pocoproject.org/">Poco</a> en nuestro proyecto, por ejemplo:</p>
+<pre class="code cpp"><a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-1"></a><span class="cp">#include "Poco/FileChannel.h"</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-2"></a><span class="cp">#include "Poco/FormattingChannel.h"</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-3"></a><span class="cp">#include "Poco/PatternFormatter.h"</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-4"></a><span class="cp">#include "Poco/Logger.h"</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-5"></a><span class="cp">#include "Poco/AutoPtr.h"</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-6"></a>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-7"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FileChannel</span><span class="p">;</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-8"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FormattingChannel</span><span class="p">;</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-9"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">PatternFormatter</span><span class="p">;</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-10"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">Logger</span><span class="p">;</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-11"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">AutoPtr</span><span class="p">;</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-12"></a>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-13"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-14"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FileChannel</span><span class="o">&gt;</span> <span class="n">pChannel</span><span class="p">(</span><span class="k">new</span> <span class="n">FileChannel</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-15"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"path"</span><span class="p">,</span> <span class="s">"log/sample.log"</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-16"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"rotation"</span><span class="p">,</span> <span class="s">"100 K"</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-17"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"archive"</span><span class="p">,</span> <span class="s">"timestamp"</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-18"></a>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-19"></a>        <span class="c1">//AutoPtr&lt;ConsoleChannel&gt; pCons(new ConsoleChannel);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-20"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">PatternFormatter</span><span class="o">&gt;</span> <span class="n">pPF</span><span class="p">(</span><span class="k">new</span> <span class="n">PatternFormatter</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-21"></a>        <span class="n">pPF</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"pattern"</span><span class="p">,</span> <span class="s">"%Y-%m-%d %H:%M:%S %s: %t"</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-22"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FormattingChannel</span><span class="o">&gt;</span> <span class="n">pFC</span><span class="p">(</span><span class="k">new</span> <span class="n">FormattingChannel</span><span class="p">(</span><span class="n">pPF</span><span class="p">,</span> <span class="n">pChannel</span><span class="p">));</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-23"></a>        <span class="n">Logger</span><span class="o">::</span><span class="n">root</span><span class="p">().</span><span class="n">setChannel</span><span class="p">(</span><span class="n">pFC</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-24"></a>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-25"></a>        <span class="n">Logger</span> <span class="o">&amp;</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="s">"TestChannel"</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-26"></a>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-27"></a>                <span class="n">poco_information</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a info"</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-28"></a>                <span class="n">poco_warning</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a warning"</span><span class="p">);</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-29"></a>        <span class="p">}</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-30"></a>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_fce0e1632ac9463a9fe058a6a1e165d6-31"></a><span class="p">}</span>
+</pre>
+<p>Para compilar el proyecto simplemente hay que ejecutar:</p>
+<pre class="code bash"><a name="rest_code_027852f72ea04e6ba28ad2d12200df08-1"></a>bii cpp:build
+</pre>
+<p>Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utilizado <a class="reference external" href="http://pocoproject.org/">Poco</a>:</p>
+<pre class="code bash"><a name="rest_code_d535bd3bb8ac4a7699381750444263e3-1"></a>bii publish
+</pre>
+<p>Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi <a class="reference external" href="https://eclipse.org">Eclipse</a> con <a class="reference external" href="https://eclipse.org/cdt/">CDT</a> indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/software-maintenance.html" class="u-url">Software Maintenance</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/software-maintenance.html" rel="bookmark"><time class="published dt-published" datetime="2014-10-11T21:00:00+02:00" title="2014-10-11 21:00">2014-10-11 21:00</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -122,7 +206,7 @@
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/gradle-cpp.html" class="u-url">Build C++ project with Gradle</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/gradle-cpp.html" rel="bookmark"><time class="published dt-published" datetime="2014-09-25T19:00:00+02:00" itemprop="datePublished" title="Publication date">2014-09-25 19:00</time></a></p>
+            <p class="dateline"><a href="posts/gradle-cpp.html" rel="bookmark"><time class="published dt-published" datetime="2014-09-25T19:00:00+02:00" title="2014-09-25 19:00">2014-09-25 19:00</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -177,7 +261,7 @@ About <a class="reference external" href="http://developer.android.com/sdk/insta
     </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/sorting-algorithm-dancing.html" class="u-url">How sorting algorithms work (Dancing)</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/sorting-algorithm-dancing.html" rel="bookmark"><time class="published dt-published" datetime="2014-06-16T20:09:00+02:00" itemprop="datePublished" title="Publication date">2014-06-16 20:09</time></a></p>
+            <p class="dateline"><a href="posts/sorting-algorithm-dancing.html" rel="bookmark"><time class="published dt-published" datetime="2014-06-16T20:09:00+02:00" title="2014-06-16 20:09">2014-06-16 20:09</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -194,7 +278,7 @@ About <a class="reference external" href="http://developer.android.com/sdk/insta
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/java-embedded-db-performance-comparison.html" class="u-url">Bases de Datos Embebidas Java: Comparación de Rendimiento</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/java-embedded-db-performance-comparison.html" rel="bookmark"><time class="published dt-published" datetime="2014-06-07T18:09:00+02:00" itemprop="datePublished" title="Publication date">2014-06-07 18:09</time></a></p>
+            <p class="dateline"><a href="posts/java-embedded-db-performance-comparison.html" rel="bookmark"><time class="published dt-published" datetime="2014-06-07T18:09:00+02:00" title="2014-06-07 18:09">2014-06-07 18:09</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -234,7 +318,7 @@ About <a class="reference external" href="http://developer.android.com/sdk/insta
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/serialization-java-serializable-externalizable.html" class="u-url">Java serialization ways: Performance Comparison</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/serialization-java-serializable-externalizable.html" rel="bookmark"><time class="published dt-published" datetime="2014-05-13T17:00:00+02:00" itemprop="datePublished" title="Publication date">2014-05-13 17:00</time></a></p>
+            <p class="dateline"><a href="posts/serialization-java-serializable-externalizable.html" rel="bookmark"><time class="published dt-published" datetime="2014-05-13T17:00:00+02:00" title="2014-05-13 17:00">2014-05-13 17:00</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -266,7 +350,7 @@ About <a class="reference external" href="http://developer.android.com/sdk/insta
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/cpp-mutex.html" class="u-url">Mutex C++</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/cpp-mutex.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-24T17:50:00+02:00" itemprop="datePublished" title="Publication date">2014-04-24 17:50</time></a></p>
+            <p class="dateline"><a href="posts/cpp-mutex.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-24T17:50:00+02:00" title="2014-04-24 17:50">2014-04-24 17:50</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -286,7 +370,7 @@ About <a class="reference external" href="http://developer.android.com/sdk/insta
     </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/async-what-how-when.html" class="u-url">Python's asyncio: What, How, When</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/async-what-how-when.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-20T13:35:00+02:00" itemprop="datePublished" title="Publication date">2014-04-20 13:35</time></a></p>
+            <p class="dateline"><a href="posts/async-what-how-when.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-20T13:35:00+02:00" title="2014-04-20 13:35">2014-04-20 13:35</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -303,7 +387,7 @@ About <a class="reference external" href="http://developer.android.com/sdk/insta
     </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/equations-that-changed-the-word.html" class="u-url">Equations that changed the world</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/equations-that-changed-the-word.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-03T11:30:00+02:00" itemprop="datePublished" title="Publication date">2014-04-03 11:30</time></a></p>
+            <p class="dateline"><a href="posts/equations-that-changed-the-word.html" rel="bookmark"><time class="published dt-published" datetime="2014-04-03T11:30:00+02:00" title="2014-04-03 11:30">2014-04-03 11:30</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -320,7 +404,7 @@ In my opinion, everybody must understand some of these equations.</p>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/primer-post.html" class="u-url">First post with Nikola</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/primer-post.html" rel="bookmark"><time class="published dt-published" datetime="2014-03-27T13:30:02+01:00" itemprop="datePublished" title="Publication date">2014-03-27 13:30</time></a></p>
+            <p class="dateline"><a href="posts/primer-post.html" rel="bookmark"><time class="published dt-published" datetime="2014-03-27T13:30:02+01:00" title="2014-03-27 13:30">2014-03-27 13:30</time></a></p>
                 <p class="commentline">
         
 </p>
@@ -359,19 +443,6 @@ although this time, I'm not going to install on a remote server.</p>
 <p class="more"><a href="posts/primer-post.html">Read more…</a></p>
 </div>
     </div>
-    </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/android-studio-portable-download.html" class="u-url">Android Studio Portable Download</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/android-studio-portable-download.html" rel="bookmark"><time class="published dt-published" datetime="2013-10-20T13:00:00+02:00" itemprop="datePublished" title="Publication date">2013-10-20 13:00</time></a></p>
-                <p class="commentline">
-        
-</p>
-<div class="g-commentcount" data-href="/en/posts/android-studio-portable-download.html"></div>
-<script src="https://apis.google.com/js/plusone.js"></script>
-</div>
-    </header><div class="p-summary entry-summary">
-    <p>If you want to use <a class="reference external" href="http://developer.android.com/sdk/installing/studio.html">Android Studio</a> without installation, as a portable software, here you have the link to <a class="reference external" href="http://tools.android.com/download/studio/canary/latest">last portable version of Android Studio</a>.</p>
-    </div>
     </article>
 </div>
 
@@ -384,7 +455,7 @@ although this time, I'm not going to install on a remote server.</p>
         <!--End of body content-->
 
         <footer>
-            Contents © 2014         <a href="mailto:carlosvin@gmail.com">Carlos Martín Sánchez</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2015         <a href="mailto:carlosvin@gmail.com">Carlos Martín Sánchez</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
    <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>
             
@@ -410,7 +481,10 @@ although this time, I'm not going to install on a remote server.</p>
 </li>
 </ul>
 </div>
-<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script>
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script>jQuery("a.image-reference,!.islink").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
