@@ -106,15 +106,17 @@ Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utiliza
 
 Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi Eclipse_ con CDT_ indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos. 
 
+.. _Biicode: https://www.biicode.org/
 .. _Poco: http://pocoproject.org/
 .. _Eclipse: https://eclipse.org
 .. _CDT: https://eclipse.org/cdt/
 .. _pip: https://pypi.python.org/pypi/pip
 .. _Maven: http://maven.apache.org/
+.. _Nar: http://maven-nar.github.io/
+.. _Java: http://java.com/en/download/whatis_java.jsp
 .. _Gradle: http://www.gradle.org/
 .. _Python: http://www.python.org/
 .. _Scala: http://www.scala-lang.org/
 .. _Sbt: http://www.scala-sbt.org/
 .. _`plugin cpp`: https://gradle.org/docs/current/userguide/nativeBinaries.html
 .. _`instalar biicode en nuestra máquina`: http://docs.biicode.com/c++/installation.html
-
