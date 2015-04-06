@@ -392,6 +392,8 @@ Gradle_ for C++ is a feature under development, we have to be careful:
 The full example is on https://github.com/carlosvin/cpp_gradle.
 I recommend you to `Try it yourself`_.
 
+`Getting Started Gradle Native`_.
+
 .. _SCons: http://www.scons.org
 .. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
 .. _Ant: http://ant.apache.org
@@ -403,8 +405,8 @@ I recommend you to `Try it yourself`_.
 .. _Java: http://www.java.com
 .. _Makefile: https://www.gnu.org/software/make/manual/html_node/Makefiles.html
 .. _Android: http://developer.android.com/sdk/installing/studio-build.html
-.. _`Instala Gradle`: http://www.gradle.org/docs/current/userguide/installation.html
 .. _GCC: https://gcc.gnu.org/
+.. _`Getting Started Gradle Native`: http://gradle.org/getting-started-native/ 
 
 .. [n] 'n' Positive integer
 
