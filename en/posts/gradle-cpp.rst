@@ -282,7 +282,7 @@ Enterprise
     10.     Hello Mr. Pepito        (Enterprise)
 
 Release or Debug
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 By default Gradle_ compiles in Debug mode, but we can add the Release mode which enables several optimizations and remove debug flags [3]_.
 
