@@ -16,7 +16,7 @@ Necesitamos `instalar biicode en nuestra máquina`_.
 
 Yo he creado un pequeño ejemplo utilizando el sistema de log de la librería Poco_.
 
-He ejecuta este comando para crear mi proyecto, al que he llamado bii_log. Eso sí, lo tengo que crear debajo de mi nombre de usuario en Biicode_, por si posteriormente lo quiero publicar. 
+He ejecutado este comando para crear mi proyecto, al que he llamado bii_log. Eso sí, lo tengo que crear debajo de mi nombre de usuario en Biicode_, por si posteriormente lo quiero publicar. 
 
 .. code-block:: bash
 
@@ -106,6 +106,8 @@ Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utiliza
 
 Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi Eclipse_ con CDT_ indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos. 
 
+Tambien he leido un articulo sobre lo bien que se integra con CLion_: `When CLion met biicode`_.
+
 .. _Biicode: https://www.biicode.org/
 .. _Poco: http://pocoproject.org/
 .. _Eclipse: https://eclipse.org
@@ -120,3 +122,6 @@ Además de lo sencillo que ha resultado todo, me ha gustado mucho que después d
 .. _Sbt: http://www.scala-sbt.org/
 .. _`plugin cpp`: https://gradle.org/docs/current/userguide/nativeBinaries.html
 .. _`instalar biicode en nuestra máquina`: http://docs.biicode.com/c++/installation.html
+.. _CLion: https://www.jetbrains.com/clion/
+.. _`When CLion met biicode`: http://blog.jetbrains.com/clion/2015/03/when-clion-met-biicode/
+
