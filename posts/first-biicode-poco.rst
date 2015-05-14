@@ -106,7 +106,7 @@ Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utiliza
 
 Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi Eclipse_ con CDT_ indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos. 
 
-Tambien he leido un articulo sobre lo bien que se integra con CLion_: `When CLion met biicode`_.
+También he leído un artículo sobre lo bien que se integra con CLion_: `When CLion met biicode`_.
 
 .. _Biicode: https://www.biicode.org/
 .. _Poco: http://pocoproject.org/
