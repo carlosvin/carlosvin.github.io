@@ -15,6 +15,7 @@ SITE_URL = "http://carlosvin.github.io/"
 BLOG_EMAIL = "carlosvin@gmail.com"
 BLOG_DESCRIPTION = "Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza."
 
+WRITE_TAG_CLOUD = True
 # Nikola is multilingual!
 #
 # Currently supported languages are:
