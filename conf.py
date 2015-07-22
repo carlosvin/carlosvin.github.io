@@ -538,11 +538,8 @@ RSS_TEASERS = True
 # it appears on the navigation bar:
 #
 SEARCH_FORM = """
-<span class="navbar-form navbar-right">
-  <input type="text" class="form-control" placeholder="Search" id="tipue_search_input">
-  <button type="button" id="tipue_search_button">
-    <span class="glyphicon glyphicon-search"> </span>
-  </button>
+<span class="navbar-form pull-left">
+<input type="text" id="tipue_search_input">
 </span>"""
 
 EXTRA_HEAD_DATA = """
