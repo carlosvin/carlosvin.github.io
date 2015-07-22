@@ -334,7 +334,7 @@ COMPILERS = {
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-THEME = "bootstrap3"
+THEME = "def"
 
 
 # Color scheme to be used for code blocks. If your theme provides
@@ -540,17 +540,21 @@ RSS_TEASERS = True
 # it appears on the navigation bar:
 #
 SEARCH_FORM = """
-<span class="navbar-form navbar-right">
-  <input type="text" class="form-control" placeholder="Search" id="tipue_search_input">
-  <button type="button" id="tipue_search_button">
-    <span class="glyphicon glyphicon-search"> </span>
-  </button>
-</span>"""
+<script>
+  (function() {
+    var cx = '016672377533739393798:3kwbrrevcdc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>"""
 
-EXTRA_HEAD_DATA = """
-<link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
-<div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
-"""
+# EXTRA_HEAD_DATA = """"""
 
 BODY_END = """<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -580,19 +584,7 @@ class="statcounter"
 src="http://c.statcounter.com/9708205/0/4998d447/1/"
 alt="web analytics"></a></div></noscript>
 <!-- End of StatCounter Code for Default Guide -->
-
-<!-- Tipue search -->
-<script src="/assets/js/tipuesearch_set.js"></script>
-<script src="/assets/js/tipuesearch.js"></script>
-<script>
-$(document).ready(function() {
-    $('#tipue_search_input').tipuesearch({
-        'mode': 'json',
-        'contentLocation': '/assets/js/tipuesearch_content.json',
-        'showUrl': false
-    });
-});
-</script>"""
+"""
 
 
 # The possibility to extract metadata from the filename by using a
