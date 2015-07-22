@@ -334,7 +334,7 @@ COMPILERS = {
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-THEME = "zen"
+THEME = "bootstrap3"
 
 
 # Color scheme to be used for code blocks. If your theme provides
