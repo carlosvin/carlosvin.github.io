@@ -86,11 +86,13 @@ NAVIGATION_LINKS = {
         ('/archive.html', u'Archivos'),
         ('/categories/index.html', u'Categorías'),
         ('/rss.xml', 'RSS'),
+        ('https://cse.google.com/cse/publicurl?cx=016672377533739393798:3kwbrrevcdc', 'Buscar'),
     ),
     'en': (
         ('/en/archive.html', 'Archives'),
         ('/en/categories/index.html', 'Tags'),
         ('/en/rss.xml', 'RSS'),
+        ('https://cse.google.com/cse/publicurl?cx=016672377533739393798:3kwbrrevcdc', 'Search'),
     ),
 }
 
@@ -539,20 +541,7 @@ RSS_TEASERS = True
 # This search form works for any site and looks good in the "site" theme where
 # it appears on the navigation bar:
 #
-SEARCH_FORM = """
-<script>
-  (function() {
-    var cx = '016672377533739393798:3kwbrrevcdc';
-    var gcse = document.createElement('script');
-    gcse.type = 'text/javascript';
-    gcse.async = true;
-    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
-        '//cse.google.com/cse.js?cx=' + cx;
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(gcse, s);
-  })();
-</script>
-<gcse:search></gcse:search>"""
+# SEARCH_FORM = """"""
 
 # EXTRA_HEAD_DATA = """"""
 
