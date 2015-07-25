@@ -44,13 +44,11 @@ NAVIGATION_LINKS = {
         ('/archive.html', u'Archivos'),
         ('/categories/index.html', u'Categorías'),
         ('/rss.xml', 'RSS'),
-        ('https://cse.google.com/cse/publicurl?cx=016672377533739393798:3kwbrrevcdc', 'Buscar'),
     ),
     'en': (
         ('/en/archive.html', 'Archives'),
         ('/en/categories/index.html', 'Tags'),
         ('/en/rss.xml', 'RSS'),
-        ('https://cse.google.com/cse/publicurl?cx=016672377533739393798:3kwbrrevcdc', 'Search'),
     ),
 }
 
@@ -500,6 +498,15 @@ RSS_TEASERS = True
 # it appears on the navigation bar:
 #
 # SEARCH_FORM = """"""
+SEARCH_FORM = """
+<div class="container nopadding">
+<form method="get" action="http://www.google.com/search" class="form-horizontal" role="form">
+<input type="text" name="q" size="25" placeholder="Search"/>
+<input type="submit"/>
+<input type="hidden" name="sitesearch" value="%s" />
+</form>
+</div>
+""" % SITE_URL
 
 # EXTRA_HEAD_DATA = """"""
 
@@ -516,9 +523,9 @@ BODY_END = """<script>
 
 <!-- Start of StatCounter Code for Default Guide -->
 <script type="text/javascript">
-var sc_project=9708205; 
-var sc_invisible=1; 
-var sc_security="4998d447"; 
+var sc_project=9708205;
+var sc_invisible=1;
+var sc_security="4998d447";
 var scJsHost = (("https:" == document.location.protocol) ?
 "https://secure." : "http://www.");
 document.write("<sc"+"ript type='text/javascript' src='" +
@@ -550,7 +557,7 @@ alt="web analytics"></a></div></noscript>
 # FILE_METADATA_REGEXP = None
 
 # Additional metadata that is added to a post when creating a new_post
-#ADDITIONAL_METADATA = { 
+#ADDITIONAL_METADATA = {
 #    'author': 'Carlos Martín Sánchez',
 #}
 
