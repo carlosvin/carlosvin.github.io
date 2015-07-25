@@ -3,54 +3,14 @@
 from __future__ import unicode_literals
 import time
 
-# Data about this site
 BLOG_AUTHOR = u"Carlos Martín Sánchez"
 BLOG_TITLE = u"Vin's Blog"
-# This is the main URL for your site. It will be used
-# in a prominent link
 SITE_URL = "http://carlosvin.github.io/"
-# This is the URL where nikola's output will be deployed.
-# If not set, defaults to SITE_URL
 # BASE_URL = "http://getnikola.com/"
 BLOG_EMAIL = "carlosvin@gmail.com"
 BLOG_DESCRIPTION = "Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza."
 
 WRITE_TAG_CLOUD = True
-# Nikola is multilingual!
-#
-# Currently supported languages are:
-# bg     Bulgarian
-# ca     Catalan
-# cs     Czech [ALTERNATIVELY cz]
-# de     German
-# el     Greek [NOT gr!]
-# en     English
-# eo     Esperanto
-# es     Spanish
-# et     Estonian
-# eu     Basque
-# fa     Persian
-# fi     Finnish
-# fr     French
-# hi     Hindi
-# hr     Croatian
-# it     Italian
-# ja     Japanese [NOT jp!]
-# nb     Norwegian Bokmål
-# nl     Dutch
-# pt_br  Portuguese (Brasil)
-# pl     Polish
-# ru     Russian
-# sl     Slovenian [NOT sl_si!]
-# tr     Turkish (Turkey) [NOT tr_tr!]
-# ur     Urdu
-# zh_cn  Chinese (Simplified)
-#
-# If you want to use Nikola with a non-supported language you have to provide
-# a module containing the necessary translations
-# (cf. the modules at nikola/data/themes/base/messages/).
-# If a specific post is not translated to a language, then the version
-# in the default language will be shown instead.
 
 # What is the default language?
 DEFAULT_LANG = "es"
@@ -61,8 +21,6 @@ DEFAULT_LANG = "es"
 TRANSLATIONS = {
     DEFAULT_LANG: "",
     "en": "./en",
-    # Example for another language:
-    # "es": "./es",
 }
 
 # What will translated input files be named like?
@@ -447,7 +405,7 @@ COMMENT_SYSTEM_ID = "carlosvin@gmail.com"
 # This can be disabled on a per-page/post basis by adding
 #    .. pretty_url: False
 # to the metadata
-# PRETTY_URLS = False
+PRETTY_URLS = T
 
 # If True, publish future dated posts right away instead of scheduling them.
 # Defaults to False.
