@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import time
 
 BLOG_AUTHOR = u"Carlos Martín Sánchez"
-BLOG_TITLE = u"Vin's Blog"
+BLOG_TITLE = u"Carlos says bla bla"
 SITE_URL = "http://carlosvin.github.io/"
 # BASE_URL = "http://getnikola.com/"
 BLOG_EMAIL = "carlosvin@gmail.com"
