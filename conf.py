@@ -403,7 +403,7 @@ COMMENT_SYSTEM_ID = "carlosvin@gmail.com"
 # This can be disabled on a per-page/post basis by adding
 #    .. pretty_url: False
 # to the metadata
-PRETTY_URLS = T
+PRETTY_URLS = True
 
 # If True, publish future dated posts right away instead of scheduling them.
 # Defaults to False.
@@ -499,14 +499,17 @@ RSS_TEASERS = True
 #
 # SEARCH_FORM = """"""
 SEARCH_FORM = """
-<div class="container nopadding">
-<form method="get" action="http://www.google.com/search" class="form-horizontal" role="form">
-<input type="text" name="q" size="25" placeholder="Search"/>
-<input type="submit"/>
-<input type="hidden" name="sitesearch" value="%s" />
-</form>
+<form method="get" action="http://www.google.com/search" class="navbar-form navbar-right" role="search">
+<div class="form-group">
+<input type="text" name="q" class="form-control" placeholder="Search"/>
 </div>
+<button type="submit" class="btn btn-primary">
+	<span class="glyphicon glyphicon-search"></span>
+</button>
+<input type="hidden" name="sitesearch" value="%s"/>
+</form>
 """ % SITE_URL
+
 
 # EXTRA_HEAD_DATA = """"""
 
