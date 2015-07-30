@@ -10,6 +10,41 @@ Las primeras veces que me puse a diseñar una API_ REST_ cometí unos cuantos er
 
 A continuación os voy a contar alguno de los errores que cometí, lo que he entendido hasta hoy sobre la construcción de URL_s REST_ y pondré un ejemplo.
 
+.. contents:: Índice
+
+Fundamentos REST_
+=================
+
+- Utilizamos URL_s para acceder a recursos.
+- Utilizamos *verbos* para modificar recursos.
+- Nuestros *verbos* están proporcionados por el protocolo HTTP_.
+- Los *verbos* tienen un equivalente directo con las operaciones CRUD_ [#]_.
+- Para acceder a un recuros existente necesitamos su identificador.
+
+Verbos REST_
+------------
+
+POST
+ (C) Utilizado para **crear** nuevos recursos.
+GET
+ (R) Utilizado para **leer** un recursos existentes en el sistema.
+PUT
+ (U) Utilizado para **actualizar** recursos existentes.
+DELETE
+ (D) Utilizado para **borrar** recursos existentes.
+
+En una tabla quedará más claro
+
+===========  ============  ========================
+Verbo REST_  Acción CRUD_  Debe exisitir el recurso
+-----------  ------------  ------------------------
+POST         Crear         No
+GET          Leer          Sí
+PUT          Actualizar    Sí
+DELETE       Borrar        Sí
+===========  ============  ========================
+
+
 Típico error
 ============
 
@@ -51,3 +86,9 @@ También tenemos **tags** o etiquetas que podemos *asociar* a nuestros **posts**
 .. _REST: https://es.wikipedia.org/wiki/Representational_State_Transfer
 .. _URL: https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme
 .. _HTTP: https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol
+.. _CRUD: https://es.wikipedia.org/wiki/CRUD
+.. _`REST Tutorial`: http://www.restapitutorial.com/
+
+.. [#] Create, Read,Update, Delete
+
+
