@@ -8,6 +8,8 @@
 
 Las primeras veces que me puse a diseñar una API_ REST_ cometí unos cuantos errores, por supuesto.
 
+A continuación os voy a contar alguno de los errores que cometí, lo que he entendido hasta hoy sobre la construcción de URL_s REST_ y pondré un ejemplo.
+
 Típico error
 ============
 
@@ -31,6 +33,19 @@ Video Tutoriales
 
 .. youtube:: NjpKwiRORI4
 .. youtube:: gYKJqUZXuBw
+
+
+Ejemplo Explicativo
+===================
+
+Imaginemos que queremos proporcionar una API_ REST_ para un blog.
+
+Lo primero es identificar cuáles son los recursos a los que vamos a acceder.
+
+En nuestro caso como todos sabemos un blog tiene **posts** o entradas.
+
+También tenemos **tags** o etiquetas que podemos *asociar* a nuestros **posts**.
+
 
 .. _API: https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones
 .. _REST: https://es.wikipedia.org/wiki/Representational_State_Transfer
