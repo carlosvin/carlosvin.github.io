@@ -11,7 +11,7 @@
 <link rel="canonical" href="http://carlosvin.github.io/posts/rest-urls/">
 <!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Crear REST API: URLs">
 <meta name="author" content="Carlos Martín Sánchez">
-<meta name="robots" content="noindex">
+<link rel="prev" href="../first-biicode-poco/" title="Gestión de dependencias C++: Biicode" type="text/html">
 <meta property="og:site_name" content="Carlos says bla bla">
 <meta property="og:title" content="Creando REST URLs">
 <meta property="og:url" content="http://carlosvin.github.io/posts/rest-urls/">
@@ -107,51 +107,54 @@
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<p>Las primeras veces que me puse a diseñar una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> cometí unos cuantos errores, por supuesto.</p>
-<p>A continuación os voy a contar alguno de los errores que cometí, lo que he entendido hasta hoy sobre la construcción de URL_s <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> y pondré un ejemplo.</p>
+<p>Las primeras veces que me puse a diseñar una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> con ejemplos.</p>
 <div class="contents topic" id="indice">
 <p class="topic-title first">Índice</p>
 <ul class="simple">
 <li>
 <a class="reference internal" href=".#fundamentos-rest" id="id3">Fundamentos REST</a><ul>
 <li><a class="reference internal" href=".#verbos-rest" id="id4">Verbos REST</a></li>
+<li><a class="reference internal" href=".#acceso-a-recursos" id="id5">Acceso a Recursos</a></li>
+<li><a class="reference internal" href=".#modificar-recursos" id="id6">Modificar Recursos</a></li>
+<li><a class="reference internal" href=".#borrar-recursos" id="id7">Borrar Recursos</a></li>
+<li><a class="reference internal" href=".#crear-recursos" id="id8">Crear Recursos</a></li>
+<li>
+<a class="reference internal" href=".#colecciones" id="id9">Colecciones</a><ul>
+<li><a class="reference internal" href=".#anadir-un-elemento-a-la-coleccion" id="id10">Añadir un elemento a la colección</a></li>
+<li><a class="reference internal" href=".#modificar-un-elemento-de-la-coleccion" id="id11">Modificar un elemento de la colección</a></li>
+<li><a class="reference internal" href=".#borrar-un-elemento-de-la-coleccion" id="id12">Borrar un elemento de la colección</a></li>
+<li><a class="reference internal" href=".#leer-un-elemento-de-la-coleccion" id="id13">Leer un elemento de la colección</a></li>
+<li><a class="reference internal" href=".#listar-elementos-de-la-coleccion" id="id14">Listar elementos de la colección</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href=".#tipico-error" id="id5">Típico error</a></li>
-<li><a class="reference internal" href=".#video-tutoriales" id="id6">Video Tutoriales</a></li>
-<li><a class="reference internal" href=".#ejemplo-explicativo" id="id7">Ejemplo Explicativo</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href=".#tipico-error" id="id15">Típico error</a></li>
+<li><a class="reference internal" href=".#video-tutoriales" id="id16">Video Tutoriales</a></li>
 </ul>
 </div>
 <div class="section" id="fundamentos-rest">
 <h2>Fundamentos <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
 </h2>
 <ul class="simple">
-<li>Utilizamos URL_s para acceder a recursos.</li>
+<li>Utilizamos <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> para acceder a recursos.</li>
 <li>Utilizamos <em>verbos</em> para modificar recursos.</li>
 <li>Nuestros <em>verbos</em> están proporcionados por el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</li>
 <li>Los <em>verbos</em> tienen un equivalente directo con las operaciones <a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a> <a class="footnote-reference" href=".#id2" id="id1">[1]</a>.</li>
-<li>Para acceder a un recuros existente necesitamos su identificador.</li>
+<li>Para acceder a un recurso existente necesitamos su identificador.</li>
 </ul>
 <div class="section" id="verbos-rest">
 <h3>Verbos <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
 </h3>
 <dl class="docutils">
 <dt>POST</dt>
-<dd><ol class="first last upperalpha simple" start="3">
-<li>Utilizado para <strong>crear</strong> nuevos recursos.</li>
-</ol></dd>
+<dd>(<strong>C</strong>) Utilizado para <strong>crear</strong> nuevos recursos.</dd>
 <dt>GET</dt>
-<dd><ol class="first last upperalpha simple" start="18">
-<li>Utilizado para <strong>leer</strong> un recursos existentes en el sistema.</li>
-</ol></dd>
+<dd>(<strong>R</strong>) Utilizado para <strong>leer</strong> un recursos existentes en el sistema.</dd>
 <dt>PUT</dt>
-<dd><ol class="first last upperalpha simple" start="21">
-<li>Utilizado para <strong>actualizar</strong> recursos existentes.</li>
-</ol></dd>
+<dd>(<strong>U</strong>) Utilizado para <strong>actualizar</strong> recursos existentes.</dd>
 <dt>DELETE</dt>
-<dd><ol class="first last upperalpha simple" start="4">
-<li>Utilizado para <strong>borrar</strong> recursos existentes.</li>
-</ol></dd>
+<dd>(<strong>D</strong>) Utilizado para <strong>borrar</strong> recursos existentes.</dd>
 </dl>
 <p>En una tabla quedará más claro</p>
 <table border="1" class="docutils">
@@ -191,35 +194,205 @@
 </tbody>
 </table>
 </div>
+<div class="section" id="acceso-a-recursos">
+<h3><a class="toc-backref" href=".#id5">Acceso a Recursos</a></h3>
+<p>Un recurso es <em>a lo que quieres acceder</em>. Por ejemplo, un coche.</p>
+<p>Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:</p>
+<p><em>Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV</em>.</p>
+<p>De esta forma el dependiente sabe cuál es y te puede dar la información.</p>
+<p>"Fiat Bravo 1.9 Emotion 120CV" es nuestro <strong>identificador</strong>.</p>
+<p>Trasladando el ejemplo a las <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">APIs</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
+</pre>
+<p>De esta forma nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> nos puede proporcionar información del coche.</p>
+<p>Esto es un ejemplo muy simplificado, pero realmente cuando accedemos a un recurso concreto solemos utilizar algo que lo identifique de forma unívoca. Una práctica común y recomendable es utilizar <a class="reference external" href="https://es.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>.</p>
+<pre class="literal-block">
+GET  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>Pero nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, al igual que una tienda, no tiene por qué ser tan estricta, podemos preguntar por los coches que tienen ciertas caracteríticas, podemos ir al concesionario y decir:</p>
+<p><em>Hola buenos días, quiero un Fiat Bravo</em>.</p>
+<p>Y el dependiente, amablemente, te mostrará todos los Fiat Bravo que tiene. Veamos cómo podemos decir esto a nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>.</p>
+<pre class="literal-block">
+GET  http://tiendadecoches.es/api/coches/?marca=fiat&amp;modelo=bravo
+</pre>
+<p>Nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> nos devolverá todos los coches que son marca Fiat y modelo Bravo.</p>
+<p>Marca y modelo en este caso son lo que llamamos <strong>parámetros de consulta</strong> (query parameters).</p>
+<p>Como os habréis dado cuenta durante el ejemplo, para obtener información de un recurso siempre hemos utilizado el <em>verbo</em> <strong>GET</strong>.</p>
+</div>
+<div class="section" id="modificar-recursos">
+<h3><a class="toc-backref" href=".#id6">Modificar Recursos</a></h3>
+<p>Nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> también nos puede permitir modificar un recurso, al igual que para pedir información, para modificar un recurso necesitamos especificar qué recurso queremos modificar, así que necesitamos otra vez un <em>identificador</em>.</p>
+<p>Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo único que cambia es el verbo, queremos <strong>modificar</strong> así que utilizamos el verbo equivalente que nos proporciona el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>: <strong>PUT</strong>.</p>
+<pre class="literal-block">
+PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.</p>
+<p>Tenemos que enviar la nueva cilindrada a esta <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URL</a>  <a class="reference external" href="http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f">http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f</a> por <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> utilizando el verbo <strong>PUT</strong>.</p>
+<p>El protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.</p>
+<p>Podemos enviarlo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a> o <a class="reference external" href="https://es.wikipedia.org/wiki/XML">XML</a> o como queramos, solo tenemos que estar seguros de que el formato que enviamos es lo que espera recibir el servidor.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">Cuando definimos una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> tenemos que definir también el formato en que vamos a enviar los datos.</p>
+</div>
+<p>Ejemplo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a>:</p>
+<pre class="literal-block">
+{ cilindrada: 100 }
+</pre>
+</div>
+<div class="section" id="borrar-recursos">
+<h3><a class="toc-backref" href=".#id7">Borrar Recursos</a></h3>
+<p>Continuando con el ejemplo de los coches, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URL</a> que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos <strong>borrar (DELETE)</strong>.</p>
+<pre class="literal-block">
+DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.</p>
+</div>
+<div class="section" id="crear-recursos">
+<h3><a class="toc-backref" href=".#id8">Crear Recursos</a></h3>
+<p>Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.</p>
+<pre class="literal-block">
+POST   http://tiendadecoches.es/api/coches/
+</pre>
+<p>Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.</p>
+<p>En nuestro ejemplo, queremos crear un coche, así que ponemos toda la información necesaria para crear un coche dentro de la llamada POST de <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>, algo muy parecido como hemos hecho en el apartado <a class="reference internal" href=".#modificar-recursos">Modificar Recursos</a>, pero en este caso mandamos <strong>toda la información necesaria</strong>, no solo la cilindrada.</p>
+<p>Ejemplo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a>:</p>
+<pre class="literal-block">
+{
+"marca": "Fiat",
+"modelo": "Bravo"
+"anio": 2010
+"puertas": 5,
+"cilindrada": 120,
+"version": "Emotion",
+"climatizador": true,
+"ac": false,
+"fuel": "Diesel"
+}
+</pre>
+<p>Podemos delegar en el sistema, para que cuando pidamos la creación de un recurso nuevo, nos asigne un nuevo <strong>identificador</strong>, o simplemente enviarlo con el resto de información:</p>
+<pre class="literal-block">
+{
+"identificador": "cce05bee-386b-11e5-a151-feff819cdc9f"
+"marca": "Fiat",
+"modelo": "Bravo"
+"anio": 2010
+"puertas": 5,
+"cilindrada": 120,
+"version": "Emotion",
+"climatizador": true,
+"ac": false,
+"fuel": "Diesel"
+}
+</pre>
+</div>
+<div class="section" id="colecciones">
+<h3><a class="toc-backref" href=".#id9">Colecciones</a></h3>
+<p>Algo que no quiero pasar por alto, porque al menos para mí no fue obvio, es el manejo de colecciones. Realmente ya está explicado, porque todas las acciones que hemos visto previamente sobre los coches, estaba aplicando realmente a una colección de coches.</p>
+<p>Pero, ¿qué pasa si un recurso tiene a su vez una colección? Siguiendo con los coches, un coche puede tener una lista de aceites con los que puede funcionar, así que nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> debería permitir obtener, modificar, borrar o crear elementos en la lista.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.</p>
+</div>
+<div class="section" id="anadir-un-elemento-a-la-coleccion">
+<h4><a class="toc-backref" href=".#id10">Añadir un elemento a la colección</a></h4>
+<p>Si queremos añadir un elemento a la colección de coches lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de <a class="reference internal" href=".#crear-recursos">Crear Recursos</a>.</p>
+<p>Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe:</p>
+<pre class="literal-block">
+POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+
+{
+"tipo": "5W30",
+"otros_datos": "este es el mejor del mundo para este coche"
+}
+</pre>
+<p>Si queremos añadir otro aceite:</p>
+<pre class="literal-block">
+POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+
+{
+"tipo": "10W30",
+"otros_datos": "otras cosas sobre aceites de coche",
+}
+</pre>
+</div>
+<div class="section" id="modificar-un-elemento-de-la-coleccion">
+<h4><a class="toc-backref" href=".#id11">Modificar un elemento de la colección</a></h4>
+<p>Si queremos modificar los datos del aceite <em>5W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
+
+{
+"tipo": "5W30",
+"otros_datos": "este ya no es el mejor del mundo para este coche"
+}
+</pre>
+</div>
+<div class="section" id="borrar-un-elemento-de-la-coleccion">
+<h4><a class="toc-backref" href=".#id12">Borrar un elemento de la colección</a></h4>
+<p>Para borrar un aceite <em>10W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+</pre>
+</div>
+<div class="section" id="leer-un-elemento-de-la-coleccion">
+<h4><a class="toc-backref" href=".#id13">Leer un elemento de la colección</a></h4>
+<p>Para obtener la información del aceite <em>10W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+</pre>
+</div>
+<div class="section" id="listar-elementos-de-la-coleccion">
+<h4><a class="toc-backref" href=".#id14">Listar elementos de la colección</a></h4>
+<p>Como hemos visto en <a class="reference internal" href=".#leer-un-elemento-de-la-coleccion">Leer un elemento de la colección</a>, podemos obtener información de cualquier elemento de la colección, pero también podemos obtener varios elementos de la colección, ordenarlos, paginarlos y aplicar cualquier tipo de acciones típicas de una colección.</p>
+<p>Podemos obtener todos los aceites soportados por el coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>, es tan simple como:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+</pre>
+<p>Pero también podemos proporcionar otras funcionalidades en nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, como obtener los resultados ordenados:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&amp;orden=ascendente
+</pre>
+<p>Podemos pedir al <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> que nos devuelva los 10 primeros aceites del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
+</pre>
+<p>Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&amp;numero_de_elementos=3
+</pre>
+<p>En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em> y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&amp;numero_de_elementos=3
+</pre>
+<p>Todas estas funcionalidades, son posibles gracias a los <strong>parámetros de consulta</strong>.</p>
+</div>
+</div>
 </div>
 <div class="section" id="tipico-error">
-<h2><a class="toc-backref" href=".#id5">Típico error</a></h2>
-<p>El principal fue la construción de las URL_s, incluí <em>verbos</em> sin tener en cuenta que los verbos ya me los proporcionaba el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</p>
-<p>Por ejemplo, creaba URL_s del tipo:</p>
-<pre class="code text"><a name="rest_code_ec3cef71fbdb4e4cb14932411463dac2-1"></a>POST    http://example.com/api/coches/seat-ibiza/removeRueda/3
+<h2><a class="toc-backref" href=".#id15">Típico error</a></h2>
+<p>La primera vez que intenté diseñar un <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> lo que hice fué otra cosa, era una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, pero no <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>.</p>
+<p>Mi principal error fue en la construción de las <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a>, incluí <em>verbos</em> sin tener en cuenta que los verbos ya me los proporcionaba el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</p>
+<p>Por ejemplo, creaba <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> del tipo:</p>
+<pre class="literal-block">
+POST    http://example.com/api/coches/seat-ibiza/borrar-rueda/3
 </pre>
 <p>Cuando lo correcto sería</p>
-<pre class="code text"><a name="rest_code_f5576848cb004669b40ecb227d9e40fa-1"></a>DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
+<pre class="literal-block">
+DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
 </pre>
 </div>
 <div class="section" id="video-tutoriales">
-<h2><a class="toc-backref" href=".#id6">Video Tutoriales</a></h2>
-<iframe width="425" height="344" src="//www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;hd=1&amp;wmode=transparent"></iframe><iframe width="425" height="344" src="//www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;hd=1&amp;wmode=transparent"></iframe>
-</div>
-<div class="section" id="ejemplo-explicativo">
-<h2><a class="toc-backref" href=".#id7">Ejemplo Explicativo</a></h2>
-<p>Imaginemos que queremos proporcionar una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> para un blog.</p>
-<p>Lo primero es identificar cuáles son los recursos a los que vamos a acceder.</p>
-<p>En nuestro caso como todos sabemos un blog tiene <strong>posts</strong> o entradas.</p>
-<p>También tenemos <strong>tags</strong> o etiquetas que podemos <em>asociar</em> a nuestros <strong>posts</strong>.</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
+<h2><a class="toc-backref" href=".#id16">Video Tutoriales</a></h2>
+<p>Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:</p>
+<iframe width="425" height="344" src="//www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;hd=1&amp;wmode=transparent"></iframe><iframe width="425" height="344" src="//www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;hd=1&amp;wmode=transparent"></iframe><table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup>
 <col class="label">
 <col>
 </colgroup>
 <tbody valign="top"><tr>
 <td class="label"><a class="fn-backref" href=".#id1">[1]</a></td>
-<td>Create, Read,Update, Delete</td>
+<td>Create, Read, Update, Delete</td>
 </tr></tbody>
 </table>
 </div>
@@ -229,6 +402,11 @@
 <li><a class="tag p-category" href="../../categories/api/" rel="tag">API</a></li>
             <li><a class="tag p-category" href="../../categories/rest/" rel="tag">REST</a></li>
             <li><a class="tag p-category" href="../../categories/web-services/" rel="tag">Web Services</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../first-biicode-poco/" rel="prev" title="Gestión de dependencias C++: Biicode">Publicación anterior</a>
+            </li>
         </ul></nav></aside><section class="comments hidden-print"><h2>Comentarios</h2>
         
         
