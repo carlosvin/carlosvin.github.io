@@ -1,53 +1,53 @@
-.. title: Creando REST URLs
+.. title: REST URLs
 .. slug: rest-urls
-.. date: 2015/07/26 18:00:00
-.. tags: REST, API, Web Services
+.. date: 2015/08/16 14:00:00
+.. tags: REST, API, Web Services, draft
 .. link:
-.. description: Crear REST API: URLs
+.. description: Design REST API: URLs
 .. type: text
 
-Las primeras veces que me puse a diseñar una API_ REST_ cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de URLs_ REST_ con ejemplos.
+First time I designed a REST_ API_ I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about REST_ URL_ with examples.
 
-.. contents:: Índice
+.. contents:: Index
 
-Fundamentos REST_
-=================
+REST_ Basics
+============
 
-- Utilizamos URLs_ para acceder a recursos.
-- Utilizamos *verbos* para modificar recursos.
-- Nuestros *verbos* están proporcionados por el protocolo HTTP_.
-- Los *verbos* tienen un equivalente directo con las operaciones CRUD_ [#]_.
-- Para acceder a un recurso existente necesitamos su identificador.
+- Using URLs_ for get resources.
+- Using *verbs* for modify resources.
+- The *verbs* are provided by the HTTP_ protocol.
+- The *verbs* have a direct equivalency with CRUD_ [#]_.
+- To access to an existent resource we need an identifier.
 
-Verbos REST_
-------------
+REST_ Verbs
+-----------
 
 POST
- (**C**) Utilizado para **crear** nuevos recursos.
+ **Create** new resources.
 GET
- (**R**) Utilizado para **leer** un recursos existentes en el sistema.
+ **Read** already existing resources.
 PUT
- (**U**) Utilizado para **actualizar** recursos existentes.
+ **Update** already existing resources.
 DELETE
- (**D**) Utilizado para **borrar** recursos existentes.
+ **Delete** already existing resources.
 
-En una tabla quedará más claro
+It is clearer in the following table
 
-===========  ============  ========================
-Verbo REST_  Acción CRUD_  Debe exisitir el recurso
------------  ------------  ------------------------
-POST         Crear         No
-GET          Leer          Sí
-PUT          Actualizar    Sí
-DELETE       Borrar        Sí
-===========  ============  ========================
+===========  ============  ===================
+REST_ Verb   CRUD_ Action  Resource must exist
+-----------  ------------  -------------------
+POST         Create        No
+GET          Read          Yes
+PUT          Update        Yes
+DELETE       Delete        Yes
+===========  ============  ===================
 
-Acceso a Recursos
------------------
+Accessing to Resources
+----------------------
 
-Un recurso es *a lo que quieres acceder*. Por ejemplo, un coche.
+A resource is *what we want to get*. For example, a car.
 
-Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:
+To be able to get a car, Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:
 
 *Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV*.
 

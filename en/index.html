@@ -2,6 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
+<base href="http://carlosvin.github.io/en/">
 <meta name="description" content="Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Carlos says bla bla | Carlos says bla bla</title>
@@ -78,310 +79,7 @@
             
 
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/rest-urls/" class="u-url">Creando REST URLs</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
-            <p class="dateline"><a href="posts/rest-urls/" rel="bookmark"><time class="published dt-published" datetime="2015-07-26T18:00:00+02:00" title="2015-07-26">2015-07-26</time></a></p>
-                <p class="commentline">
-        
-</p>
-<div class="g-commentcount" data-href="/en/posts/rest-urls/"></div>
-<script src="https://apis.google.com/js/plusone.js"></script>
-</div>
-    </header><div class="p-summary entry-summary">
-    <div>
-<p>Las primeras veces que me puse a diseñar una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> con ejemplos.</p>
-<div class="contents topic" id="indice">
-<p class="topic-title first">Índice</p>
-<ul class="simple">
-<li>
-<a class="reference internal" href="posts/rest-urls/#fundamentos-rest" id="id3">Fundamentos REST</a><ul>
-<li><a class="reference internal" href="posts/rest-urls/#verbos-rest" id="id4">Verbos REST</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#acceso-a-recursos" id="id5">Acceso a Recursos</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#modificar-recursos" id="id6">Modificar Recursos</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#borrar-recursos" id="id7">Borrar Recursos</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#crear-recursos" id="id8">Crear Recursos</a></li>
-<li>
-<a class="reference internal" href="posts/rest-urls/#colecciones" id="id9">Colecciones</a><ul>
-<li><a class="reference internal" href="posts/rest-urls/#anadir-un-elemento-a-la-coleccion" id="id10">Añadir un elemento a la colección</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#modificar-un-elemento-de-la-coleccion" id="id11">Modificar un elemento de la colección</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#borrar-un-elemento-de-la-coleccion" id="id12">Borrar un elemento de la colección</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#leer-un-elemento-de-la-coleccion" id="id13">Leer un elemento de la colección</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#listar-elementos-de-la-coleccion" id="id14">Listar elementos de la colección</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="posts/rest-urls/#tipico-error" id="id15">Típico error</a></li>
-<li><a class="reference internal" href="posts/rest-urls/#video-tutoriales" id="id16">Video Tutoriales</a></li>
-</ul>
-</div>
-<div class="section" id="fundamentos-rest">
-<h2>Fundamentos <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
-</h2>
-<ul class="simple">
-<li>Utilizamos <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> para acceder a recursos.</li>
-<li>Utilizamos <em>verbos</em> para modificar recursos.</li>
-<li>Nuestros <em>verbos</em> están proporcionados por el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</li>
-<li>Los <em>verbos</em> tienen un equivalente directo con las operaciones <a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a> <a class="footnote-reference" href="posts/rest-urls/#id2" id="id1">[1]</a>.</li>
-<li>Para acceder a un recurso existente necesitamos su identificador.</li>
-</ul>
-<div class="section" id="verbos-rest">
-<h3>Verbos <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
-</h3>
-<dl class="docutils">
-<dt>POST</dt>
-<dd>(<strong>C</strong>) Utilizado para <strong>crear</strong> nuevos recursos.</dd>
-<dt>GET</dt>
-<dd>(<strong>R</strong>) Utilizado para <strong>leer</strong> un recursos existentes en el sistema.</dd>
-<dt>PUT</dt>
-<dd>(<strong>U</strong>) Utilizado para <strong>actualizar</strong> recursos existentes.</dd>
-<dt>DELETE</dt>
-<dd>(<strong>D</strong>) Utilizado para <strong>borrar</strong> recursos existentes.</dd>
-</dl>
-<p>En una tabla quedará más claro</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="23%">
-<col width="26%">
-<col width="51%">
-</colgroup>
-<tbody valign="top">
-<tr>
-<td>Verbo <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
-</td>
-<td>Acción <a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a>
-</td>
-<td>Debe exisitir el recurso</td>
-</tr>
-<tr>
-<td>POST</td>
-<td>Crear</td>
-<td>No</td>
-</tr>
-<tr>
-<td>GET</td>
-<td>Leer</td>
-<td>Sí</td>
-</tr>
-<tr>
-<td>PUT</td>
-<td>Actualizar</td>
-<td>Sí</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td>Borrar</td>
-<td>Sí</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="acceso-a-recursos">
-<h3><a class="toc-backref" href="posts/rest-urls/#id5">Acceso a Recursos</a></h3>
-<p>Un recurso es <em>a lo que quieres acceder</em>. Por ejemplo, un coche.</p>
-<p>Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:</p>
-<p><em>Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV</em>.</p>
-<p>De esta forma el dependiente sabe cuál es y te puede dar la información.</p>
-<p>"Fiat Bravo 1.9 Emotion 120CV" es nuestro <strong>identificador</strong>.</p>
-<p>Trasladando el ejemplo a las <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">APIs</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>:</p>
-<pre class="literal-block">
-GET   http://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
-</pre>
-<p>De esta forma nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> nos puede proporcionar información del coche.</p>
-<p>Esto es un ejemplo muy simplificado, pero realmente cuando accedemos a un recurso concreto solemos utilizar algo que lo identifique de forma unívoca. Una práctica común y recomendable es utilizar <a class="reference external" href="https://es.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>.</p>
-<pre class="literal-block">
-GET  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-</pre>
-<p>Pero nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, al igual que una tienda, no tiene por qué ser tan estricta, podemos preguntar por los coches que tienen ciertas caracteríticas, podemos ir al concesionario y decir:</p>
-<p><em>Hola buenos días, quiero un Fiat Bravo</em>.</p>
-<p>Y el dependiente, amablemente, te mostrará todos los Fiat Bravo que tiene. Veamos cómo podemos decir esto a nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>.</p>
-<pre class="literal-block">
-GET  http://tiendadecoches.es/api/coches/?marca=fiat&amp;modelo=bravo
-</pre>
-<p>Nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> nos devolverá todos los coches que son marca Fiat y modelo Bravo.</p>
-<p>Marca y modelo en este caso son lo que llamamos <strong>parámetros de consulta</strong> (query parameters).</p>
-<p>Como os habréis dado cuenta durante el ejemplo, para obtener información de un recurso siempre hemos utilizado el <em>verbo</em> <strong>GET</strong>.</p>
-</div>
-<div class="section" id="modificar-recursos">
-<h3><a class="toc-backref" href="posts/rest-urls/#id6">Modificar Recursos</a></h3>
-<p>Nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> también nos puede permitir modificar un recurso, al igual que para pedir información, para modificar un recurso necesitamos especificar qué recurso queremos modificar, así que necesitamos otra vez un <em>identificador</em>.</p>
-<p>Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo único que cambia es el verbo, queremos <strong>modificar</strong> así que utilizamos el verbo equivalente que nos proporciona el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>: <strong>PUT</strong>.</p>
-<pre class="literal-block">
-PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-</pre>
-<p>Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.</p>
-<p>Tenemos que enviar la nueva cilindrada a esta <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URL</a>  <a class="reference external" href="http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f">http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f</a> por <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> utilizando el verbo <strong>PUT</strong>.</p>
-<p>El protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.</p>
-<p>Podemos enviarlo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a> o <a class="reference external" href="https://es.wikipedia.org/wiki/XML">XML</a> o como queramos, solo tenemos que estar seguros de que el formato que enviamos es lo que espera recibir el servidor.</p>
-<div class="note">
-<p class="first admonition-title">Note</p>
-<p class="last">Cuando definimos una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> tenemos que definir también el formato en que vamos a enviar los datos.</p>
-</div>
-<p>Ejemplo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a>:</p>
-<pre class="literal-block">
-{ cilindrada: 100 }
-</pre>
-</div>
-<div class="section" id="borrar-recursos">
-<h3><a class="toc-backref" href="posts/rest-urls/#id7">Borrar Recursos</a></h3>
-<p>Continuando con el ejemplo de los coches, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URL</a> que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos <strong>borrar (DELETE)</strong>.</p>
-<pre class="literal-block">
-DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-</pre>
-<p>En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.</p>
-</div>
-<div class="section" id="crear-recursos">
-<h3><a class="toc-backref" href="posts/rest-urls/#id8">Crear Recursos</a></h3>
-<p>Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.</p>
-<pre class="literal-block">
-POST   http://tiendadecoches.es/api/coches/
-</pre>
-<p>Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.</p>
-<p>En nuestro ejemplo, queremos crear un coche, así que ponemos toda la información necesaria para crear un coche dentro de la llamada POST de <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>, algo muy parecido como hemos hecho en el apartado <a class="reference internal" href="posts/rest-urls/#modificar-recursos">Modificar Recursos</a>, pero en este caso mandamos <strong>toda la información necesaria</strong>, no solo la cilindrada.</p>
-<p>Ejemplo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a>:</p>
-<pre class="literal-block">
-{
-"marca": "Fiat",
-"modelo": "Bravo"
-"anio": 2010
-"puertas": 5,
-"cilindrada": 120,
-"version": "Emotion",
-"climatizador": true,
-"ac": false,
-"fuel": "Diesel"
-}
-</pre>
-<p>Podemos delegar en el sistema, para que cuando pidamos la creación de un recurso nuevo, nos asigne un nuevo <strong>identificador</strong>, o simplemente enviarlo con el resto de información:</p>
-<pre class="literal-block">
-{
-"identificador": "cce05bee-386b-11e5-a151-feff819cdc9f"
-"marca": "Fiat",
-"modelo": "Bravo"
-"anio": 2010
-"puertas": 5,
-"cilindrada": 120,
-"version": "Emotion",
-"climatizador": true,
-"ac": false,
-"fuel": "Diesel"
-}
-</pre>
-</div>
-<div class="section" id="colecciones">
-<h3><a class="toc-backref" href="posts/rest-urls/#id9">Colecciones</a></h3>
-<p>Algo que no quiero pasar por alto, porque al menos para mí no fue obvio, es el manejo de colecciones. Realmente ya está explicado, porque todas las acciones que hemos visto previamente sobre los coches, estaba aplicando realmente a una colección de coches.</p>
-<p>Pero, ¿qué pasa si un recurso tiene a su vez una colección? Siguiendo con los coches, un coche puede tener una lista de aceites con los que puede funcionar, así que nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> debería permitir obtener, modificar, borrar o crear elementos en la lista.</p>
-<div class="note">
-<p class="first admonition-title">Note</p>
-<p class="last">Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.</p>
-</div>
-<div class="section" id="anadir-un-elemento-a-la-coleccion">
-<h4><a class="toc-backref" href="posts/rest-urls/#id10">Añadir un elemento a la colección</a></h4>
-<p>Si queremos añadir un elemento a la colección de coches lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de <a class="reference internal" href="posts/rest-urls/#crear-recursos">Crear Recursos</a>.</p>
-<p>Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe:</p>
-<pre class="literal-block">
-POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-
-{
-"tipo": "5W30",
-"otros_datos": "este es el mejor del mundo para este coche"
-}
-</pre>
-<p>Si queremos añadir otro aceite:</p>
-<pre class="literal-block">
-POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-
-{
-"tipo": "10W30",
-"otros_datos": "otras cosas sobre aceites de coche",
-}
-</pre>
-</div>
-<div class="section" id="modificar-un-elemento-de-la-coleccion">
-<h4><a class="toc-backref" href="posts/rest-urls/#id11">Modificar un elemento de la colección</a></h4>
-<p>Si queremos modificar los datos del aceite <em>5W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
-<pre class="literal-block">
-PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
-
-{
-"tipo": "5W30",
-"otros_datos": "este ya no es el mejor del mundo para este coche"
-}
-</pre>
-</div>
-<div class="section" id="borrar-un-elemento-de-la-coleccion">
-<h4><a class="toc-backref" href="posts/rest-urls/#id12">Borrar un elemento de la colección</a></h4>
-<p>Para borrar un aceite <em>10W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
-<pre class="literal-block">
-DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
-</pre>
-</div>
-<div class="section" id="leer-un-elemento-de-la-coleccion">
-<h4><a class="toc-backref" href="posts/rest-urls/#id13">Leer un elemento de la colección</a></h4>
-<p>Para obtener la información del aceite <em>10W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
-<pre class="literal-block">
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
-</pre>
-</div>
-<div class="section" id="listar-elementos-de-la-coleccion">
-<h4><a class="toc-backref" href="posts/rest-urls/#id14">Listar elementos de la colección</a></h4>
-<p>Como hemos visto en <a class="reference internal" href="posts/rest-urls/#leer-un-elemento-de-la-coleccion">Leer un elemento de la colección</a>, podemos obtener información de cualquier elemento de la colección, pero también podemos obtener varios elementos de la colección, ordenarlos, paginarlos y aplicar cualquier tipo de acciones típicas de una colección.</p>
-<p>Podemos obtener todos los aceites soportados por el coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>, es tan simple como:</p>
-<pre class="literal-block">
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-</pre>
-<p>Pero también podemos proporcionar otras funcionalidades en nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, como obtener los resultados ordenados:</p>
-<pre class="literal-block">
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&amp;orden=ascendente
-</pre>
-<p>Podemos pedir al <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> que nos devuelva los 10 primeros aceites del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
-<pre class="literal-block">
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
-</pre>
-<p>Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación:</p>
-<pre class="literal-block">
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&amp;numero_de_elementos=3
-</pre>
-<p>En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em> y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente:</p>
-<pre class="literal-block">
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&amp;numero_de_elementos=3
-</pre>
-<p>Todas estas funcionalidades, son posibles gracias a los <strong>parámetros de consulta</strong>.</p>
-</div>
-</div>
-</div>
-<div class="section" id="tipico-error">
-<h2><a class="toc-backref" href="posts/rest-urls/#id15">Típico error</a></h2>
-<p>La primera vez que intenté diseñar un <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> lo que hice fué otra cosa, era una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, pero no <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>.</p>
-<p>Mi principal error fue en la construción de las <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a>, incluí <em>verbos</em> sin tener en cuenta que los verbos ya me los proporcionaba el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</p>
-<p>Por ejemplo, creaba <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> del tipo:</p>
-<pre class="literal-block">
-POST    http://example.com/api/coches/seat-ibiza/borrar-rueda/3
-</pre>
-<p>Cuando lo correcto sería</p>
-<pre class="literal-block">
-DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
-</pre>
-</div>
-<div class="section" id="video-tutoriales">
-<h2><a class="toc-backref" href="posts/rest-urls/#id16">Video Tutoriales</a></h2>
-<p>Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:</p>
-<iframe width="425" height="344" src="//www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;hd=1&amp;wmode=transparent"></iframe><iframe width="425" height="344" src="//www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;hd=1&amp;wmode=transparent"></iframe><table class="docutils footnote" frame="void" id="id2" rules="none">
-<colgroup>
-<col class="label">
-<col>
-</colgroup>
-<tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href="posts/rest-urls/#id1">[1]</a></td>
-<td>Create, Read, Update, Delete</td>
-</tr></tbody>
-</table>
-</div>
-</div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/first-biicode-poco/" class="u-url">C++ Dependency Management: Biicode</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/first-biicode-poco/" class="u-url">C++ Dependency Management: Biicode</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
             <p class="dateline"><a href="posts/first-biicode-poco/" rel="bookmark"><time class="published dt-published" datetime="2015-02-25T20:00:00+01:00" title="2015-02-25">2015-02-25</time></a></p>
@@ -399,69 +97,69 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
 <p>Firstly we have to <a class="reference external" href="http://docs.biicode.com/c++/installation.html">install Biicode</a>.</p>
 <p>I've made tiny example project using logging system from <a class="reference external" href="http://pocoproject.org/">Poco</a> library.</p>
 <p>I've executed this command to create the project, called bii_log.</p>
-<pre class="code bash"><a name="rest_code_d6081051c13a414e973db6bf4f44f261-1"></a>bii new carlovin/bii_log --hello<span class="o">=</span>cpp
+<pre class="code bash"><a name="rest_code_57536b335c3447b289071052eafa52da-1"></a>bii new carlovin/bii_log --hello<span class="o">=</span>cpp
 </pre>
 <p>I've created the project under my <a class="reference external" href="https://www.biicode.org/">Biicode</a> username, just in case I'd like to publish later.</p>
 <p>Previous command generates the structure of files and directories, although we are going to focus only on:</p>
-<pre class="code bash"><a name="rest_code_75d75e8fa5214a2d92a4a838449bf0ac-1"></a>blocks/carlosvin/bii_log/main.cpp
-<a name="rest_code_75d75e8fa5214a2d92a4a838449bf0ac-2"></a>blocks/carlosvin/bii_log/biicode.conf
+<pre class="code bash"><a name="rest_code_44c5176b675b49d9b8b816d350a3662c-1"></a>blocks/carlosvin/bii_log/main.cpp
+<a name="rest_code_44c5176b675b49d9b8b816d350a3662c-2"></a>blocks/carlosvin/bii_log/biicode.conf
 </pre>
 <p>In biicode.conf we are going to configure our dependencies, in this example <a class="reference external" href="http://pocoproject.org/">Poco</a> library.</p>
-<pre class="code yaml"><a name="rest_code_38f68cb37f8444008ec52f25c557c955-1"></a><span class="c1"># Biicode configuration file</span>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-2"></a>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-3"></a><span class="p-Indicator">[</span><span class="nv">requirements</span><span class="p-Indicator">]</span>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-4"></a>    <span class="l-Scalar-Plain">fenix/poco(develop)</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-5"></a>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-6"></a><span class="p-Indicator">[</span><span class="nv">parent</span><span class="p-Indicator">]</span>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-7"></a>        <span class="l-Scalar-Plain">carlosvin/bii_log</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-8"></a>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-9"></a><span class="p-Indicator">[</span><span class="nv">includes</span><span class="p-Indicator">]</span>
-<a name="rest_code_38f68cb37f8444008ec52f25c557c955-10"></a>    <span class="l-Scalar-Plain">Poco/*.h</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">fenix/poco/Foundation/include</span>
+<pre class="code yaml"><a name="rest_code_f3135514a76c479385b41d8dde91d8d5-1"></a><span class="c1"># Biicode configuration file</span>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-2"></a>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-3"></a><span class="p-Indicator">[</span><span class="nv">requirements</span><span class="p-Indicator">]</span>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-4"></a>    <span class="l-Scalar-Plain">fenix/poco(develop)</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-5"></a>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-6"></a><span class="p-Indicator">[</span><span class="nv">parent</span><span class="p-Indicator">]</span>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-7"></a>        <span class="l-Scalar-Plain">carlosvin/bii_log</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-8"></a>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-9"></a><span class="p-Indicator">[</span><span class="nv">includes</span><span class="p-Indicator">]</span>
+<a name="rest_code_f3135514a76c479385b41d8dde91d8d5-10"></a>    <span class="l-Scalar-Plain">Poco/*.h</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">fenix/poco/Foundation/include</span>
 </pre>
 <p>In [includes] section, we are overriding the path to file headers. If we don't override it we'd had to do something like this:</p>
-<pre class="code cpp"><a name="rest_code_92d0bb0f43474ff990e0a9dadf1a4c06-1"></a><span class="cp">#include "fenix/poco/Foundation/include/Logger.h"</span>
+<pre class="code cpp"><a name="rest_code_564d220674374ddebe9c033632a20288-1"></a><span class="cp">#include "fenix/poco/Foundation/include/Logger.h"</span>
 </pre>
 <p>Thanks to this line, include declarations are going to be clearer, as follows:</p>
-<pre class="code cpp"><a name="rest_code_84738fb92cfb41bdb00369c4445343e9-1"></a><span class="cp">#include "Poco/Logger.h"</span>
+<pre class="code cpp"><a name="rest_code_55f5672390794e98b362b6e44f809d7f-1"></a><span class="cp">#include "Poco/Logger.h"</span>
 </pre>
 <p>Easy, now we can start using <a class="reference external" href="http://pocoproject.org/">Poco</a> in our project, e.g:</p>
-<pre class="code cpp"><a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-1"></a><span class="cp">#include "Poco/FileChannel.h"</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-2"></a><span class="cp">#include "Poco/FormattingChannel.h"</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-3"></a><span class="cp">#include "Poco/PatternFormatter.h"</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-4"></a><span class="cp">#include "Poco/Logger.h"</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-5"></a><span class="cp">#include "Poco/AutoPtr.h"</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-6"></a>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-7"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FileChannel</span><span class="p">;</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-8"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FormattingChannel</span><span class="p">;</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-9"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">PatternFormatter</span><span class="p">;</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-10"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">Logger</span><span class="p">;</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-11"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">AutoPtr</span><span class="p">;</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-12"></a>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-13"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-14"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FileChannel</span><span class="o">&gt;</span> <span class="n">pChannel</span><span class="p">(</span><span class="k">new</span> <span class="n">FileChannel</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-15"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"path"</span><span class="p">,</span> <span class="s">"log/sample.log"</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-16"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"rotation"</span><span class="p">,</span> <span class="s">"100 K"</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-17"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"archive"</span><span class="p">,</span> <span class="s">"timestamp"</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-18"></a>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-19"></a>        <span class="c1">//AutoPtr&lt;ConsoleChannel&gt; pCons(new ConsoleChannel);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-20"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">PatternFormatter</span><span class="o">&gt;</span> <span class="n">pPF</span><span class="p">(</span><span class="k">new</span> <span class="n">PatternFormatter</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-21"></a>        <span class="n">pPF</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"pattern"</span><span class="p">,</span> <span class="s">"%Y-%m-%d %H:%M:%S %s: %t"</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-22"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FormattingChannel</span><span class="o">&gt;</span> <span class="n">pFC</span><span class="p">(</span><span class="k">new</span> <span class="n">FormattingChannel</span><span class="p">(</span><span class="n">pPF</span><span class="p">,</span> <span class="n">pChannel</span><span class="p">));</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-23"></a>        <span class="n">Logger</span><span class="o">::</span><span class="n">root</span><span class="p">().</span><span class="n">setChannel</span><span class="p">(</span><span class="n">pFC</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-24"></a>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-25"></a>        <span class="n">Logger</span> <span class="o">&amp;</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="s">"TestChannel"</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-26"></a>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-27"></a>                <span class="n">poco_information</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a info"</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-28"></a>                <span class="n">poco_warning</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a warning"</span><span class="p">);</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-29"></a>        <span class="p">}</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-30"></a>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<a name="rest_code_d3bbbd302b4a4463869c5ed15294d67c-31"></a><span class="p">}</span>
+<pre class="code cpp"><a name="rest_code_b014af62232541448a1ffd091a8d22a5-1"></a><span class="cp">#include "Poco/FileChannel.h"</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-2"></a><span class="cp">#include "Poco/FormattingChannel.h"</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-3"></a><span class="cp">#include "Poco/PatternFormatter.h"</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-4"></a><span class="cp">#include "Poco/Logger.h"</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-5"></a><span class="cp">#include "Poco/AutoPtr.h"</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-6"></a>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-7"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FileChannel</span><span class="p">;</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-8"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FormattingChannel</span><span class="p">;</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-9"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">PatternFormatter</span><span class="p">;</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-10"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">Logger</span><span class="p">;</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-11"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">AutoPtr</span><span class="p">;</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-12"></a>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-13"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-14"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FileChannel</span><span class="o">&gt;</span> <span class="n">pChannel</span><span class="p">(</span><span class="k">new</span> <span class="n">FileChannel</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-15"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"path"</span><span class="p">,</span> <span class="s">"log/sample.log"</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-16"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"rotation"</span><span class="p">,</span> <span class="s">"100 K"</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-17"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"archive"</span><span class="p">,</span> <span class="s">"timestamp"</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-18"></a>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-19"></a>        <span class="c1">//AutoPtr&lt;ConsoleChannel&gt; pCons(new ConsoleChannel);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-20"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">PatternFormatter</span><span class="o">&gt;</span> <span class="n">pPF</span><span class="p">(</span><span class="k">new</span> <span class="n">PatternFormatter</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-21"></a>        <span class="n">pPF</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"pattern"</span><span class="p">,</span> <span class="s">"%Y-%m-%d %H:%M:%S %s: %t"</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-22"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FormattingChannel</span><span class="o">&gt;</span> <span class="n">pFC</span><span class="p">(</span><span class="k">new</span> <span class="n">FormattingChannel</span><span class="p">(</span><span class="n">pPF</span><span class="p">,</span> <span class="n">pChannel</span><span class="p">));</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-23"></a>        <span class="n">Logger</span><span class="o">::</span><span class="n">root</span><span class="p">().</span><span class="n">setChannel</span><span class="p">(</span><span class="n">pFC</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-24"></a>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-25"></a>        <span class="n">Logger</span> <span class="o">&amp;</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="s">"TestChannel"</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-26"></a>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-27"></a>                <span class="n">poco_information</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a info"</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-28"></a>                <span class="n">poco_warning</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a warning"</span><span class="p">);</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-29"></a>        <span class="p">}</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-30"></a>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_b014af62232541448a1ffd091a8d22a5-31"></a><span class="p">}</span>
 </pre>
 <p>To compile the project we only have to execute following command:</p>
-<pre class="code bash"><a name="rest_code_480b911d826446e98f03f8f6941d4949-1"></a>bii cpp:build
+<pre class="code bash"><a name="rest_code_dbcc04a6d8fe4b47a99ea22472248ca5-1"></a>bii cpp:build
 </pre>
 <p>To publish the project and to allow everyone use it as we have used <a class="reference external" href="http://pocoproject.org/">Poco</a>:</p>
-<pre class="code bash"><a name="rest_code_9da17c22af8e45e0a028cc4fd6c3c20e-1"></a>bii publish
+<pre class="code bash"><a name="rest_code_485ba5e1e8ff4c3ba60b8e3af9af5d07-1"></a>bii publish
 </pre>
 <p>Besides the ease to use, I like so much the integration with <a class="reference external" href="https://eclipse.org">Eclipse</a> with <a class="reference external" href="https://eclipse.org/cdt/">CDT</a>. After "bii cpp:build" execution all files were properly indexed.</p>
 <p>I've read also an article about the good integration with <a class="reference external" href="https://www.jetbrains.com/clion/">CLion</a>: <a class="reference external" href="http://blog.jetbrains.com/clion/2015/03/when-clion-met-biicode/">When CLion met biicode</a>.</p>
@@ -702,6 +400,48 @@ About <a class="reference external" href="http://developer.android.com/sdk/insta
 <p>I've seen in <a class="reference external" href="https://plus.google.com/+GoogleScienceFair">Google Science Fair</a> a collection of equations that changed the world.
 In my opinion, everybody must understand some of these equations.</p>
 <a class="reference external image-reference" href="https://plus.google.com/108818810955465968635/posts/MQ6e6NXNGTf"><img alt="Equations that changed the world" class="align-center" src="https://lh4.googleusercontent.com/-FHTLwqgD_9Y/Uzw9gQoOzWI/AAAAAAAAzPo/wYMfpR33uqM/w319-h417-no/10013908_458548124276223_2085950828_n.jpg" style="width: 400px;"></a>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/primer-post/" class="u-url">First post with Nikola</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="posts/primer-post/" rel="bookmark"><time class="published dt-published" datetime="2014-03-27T13:30:02+01:00" title="2014-03-27">2014-03-27</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/en/posts/primer-post/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>I guess that most people come from dynamic content management systems based on:</p>
+<ul class="simple">
+<li>send data from browser to server</li>
+<li>process the received data, then it stores the info into a database (or files)</li>
+<li>the server generate dynamically an answer that is sent to the browser as HTML<ul>
+<li>the answer is usually built reading info from a database or files.</li>
+</ul>
+</li>
+</ul>
+<p>This process is managed by a software installed on server, this is our content management system.</p>
+<p>Now I've changed the paradigm to "static web site generator", specifically I'm going to use <a class="reference external" href="http://getnikola.com/">Nikola</a>,
+although this time, I'm not going to install on a remote server.</p>
+<p>In a next post I'll tell you how I've automated the publication process using <a class="reference external" href="http://www.github.com">Github</a> <a class="footnote-reference" href="posts/primer-post/#id9" id="id1">[1]</a> and <a class="reference external" href="https://travis-ci.org/">Travis</a> <a class="footnote-reference" href="posts/primer-post/#id10" id="id2">[2]</a>.</p>
+<div class="contents topic" id="path-to-nikola">
+<p class="topic-title first">Path to <a class="reference external" href="http://getnikola.com/">Nikola</a></p>
+<ul class="simple">
+<li><a class="reference internal" href="posts/primer-post/#phpnuke" id="id16">PhpNuke</a></li>
+<li>
+<a class="reference internal" href="posts/primer-post/#my-own-content-management-system" id="id17">My Own Content Management System</a><ul>
+<li><a class="reference internal" href="posts/primer-post/#drupal" id="id18">Drupal</a></li>
+<li><a class="reference internal" href="posts/primer-post/#wordpress" id="id19">Wordpress</a></li>
+<li><a class="reference internal" href="posts/primer-post/#cmsdj" id="id20">CMSdj</a></li>
+<li><a class="reference internal" href="posts/primer-post/#nikola" id="id21">Nikola</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p class="more"><a href="posts/primer-post/">Read more…</a></p>
 </div>
     </div>
     </article>

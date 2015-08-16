@@ -2,20 +2,21 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="Crear REST API: URLs">
+<base href="http://carlosvin.github.io/en/posts/rest-urls/">
+<meta name="description" content="Design REST API: URLs">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Creando REST URLs | Carlos says bla bla</title>
+<title>REST URLs | Carlos says bla bla</title>
 <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../rss.xml">
 <link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../../../rss.xml">
 <link rel="canonical" href="http://carlosvin.github.io/en/posts/rest-urls/">
-<!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Crear REST API: URLs">
+<!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Design REST API: URLs">
 <meta name="author" content="Carlos Martín Sánchez">
-<link rel="prev" href="../first-biicode-poco/" title="C++ Dependency Management: Biicode" type="text/html">
+<meta name="robots" content="noindex">
 <meta property="og:site_name" content="Carlos says bla bla">
-<meta property="og:title" content="Creando REST URLs">
+<meta property="og:title" content="REST URLs">
 <meta property="og:url" content="http://carlosvin.github.io/en/posts/rest-urls/">
-<meta property="og:description" content="Crear REST API: URLs">
+<meta property="og:description" content="Design REST API: URLs">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2015-07-26T18:00:00+02:00">
 <meta property="article:tag" content="API">
@@ -91,7 +92,7 @@
         <div class="row">
             
             
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Creando REST URLs</a></h1>
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">REST URLs</a></h1>
 
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
@@ -102,20 +103,24 @@
 <div class="g-commentcount" data-href="/en/posts/rest-urls/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script><p class="sourceline"><a href="index.rst" id="sourcelink">Source</a></p>
 
-                <meta name="description" itemprop="description" content="Crear REST API: URLs">
+                <meta name="description" itemprop="description" content="Design REST API: URLs">
 </div>
         
+        <div class="metadata posttranslations translations">
+            <h3 class="posttranslations-intro">Also available in:</h3>
+                <p><a href="../../../posts/rest-urls/" rel="alternate" hreflang="es">Español</a></p>
+        </div>
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<p>Las primeras veces que me puse a diseñar una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> con ejemplos.</p>
-<div class="contents topic" id="indice">
-<p class="topic-title first">Índice</p>
+<p>First time I designed a <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URL</a> with examples.</p>
+<div class="contents topic" id="index">
+<p class="topic-title first">Index</p>
 <ul class="simple">
 <li>
-<a class="reference internal" href=".#fundamentos-rest" id="id3">Fundamentos REST</a><ul>
-<li><a class="reference internal" href=".#verbos-rest" id="id4">Verbos REST</a></li>
-<li><a class="reference internal" href=".#acceso-a-recursos" id="id5">Acceso a Recursos</a></li>
+<a class="reference internal" href=".#rest-basics" id="id3">REST Basics</a><ul>
+<li><a class="reference internal" href=".#rest-verbs" id="id4">REST Verbs</a></li>
+<li><a class="reference internal" href=".#accessing-to-resources" id="id5">Accessing to Resources</a></li>
 <li><a class="reference internal" href=".#modificar-recursos" id="id6">Modificar Recursos</a></li>
 <li><a class="reference internal" href=".#borrar-recursos" id="id7">Borrar Recursos</a></li>
 <li><a class="reference internal" href=".#crear-recursos" id="id8">Crear Recursos</a></li>
@@ -134,71 +139,75 @@
 <li><a class="reference internal" href=".#video-tutoriales" id="id16">Video Tutoriales</a></li>
 </ul>
 </div>
-<div class="section" id="fundamentos-rest">
-<h2>Fundamentos <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
-</h2>
+<div class="section" id="rest-basics">
+<h2>
+<a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> Basics</h2>
 <ul class="simple">
-<li>Utilizamos <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> para acceder a recursos.</li>
-<li>Utilizamos <em>verbos</em> para modificar recursos.</li>
-<li>Nuestros <em>verbos</em> están proporcionados por el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</li>
-<li>Los <em>verbos</em> tienen un equivalente directo con las operaciones <a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a> <a class="footnote-reference" href=".#id2" id="id1">[1]</a>.</li>
-<li>Para acceder a un recurso existente necesitamos su identificador.</li>
+<li>Using <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> for get resources.</li>
+<li>Using <em>verbs</em> for modify resources.</li>
+<li>The <em>verbs</em> are provided by the <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> protocol.</li>
+<li>The <em>verbs</em> have a direct equivalency with <a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a> <a class="footnote-reference" href=".#id2" id="id1">[1]</a>.</li>
+<li>To access to an existent resource we need an identifier.</li>
 </ul>
-<div class="section" id="verbos-rest">
-<h3>Verbos <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
-</h3>
+<div class="section" id="rest-verbs">
+<h3>
+<a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> Verbs</h3>
 <dl class="docutils">
 <dt>POST</dt>
-<dd>(<strong>C</strong>) Utilizado para <strong>crear</strong> nuevos recursos.</dd>
+<dd>
+<strong>Create</strong> new resources.</dd>
 <dt>GET</dt>
-<dd>(<strong>R</strong>) Utilizado para <strong>leer</strong> un recursos existentes en el sistema.</dd>
+<dd>
+<strong>Read</strong> already existing resources.</dd>
 <dt>PUT</dt>
-<dd>(<strong>U</strong>) Utilizado para <strong>actualizar</strong> recursos existentes.</dd>
+<dd>
+<strong>Update</strong> already existing resources.</dd>
 <dt>DELETE</dt>
-<dd>(<strong>D</strong>) Utilizado para <strong>borrar</strong> recursos existentes.</dd>
+<dd>
+<strong>Delete</strong> already existing resources.</dd>
 </dl>
-<p>En una tabla quedará más claro</p>
+<p>It is clearer in the following table</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="23%">
 <col width="26%">
-<col width="51%">
+<col width="29%">
+<col width="45%">
 </colgroup>
 <tbody valign="top">
 <tr>
-<td>Verbo <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
-</td>
-<td>Acción <a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a>
-</td>
-<td>Debe exisitir el recurso</td>
+<td>
+<a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> Verb</td>
+<td>
+<a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a> Action</td>
+<td>Resource must exist</td>
 </tr>
 <tr>
 <td>POST</td>
-<td>Crear</td>
+<td>Create</td>
 <td>No</td>
 </tr>
 <tr>
 <td>GET</td>
-<td>Leer</td>
-<td>Sí</td>
+<td>Read</td>
+<td>Yes</td>
 </tr>
 <tr>
 <td>PUT</td>
-<td>Actualizar</td>
-<td>Sí</td>
+<td>Update</td>
+<td>Yes</td>
 </tr>
 <tr>
 <td>DELETE</td>
-<td>Borrar</td>
-<td>Sí</td>
+<td>Delete</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="acceso-a-recursos">
-<h3><a class="toc-backref" href=".#id5">Acceso a Recursos</a></h3>
-<p>Un recurso es <em>a lo que quieres acceder</em>. Por ejemplo, un coche.</p>
-<p>Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:</p>
+<div class="section" id="accessing-to-resources">
+<h3><a class="toc-backref" href=".#id5">Accessing to Resources</a></h3>
+<p>A resource is <em>what we want to get</em>. For example, a car.</p>
+<p>To be able to get a car, Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:</p>
 <p><em>Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV</em>.</p>
 <p>De esta forma el dependiente sabe cuál es y te puede dar la información.</p>
 <p>"Fiat Bravo 1.9 Emotion 120CV" es nuestro <strong>identificador</strong>.</p>
@@ -403,11 +412,6 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
 <li><a class="tag p-category" href="../../categories/api/" rel="tag">API</a></li>
             <li><a class="tag p-category" href="../../categories/rest/" rel="tag">REST</a></li>
             <li><a class="tag p-category" href="../../categories/web-services/" rel="tag">Web Services</a></li>
-        </ul>
-<ul class="pager hidden-print">
-<li class="previous">
-                <a href="../first-biicode-poco/" rel="prev" title="C++ Dependency Management: Biicode">Previous post</a>
-            </li>
         </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
         
         

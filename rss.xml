@@ -1,308 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Carlos says bla bla</title><link>http://carlosvin.github.io/</link><description>Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.</description><atom:link href="http://carlosvin.github.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>es</language><lastBuildDate>Sat, 01 Aug 2015 21:05:13 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Creando REST URLs</title><link>http://carlosvin.github.io/posts/rest-urls/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Las primeras veces que me puse a diseñar una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; con ejemplos.&lt;/p&gt;
-&lt;div class="contents topic" id="indice"&gt;
-&lt;p class="topic-title first"&gt;Índice&lt;/p&gt;
-&lt;ul class="simple"&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#fundamentos-rest" id="id3"&gt;Fundamentos REST&lt;/a&gt;&lt;ul&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#verbos-rest" id="id4"&gt;Verbos REST&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#acceso-a-recursos" id="id5"&gt;Acceso a Recursos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#modificar-recursos" id="id6"&gt;Modificar Recursos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#borrar-recursos" id="id7"&gt;Borrar Recursos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#crear-recursos" id="id8"&gt;Crear Recursos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#colecciones" id="id9"&gt;Colecciones&lt;/a&gt;&lt;ul&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#anadir-un-elemento-a-la-coleccion" id="id10"&gt;Añadir un elemento a la colección&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#modificar-un-elemento-de-la-coleccion" id="id11"&gt;Modificar un elemento de la colección&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#borrar-un-elemento-de-la-coleccion" id="id12"&gt;Borrar un elemento de la colección&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#leer-un-elemento-de-la-coleccion" id="id13"&gt;Leer un elemento de la colección&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#listar-elementos-de-la-coleccion" id="id14"&gt;Listar elementos de la colección&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#tipico-error" id="id15"&gt;Típico error&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#video-tutoriales" id="id16"&gt;Video Tutoriales&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/div&gt;
-&lt;div class="section" id="fundamentos-rest"&gt;
-&lt;h2&gt;Fundamentos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/h2&gt;
-&lt;ul class="simple"&gt;&lt;li&gt;Utilizamos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; para acceder a recursos.&lt;/li&gt;
-&lt;li&gt;Utilizamos &lt;em&gt;verbos&lt;/em&gt; para modificar recursos.&lt;/li&gt;
-&lt;li&gt;Nuestros &lt;em&gt;verbos&lt;/em&gt; están proporcionados por el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Los &lt;em&gt;verbos&lt;/em&gt; tienen un equivalente directo con las operaciones &lt;a class="reference external" href="https://es.wikipedia.org/wiki/CRUD"&gt;CRUD&lt;/a&gt; &lt;a class="footnote-reference" href="http://carlosvin.github.io/posts/rest-urls/#id2" id="id1"&gt;[1]&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Para acceder a un recurso existente necesitamos su identificador.&lt;/li&gt;
-&lt;/ul&gt;&lt;div class="section" id="verbos-rest"&gt;
-&lt;h3&gt;Verbos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/h3&gt;
-&lt;dl class="docutils"&gt;&lt;dt&gt;POST&lt;/dt&gt;
-&lt;dd&gt;(&lt;strong&gt;C&lt;/strong&gt;) Utilizado para &lt;strong&gt;crear&lt;/strong&gt; nuevos recursos.&lt;/dd&gt;
-&lt;dt&gt;GET&lt;/dt&gt;
-&lt;dd&gt;(&lt;strong&gt;R&lt;/strong&gt;) Utilizado para &lt;strong&gt;leer&lt;/strong&gt; un recursos existentes en el sistema.&lt;/dd&gt;
-&lt;dt&gt;PUT&lt;/dt&gt;
-&lt;dd&gt;(&lt;strong&gt;U&lt;/strong&gt;) Utilizado para &lt;strong&gt;actualizar&lt;/strong&gt; recursos existentes.&lt;/dd&gt;
-&lt;dt&gt;DELETE&lt;/dt&gt;
-&lt;dd&gt;(&lt;strong&gt;D&lt;/strong&gt;) Utilizado para &lt;strong&gt;borrar&lt;/strong&gt; recursos existentes.&lt;/dd&gt;
-&lt;/dl&gt;&lt;p&gt;En una tabla quedará más claro&lt;/p&gt;
-&lt;table border="1" class="docutils"&gt;&lt;colgroup&gt;&lt;col width="23%"&gt;&lt;col width="26%"&gt;&lt;col width="51%"&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td&gt;Verbo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;Acción &lt;a class="reference external" href="https://es.wikipedia.org/wiki/CRUD"&gt;CRUD&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;Debe exisitir el recurso&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;POST&lt;/td&gt;
-&lt;td&gt;Crear&lt;/td&gt;
-&lt;td&gt;No&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;GET&lt;/td&gt;
-&lt;td&gt;Leer&lt;/td&gt;
-&lt;td&gt;Sí&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;PUT&lt;/td&gt;
-&lt;td&gt;Actualizar&lt;/td&gt;
-&lt;td&gt;Sí&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;DELETE&lt;/td&gt;
-&lt;td&gt;Borrar&lt;/td&gt;
-&lt;td&gt;Sí&lt;/td&gt;
-&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;
-&lt;div class="section" id="acceso-a-recursos"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id5"&gt;Acceso a Recursos&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Un recurso es &lt;em&gt;a lo que quieres acceder&lt;/em&gt;. Por ejemplo, un coche.&lt;/p&gt;
-&lt;p&gt;Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;De esta forma el dependiente sabe cuál es y te puede dar la información.&lt;/p&gt;
-&lt;p&gt;"Fiat Bravo 1.9 Emotion 120CV" es nuestro &lt;strong&gt;identificador&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;Trasladando el ejemplo a las &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;APIs&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
-&lt;/pre&gt;
-&lt;p&gt;De esta forma nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; nos puede proporcionar información del coche.&lt;/p&gt;
-&lt;p&gt;Esto es un ejemplo muy simplificado, pero realmente cuando accedemos a un recurso concreto solemos utilizar algo que lo identifique de forma unívoca. Una práctica común y recomendable es utilizar &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Universally_unique_identifier"&gt;UUID&lt;/a&gt;.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-&lt;/pre&gt;
-&lt;p&gt;Pero nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, al igual que una tienda, no tiene por qué ser tan estricta, podemos preguntar por los coches que tienen ciertas caracteríticas, podemos ir al concesionario y decir:&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Hola buenos días, quiero un Fiat Bravo&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Y el dependiente, amablemente, te mostrará todos los Fiat Bravo que tiene. Veamos cómo podemos decir esto a nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET  http://tiendadecoches.es/api/coches/?marca=fiat&amp;amp;modelo=bravo
-&lt;/pre&gt;
-&lt;p&gt;Nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; nos devolverá todos los coches que son marca Fiat y modelo Bravo.&lt;/p&gt;
-&lt;p&gt;Marca y modelo en este caso son lo que llamamos &lt;strong&gt;parámetros de consulta&lt;/strong&gt; (query parameters).&lt;/p&gt;
-&lt;p&gt;Como os habréis dado cuenta durante el ejemplo, para obtener información de un recurso siempre hemos utilizado el &lt;em&gt;verbo&lt;/em&gt; &lt;strong&gt;GET&lt;/strong&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="modificar-recursos"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id6"&gt;Modificar Recursos&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; también nos puede permitir modificar un recurso, al igual que para pedir información, para modificar un recurso necesitamos especificar qué recurso queremos modificar, así que necesitamos otra vez un &lt;em&gt;identificador&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo único que cambia es el verbo, queremos &lt;strong&gt;modificar&lt;/strong&gt; así que utilizamos el verbo equivalente que nos proporciona el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;: &lt;strong&gt;PUT&lt;/strong&gt;.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-&lt;/pre&gt;
-&lt;p&gt;Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.&lt;/p&gt;
-&lt;p&gt;Tenemos que enviar la nueva cilindrada a esta &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URL&lt;/a&gt;  &lt;a class="reference external" href="http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f"&gt;http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f&lt;/a&gt; por &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; utilizando el verbo &lt;strong&gt;PUT&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;El protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.&lt;/p&gt;
-&lt;p&gt;Podemos enviarlo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt; o &lt;a class="reference external" href="https://es.wikipedia.org/wiki/XML"&gt;XML&lt;/a&gt; o como queramos, solo tenemos que estar seguros de que el formato que enviamos es lo que espera recibir el servidor.&lt;/p&gt;
-&lt;div class="note"&gt;
-&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
-&lt;p class="last"&gt;Cuando definimos una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; tenemos que definir también el formato en que vamos a enviar los datos.&lt;/p&gt;
-&lt;/div&gt;
-&lt;p&gt;Ejemplo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-{ cilindrada: 100 }
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="borrar-recursos"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id7"&gt;Borrar Recursos&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Continuando con el ejemplo de los coches, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URL&lt;/a&gt; que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos &lt;strong&gt;borrar (DELETE)&lt;/strong&gt;.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-&lt;/pre&gt;
-&lt;p&gt;En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="crear-recursos"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id8"&gt;Crear Recursos&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-POST   http://tiendadecoches.es/api/coches/
-&lt;/pre&gt;
-&lt;p&gt;Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.&lt;/p&gt;
-&lt;p&gt;En nuestro ejemplo, queremos crear un coche, así que ponemos toda la información necesaria para crear un coche dentro de la llamada POST de &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;, algo muy parecido como hemos hecho en el apartado &lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#modificar-recursos"&gt;Modificar Recursos&lt;/a&gt;, pero en este caso mandamos &lt;strong&gt;toda la información necesaria&lt;/strong&gt;, no solo la cilindrada.&lt;/p&gt;
-&lt;p&gt;Ejemplo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-{
-"marca": "Fiat",
-"modelo": "Bravo"
-"anio": 2010
-"puertas": 5,
-"cilindrada": 120,
-"version": "Emotion",
-"climatizador": true,
-"ac": false,
-"fuel": "Diesel"
-}
-&lt;/pre&gt;
-&lt;p&gt;Podemos delegar en el sistema, para que cuando pidamos la creación de un recurso nuevo, nos asigne un nuevo &lt;strong&gt;identificador&lt;/strong&gt;, o simplemente enviarlo con el resto de información:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-{
-"identificador": "cce05bee-386b-11e5-a151-feff819cdc9f"
-"marca": "Fiat",
-"modelo": "Bravo"
-"anio": 2010
-"puertas": 5,
-"cilindrada": 120,
-"version": "Emotion",
-"climatizador": true,
-"ac": false,
-"fuel": "Diesel"
-}
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="colecciones"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id9"&gt;Colecciones&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Algo que no quiero pasar por alto, porque al menos para mí no fue obvio, es el manejo de colecciones. Realmente ya está explicado, porque todas las acciones que hemos visto previamente sobre los coches, estaba aplicando realmente a una colección de coches.&lt;/p&gt;
-&lt;p&gt;Pero, ¿qué pasa si un recurso tiene a su vez una colección? Siguiendo con los coches, un coche puede tener una lista de aceites con los que puede funcionar, así que nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; debería permitir obtener, modificar, borrar o crear elementos en la lista.&lt;/p&gt;
-&lt;div class="note"&gt;
-&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
-&lt;p class="last"&gt;Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="anadir-un-elemento-a-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id10"&gt;Añadir un elemento a la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Si queremos añadir un elemento a la colección de coches lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de &lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#crear-recursos"&gt;Crear Recursos&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-
-{
-"tipo": "5W30",
-"otros_datos": "este es el mejor del mundo para este coche"
-}
-&lt;/pre&gt;
-&lt;p&gt;Si queremos añadir otro aceite:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-
-{
-"tipo": "10W30",
-"otros_datos": "otras cosas sobre aceites de coche",
-}
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="modificar-un-elemento-de-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id11"&gt;Modificar un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Si queremos modificar los datos del aceite &lt;em&gt;5W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
-
-{
-"tipo": "5W30",
-"otros_datos": "este ya no es el mejor del mundo para este coche"
-}
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="borrar-un-elemento-de-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id12"&gt;Borrar un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Para borrar un aceite &lt;em&gt;10W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="leer-un-elemento-de-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id13"&gt;Leer un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Para obtener la información del aceite &lt;em&gt;10W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="listar-elementos-de-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id14"&gt;Listar elementos de la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Como hemos visto en &lt;a class="reference internal" href="http://carlosvin.github.io/posts/rest-urls/#leer-un-elemento-de-la-coleccion"&gt;Leer un elemento de la colección&lt;/a&gt;, podemos obtener información de cualquier elemento de la colección, pero también podemos obtener varios elementos de la colección, ordenarlos, paginarlos y aplicar cualquier tipo de acciones típicas de una colección.&lt;/p&gt;
-&lt;p&gt;Podemos obtener todos los aceites soportados por el coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;, es tan simple como:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-&lt;/pre&gt;
-&lt;p&gt;Pero también podemos proporcionar otras funcionalidades en nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, como obtener los resultados ordenados:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&amp;amp;orden=ascendente
-&lt;/pre&gt;
-&lt;p&gt;Podemos pedir al &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; que nos devuelva los 10 primeros aceites del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
-&lt;/pre&gt;
-&lt;p&gt;Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&amp;amp;numero_de_elementos=3
-&lt;/pre&gt;
-&lt;p&gt;En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt; y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&amp;amp;numero_de_elementos=3
-&lt;/pre&gt;
-&lt;p&gt;Todas estas funcionalidades, son posibles gracias a los &lt;strong&gt;parámetros de consulta&lt;/strong&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="tipico-error"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id15"&gt;Típico error&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;La primera vez que intenté diseñar un &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; lo que hice fué otra cosa, era una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, pero no &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Mi principal error fue en la construción de las &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt;, incluí &lt;em&gt;verbos&lt;/em&gt; sin tener en cuenta que los verbos ya me los proporcionaba el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Por ejemplo, creaba &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; del tipo:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-POST    http://example.com/api/coches/seat-ibiza/borrar-rueda/3
-&lt;/pre&gt;
-&lt;p&gt;Cuando lo correcto sería&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="video-tutoriales"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/rest-urls/#id16"&gt;Video Tutoriales&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:&lt;/p&gt;
-&lt;iframe width="425" height="344" src="//www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;iframe width="425" height="344" src="//www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/posts/rest-urls/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Create, Read, Update, Delete&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;</description><category>API</category><category>REST</category><category>Web Services</category><guid>http://carlosvin.github.io/posts/rest-urls/</guid><pubDate>Sun, 26 Jul 2015 16:00:00 GMT</pubDate></item><item><title>Gestión de dependencias C++: Biicode</title><link>http://carlosvin.github.io/posts/first-biicode-poco/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Hace tiempo que estoy interesado la construcción, gestión de dependencias, empaquetado y despliegue de proyectos software. Para &lt;a class="reference external" href="http://java.com/en/download/whatis_java.jsp"&gt;Java&lt;/a&gt;, &lt;a class="reference external" href="http://www.scala-lang.org/"&gt;Scala&lt;/a&gt;, &lt;a class="reference external" href="http://www.python.org/"&gt;Python&lt;/a&gt;, etc. Es bastante sencillo ya que hay herramientas como &lt;a class="reference external" href="http://maven.apache.org/"&gt;Maven&lt;/a&gt;, &lt;a class="reference external" href="http://www.gradle.org/"&gt;Gradle&lt;/a&gt;, &lt;a class="reference external" href="https://pypi.python.org/pypi/pip"&gt;pip&lt;/a&gt;, &lt;a class="reference external" href="http://www.scala-sbt.org/"&gt;Sbt&lt;/a&gt;, etc. Pero para C++_, lo más parecido que he encontrado es &lt;a class="reference external" href="http://maven.apache.org/"&gt;Maven&lt;/a&gt; con el plugin &lt;a class="reference external" href="http://maven-nar.github.io/"&gt;Nar&lt;/a&gt; o &lt;a class="reference external" href="http://www.gradle.org/"&gt;Gradle&lt;/a&gt; con su &lt;a class="reference external" href="https://gradle.org/docs/current/userguide/nativeBinaries.html"&gt;plugin cpp&lt;/a&gt; (que está en desarrollo).&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Carlos says bla bla</title><link>http://carlosvin.github.io/</link><description>Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza.</description><atom:link href="http://carlosvin.github.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>es</language><lastBuildDate>Sun, 16 Aug 2015 12:59:42 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Gestión de dependencias C++: Biicode</title><link>http://carlosvin.github.io/posts/first-biicode-poco/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Hace tiempo que estoy interesado la construcción, gestión de dependencias, empaquetado y despliegue de proyectos software. Para &lt;a class="reference external" href="http://java.com/en/download/whatis_java.jsp"&gt;Java&lt;/a&gt;, &lt;a class="reference external" href="http://www.scala-lang.org/"&gt;Scala&lt;/a&gt;, &lt;a class="reference external" href="http://www.python.org/"&gt;Python&lt;/a&gt;, etc. Es bastante sencillo ya que hay herramientas como &lt;a class="reference external" href="http://maven.apache.org/"&gt;Maven&lt;/a&gt;, &lt;a class="reference external" href="http://www.gradle.org/"&gt;Gradle&lt;/a&gt;, &lt;a class="reference external" href="https://pypi.python.org/pypi/pip"&gt;pip&lt;/a&gt;, &lt;a class="reference external" href="http://www.scala-sbt.org/"&gt;Sbt&lt;/a&gt;, etc. Pero para C++_, lo más parecido que he encontrado es &lt;a class="reference external" href="http://maven.apache.org/"&gt;Maven&lt;/a&gt; con el plugin &lt;a class="reference external" href="http://maven-nar.github.io/"&gt;Nar&lt;/a&gt; o &lt;a class="reference external" href="http://www.gradle.org/"&gt;Gradle&lt;/a&gt; con su &lt;a class="reference external" href="https://gradle.org/docs/current/userguide/nativeBinaries.html"&gt;plugin cpp&lt;/a&gt; (que está en desarrollo).&lt;/p&gt;
 &lt;p&gt;Hace tiempo que conozco &lt;a class="reference external" href="https://www.biicode.org/"&gt;Biicode&lt;/a&gt;, pero no había sacado nunca tiempo para probarlo, hasta hoy.&lt;/p&gt;
 &lt;p&gt;El funcionamiento general es muy sencillo.&lt;/p&gt;
 &lt;p&gt;Necesitamos &lt;a class="reference external" href="http://docs.biicode.com/c++/installation.html"&gt;instalar biicode en nuestra máquina&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Yo he creado un pequeño ejemplo utilizando el sistema de log de la librería &lt;a class="reference external" href="http://pocoproject.org/"&gt;Poco&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;He ejecutado este comando para crear mi proyecto, al que he llamado bii_log. Eso sí, lo tengo que crear debajo de mi nombre de usuario en &lt;a class="reference external" href="https://www.biicode.org/"&gt;Biicode&lt;/a&gt;, por si posteriormente lo quiero publicar.&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_b45cd48c310f488698d99a50d0c25757-1"&gt;&lt;/a&gt;bii new carlovin/bii_log --hello&lt;span class="o"&gt;=&lt;/span&gt;cpp
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_47a8dce2353d4bc7a777a8f62eeb4fd5-1"&gt;&lt;/a&gt;bii new carlovin/bii_log --hello&lt;span class="o"&gt;=&lt;/span&gt;cpp
 &lt;/pre&gt;&lt;p&gt;Se ha creado una estructura de directorios y ficheros con nuestro proyecto. Aunque los únicos ficheros que vamos a tocar son:&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_bf583e1baafe47faa6d4874328a805b8-1"&gt;&lt;/a&gt;blocks/carlosvin/bii_log/main.cpp
-&lt;a name="rest_code_bf583e1baafe47faa6d4874328a805b8-2"&gt;&lt;/a&gt;blocks/carlosvin/bii_log/biicode.conf
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_b49a54ae14a449cd82135755c44cd476-1"&gt;&lt;/a&gt;blocks/carlosvin/bii_log/main.cpp
+&lt;a name="rest_code_b49a54ae14a449cd82135755c44cd476-2"&gt;&lt;/a&gt;blocks/carlosvin/bii_log/biicode.conf
 &lt;/pre&gt;&lt;p&gt;En el fichero biicode.conf vamos a configurar nuestras dependencias, en nuestro caso la librería &lt;a class="reference external" href="http://pocoproject.org/"&gt;Poco&lt;/a&gt;.&lt;/p&gt;
-&lt;pre class="code yaml"&gt;&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Biicode configuration file&lt;/span&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-3"&gt;&lt;/a&gt;&lt;span class="p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;requirements&lt;/span&gt;&lt;span class="p-Indicator"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-4"&gt;&lt;/a&gt;    &lt;span class="l-Scalar-Plain"&gt;fenix/poco(develop)&lt;/span&gt;&lt;span class="p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l-Scalar-Plain"&gt;0&lt;/span&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-6"&gt;&lt;/a&gt;&lt;span class="p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;parent&lt;/span&gt;&lt;span class="p-Indicator"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-7"&gt;&lt;/a&gt;        &lt;span class="l-Scalar-Plain"&gt;carlosvin/bii_log&lt;/span&gt;&lt;span class="p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l-Scalar-Plain"&gt;0&lt;/span&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-9"&gt;&lt;/a&gt;&lt;span class="p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;includes&lt;/span&gt;&lt;span class="p-Indicator"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_6434412410704b0e82cf6b5791dd1efd-10"&gt;&lt;/a&gt;    &lt;span class="l-Scalar-Plain"&gt;Poco/*.h&lt;/span&gt;&lt;span class="p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l-Scalar-Plain"&gt;fenix/poco/Foundation/include&lt;/span&gt;
+&lt;pre class="code yaml"&gt;&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Biicode configuration file&lt;/span&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-3"&gt;&lt;/a&gt;&lt;span class="p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;requirements&lt;/span&gt;&lt;span class="p-Indicator"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-4"&gt;&lt;/a&gt;    &lt;span class="l-Scalar-Plain"&gt;fenix/poco(develop)&lt;/span&gt;&lt;span class="p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l-Scalar-Plain"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-6"&gt;&lt;/a&gt;&lt;span class="p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;parent&lt;/span&gt;&lt;span class="p-Indicator"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-7"&gt;&lt;/a&gt;        &lt;span class="l-Scalar-Plain"&gt;carlosvin/bii_log&lt;/span&gt;&lt;span class="p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l-Scalar-Plain"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-9"&gt;&lt;/a&gt;&lt;span class="p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;includes&lt;/span&gt;&lt;span class="p-Indicator"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_7ceb7d037280438ba5d06eced681db65-10"&gt;&lt;/a&gt;    &lt;span class="l-Scalar-Plain"&gt;Poco/*.h&lt;/span&gt;&lt;span class="p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l-Scalar-Plain"&gt;fenix/poco/Foundation/include&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;En la sección [includes], estamos redefiniendo la ruta a nuestros ficheros de cabeceras, porque si no lo hiciéramos tendríamos que hacer algo así:&lt;/p&gt;
-&lt;pre class="code cpp"&gt;&lt;a name="rest_code_1ebc5285204142dc8d8b95e366ba45a9-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "fenix/poco/Foundation/include/Logger.h"&lt;/span&gt;
+&lt;pre class="code cpp"&gt;&lt;a name="rest_code_e5f548229aec4faeb338526248bfd50c-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "fenix/poco/Foundation/include/Logger.h"&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Gracias a esta línea, en nuestro código tendremos includes más claros como:&lt;/p&gt;
-&lt;pre class="code cpp"&gt;&lt;a name="rest_code_a75e0d7d09214914a3f508eacce27eaa-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/Logger.h"&lt;/span&gt;
+&lt;pre class="code cpp"&gt;&lt;a name="rest_code_824302a220ae4582a87629711f0c28f8-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/Logger.h"&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Así de fácil, ya podemos utilizar la librería &lt;a class="reference external" href="http://pocoproject.org/"&gt;Poco&lt;/a&gt; en nuestro proyecto, por ejemplo:&lt;/p&gt;
-&lt;pre class="code cpp"&gt;&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/FileChannel.h"&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-2"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/FormattingChannel.h"&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-3"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/PatternFormatter.h"&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-4"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/Logger.h"&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-5"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/AutoPtr.h"&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-6"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-9"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-10"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-11"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-13"&gt;&lt;/a&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-14"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-15"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"path"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"log/sample.log"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"rotation"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"100 K"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-17"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"archive"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"timestamp"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-18"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-19"&gt;&lt;/a&gt;        &lt;span class="c1"&gt;//AutoPtr&amp;lt;ConsoleChannel&amp;gt; pCons(new ConsoleChannel);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-20"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"pattern"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%Y-%m-%d %H:%M:%S %s: %t"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-22"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pFC&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-23"&gt;&lt;/a&gt;        &lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;setChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pFC&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-24"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-25"&gt;&lt;/a&gt;        &lt;span class="n"&gt;Logger&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"TestChannel"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-26"&gt;&lt;/a&gt;        &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-27"&gt;&lt;/a&gt;                &lt;span class="n"&gt;poco_information&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"This is a info"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-28"&gt;&lt;/a&gt;                &lt;span class="n"&gt;poco_warning&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"This is a warning"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-29"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-30"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_c919ef2a2b4049b39e0f3573301767af-31"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code cpp"&gt;&lt;a name="rest_code_43033d351a12415497e799354439900d-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/FileChannel.h"&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-2"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/FormattingChannel.h"&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-3"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/PatternFormatter.h"&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-4"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/Logger.h"&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-5"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include "Poco/AutoPtr.h"&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-6"&gt;&lt;/a&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-9"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-10"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-11"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-13"&gt;&lt;/a&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-14"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-15"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"path"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"log/sample.log"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"rotation"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"100 K"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-17"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"archive"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"timestamp"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-18"&gt;&lt;/a&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-19"&gt;&lt;/a&gt;        &lt;span class="c1"&gt;//AutoPtr&amp;lt;ConsoleChannel&amp;gt; pCons(new ConsoleChannel);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-20"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"pattern"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%Y-%m-%d %H:%M:%S %s: %t"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-22"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pFC&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-23"&gt;&lt;/a&gt;        &lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;setChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pFC&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-24"&gt;&lt;/a&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-25"&gt;&lt;/a&gt;        &lt;span class="n"&gt;Logger&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"TestChannel"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-26"&gt;&lt;/a&gt;        &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-27"&gt;&lt;/a&gt;                &lt;span class="n"&gt;poco_information&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"This is a info"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-28"&gt;&lt;/a&gt;                &lt;span class="n"&gt;poco_warning&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"This is a warning"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-29"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-30"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_43033d351a12415497e799354439900d-31"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Para compilar el proyecto simplemente hay que ejecutar:&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_0df409e511554898a73df7e9e7c4188d-1"&gt;&lt;/a&gt;bii cpp:build
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_13130b4da0e34486a59332b260afdb75-1"&gt;&lt;/a&gt;bii cpp:build
 &lt;/pre&gt;&lt;p&gt;Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utilizado &lt;a class="reference external" href="http://pocoproject.org/"&gt;Poco&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_ed6612480eb74999a53d82de01fd6ac0-1"&gt;&lt;/a&gt;bii publish
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_32af66a5d2da4abc87517f759fe04459-1"&gt;&lt;/a&gt;bii publish
 &lt;/pre&gt;&lt;p&gt;Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi &lt;a class="reference external" href="https://eclipse.org"&gt;Eclipse&lt;/a&gt; con &lt;a class="reference external" href="https://eclipse.org/cdt/"&gt;CDT&lt;/a&gt; indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos.&lt;/p&gt;
 &lt;p&gt;También he leído un artículo sobre lo bien que se integra con &lt;a class="reference external" href="https://www.jetbrains.com/clion/"&gt;CLion&lt;/a&gt;: &lt;a class="reference external" href="http://blog.jetbrains.com/clion/2015/03/when-clion-met-biicode/"&gt;When CLion met biicode&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>biicode</category><category>C++</category><category>depencency management</category><category>Poco</category><guid>http://carlosvin.github.io/posts/first-biicode-poco/</guid><pubDate>Wed, 25 Feb 2015 19:00:00 GMT</pubDate></item><item><title>Mantenimiento de Software</title><link>http://carlosvin.github.io/posts/software-maintenance/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Hace unos días en el trabajo tuve que rellenar un documento en el que debía indicar el tipo de mantenimiento que debía hacer y sólo tenía dos opciones: correctivo y adaptativo. Esto me extrañó, porque el cambio que yo quería hacer no terminaba de encajar en ninguno de los dos tipos.&lt;/p&gt;
 &lt;p&gt;Haciendo memoria sobre lo que había dado en mi primera asignatura de Ingeniería del Software, conseguí recordar tres tipos, pero me parecía que me faltaba un tipo.&lt;/p&gt;
@@ -337,7 +94,7 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/gradle-cpp/#conclusiones" id="id19"&gt;Conclusiones&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href="http://carlosvin.github.io/posts/gradle-cpp/"&gt;Leer más…&lt;/a&gt; (quedan 5 minutos de lectura)&lt;/p&gt;&lt;/div&gt;</description><category>Build Construction Systems</category><category>C++</category><category>Gradle</category><guid>http://carlosvin.github.io/posts/gradle-cpp/</guid><pubDate>Thu, 25 Sep 2014 17:00:00 GMT</pubDate></item><item><title>Cómo funcionan los algoritmos de ordenación (Bailando)</title><link>http://carlosvin.github.io/posts/sorting-algorithm-dancing/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;He encontrado por ahí un grupo tecnológico-artístico llamados &lt;a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos"&gt;AlgoRythmics&lt;/a&gt;, que enseñan cómo funcionan los algoritmos de ordenación más conocidos.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://carlosvin.github.io/posts/gradle-cpp/"&gt;Leer más…&lt;/a&gt; (quedan 6 minutos de lectura)&lt;/p&gt;&lt;/div&gt;</description><category>Build Construction Systems</category><category>C++</category><category>Gradle</category><guid>http://carlosvin.github.io/posts/gradle-cpp/</guid><pubDate>Thu, 25 Sep 2014 17:00:00 GMT</pubDate></item><item><title>Cómo funcionan los algoritmos de ordenación (Bailando)</title><link>http://carlosvin.github.io/posts/sorting-algorithm-dancing/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;He encontrado por ahí un grupo tecnológico-artístico llamados &lt;a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos"&gt;AlgoRythmics&lt;/a&gt;, que enseñan cómo funcionan los algoritmos de ordenación más conocidos.&lt;/p&gt;
 &lt;p&gt;Siempre puedes consultar en la wikipedia &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Algoritmo_de_ordenamiento#Lista_de_algoritmos_de_ordenamiento"&gt;Algoritmos de ordenamiento&lt;/a&gt;, aunque no creo que sea tan rápido ni tan divertido para aprender como con &lt;a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos"&gt;AlgoRythmics&lt;/a&gt;, os dejo el ejemplo del &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Quicksort"&gt;Quicksort&lt;/a&gt;.&lt;/p&gt;
 &lt;iframe width="425" height="344" src="//www.youtube.com/embed/ywWBy6J5gz8?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;/div&gt;</description><category>Algorithm</category><category>Programming</category><category>Sorting</category><guid>http://carlosvin.github.io/posts/sorting-algorithm-dancing/</guid><pubDate>Mon, 16 Jun 2014 18:09:00 GMT</pubDate></item><item><title>Bases de Datos Embebidas Java: Comparación de Rendimiento</title><link>http://carlosvin.github.io/posts/java-embedded-db-performance-comparison/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div class="section" id="bases-de-datos-embebidas"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/posts/java-embedded-db-performance-comparison/#id1"&gt;Bases de datos embebidas&lt;/a&gt;&lt;/h2&gt;
@@ -378,4 +135,22 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
 &lt;p&gt;En la charla nos cuenta qué es, cómo funciona, cuándo utilizarlo y cuándo no.&lt;/p&gt;
 &lt;iframe width="425" height="344" src="//www.youtube.com/embed/9WV7juNmyE8?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;/div&gt;</description><category>Programming</category><category>Python</category><guid>http://carlosvin.github.io/posts/async-what-how-when/</guid><pubDate>Sun, 20 Apr 2014 11:35:00 GMT</pubDate></item><item><title>Ecuaciones que han cambiado el Mundo</title><link>http://carlosvin.github.io/posts/equations-that-changed-the-word/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;He visto en &lt;a class="reference external" href="https://plus.google.com/+GoogleScienceFair"&gt;Google Science Fair&lt;/a&gt; una colección de ecuaciones que han cambiado el mundo.
 En mi opinión, comprender algunas de estas ecuaciones debería entrar en lo que llamamos "Cultura General".&lt;/p&gt;
-&lt;a class="reference external image-reference" href="https://plus.google.com/108818810955465968635/posts/MQ6e6NXNGTf"&gt;&lt;img alt="Ecuaciones que cambiaron el mundo" class="align-center" src="https://lh4.googleusercontent.com/-FHTLwqgD_9Y/Uzw9gQoOzWI/AAAAAAAAzPo/wYMfpR33uqM/w319-h417-no/10013908_458548124276223_2085950828_n.jpg" style="width: 400px;"&gt;&lt;/a&gt;&lt;/div&gt;</description><category>G+</category><category>Math</category><category>Pysics</category><category>Science</category><guid>http://carlosvin.github.io/posts/equations-that-changed-the-word/</guid><pubDate>Thu, 03 Apr 2014 09:30:00 GMT</pubDate></item></channel></rss>
+&lt;a class="reference external image-reference" href="https://plus.google.com/108818810955465968635/posts/MQ6e6NXNGTf"&gt;&lt;img alt="Ecuaciones que cambiaron el mundo" class="align-center" src="https://lh4.googleusercontent.com/-FHTLwqgD_9Y/Uzw9gQoOzWI/AAAAAAAAzPo/wYMfpR33uqM/w319-h417-no/10013908_458548124276223_2085950828_n.jpg" style="width: 400px;"&gt;&lt;/a&gt;&lt;/div&gt;</description><category>G+</category><category>Math</category><category>Pysics</category><category>Science</category><guid>http://carlosvin.github.io/posts/equations-that-changed-the-word/</guid><pubDate>Thu, 03 Apr 2014 09:30:00 GMT</pubDate></item><item><title>Primer Post utilizando Nikola</title><link>http://carlosvin.github.io/posts/primer-post/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Supongo que, como la mayoría, vengo del concepto de software de gestión de blogs o gestores de contenidos dinámicos, basados en:&lt;/p&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;enviar información desde un navegador a un servidor&lt;/li&gt;
+&lt;li&gt;procesar y almacenar la información en una base de datos o en ficheros&lt;/li&gt;
+&lt;li&gt;el servidor genera una respuesta dinámicamente que se envía al navegador en forma de HTML&lt;ul&gt;&lt;li&gt;para generar esta respuesta se suele leer de la base de datos o de los ficheros&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;De todo este proceso se encarga un software instalado en el servidor, nuestro gestor de contenidos.&lt;/p&gt;
+&lt;p&gt;Ahora he cambiado al paradigma de "generador de sitios web estáticos", en concreto voy a utilizar &lt;a class="reference external" href="http://getnikola.com/"&gt;Nikola&lt;/a&gt;, aunque esta vez no lo voy a instalar en ningún servidor.
+En otro post os contaré cómo he montado esto con &lt;a class="reference external" href="http://www.github.com"&gt;Github&lt;/a&gt; &lt;a class="footnote-reference" href="http://carlosvin.github.io/posts/primer-post/#id5" id="id1"&gt;[1]&lt;/a&gt; y &lt;a class="reference external" href="https://travis-ci.org/"&gt;Travis&lt;/a&gt; &lt;a class="footnote-reference" href="http://carlosvin.github.io/posts/primer-post/#id6" id="id2"&gt;[2]&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Mi camino para llegar hasta los generadores de sitios web estáticos ha pasado por las etapas que os cuento abajo (me he saltado alguna menos importante).&lt;/p&gt;
+&lt;div class="contents topic" id="camino-hasta-nikola"&gt;
+&lt;p class="topic-title first"&gt;Camino hasta &lt;a class="reference external" href="http://getnikola.com/"&gt;Nikola&lt;/a&gt;&lt;/p&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/primer-post/#phpnuke" id="id14"&gt;PhpNuke&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/primer-post/#mi-propio-gestor-de-contenidos" id="id15"&gt;Mi propio gestor de contenidos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/primer-post/#drupal" id="id16"&gt;Drupal&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/primer-post/#wordpress" id="id17"&gt;Wordpress&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/primer-post/#cmsdj" id="id18"&gt;CMSdj&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/posts/primer-post/#nikola" id="id19"&gt;Nikola&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href="http://carlosvin.github.io/posts/primer-post/"&gt;Leer más…&lt;/a&gt; (quedan 3 minutos de lectura)&lt;/p&gt;&lt;/div&gt;</description><category>Python</category><category>Static Sites</category><guid>http://carlosvin.github.io/posts/primer-post/</guid><pubDate>Thu, 27 Mar 2014 12:30:02 GMT</pubDate></item></channel></rss>
