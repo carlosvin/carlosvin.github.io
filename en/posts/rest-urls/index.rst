@@ -88,33 +88,35 @@ As you might already notice, to get resource information, we have always used **
 Update resources
 ----------------
 
-Nuestra API_ también nos puede permitir modificar un recurso, al igual que para pedir información, para modificar un recurso necesitamos especificar qué recurso queremos modificar, así que necesitamos otra vez un *identificador*.
+The API_ should also support updating resources. Like reading resources, to update a resource we have to specify which resource we want to update, so we again need an *identifier*.
 
-Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo único que cambia es el verbo, queremos **modificar** así que utilizamos el verbo equivalente que nos proporciona el protocolo HTTP_: **PUT**.
+Before, we wanted to get information (read) and we used **GET** *verb*. Now the only difference is the verb.
+
+We want to **update** so we use the equivalency HTTP_ verb: **PUT**.
 
 ::
 
   PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 
-Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.
+Actually something else is missing, we have to say what thing of the car we want to change, for example, let's imagine we want to change the engine capacity and set it to 100CV.
 
-Tenemos que enviar la nueva cilindrada a esta URL_  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f por HTTP_ utilizando el verbo **PUT**.
+We have to send the new engine capacity to following URL_  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f through HTTP_ using **PUT** verb.
 
-El protocolo HTTP_ nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.
+HTTP_ protocol allows us sending data within PUT message, we have to choose a sending format.
 
-Podemos enviarlo en JSON_ o XML_ o como queramos, solo tenemos que estar seguros de que el formato que enviamos es lo que espera recibir el servidor.
+We can use JSON_ or XML_ or whatever, we only have to ensure the sent format is expected in server side.
 
 .. note::
 
-  Cuando definimos una API_ REST_ tenemos que definir también el formato en que vamos a enviar los datos.
+  When we create a REST_ API_ we have to select a sending data format.
 
-Ejemplo en JSON_::
+JSON_ example::
 
-  { cilindrada: 100 }
+  { engineCapacity: 100 }
 
 
-Borrar Recursos
----------------
+Delete Resources
+----------------
 
 Continuando con el ejemplo de los cars, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la URL_ que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos **borrar (DELETE)**.
 
