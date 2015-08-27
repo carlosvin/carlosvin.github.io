@@ -147,8 +147,8 @@
 </li>
 <li>If you have to manage the serialization of parent class attributes, then I recommend you use <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, because we'll avoid a weird overriding of private methods.</li>
 </ul>
-<pre class="code java"><a name="rest_code_58889e40fc644beda921d48cd900a2bd-1"></a><span class="kd">private</span> <span class="kt">void</span> <span class="nf">writeObject</span><span class="o">(</span><span class="n">ObjectOutputStream</span> <span class="n">oos</span><span class="o">)</span>
-<a name="rest_code_58889e40fc644beda921d48cd900a2bd-2"></a><span class="kd">private</span> <span class="kt">void</span> <span class="nf">readObject</span><span class="o">(</span><span class="n">ObjectInputStream</span> <span class="n">ois</span><span class="o">)</span>
+<pre class="code java"><a name="rest_code_35a6bf454bfb46349cf916eb98067258-1"></a><span class="kd">private</span> <span class="kt">void</span> <span class="nf">writeObject</span><span class="o">(</span><span class="n">ObjectOutputStream</span> <span class="n">oos</span><span class="o">)</span>
+<a name="rest_code_35a6bf454bfb46349cf916eb98067258-2"></a><span class="kd">private</span> <span class="kt">void</span> <span class="nf">readObject</span><span class="o">(</span><span class="n">ObjectInputStream</span> <span class="n">ois</span><span class="o">)</span>
 </pre>
 </div>
 <div class="section" id="performance-tests-serializable-vs-externalizable">
@@ -160,7 +160,7 @@
 <h3>Implementing <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>
 </h3>
 <p>As we told above, <a class="reference external" href="http://www.java.com/">Java</a> has to guessed certain things, in this process it sacrifices some of performance (slower way), in exchange for programming simplicity, the class to serialize just has to implement the <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> interface.</p>
-<pre class="code java"><a name="rest_code_fcef3fd99e144f85aeb5d8c51f36d17c-1"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Contacts</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+<pre class="code java"><a name="rest_code_ccc7d453ea2f4b8880f842069a602a06-1"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Contacts</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
 </pre>
 <ul class="simple">
 <li>serializing:   1133 millisecond</li>
@@ -170,17 +170,17 @@
 <div class="section" id="implementing-externalizable-wrong-way">
 <h3>Implementing <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> (wrong way)</h3>
 <p>If the class implements <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, we must tell to <a class="reference external" href="http://www.java.com/">Java</a> how it has to serialize/deserialize the class attributes. We must be carefully, because if we did it bad, then we'll get the worst of the both worlds: more complex implementation and bad performance, i.e: If we serialize/deserialize complex class attributes (like collections), <a class="reference external" href="http://www.java.com/">Java</a> will also have to guess many things about the attributes type.</p>
-<pre class="code java"><a name="rest_code_cea454ce1b3447c0a29ed94887713cba-1"></a><span class="nd">@Override</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-2"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">readExternal</span><span class="o">(</span><span class="n">ObjectInput</span> <span class="n">in</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-3"></a>  <span class="n">setEmails</span><span class="o">((</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;)</span> <span class="n">in</span><span class="o">.</span><span class="na">readObject</span><span class="o">());</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-4"></a>  <span class="n">setPhones</span><span class="o">((</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;)</span> <span class="n">in</span><span class="o">.</span><span class="na">readObject</span><span class="o">());</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-5"></a><span class="o">}</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-6"></a>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-7"></a><span class="nd">@Override</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-8"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">writeExternal</span><span class="o">(</span><span class="n">ObjectOutput</span> <span class="n">out</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-9"></a>  <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">emails</span><span class="o">);</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-10"></a>  <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">phones</span><span class="o">);</span>
-<a name="rest_code_cea454ce1b3447c0a29ed94887713cba-11"></a><span class="o">}</span>
+<pre class="code java"><a name="rest_code_e0f5bb9984844fd39b8a268767c83646-1"></a><span class="nd">@Override</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-2"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">readExternal</span><span class="o">(</span><span class="n">ObjectInput</span> <span class="n">in</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-3"></a>  <span class="n">setEmails</span><span class="o">((</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;)</span> <span class="n">in</span><span class="o">.</span><span class="na">readObject</span><span class="o">());</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-4"></a>  <span class="n">setPhones</span><span class="o">((</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;)</span> <span class="n">in</span><span class="o">.</span><span class="na">readObject</span><span class="o">());</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-5"></a><span class="o">}</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-6"></a>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-7"></a><span class="nd">@Override</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-8"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">writeExternal</span><span class="o">(</span><span class="n">ObjectOutput</span> <span class="n">out</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-9"></a>  <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">emails</span><span class="o">);</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-10"></a>  <span class="n">out</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">phones</span><span class="o">);</span>
+<a name="rest_code_e0f5bb9984844fd39b8a268767c83646-11"></a><span class="o">}</span>
 </pre>
 <ul class="simple">
 <li>serializing:   737 millisecond</li>
@@ -190,31 +190,31 @@
 <div class="section" id="implementing-externalizable-right-way">
 <h3>Implementing <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> (right way)</h3>
 <p>If we serialize one by one the collection elements, then we'll save more time, because <a class="reference external" href="http://www.java.com/">Java</a> serializes simple types, this way avoids guessing things that we actually know.</p>
-<pre class="code java"><a name="rest_code_d9bbb212dcf84fd38324a225e9114913-1"></a><span class="nd">@Override</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-2"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">readExternal</span><span class="o">(</span><span class="n">ObjectInput</span> <span class="n">in</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-3"></a>  <span class="n">emails</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-4"></a>  <span class="n">phones</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-5"></a>  <span class="kt">int</span> <span class="n">nEmails</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-6"></a>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nEmails</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-7"></a>    <span class="n">emails</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">readUTF</span><span class="o">());</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-8"></a>  <span class="o">}</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-9"></a>  <span class="kt">int</span> <span class="n">nPhones</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-10"></a>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nPhones</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-11"></a>    <span class="n">phones</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">readUTF</span><span class="o">());</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-12"></a>  <span class="o">}</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-13"></a><span class="o">}</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-14"></a>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-15"></a><span class="nd">@Override</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-16"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">writeExternal</span><span class="o">(</span><span class="n">ObjectOutput</span> <span class="n">out</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-17"></a>  <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">emails</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-18"></a>  <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">e</span> <span class="o">:</span> <span class="n">emails</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-19"></a>    <span class="n">out</span><span class="o">.</span><span class="na">writeUTF</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-20"></a>  <span class="o">}</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-21"></a>  <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">phones</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-22"></a>  <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">p</span> <span class="o">:</span> <span class="n">phones</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-23"></a>    <span class="n">out</span><span class="o">.</span><span class="na">writeUTF</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-24"></a>  <span class="o">}</span>
-<a name="rest_code_d9bbb212dcf84fd38324a225e9114913-25"></a><span class="o">}</span>
+<pre class="code java"><a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-1"></a><span class="nd">@Override</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-2"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">readExternal</span><span class="o">(</span><span class="n">ObjectInput</span> <span class="n">in</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ClassNotFoundException</span> <span class="o">{</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-3"></a>  <span class="n">emails</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-4"></a>  <span class="n">phones</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-5"></a>  <span class="kt">int</span> <span class="n">nEmails</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-6"></a>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nEmails</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-7"></a>    <span class="n">emails</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">readUTF</span><span class="o">());</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-8"></a>  <span class="o">}</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-9"></a>  <span class="kt">int</span> <span class="n">nPhones</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-10"></a>  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nPhones</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-11"></a>    <span class="n">phones</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">in</span><span class="o">.</span><span class="na">readUTF</span><span class="o">());</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-12"></a>  <span class="o">}</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-13"></a><span class="o">}</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-14"></a>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-15"></a><span class="nd">@Override</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-16"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">writeExternal</span><span class="o">(</span><span class="n">ObjectOutput</span> <span class="n">out</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-17"></a>  <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">emails</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-18"></a>  <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">e</span> <span class="o">:</span> <span class="n">emails</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-19"></a>    <span class="n">out</span><span class="o">.</span><span class="na">writeUTF</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-20"></a>  <span class="o">}</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-21"></a>  <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">phones</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-22"></a>  <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">p</span> <span class="o">:</span> <span class="n">phones</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-23"></a>    <span class="n">out</span><span class="o">.</span><span class="na">writeUTF</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-24"></a>  <span class="o">}</span>
+<a name="rest_code_0ce4e47d4b664d93be81555e9609e48d-25"></a><span class="o">}</span>
 </pre>
 <ul class="simple">
 <li>serializing:   204 millisecond</li>
