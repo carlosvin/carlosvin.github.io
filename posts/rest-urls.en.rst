@@ -98,9 +98,9 @@ We want to **update** so we use the equivalency HTTP_ verb: **PUT**.
 
   PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 
-Actually something else is missing, we have to say what thing of the car we want to change, for example, let's imagine we want to change the engine capacity and set it to 100CV.
+Actually something else is missing, we have to say what thing of the car we want to change, for example, let's imagine we want to change the engine power and set it to 100CV.
 
-We have to send the new engine capacity to following URL_  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f through HTTP_ using **PUT** verb.
+We have to send the new engine power to following URL_  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f through HTTP_ using **PUT** verb.
 
 HTTP_ protocol allows sending data within PUT message, we have to choose a sending format.
 
@@ -112,7 +112,7 @@ We can use JSON_ or XML_ or whatever, we only have to ensure the sent format is 
 
 JSON_ example::
 
-  { engineCapacity: 100 }
+  { enginePower: 100 }
 
 
 Delete Resources
@@ -130,60 +130,62 @@ We don't have to supply any additional info, only de verb (DELETE) and the resou
 Create Recursos
 ---------------
 
-Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.
+And the last verb is **create (POST)**. In this case we don't have to identify the resource, because it still doesn't exist.
 
 ::
 
   POST   http://cardealer.com/api/cars/
 
-Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.
+But we have to send the data to create the resource.
 
-En nuestro ejemplo, queremos crear un coche, así que ponemos toda la información necesaria para crear un coche dentro de la llamada POST de HTTP_, algo muy parecido como hemos hecho en el apartado `Modificar Recursos`_, pero en este caso mandamos **toda la información necesaria**, no solo la cilindrada.
+Following with the example, let's create a new car, so we include the necessary data within POST HTTP_ message, it is somthing similar what we did at section `Update resources`_, but we are going to send **all required data**, not only the engine power.
 
-Ejemplo en JSON_::
+JSON_ example::
 
   {
-  "marca": "Fiat",
-  "modelo": "Bravo"
-  "anio": 2010
-  "puertas": 5,
-  "cilindrada": 120,
+  "brand": "Fiat",
+  "model": "Bravo"
+  "year": 2010
+  "doors": 5,
+  "enginePower": 120,
   "version": "Emotion",
-  "climatizador": true,
+  "clima": true,
   "ac": false,
   "fuel": "Diesel"
   }
 
-Podemos delegar en el sistema, para que cuando pidamos la creación de un recurso nuevo, nos asigne un nuevo **identificador**, o simplemente enviarlo con el resto de información::
+We can delegate on the system to assign a new **identifier**, or simply send it within the message::
 
   {
-  "identificador": "cce05bee-386b-11e5-a151-feff819cdc9f"
-  "marca": "Fiat",
-  "modelo": "Bravo"
-  "anio": 2010
-  "puertas": 5,
-  "cilindrada": 120,
+  "identifier": "cce05bee-386b-11e5-a151-feff819cdc9f"
+  "brand": "Fiat",
+  "model": "Bravo"
+  "year": 2010
+  "doors": 5,
+  "enginePower": 120,
   "version": "Emotion",
-  "climatizador": true,
+  "clima": true,
   "ac": false,
   "fuel": "Diesel"
   }
 
 
-Colecciones
+Collections
 -----------
 
-Algo que no quiero pasar por alto, porque al menos para mí no fue obvio, es el manejo de colecciones. Realmente ya está explicado, porque todas las acciones que hemos visto previamente sobre los cars, estaba aplicando realmente a una colección de cars.
+All the actions we have already explained were actually applied over a cars collection.
 
-Pero, ¿qué pasa si un recurso tiene a su vez una colección? Siguiendo con los cars, un coche puede tener una lista de aceites con los que puede funcionar, así que nuestra API_ debería permitir obtener, modificar, borrar o crear elementos en la lista.
+But, what happen if a resource has a nested collection?
+
+Continuing with cars example, a car can use a set of engine oils. So the API_ must allow to update, delete or create elements in the set.
 
 .. note::
 
-  Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.
+  For the example we will assume that *the oil identifier* is the attribute *type*.
 
 
-Añadir un elemento a la colección
-*********************************
+Add a element to collection
+***************************
 
 Si queremos añadir un elemento a la colección de cars lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de `Crear Recursos`_.
 
