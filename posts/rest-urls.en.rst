@@ -102,7 +102,7 @@ Actually something else is missing, we have to say what thing of the car we want
 
 We have to send the new engine capacity to following URL_  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f through HTTP_ using **PUT** verb.
 
-HTTP_ protocol allows us sending data within PUT message, we have to choose a sending format.
+HTTP_ protocol allows sending data within PUT message, we have to choose a sending format.
 
 We can use JSON_ or XML_ or whatever, we only have to ensure the sent format is expected in server side.
 
@@ -118,16 +118,17 @@ JSON_ example::
 Delete Resources
 ----------------
 
-Continuando con el ejemplo de los cars, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la URL_ que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos **borrar (DELETE)**.
+Let's imagine that now we are the car dealer and we don't want to shell the Fiat Bravo Emotion 1.9CV anymore (the cce05bee-386b-11e5-a151-feff819cdc9f).
+We'll keep the URL_ that identifies the resource, but we change the verb: we don't want to read (GET), we don't want to update (PUT), we want to **delete (DELETE)**.
 
 ::
 
   DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 
-En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.
+We don't have to supply any additional info, only de verb (DELETE) and the resource identifier.
 
-Crear Recursos
---------------
+Create Recursos
+---------------
 
 Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.
 
@@ -280,10 +281,10 @@ Cuando lo correcto sería
 	DELETE	http://example.com/api/cars/seat-ibiza/ruedas/3
 
 
-Video Tutoriales
-================
+Video Tutorials
+===============
 
-Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:
+These 2 videos help me to understand REST_ URLs_, I encourage you to watch them full:
 
 .. youtube:: NjpKwiRORI4
 .. youtube:: gYKJqUZXuBw
