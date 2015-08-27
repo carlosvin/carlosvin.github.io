@@ -1,245 +1,254 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Carlos says bla bla (Web Services)</title><link>http://carlosvin.github.io/</link><description></description><atom:link href="http://carlosvin.github.io/en/categories/web-services.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 01 Aug 2015 21:05:14 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Creando REST URLs</title><link>http://carlosvin.github.io/en/posts/rest-urls/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Las primeras veces que me puse a diseñar una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; con ejemplos.&lt;/p&gt;
-&lt;div class="contents topic" id="indice"&gt;
-&lt;p class="topic-title first"&gt;Índice&lt;/p&gt;
-&lt;ul class="simple"&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#fundamentos-rest" id="id3"&gt;Fundamentos REST&lt;/a&gt;&lt;ul&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#verbos-rest" id="id4"&gt;Verbos REST&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#acceso-a-recursos" id="id5"&gt;Acceso a Recursos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#modificar-recursos" id="id6"&gt;Modificar Recursos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#borrar-recursos" id="id7"&gt;Borrar Recursos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#crear-recursos" id="id8"&gt;Crear Recursos&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#colecciones" id="id9"&gt;Colecciones&lt;/a&gt;&lt;ul&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#anadir-un-elemento-a-la-coleccion" id="id10"&gt;Añadir un elemento a la colección&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#modificar-un-elemento-de-la-coleccion" id="id11"&gt;Modificar un elemento de la colección&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#borrar-un-elemento-de-la-coleccion" id="id12"&gt;Borrar un elemento de la colección&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#leer-un-elemento-de-la-coleccion" id="id13"&gt;Leer un elemento de la colección&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#listar-elementos-de-la-coleccion" id="id14"&gt;Listar elementos de la colección&lt;/a&gt;&lt;/li&gt;
+<?xml-stylesheet type="text/xsl" href="../../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Carlos says "bla bla" (Web Services)</title><link>http://carlosvin.github.io/</link><description></description><atom:link type="application/rss+xml" href="http://carlosvin.github.io/en/categories/web-services.xml" rel="self"></atom:link><language>en</language><lastBuildDate>Thu, 27 Aug 2015 18:53:57 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>REST URLs</title><link>http://carlosvin.github.io/en/posts/rest-urls/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;First time I designed a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator"&gt;URL&lt;/a&gt; with examples.&lt;/p&gt;
+&lt;div class="contents topic" id="index"&gt;
+&lt;p class="topic-title first"&gt;Index&lt;/p&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#rest-basics" id="id3"&gt;REST Basics&lt;/a&gt;&lt;ul&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#rest-verbs" id="id4"&gt;REST Verbs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#accessing-to-resources" id="id5"&gt;Accessing to Resources&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#update-resources" id="id6"&gt;Update resources&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#delete-resources" id="id7"&gt;Delete Resources&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#create-recursos" id="id8"&gt;Create Recursos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#collections" id="id9"&gt;Collections&lt;/a&gt;&lt;ul&gt;&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#add-a-element-to-collection" id="id10"&gt;Add a element to collection&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#update-a-collection-item" id="id11"&gt;Update a collection item&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#delete-a-collection-item" id="id12"&gt;Delete a collection item&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#read-a-collection-item" id="id13"&gt;Read a collection item&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#list-collection-items" id="id14"&gt;List collection items&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#tipico-error" id="id15"&gt;Típico error&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#video-tutoriales" id="id16"&gt;Video Tutoriales&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#common-mistake" id="id15"&gt;Common mistake&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#video-tutorials" id="id16"&gt;Video Tutorials&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/div&gt;
-&lt;div class="section" id="fundamentos-rest"&gt;
-&lt;h2&gt;Fundamentos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/h2&gt;
-&lt;ul class="simple"&gt;&lt;li&gt;Utilizamos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; para acceder a recursos.&lt;/li&gt;
-&lt;li&gt;Utilizamos &lt;em&gt;verbos&lt;/em&gt; para modificar recursos.&lt;/li&gt;
-&lt;li&gt;Nuestros &lt;em&gt;verbos&lt;/em&gt; están proporcionados por el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Los &lt;em&gt;verbos&lt;/em&gt; tienen un equivalente directo con las operaciones &lt;a class="reference external" href="https://es.wikipedia.org/wiki/CRUD"&gt;CRUD&lt;/a&gt; &lt;a class="footnote-reference" href="http://carlosvin.github.io/en/posts/rest-urls/#id2" id="id1"&gt;[1]&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Para acceder a un recurso existente necesitamos su identificador.&lt;/li&gt;
-&lt;/ul&gt;&lt;div class="section" id="verbos-rest"&gt;
-&lt;h3&gt;Verbos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/h3&gt;
+&lt;div class="section" id="rest-basics"&gt;
+&lt;h2&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; Basics&lt;/h2&gt;
+&lt;ul class="simple"&gt;&lt;li&gt;Using &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator"&gt;URLs&lt;/a&gt; for get resources.&lt;/li&gt;
+&lt;li&gt;Using &lt;em&gt;verbs&lt;/em&gt; for modify resources.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;verbs&lt;/em&gt; are provided by the &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; protocol.&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;verbs&lt;/em&gt; have a direct equivalency with &lt;a class="reference external" href="https://en.wikipedia.org/wiki/CRUD"&gt;CRUD&lt;/a&gt; &lt;a class="footnote-reference" href="http://carlosvin.github.io/en/posts/rest-urls/#id2" id="id1"&gt;[1]&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;To access to an existent resource we need an identifier.&lt;/li&gt;
+&lt;/ul&gt;&lt;div class="section" id="rest-verbs"&gt;
+&lt;h3&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; Verbs&lt;/h3&gt;
 &lt;dl class="docutils"&gt;&lt;dt&gt;POST&lt;/dt&gt;
-&lt;dd&gt;(&lt;strong&gt;C&lt;/strong&gt;) Utilizado para &lt;strong&gt;crear&lt;/strong&gt; nuevos recursos.&lt;/dd&gt;
+&lt;dd&gt;&lt;strong&gt;Create&lt;/strong&gt; new resources.&lt;/dd&gt;
 &lt;dt&gt;GET&lt;/dt&gt;
-&lt;dd&gt;(&lt;strong&gt;R&lt;/strong&gt;) Utilizado para &lt;strong&gt;leer&lt;/strong&gt; un recursos existentes en el sistema.&lt;/dd&gt;
+&lt;dd&gt;&lt;strong&gt;Read&lt;/strong&gt; already existing resources.&lt;/dd&gt;
 &lt;dt&gt;PUT&lt;/dt&gt;
-&lt;dd&gt;(&lt;strong&gt;U&lt;/strong&gt;) Utilizado para &lt;strong&gt;actualizar&lt;/strong&gt; recursos existentes.&lt;/dd&gt;
+&lt;dd&gt;&lt;strong&gt;Update&lt;/strong&gt; already existing resources.&lt;/dd&gt;
 &lt;dt&gt;DELETE&lt;/dt&gt;
-&lt;dd&gt;(&lt;strong&gt;D&lt;/strong&gt;) Utilizado para &lt;strong&gt;borrar&lt;/strong&gt; recursos existentes.&lt;/dd&gt;
-&lt;/dl&gt;&lt;p&gt;En una tabla quedará más claro&lt;/p&gt;
-&lt;table border="1" class="docutils"&gt;&lt;colgroup&gt;&lt;col width="23%"&gt;&lt;col width="26%"&gt;&lt;col width="51%"&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td&gt;Verbo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;Acción &lt;a class="reference external" href="https://es.wikipedia.org/wiki/CRUD"&gt;CRUD&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;Debe exisitir el recurso&lt;/td&gt;
+&lt;dd&gt;&lt;strong&gt;Delete&lt;/strong&gt; already existing resources.&lt;/dd&gt;
+&lt;/dl&gt;&lt;p&gt;It is clearer in the following table&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;&lt;colgroup&gt;&lt;col width="26%"&gt;&lt;col width="29%"&gt;&lt;col width="45%"&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; Verb&lt;/td&gt;
+&lt;td&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/CRUD"&gt;CRUD&lt;/a&gt; Action&lt;/td&gt;
+&lt;td&gt;Resource must exist&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td&gt;POST&lt;/td&gt;
-&lt;td&gt;Crear&lt;/td&gt;
+&lt;td&gt;Create&lt;/td&gt;
 &lt;td&gt;No&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td&gt;GET&lt;/td&gt;
-&lt;td&gt;Leer&lt;/td&gt;
-&lt;td&gt;Sí&lt;/td&gt;
+&lt;td&gt;Read&lt;/td&gt;
+&lt;td&gt;Yes&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td&gt;PUT&lt;/td&gt;
-&lt;td&gt;Actualizar&lt;/td&gt;
-&lt;td&gt;Sí&lt;/td&gt;
+&lt;td&gt;Update&lt;/td&gt;
+&lt;td&gt;Yes&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td&gt;DELETE&lt;/td&gt;
-&lt;td&gt;Borrar&lt;/td&gt;
-&lt;td&gt;Sí&lt;/td&gt;
+&lt;td&gt;Delete&lt;/td&gt;
+&lt;td&gt;Yes&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;
-&lt;div class="section" id="acceso-a-recursos"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id5"&gt;Acceso a Recursos&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Un recurso es &lt;em&gt;a lo que quieres acceder&lt;/em&gt;. Por ejemplo, un coche.&lt;/p&gt;
-&lt;p&gt;Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;De esta forma el dependiente sabe cuál es y te puede dar la información.&lt;/p&gt;
-&lt;p&gt;"Fiat Bravo 1.9 Emotion 120CV" es nuestro &lt;strong&gt;identificador&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;Trasladando el ejemplo a las &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;APIs&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="section" id="accessing-to-resources"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id5"&gt;Accessing to Resources&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;A resource is &lt;em&gt;what we want to get&lt;/em&gt;. For example, a car.&lt;/p&gt;
+&lt;p&gt;To be able to get a car, that information is not enough, you can't go to your car dealer and ask for whatever car, you have to specify which one you want:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Good morning. I'd like to have a Fiat Bravo 1.9 Emotion 120CV&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;In this manner the sheller knows which one is.&lt;/p&gt;
+&lt;p&gt;"Fiat Bravo 1.9 Emotion 120CV" is the &lt;strong&gt;identifier&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Transferring the example to &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;APIs&lt;/a&gt;:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
+GET   http://cardealer.com/api/cars/fiat-bravo-19-emotion-120cv
 &lt;/pre&gt;
-&lt;p&gt;De esta forma nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; nos puede proporcionar información del coche.&lt;/p&gt;
-&lt;p&gt;Esto es un ejemplo muy simplificado, pero realmente cuando accedemos a un recurso concreto solemos utilizar algo que lo identifique de forma unívoca. Una práctica común y recomendable es utilizar &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Universally_unique_identifier"&gt;UUID&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now our &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; can supply the car info.&lt;/p&gt;
+&lt;p&gt;This is a very simple example, but actually when we access to a specific resource, we have to use something to identify it, a common and recommendable practice is use &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Universally_unique_identifier"&gt;UUID&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+GET  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 &lt;/pre&gt;
-&lt;p&gt;Pero nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, al igual que una tienda, no tiene por qué ser tan estricta, podemos preguntar por los coches que tienen ciertas caracteríticas, podemos ir al concesionario y decir:&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Hola buenos días, quiero un Fiat Bravo&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Y el dependiente, amablemente, te mostrará todos los Fiat Bravo que tiene. Veamos cómo podemos decir esto a nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;But our &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt;, like a shop, it hasn't to be so strict. We can ask for cars with several features:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Good morning, I want a Fiat Bravo&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Then, the dealer kindly will show you all Fiat Bravo he has available. Let's see how &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; says that.&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET  http://tiendadecoches.es/api/coches/?marca=fiat&amp;amp;modelo=bravo
+GET  http://cardealer.com/api/cars/?brand=fiat&amp;amp;model=bravo
 &lt;/pre&gt;
-&lt;p&gt;Nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; nos devolverá todos los coches que son marca Fiat y modelo Bravo.&lt;/p&gt;
-&lt;p&gt;Marca y modelo en este caso son lo que llamamos &lt;strong&gt;parámetros de consulta&lt;/strong&gt; (query parameters).&lt;/p&gt;
-&lt;p&gt;Como os habréis dado cuenta durante el ejemplo, para obtener información de un recurso siempre hemos utilizado el &lt;em&gt;verbo&lt;/em&gt; &lt;strong&gt;GET&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; will return all cars with Fiat brand and Bravo model.&lt;/p&gt;
+&lt;p&gt;Brand and model are so called &lt;strong&gt;query paremeters&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;As you might already notice, to get resource information, we have always used &lt;strong&gt;GET&lt;/strong&gt; &lt;em&gt;verb&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="modificar-recursos"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id6"&gt;Modificar Recursos&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; también nos puede permitir modificar un recurso, al igual que para pedir información, para modificar un recurso necesitamos especificar qué recurso queremos modificar, así que necesitamos otra vez un &lt;em&gt;identificador&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo único que cambia es el verbo, queremos &lt;strong&gt;modificar&lt;/strong&gt; así que utilizamos el verbo equivalente que nos proporciona el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;: &lt;strong&gt;PUT&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="section" id="update-resources"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id6"&gt;Update resources&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; should also support updating resources. Like reading resources, to update a resource we have to specify which resource we want to update, so we again need an &lt;em&gt;identifier&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Before, we wanted to get information (read) and we used &lt;strong&gt;GET&lt;/strong&gt; &lt;em&gt;verb&lt;/em&gt;. Now the only difference is the verb.&lt;/p&gt;
+&lt;p&gt;We want to &lt;strong&gt;update&lt;/strong&gt; so we use the equivalency &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; verb: &lt;strong&gt;PUT&lt;/strong&gt;.&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 &lt;/pre&gt;
-&lt;p&gt;Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.&lt;/p&gt;
-&lt;p&gt;Tenemos que enviar la nueva cilindrada a esta &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URL&lt;/a&gt;  &lt;a class="reference external" href="http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f"&gt;http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f&lt;/a&gt; por &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; utilizando el verbo &lt;strong&gt;PUT&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;El protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.&lt;/p&gt;
-&lt;p&gt;Podemos enviarlo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt; o &lt;a class="reference external" href="https://es.wikipedia.org/wiki/XML"&gt;XML&lt;/a&gt; o como queramos, solo tenemos que estar seguros de que el formato que enviamos es lo que espera recibir el servidor.&lt;/p&gt;
+&lt;p&gt;Actually something else is missing, we have to say what thing of the car we want to change, for example, let's imagine we want to change the engine power and set it to 100CV.&lt;/p&gt;
+&lt;p&gt;We have to send the new engine power to following &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator"&gt;URL&lt;/a&gt;  &lt;a class="reference external" href="http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f"&gt;http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f&lt;/a&gt; through &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; using &lt;strong&gt;PUT&lt;/strong&gt; verb.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; protocol allows sending data within PUT message, we have to choose a sending format.&lt;/p&gt;
+&lt;p&gt;We can use &lt;a class="reference external" href="https://en.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt; or &lt;a class="reference external" href="https://en.wikipedia.org/wiki/XML"&gt;XML&lt;/a&gt; or whatever, we only have to ensure the sent format is expected in server side.&lt;/p&gt;
 &lt;div class="note"&gt;
 &lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
-&lt;p class="last"&gt;Cuando definimos una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; tenemos que definir también el formato en que vamos a enviar los datos.&lt;/p&gt;
+&lt;p class="last"&gt;When we create a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; we have to select a sending data format.&lt;/p&gt;
 &lt;/div&gt;
-&lt;p&gt;Ejemplo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt; example:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-{ cilindrada: 100 }
+{ enginePower: 100 }
 &lt;/pre&gt;
 &lt;/div&gt;
-&lt;div class="section" id="borrar-recursos"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id7"&gt;Borrar Recursos&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Continuando con el ejemplo de los coches, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URL&lt;/a&gt; que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos &lt;strong&gt;borrar (DELETE)&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="section" id="delete-resources"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id7"&gt;Delete Resources&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Let's imagine that now we are the car dealer and we don't want to shell the Fiat Bravo Emotion 1.9CV anymore (the cce05bee-386b-11e5-a151-feff819cdc9f).
+We'll keep the &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator"&gt;URL&lt;/a&gt; that identifies the resource, but we change the verb: we don't want to read (GET), we don't want to update (PUT), we want to &lt;strong&gt;delete (DELETE)&lt;/strong&gt;.&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 &lt;/pre&gt;
-&lt;p&gt;En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.&lt;/p&gt;
+&lt;p&gt;We don't have to supply any additional info, only de verb (DELETE) and the resource identifier.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="crear-recursos"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id8"&gt;Crear Recursos&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.&lt;/p&gt;
+&lt;div class="section" id="create-recursos"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id8"&gt;Create Recursos&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;And the last verb is &lt;strong&gt;create (POST)&lt;/strong&gt;. In this case we don't have to identify the resource, because it still doesn't exist.&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-POST   http://tiendadecoches.es/api/coches/
+POST   http://cardealer.com/api/cars/
 &lt;/pre&gt;
-&lt;p&gt;Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.&lt;/p&gt;
-&lt;p&gt;En nuestro ejemplo, queremos crear un coche, así que ponemos toda la información necesaria para crear un coche dentro de la llamada POST de &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;, algo muy parecido como hemos hecho en el apartado &lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#modificar-recursos"&gt;Modificar Recursos&lt;/a&gt;, pero en este caso mandamos &lt;strong&gt;toda la información necesaria&lt;/strong&gt;, no solo la cilindrada.&lt;/p&gt;
-&lt;p&gt;Ejemplo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;But we have to send the data to create the resource.&lt;/p&gt;
+&lt;p&gt;Following with the example, let's create a new car, so we include the necessary data within POST &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; message, it is somthing similar what we did at section &lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#update-resources"&gt;Update resources&lt;/a&gt;, but we are going to send &lt;strong&gt;all required data&lt;/strong&gt;, not only the engine power.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt; example:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
 {
-"marca": "Fiat",
-"modelo": "Bravo"
-"anio": 2010
-"puertas": 5,
-"cilindrada": 120,
+"brand": "Fiat",
+"model": "Bravo"
+"year": 2010
+"doors": 5,
+"enginePower": 120,
 "version": "Emotion",
-"climatizador": true,
+"clima": true,
 "ac": false,
 "fuel": "Diesel"
 }
 &lt;/pre&gt;
-&lt;p&gt;Podemos delegar en el sistema, para que cuando pidamos la creación de un recurso nuevo, nos asigne un nuevo &lt;strong&gt;identificador&lt;/strong&gt;, o simplemente enviarlo con el resto de información:&lt;/p&gt;
+&lt;p&gt;We can delegate on the system to assign a new &lt;strong&gt;identifier&lt;/strong&gt;, or simply send it within the message:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
 {
-"identificador": "cce05bee-386b-11e5-a151-feff819cdc9f"
-"marca": "Fiat",
-"modelo": "Bravo"
-"anio": 2010
-"puertas": 5,
-"cilindrada": 120,
+"identifier": "cce05bee-386b-11e5-a151-feff819cdc9f"
+"brand": "Fiat",
+"model": "Bravo"
+"year": 2010
+"doors": 5,
+"enginePower": 120,
 "version": "Emotion",
-"climatizador": true,
+"clima": true,
 "ac": false,
 "fuel": "Diesel"
 }
 &lt;/pre&gt;
 &lt;/div&gt;
-&lt;div class="section" id="colecciones"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id9"&gt;Colecciones&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Algo que no quiero pasar por alto, porque al menos para mí no fue obvio, es el manejo de colecciones. Realmente ya está explicado, porque todas las acciones que hemos visto previamente sobre los coches, estaba aplicando realmente a una colección de coches.&lt;/p&gt;
-&lt;p&gt;Pero, ¿qué pasa si un recurso tiene a su vez una colección? Siguiendo con los coches, un coche puede tener una lista de aceites con los que puede funcionar, así que nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; debería permitir obtener, modificar, borrar o crear elementos en la lista.&lt;/p&gt;
+&lt;div class="section" id="collections"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id9"&gt;Collections&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;All the actions we have already explained were actually applied over a cars collection.&lt;/p&gt;
+&lt;p&gt;But, what happen if a resource has a nested collection?&lt;/p&gt;
+&lt;p&gt;Continuing with cars example, a car can use a set of engine oils. So the &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; must allow to update, delete or create elements in the set.&lt;/p&gt;
 &lt;div class="note"&gt;
 &lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
-&lt;p class="last"&gt;Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.&lt;/p&gt;
+&lt;p class="last"&gt;For the example we will assume that &lt;em&gt;the oil identifier&lt;/em&gt; is the attribute &lt;em&gt;type&lt;/em&gt;.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="anadir-un-elemento-a-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id10"&gt;Añadir un elemento a la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Si queremos añadir un elemento a la colección de coches lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de &lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#crear-recursos"&gt;Crear Recursos&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe:&lt;/p&gt;
+&lt;div class="section" id="add-a-element-to-collection"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id10"&gt;Add a element to collection&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;When we add a car to cars collection, what we do is create a new car, so it is the case of &lt;a href="http://carlosvin.github.io/en/posts/rest-urls/#id17"&gt;&lt;span class="problematic" id="id18"&gt;`Create Resources`_&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To add a new engine oil to the car cce05bee-386b-11e5-a151-feff819cdc9f, that already exists:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 
 {
-"tipo": "5W30",
-"otros_datos": "este es el mejor del mundo para este coche"
+"type": "5W30",
+"otherInfo": "This is the best oil for this car"
 }
 &lt;/pre&gt;
-&lt;p&gt;Si queremos añadir otro aceite:&lt;/p&gt;
+&lt;p&gt;If we want to add another one:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 
 {
-"tipo": "10W30",
-"otros_datos": "otras cosas sobre aceites de coche",
-}
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="modificar-un-elemento-de-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id11"&gt;Modificar un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Si queremos modificar los datos del aceite &lt;em&gt;5W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
-
-{
-"tipo": "5W30",
-"otros_datos": "este ya no es el mejor del mundo para este coche"
+"type": "10W30",
+"otherInfo": "This is very good for cold weather"
 }
 &lt;/pre&gt;
 &lt;/div&gt;
-&lt;div class="section" id="borrar-un-elemento-de-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id12"&gt;Borrar un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Para borrar un aceite &lt;em&gt;10W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
+&lt;div class="section" id="update-a-collection-item"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id11"&gt;Update a collection item&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;If we want to update the info of oil &lt;em&gt;5W30&lt;/em&gt; of car &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/5W30/
+
+{
+"type": "5W30",
+"otherInfo": "This is no longer the best oil for this car"
+}
 &lt;/pre&gt;
 &lt;/div&gt;
-&lt;div class="section" id="leer-un-elemento-de-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id13"&gt;Leer un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Para obtener la información del aceite &lt;em&gt;10W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
+&lt;div class="section" id="delete-a-collection-item"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id12"&gt;Delete a collection item&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;To delete an oil &lt;em&gt;10W30&lt;/em&gt; from car &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
 &lt;/pre&gt;
 &lt;/div&gt;
-&lt;div class="section" id="listar-elementos-de-la-coleccion"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id14"&gt;Listar elementos de la colección&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Como hemos visto en &lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#leer-un-elemento-de-la-coleccion"&gt;Leer un elemento de la colección&lt;/a&gt;, podemos obtener información de cualquier elemento de la colección, pero también podemos obtener varios elementos de la colección, ordenarlos, paginarlos y aplicar cualquier tipo de acciones típicas de una colección.&lt;/p&gt;
-&lt;p&gt;Podemos obtener todos los aceites soportados por el coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;, es tan simple como:&lt;/p&gt;
+&lt;div class="section" id="read-a-collection-item"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id13"&gt;Read a collection item&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;To get the oil info &lt;em&gt;10W30&lt;/em&gt; of the car &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
 &lt;/pre&gt;
-&lt;p&gt;Pero también podemos proporcionar otras funcionalidades en nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, como obtener los resultados ordenados:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="list-collection-items"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id14"&gt;List collection items&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;As we have seen at &lt;a class="reference internal" href="http://carlosvin.github.io/en/posts/rest-urls/#read-a-collection-item"&gt;Read a collection item&lt;/a&gt;, we can get the info of every collection element, but we also can get multiple collection elements, sorted, paged and apply typical collection actions.&lt;/p&gt;
+&lt;p&gt;We can get all supported oils for a car &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;, it is as simple as:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&amp;amp;orden=ascendente
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 &lt;/pre&gt;
-&lt;p&gt;Podemos pedir al &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; que nos devuelva los 10 primeros aceites del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
+&lt;p&gt;We can also get sorted items:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?sort_by=type&amp;amp;order=asc
 &lt;/pre&gt;
-&lt;p&gt;Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación:&lt;/p&gt;
+&lt;p&gt;We can ask &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; to return the first 10 oils for car &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&amp;amp;numero_de_elementos=3
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?number_of_elements=10
 &lt;/pre&gt;
-&lt;p&gt;En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt; y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente:&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; can support also pagination:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&amp;amp;numero_de_elementos=3
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=3&amp;amp;number_of_elements=2
 &lt;/pre&gt;
-&lt;p&gt;Todas estas funcionalidades, son posibles gracias a los &lt;strong&gt;parámetros de consulta&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Above request is telling &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; that returns the page 3 of all oils of car &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt; and it has to shown 2 oils per page. If we want to go to next page:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=4&amp;amp;number_of_elements=2
+&lt;/pre&gt;
+&lt;p&gt;All those features are supported by &lt;strong&gt;query parameters&lt;/strong&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="section" id="tipico-error"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id15"&gt;Típico error&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;La primera vez que intenté diseñar un &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; lo que hice fué otra cosa, era una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, pero no &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Mi principal error fue en la construción de las &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt;, incluí &lt;em&gt;verbos&lt;/em&gt; sin tener en cuenta que los verbos ya me los proporcionaba el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Por ejemplo, creaba &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; del tipo:&lt;/p&gt;
+&lt;div class="section" id="common-mistake"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id15"&gt;Common mistake&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;First time I tried to design a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; I designed an &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt;, but &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;My main mistake was the &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator"&gt;URLs&lt;/a&gt; design, I added my own &lt;em&gt;verbs&lt;/em&gt; skipping &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; &lt;em&gt;verbs&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-POST    http://example.com/api/coches/seat-ibiza/borrar-rueda/3
+POST    http://example.com/api/cars/ford-focus/delete-oil/5W30
 &lt;/pre&gt;
-&lt;p&gt;Cuando lo correcto sería&lt;/p&gt;
+&lt;p&gt;The right:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
-DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
+DELETE  http://example.com/api/cars/ford-focus/oils/5W30
 &lt;/pre&gt;
 &lt;/div&gt;
-&lt;div class="section" id="video-tutoriales"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id16"&gt;Video Tutoriales&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:&lt;/p&gt;
-&lt;iframe width="425" height="344" src="//www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;iframe width="425" height="344" src="//www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Create, Read, Update, Delete&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>http://carlosvin.github.io/en/posts/rest-urls/</guid><pubDate>Sun, 26 Jul 2015 16:00:00 GMT</pubDate></item></channel></rss>
+&lt;div class="section" id="video-tutorials"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id16"&gt;Video Tutorials&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;These 2 videos help me to understand &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator"&gt;URLs&lt;/a&gt;, I encourage you to watch them full:&lt;/p&gt;
+&lt;iframe width="425" height="344" src="//www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;iframe width="425" height="344" src="//www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody valign="top"&gt;&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="http://carlosvin.github.io/en/posts/rest-urls/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Create, Read, Update, Delete&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;
+&lt;div class="system-messages section"&gt;
+&lt;h2&gt;Docutils System Messages&lt;/h2&gt;
+&lt;div class="system-message" id="id17"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 182); &lt;em&gt;&lt;a href="http://carlosvin.github.io/en/posts/rest-urls/#id18"&gt;backlink&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+Unknown target name: "create resources".&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>API</category><category>REST</category><category>Web Services</category><guid>http://carlosvin.github.io/en/posts/rest-urls/</guid><pubDate>Sun, 26 Jul 2015 16:00:00 GMT</pubDate></item></channel></rss>
