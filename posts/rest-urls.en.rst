@@ -1,7 +1,7 @@
 .. title: REST URLs
 .. slug: rest-urls
 .. date: 2015/08/16 14:00:00
-.. tags: REST, API, Web Services, draft
+.. tags: REST, API, Web Services
 .. link:
 .. description: Design REST API: URLs
 .. type: text
@@ -187,100 +187,97 @@ Continuing with cars example, a car can use a set of engine oils. So the API_ mu
 Add a element to collection
 ***************************
 
-Si queremos añadir un elemento a la colección de cars lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de `Crear Recursos`_.
+When we add a car to cars collection, what we do is create a new car, so it is the case of `Create Resources`_.
 
-Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe::
+To add a new engine oil to the car cce05bee-386b-11e5-a151-feff819cdc9f, that already exists::
 
-  POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+  POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 
   {
-  "tipo": "5W30",
-  "otros_datos": "este es el mejor del mundo para este coche"
+  "type": "5W30",
+  "otherInfo": "This is the best oil for this car"
   }
 
 
-Si queremos añadir otro aceite::
+If we want to add another one::
 
-  POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-
-  {
-  "tipo": "10W30",
-  "otros_datos": "otras cosas sobre aceites de coche",
-  }
-
-Modificar un elemento de la colección
-*************************************
-
-Si queremos modificar los datos del aceite *5W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
-
-  PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
+  POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 
   {
-  "tipo": "5W30",
-  "otros_datos": "este ya no es el mejor del mundo para este coche"
+  "type": "10W30",
+  "otherInfo": "This is very good for cold weather"
+  }
+
+Update a collection item
+************************
+
+If we want to update the info of oil *5W30* of car *cce05bee-386b-11e5-a151-feff819cdc9f*::
+
+  PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/5W30/
+
+  {
+  "type": "5W30",
+  "otherInfo": "This is no longer the best oil for this car"
   }
 
 
-Borrar un elemento de la colección
-**********************************
+Delete a collection item
+************************
 
-Para borrar un aceite *10W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
+To delete an oil *10W30* from car *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
-
-Leer un elemento de la colección
-********************************
-
-Para obtener la información del aceite *10W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
-
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+  DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
 
 
-Listar elementos de la colección
-********************************
+Read a collection item
+**********************
 
-Como hemos visto en `Leer un elemento de la colección`_, podemos obtener información de cualquier elemento de la colección, pero también podemos obtener varios elementos de la colección, ordenarlos, paginarlos y aplicar cualquier tipo de acciones típicas de una colección.
+To get the oil info *10W30* of the car *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-Podemos obtener todos los aceites soportados por el coche *cce05bee-386b-11e5-a151-feff819cdc9f*, es tan simple como::
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
 
-Pero también podemos proporcionar otras funcionalidades en nuestra API_, como obtener los resultados ordenados::
+List collection items
+*********************
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&orden=ascendente
+As we have seen at `Read a collection item`_, we can get the info of every collection element, but we also can get multiple collection elements, sorted, paged and apply typical collection actions.
 
-Podemos pedir al API_ que nos devuelva los 10 primeros aceites del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
+We can get all supported oils for a car *cce05bee-386b-11e5-a151-feff819cdc9f*, it is as simple as::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 
-Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación::
+We can also get sorted items::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&numero_de_elementos=3
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?sort_by=type&order=asc
 
-En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche *cce05bee-386b-11e5-a151-feff819cdc9f* y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente::
+We can ask API_ to return the first 10 oils for car *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&numero_de_elementos=3
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?number_of_elements=10
 
-Todas estas funcionalidades, son posibles gracias a los **parámetros de consulta**.
+API_ can support also pagination::
 
-Típico error
-============
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=3&number_of_elements=2
 
-La primera vez que intenté diseñar un API_ REST_ lo que hice fué otra cosa, era una API_, pero no REST_.
+Above request is telling API_ that returns the page 3 of all oils of car *cce05bee-386b-11e5-a151-feff819cdc9f* and it has to shown 2 oils per page. If we want to go to next page::
 
-Mi principal error fue en la construción de las URLs_, incluí *verbos* sin tener en cuenta que los verbos ya me los proporcionaba el protocolo HTTP_.
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=4&number_of_elements=2
 
-Por ejemplo, creaba URLs_ del tipo:
+All those features are supported by **query parameters**.
 
-::
+Common mistake
+==============
 
-	POST	http://example.com/api/cars/seat-ibiza/borrar-rueda/3
+First time I tried to design a API_ REST_ I designed an API_, but REST_.
 
-Cuando lo correcto sería
+My main mistake was the URLs_ design, I added my own *verbs* skipping HTTP_ *verbs*.
 
-::
+For example::
 
-	DELETE	http://example.com/api/cars/seat-ibiza/ruedas/3
+	POST	http://example.com/api/cars/ford-focus/delete-oil/5W30
+
+The right::
+
+	DELETE	http://example.com/api/cars/ford-focus/oils/5W30
 
 
 Video Tutorials
@@ -292,16 +289,16 @@ These 2 videos help me to understand REST_ URLs_, I encourage you to watch them 
 .. youtube:: gYKJqUZXuBw
 
 
-.. _API: https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones
-.. _APIs: https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones
-.. _REST: https://es.wikipedia.org/wiki/Representational_State_Transfer
-.. _URL: https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme
-.. _URLs: https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme
-.. _HTTP: https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol
-.. _CRUD: https://es.wikipedia.org/wiki/CRUD
+.. _API: https://en.wikipedia.org/wiki/Application_programming_interface
+.. _APIs: https://en.wikipedia.org/wiki/Application_programming_interface
+.. _REST: https://en.wikipedia.org/wiki/Representational_state_transfer
+.. _URL: https://en.wikipedia.org/wiki/Uniform_resource_locator
+.. _URLs: https://en.wikipedia.org/wiki/Uniform_resource_locator
+.. _HTTP: https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
+.. _CRUD: https://en.wikipedia.org/wiki/CRUD
 .. _`REST Tutorial`: http://www.restapitutorial.com/
-.. _UUID: https://es.wikipedia.org/wiki/Universally_unique_identifier
-.. _JSON: https://es.wikipedia.org/wiki/JSON
-.. _XML: https://es.wikipedia.org/wiki/XML
+.. _UUID: https://en.wikipedia.org/wiki/Universally_unique_identifier
+.. _JSON: https://en.wikipedia.org/wiki/JSON
+.. _XML: https://en.wikipedia.org/wiki/XML
 
 .. [#] Create, Read, Update, Delete
