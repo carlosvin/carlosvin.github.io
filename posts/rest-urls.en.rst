@@ -81,7 +81,7 @@ Then, the dealer kindly will show you all Fiat Bravo he has available. Let's see
 
 API_ will return all cars with Fiat brand and Bravo model.
 
-Brand and model are so called **query paremeters**.
+Brand and model are so called **query parameters**.
 
 As you might already notice, to get resource information, we have always used **GET** *verb*
 
@@ -104,11 +104,11 @@ We have to send the new engine power to following URL_  http://cardealer.com/api
 
 HTTP_ protocol allows sending data within PUT message, we have to choose a sending format.
 
-We can use JSON_ or XML_ or whatever, we only have to ensure the sent format is expected in server side.
+We can use JSON_ or XML_ or whatever, we only have to ensure that sent format is expected in server side.
 
 .. note::
 
-  When we create a REST_ API_ we have to select a sending data format.
+  Designing a REST_ API_ requires select a sending data format.
 
 JSON_ example::
 
@@ -119,7 +119,7 @@ Delete Resources
 ----------------
 
 Let's imagine that now we are the car dealer and we don't want to shell the Fiat Bravo Emotion 1.9CV anymore (the cce05bee-386b-11e5-a151-feff819cdc9f).
-We'll keep the URL_ that identifies the resource, but we change the verb: we don't want to read (GET), we don't want to update (PUT), we want to **delete (DELETE)**.
+We'll keep the URL_ that identifies the resource, but we change the verb: we don't want to read (GET), we don't want to update (PUT), we want to **to delete (DELETE)**.
 
 ::
 
@@ -127,10 +127,10 @@ We'll keep the URL_ that identifies the resource, but we change the verb: we don
 
 We don't have to supply any additional info, only de verb (DELETE) and the resource identifier.
 
-Create Recursos
----------------
+Create Resources
+----------------
 
-And the last verb is **create (POST)**. In this case we don't have to identify the resource, because it still doesn't exist.
+And the last verb is **to create (POST)**. In this case we don't have to identify the resource, because it still doesn't exist.
 
 ::
 
@@ -138,7 +138,7 @@ And the last verb is **create (POST)**. In this case we don't have to identify t
 
 But we have to send the data to create the resource.
 
-Following with the example, let's create a new car, so we include the necessary data within POST HTTP_ message, it is somthing similar what we did at section `Update resources`_, but we are going to send **all required data**, not only the engine power.
+Following with the example, let's create a new car, so we include the necessary data within POST HTTP_ message, it is something similar what we did at section `Update resources`_, but we are going to send **all required data**, not only the engine power.
 
 JSON_ example::
 
@@ -177,14 +177,14 @@ All the actions we have already explained were actually applied over a cars coll
 
 But, what happen if a resource has a nested collection?
 
-Continuing with cars example, a car can use a set of engine oils. So the API_ must allow to update, delete or create elements in the set.
+Continuing with cars example, a car can use a set of engine oils. So the API_ must allow update, delete or create elements in the set.
 
 .. note::
 
   For the example we will assume that *the oil identifier* is the attribute *type*.
 
 
-Add a element to collection
+Add an element to collection
 ***************************
 
 When we add a car to cars collection, what we do is create a new car, so it is the case of `Create Resources`_.
