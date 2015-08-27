@@ -7,7 +7,7 @@
 .. description: Social networks
 .. type: text
 
-Donde me puedes encontrar?
+Where can you find me?
 
 .. raw:: html
 
