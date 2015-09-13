@@ -1,7 +1,7 @@
 .. title: Gestión de dependencias C++: Biicode
 .. slug: first-biicode-poco
 .. date: 2015/02/25 20:00:00
-.. tags: C++, biicode, Poco, depencency management
+.. tags: C++, Biicode, Poco, Build Automation Software, Dependency Management
 .. link: 
 .. description: Gestión de dependencias en C++ con Biicode. Proyecto de ejemplo que depende de la librería Poco, concretamente de la parte de logging.  
 .. type: text

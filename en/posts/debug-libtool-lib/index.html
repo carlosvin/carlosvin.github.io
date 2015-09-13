@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Depurar librería generada con libtool | Carlos says "bla bla"</title>
 <link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
 <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../rss.xml">
 <link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../../../rss.xml">
 <link rel="canonical" href="http://carlosvin.github.io/en/posts/debug-libtool-lib/">
@@ -97,7 +98,9 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Depurar librería generada con libtool</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Carlos Martín Sánchez
+            </span></p>
             <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2013-02-01T15:30:00+01:00" itemprop="datePublished" title="2013-02-01">2013-02-01</time></a></p>
                 <p class="commentline">
         
@@ -112,15 +115,15 @@
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <p>Trabajando con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a> <a class="footnote-reference" href=".#id3" id="id1">[1]</a>, cuando vamos a depurar un ejecutable que utiliza una librería generada con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>, es posible que nos encontremos con el siguiente error:</p>
-<pre class="code bash"><a name="rest_code_9e5a34e1bf824ffaadd4be275eba5e0e-1"></a><span class="nv">$ </span>gdb ./tests-mylib
-<a name="rest_code_9e5a34e1bf824ffaadd4be275eba5e0e-2"></a><span class="s2">"tests-mylib"</span>: not in executable format: File format not recognized
+<pre class="code bash"><a name="rest_code_a28c2d8698d24c99a5d03ed2ac851cb2-1"></a><span class="nv">$ </span>gdb ./tests-mylib
+<a name="rest_code_a28c2d8698d24c99a5d03ed2ac851cb2-2"></a><span class="s2">"tests-mylib"</span>: not in executable format: File format not recognized
 </pre>
 <p><code>libmylib.so</code> es una librería dinámica generada con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>
 <code>tests-mylib</code> es un ejecutable que utiliza la librería mylib</p>
 <p>Para los que estéis pensando que se me ha olvidado poner la opción de compilación <code>-g</code>, lo siento, pero este error ocurre aunque utilicemos <code>-g</code>.</p>
 <p>El error es debido a que estamos intentando ejecutar un script generado por <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>, es una envoltura sobre el programa real, para facilitar la ejecución de éste <a class="citation-reference" href=".#libtooldoc" id="id2">[libtooldoc]</a>.</p>
 <p>Para poder depurar nuestro programa de prueba <code>tests-mylib</code></p>
-<pre class="code bash"><a name="rest_code_e7f1a05da0614d04a6a4f86d780aeba6-1"></a>libtool --mode<span class="o">=</span>execute gdb tests-mylib
+<pre class="code bash"><a name="rest_code_4c0c9208042c423ca44a974004be6c95-1"></a>libtool --mode<span class="o">=</span>execute gdb tests-mylib
 </pre>
 <table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup>

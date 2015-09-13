@@ -1,9 +1,10 @@
 .. title: Construir un proyecto C++ con Gradle
 .. slug: gradle-cpp
 .. date: 2014/09/25 19:00:00
-.. tags: Gradle, C++, Build Construction Systems
+.. tags: Gradle, C++, Build Automation Software, Dependency Management
 .. description: Cómo construir un proyecto típico C++ utilizando Gradle.
 .. type: text
+
 
 Introducción
 ============
@@ -383,6 +384,9 @@ Todo el ejemplo se encuentra en https://github.com/carlosvin/cpp_gradle.
 Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
 
 `Getting Started Gradle Native`_.
+
+.. note:: Si encontráis algún problema en el ejemplo, escribir un comentario, abrir un defecto o corregirlo vosotros mismos en https://github.com/carlosvin/cpp_gradle
+
 
 .. _SCons: http://www.scons.org
 .. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
