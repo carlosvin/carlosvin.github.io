@@ -1,7 +1,7 @@
 .. title: C++ Dependency Management: Biicode
 .. slug: first-biicode-poco
 .. date: 2015/05/14 20:00:00
-.. tags: C++, biicode, Poco, depencency management, build system
+.. tags: C++, Biicode, Poco, Build Automation Software, Dependency Management
 .. link: 
 .. description: C++ Dependency Management with Biicode. A sample project that requires Poco library, in particular logging part.  
 .. type: text
