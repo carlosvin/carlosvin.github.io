@@ -173,7 +173,7 @@ We can delegate on the system to assign a new **identifier**, or simply send it 
 Collections
 -----------
 
-All the actions we have already explained were actually applied over a cars collection.
+All actions we have already explained were actually applied over a cars collection.
 
 But, what happen if a resource has a nested collection?
 
