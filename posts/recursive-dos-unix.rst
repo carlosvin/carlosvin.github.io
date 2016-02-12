@@ -1,4 +1,4 @@
-.. title: Eliminar etiquetas HTML
+.. title: Convertir archivos en formato Windows a formato Unix
 .. slug: recursive-dos-unix
 .. date: 2016/02/12 10:34:00
 .. tags: Useful Commands, Unix, Windows
