@@ -15,7 +15,7 @@
 <meta name="author" content="Carlos Martín Sánchez">
 <link rel="prev" href="../sorting-algorithm-dancing/" title="Cómo funcionan los algoritmos de ordenación (Bailando)" type="text/html">
 <link rel="next" href="../software-maintenance/" title="Mantenimiento de Software" type="text/html">
-<meta property="og:site_name" content="Carlos says " bla>
+<meta property="og:site_name" content='Carlos says "bla bla"'>
 <meta property="og:title" content="Construir un proyecto C++ con Gradle">
 <meta property="og:url" content="http://carlosvin.github.io/posts/gradle-cpp/">
 <meta property="og:description" content="Cómo construir un proyecto típico C++ utilizando Gradle.">
@@ -119,7 +119,7 @@
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <div class="section" id="introduccion">
-<h2><a class="toc-backref" href=".#id7">Introducción</a></h2>
+<h2><a class="toc-backref" href="#id7">Introducción</a></h2>
 <p>La construcción, gestión de dependencias y distribución de mis proyectos es algo que cada vez me preocupa más, me gustaría encontrar una herramienta que unificara este proceso y fuese independiente del lenguaje, lo más parecido con lo que he trabajado ha sido <a class="reference external" href="http://www.scons.org">SCons</a>, <a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction">Autotools</a>, <a class="reference external" href="http://ant.apache.org">Ant</a>, <a class="reference external" href="http://maven.apache.org">Maven</a> y últimamente <a class="reference external" href="http://www.gradle.org">Gradle</a>.</p>
 <p>Llevo un tiempo haciendo algunas cosas con <a class="reference external" href="http://www.gradle.org">Gradle</a>, pero siempre centrado en proyectos <a class="reference external" href="http://www.java.com">Java</a> utilizándolo como reemplazo a <a class="reference external" href="http://maven.apache.org">Maven</a>, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a> y he sufrido la pareja <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android Studio + Gradle</a> en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.</p>
 <p>Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-C con <a class="reference external" href="http://www.gradle.org">Gradle</a> se encuentra en fase de <a class="reference external" href="http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating">incubación</a>, aunque ya permite hacer algunas tareas avanzadas como:</p>
@@ -133,40 +133,40 @@
 <div class="contents topic" id="indice">
 <p class="topic-title first">índice</p>
 <ul class="simple">
-<li><a class="reference internal" href=".#introduccion" id="id7">Introducción</a></li>
+<li><a class="reference internal" href="#introduccion" id="id7">Introducción</a></li>
 <li>
-<a class="reference internal" href=".#un-caso-practico" id="id8">Un caso práctico</a><ul>
-<li><a class="reference internal" href=".#estructura-del-proyecto" id="id9">Estructura del proyecto</a></li>
-<li><a class="reference internal" href=".#la-aplicacion-c" id="id10">La Aplicación C++</a></li>
+<a class="reference internal" href="#un-caso-practico" id="id8">Un caso práctico</a><ul>
+<li><a class="reference internal" href="#estructura-del-proyecto" id="id9">Estructura del proyecto</a></li>
+<li><a class="reference internal" href="#la-aplicacion-c" id="id10">La Aplicación C++</a></li>
 <li>
-<a class="reference internal" href=".#construyendo-con-gradle" id="id11">Construyendo con Gradle</a><ul>
-<li><a class="reference internal" href=".#caso-basico" id="id12">Caso básico</a></li>
+<a class="reference internal" href="#construyendo-con-gradle" id="id11">Construyendo con Gradle</a><ul>
+<li><a class="reference internal" href="#caso-basico" id="id12">Caso básico</a></li>
 <li>
-<a class="reference internal" href=".#distintos-sabores" id="id13">Distintos “Sabores”</a><ul>
-<li><a class="reference internal" href=".#community" id="id14">Community</a></li>
-<li><a class="reference internal" href=".#enterprise" id="id15">Enterprise</a></li>
+<a class="reference internal" href="#distintos-sabores" id="id13">Distintos “Sabores”</a><ul>
+<li><a class="reference internal" href="#community" id="id14">Community</a></li>
+<li><a class="reference internal" href="#enterprise" id="id15">Enterprise</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href=".#release-o-debug" id="id16">Release o Debug</a></li>
-<li><a class="reference internal" href=".#multi-plataforma" id="id17">Multi-plataforma</a></li>
+<li><a class="reference internal" href="#release-o-debug" id="id16">Release o Debug</a></li>
+<li><a class="reference internal" href="#multi-plataforma" id="id17">Multi-plataforma</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href=".#pruebalo-tu-mism" id="id18">Pruébalo tú mism@</a></li>
+<li><a class="reference internal" href="#pruebalo-tu-mism" id="id18">Pruébalo tú mism@</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href=".#conclusiones" id="id19">Conclusiones</a></li>
+<li><a class="reference internal" href="#conclusiones" id="id19">Conclusiones</a></li>
 </ul>
 </div>
 <!-- TEASER_END -->
 </div>
 <div class="section" id="un-caso-practico">
-<h2><a class="toc-backref" href=".#id8">Un caso práctico</a></h2>
+<h2><a class="toc-backref" href="#id8">Un caso práctico</a></h2>
 <p>Básicamente he sacado todo el ejemplo de <a class="reference external" href="http://www.gradle.org/docs/current/userguide/nativeBinaries.html">aquí</a> y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.</p>
 <p>La aplicación es un ejecutable y una librería dinámica. El ejecutable hace uso de esta librería. Ya está, solo quiero mostrar lo que nos permite hacer <a class="reference external" href="http://www.gradle.org">Gradle</a>.</p>
 <p>También nos permitirá generar una versión para distribuir y otra para depurar.</p>
 <p>Todo el código se encuentra en <a class="reference external" href="https://github.com/carlosvin/cpp_gradle">https://github.com/carlosvin/cpp_gradle</a>.</p>
 <div class="section" id="estructura-del-proyecto">
-<h3><a class="toc-backref" href=".#id9">Estructura del proyecto</a></h3>
+<h3><a class="toc-backref" href="#id9">Estructura del proyecto</a></h3>
 <p>Podemos crear la estructura que queramos, pero resulta más fácil seguir la que espera <a class="reference external" href="http://www.gradle.org">Gradle</a>, para no tener que especificar donde está el códigofuente. Esta es la estructura del proyecto:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name">
@@ -280,225 +280,225 @@
 </table>
 </div>
 <div class="section" id="la-aplicacion-c">
-<h3><a class="toc-backref" href=".#id10">La Aplicación C++</a></h3>
+<h3><a class="toc-backref" href="#id10">La Aplicación C++</a></h3>
 <p>Va a consistir en un ejecutable que hará uso de la funcionalidad de la librería ’hello’.</p>
-<pre class="code cpp"><a name="rest_code_0af5340ff2bc49a09e8e3a0caace4852-1"></a><span class="c1">// main.cpp</span>
-<a name="rest_code_0af5340ff2bc49a09e8e3a0caace4852-2"></a><span class="cp">#include "Hello.h"</span>
-<a name="rest_code_0af5340ff2bc49a09e8e3a0caace4852-3"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
-<a name="rest_code_0af5340ff2bc49a09e8e3a0caace4852-4"></a><span class="p">{</span>
-<a name="rest_code_0af5340ff2bc49a09e8e3a0caace4852-5"></a>    <span class="n">Hello</span> <span class="n">hello</span> <span class="p">(</span><span class="s">"Pepito"</span><span class="p">);</span>
-<a name="rest_code_0af5340ff2bc49a09e8e3a0caace4852-6"></a>    <span class="n">hello</span><span class="p">.</span><span class="n">sayHello</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
-<a name="rest_code_0af5340ff2bc49a09e8e3a0caace4852-7"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<a name="rest_code_0af5340ff2bc49a09e8e3a0caace4852-8"></a><span class="p">}</span>
+<pre class="code cpp"><a name="rest_code_a9da5ba1af614c6686b0fb51e50bd046-1"></a><span class="c1">// main.cpp</span>
+<a name="rest_code_a9da5ba1af614c6686b0fb51e50bd046-2"></a><span class="cp">#include</span> <span class="cpf">"Hello.h"</span><span class="cp"></span>
+<a name="rest_code_a9da5ba1af614c6686b0fb51e50bd046-3"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<a name="rest_code_a9da5ba1af614c6686b0fb51e50bd046-4"></a><span class="p">{</span>
+<a name="rest_code_a9da5ba1af614c6686b0fb51e50bd046-5"></a>    <span class="n">Hello</span> <span class="n">hello</span> <span class="p">(</span><span class="s">"Pepito"</span><span class="p">);</span>
+<a name="rest_code_a9da5ba1af614c6686b0fb51e50bd046-6"></a>    <span class="n">hello</span><span class="p">.</span><span class="n">sayHello</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<a name="rest_code_a9da5ba1af614c6686b0fb51e50bd046-7"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_a9da5ba1af614c6686b0fb51e50bd046-8"></a><span class="p">}</span>
 </pre>
-<p>Esta librería permite saludar <a class="reference internal" href=".#n">n</a> veces a una persona especificada en su constructor.</p>
-<pre class="code cpp"><a name="rest_code_26257f04013a45fe9506fffb58e28cc6-1"></a><span class="c1">// Hello.h</span>
-<a name="rest_code_26257f04013a45fe9506fffb58e28cc6-2"></a><span class="k">class</span> <span class="nc">Hello</span>
-<a name="rest_code_26257f04013a45fe9506fffb58e28cc6-3"></a><span class="p">{</span>
-<a name="rest_code_26257f04013a45fe9506fffb58e28cc6-4"></a>    <span class="k">private</span><span class="o">:</span>
-<a name="rest_code_26257f04013a45fe9506fffb58e28cc6-5"></a>        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">who</span><span class="p">;</span>
-<a name="rest_code_26257f04013a45fe9506fffb58e28cc6-6"></a>    <span class="k">public</span><span class="o">:</span>
-<a name="rest_code_26257f04013a45fe9506fffb58e28cc6-7"></a>        <span class="n">Hello</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">who</span><span class="p">);</span>
-<a name="rest_code_26257f04013a45fe9506fffb58e28cc6-8"></a>        <span class="kt">void</span> <span class="nf">sayHello</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span>
-<a name="rest_code_26257f04013a45fe9506fffb58e28cc6-9"></a><span class="p">};</span>
+<p>Esta librería permite saludar <a class="reference internal" href="#n">n</a> veces a una persona especificada en su constructor.</p>
+<pre class="code cpp"><a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-1"></a><span class="c1">// Hello.h</span>
+<a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-2"></a><span class="k">class</span> <span class="nc">Hello</span>
+<a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-3"></a><span class="p">{</span>
+<a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-4"></a>    <span class="k">private</span><span class="o">:</span>
+<a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-5"></a>        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">who</span><span class="p">;</span>
+<a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-6"></a>    <span class="k">public</span><span class="o">:</span>
+<a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-7"></a>        <span class="n">Hello</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">who</span><span class="p">);</span>
+<a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-8"></a>        <span class="kt">void</span> <span class="nf">sayHello</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span>
+<a name="rest_code_b00ccfc1e3774c21b19a364171d0cb59-9"></a><span class="p">};</span>
 </pre>
 </div>
 <div class="section" id="construyendo-con-gradle">
-<h3><a class="toc-backref" href=".#id11">Construyendo con Gradle</a></h3>
+<h3><a class="toc-backref" href="#id11">Construyendo con Gradle</a></h3>
 <div class="section" id="caso-basico">
-<h4><a class="toc-backref" href=".#id12">Caso básico</a></h4>
-<p>Lo único que necesitamos para construir nuestra aplicación con <a class="reference external" href="http://www.gradle.org">Gradle</a> es: tener <a class="reference external" href="http://www.gradle.org">Gradle</a> <a class="footnote-reference" href=".#id4" id="id1">[1]</a> y el fichero <code>build.gradle</code>.</p>
-<pre class="code groovy"><a name="rest_code_3a254910b0c04576b7ea793279c7552b-1"></a><span class="c1">// build.gradle</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-2"></a><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-3"></a>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-4"></a><span class="n">libraries</span> <span class="o">{</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-5"></a>    <span class="n">hello</span> <span class="o">{}</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-6"></a><span class="o">}</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-7"></a><span class="n">executables</span> <span class="o">{</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-8"></a>    <span class="n">main</span> <span class="o">{</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-9"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-10"></a>            <span class="n">lib</span> <span class="n">libraries</span><span class="o">.</span><span class="na">hello</span><span class="o">.</span><span class="na">shared</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-11"></a>        <span class="o">}</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-12"></a>    <span class="o">}</span>
-<a name="rest_code_3a254910b0c04576b7ea793279c7552b-13"></a><span class="o">}</span>
+<h4><a class="toc-backref" href="#id12">Caso básico</a></h4>
+<p>Lo único que necesitamos para construir nuestra aplicación con <a class="reference external" href="http://www.gradle.org">Gradle</a> es: tener <a class="reference external" href="http://www.gradle.org">Gradle</a> <a class="footnote-reference" href="#id4" id="id1">[1]</a> y el fichero <code>build.gradle</code>.</p>
+<pre class="code groovy"><a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-1"></a><span class="c1">// build.gradle</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-2"></a><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-3"></a>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-4"></a><span class="n">libraries</span> <span class="o">{</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-5"></a>    <span class="n">hello</span> <span class="o">{}</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-6"></a><span class="o">}</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-7"></a><span class="n">executables</span> <span class="o">{</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-8"></a>    <span class="n">main</span> <span class="o">{</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-9"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-10"></a>            <span class="n">lib</span> <span class="n">libraries</span><span class="o">.</span><span class="na">hello</span><span class="o">.</span><span class="na">shared</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-11"></a>        <span class="o">}</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-12"></a>    <span class="o">}</span>
+<a name="rest_code_4eea819d7c0a443689a5c738c2aadc95-13"></a><span class="o">}</span>
 </pre>
 <p>Con este fichero tan simple, conseguiremos compilar e instalar nuestra aplicación, en modo Debug para la plataforma donde estamos ejecutando <a class="reference external" href="http://www.gradle.org">Gradle</a>, en mi caso es Linux X64.</p>
 <p>Si ejecutamos desde la raíz de nuestro proyecto <code>gradle task</code>, podremos ver todas las tareas que podemos hacer.</p>
 <p>En nuestro caso, solo queremos nuestra aplicación compilada y lista para funcionar, así que ejecutaremos: <code>gradle installMainExecutable</code>.</p>
-<p>Una vez que ha terminado, podemos ejecutar el programa llamando al script <code>build/install/mainExecutable/main</code> <a class="footnote-reference" href=".#id5" id="id2">[2]</a>.</p>
-<pre class="code bash"><a name="rest_code_cae0d339962f447c84a0c62b942ca797-1"></a><span class="nv">$ </span>build/install/mainExecutable/main
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-2"></a>1.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-3"></a>2.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-4"></a>3.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-5"></a>4.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-6"></a>5.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-7"></a>6.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-8"></a>7.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-9"></a>8.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-10"></a>9.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_cae0d339962f447c84a0c62b942ca797-11"></a>10. Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<p>Una vez que ha terminado, podemos ejecutar el programa llamando al script <code>build/install/mainExecutable/main</code> <a class="footnote-reference" href="#id5" id="id2">[2]</a>.</p>
+<pre class="code bash"><a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-1"></a>$ build/install/mainExecutable/main
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-2"></a>1.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-3"></a>2.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-4"></a>3.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-5"></a>4.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-6"></a>5.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-7"></a>6.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-8"></a>7.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-9"></a>8.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-10"></a>9.  Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_0e6eb8665b8345cd91c94991e4143e69-11"></a>10. Hello Mr. Pepito <span class="o">(</span>Community<span class="o">)</span>
 </pre>
 </div>
 <div class="section" id="distintos-sabores">
-<h4><a class="toc-backref" href=".#id13">Distintos “Sabores”</a></h4>
+<h4><a class="toc-backref" href="#id13">Distintos “Sabores”</a></h4>
 <p>Con unas pocas líneas más, podemos generar distintas versiones de la misma aplicación, en nuestro ejemplo vamos a generar una versión “Community” y otra “Enterprise”.</p>
-<pre class="code groovy"><a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-1"></a><span class="c1">//build.gradle</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-2"></a><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-3"></a><span class="n">model</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-4"></a>    <span class="n">flavors</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-5"></a>        <span class="n">community</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-6"></a>        <span class="n">enterprise</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-7"></a>    <span class="o">}</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-8"></a><span class="o">}</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-9"></a><span class="n">libraries</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-10"></a>    <span class="n">hello</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-11"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-12"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">flavor</span> <span class="o">==</span> <span class="n">flavors</span><span class="o">.</span><span class="na">enterprise</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-13"></a>                    <span class="n">cppCompiler</span><span class="o">.</span><span class="na">define</span> <span class="s2">"ENTERPRISE"</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-14"></a>            <span class="o">}</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-15"></a>        <span class="o">}</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-16"></a>    <span class="o">}</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-17"></a><span class="o">}</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-18"></a><span class="n">executables</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-19"></a>    <span class="n">main</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-20"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-21"></a>            <span class="n">lib</span> <span class="n">libraries</span><span class="o">.</span><span class="na">hello</span><span class="o">.</span><span class="na">shared</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-22"></a>        <span class="o">}</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-23"></a>    <span class="o">}</span>
-<a name="rest_code_452c16e502d14086bd8d8a43ee5042fd-24"></a><span class="o">}</span>
+<pre class="code groovy"><a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-1"></a><span class="c1">//build.gradle</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-2"></a><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-3"></a><span class="n">model</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-4"></a>    <span class="n">flavors</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-5"></a>        <span class="n">community</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-6"></a>        <span class="n">enterprise</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-7"></a>    <span class="o">}</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-8"></a><span class="o">}</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-9"></a><span class="n">libraries</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-10"></a>    <span class="n">hello</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-11"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-12"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">flavor</span> <span class="o">==</span> <span class="n">flavors</span><span class="o">.</span><span class="na">enterprise</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-13"></a>                    <span class="n">cppCompiler</span><span class="o">.</span><span class="na">define</span> <span class="s2">"ENTERPRISE"</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-14"></a>            <span class="o">}</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-15"></a>        <span class="o">}</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-16"></a>    <span class="o">}</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-17"></a><span class="o">}</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-18"></a><span class="n">executables</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-19"></a>    <span class="n">main</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-20"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-21"></a>            <span class="n">lib</span> <span class="n">libraries</span><span class="o">.</span><span class="na">hello</span><span class="o">.</span><span class="na">shared</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-22"></a>        <span class="o">}</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-23"></a>    <span class="o">}</span>
+<a name="rest_code_7e8ee39f46ba48d28e56830d18f448ea-24"></a><span class="o">}</span>
 </pre>
 <p>Además tenemos que preparar nuestra aplicación para utilizar estos parámetros de compilación.</p>
-<pre class="code cpp"><a name="rest_code_85232141b20c493fa67f53c80b483751-1"></a><span class="c1">// Msg.h</span>
-<a name="rest_code_85232141b20c493fa67f53c80b483751-2"></a>
-<a name="rest_code_85232141b20c493fa67f53c80b483751-3"></a><span class="cp">#ifdef ENTERPRISE</span>
-<a name="rest_code_85232141b20c493fa67f53c80b483751-4"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">EDITION</span> <span class="o">=</span> <span class="s">"Enterprise"</span><span class="p">;</span>
-<a name="rest_code_85232141b20c493fa67f53c80b483751-5"></a>
-<a name="rest_code_85232141b20c493fa67f53c80b483751-6"></a><span class="cp">#else</span>
-<a name="rest_code_85232141b20c493fa67f53c80b483751-7"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">EDITION</span> <span class="o">=</span> <span class="s">"Community"</span><span class="p">;</span>
-<a name="rest_code_85232141b20c493fa67f53c80b483751-8"></a>
-<a name="rest_code_85232141b20c493fa67f53c80b483751-9"></a><span class="cp">#endif</span>
+<pre class="code cpp"><a name="rest_code_33c058d56cc149b78749a984ee27ef90-1"></a><span class="c1">// Msg.h</span>
+<a name="rest_code_33c058d56cc149b78749a984ee27ef90-2"></a>
+<a name="rest_code_33c058d56cc149b78749a984ee27ef90-3"></a><span class="cp">#ifdef ENTERPRISE</span>
+<a name="rest_code_33c058d56cc149b78749a984ee27ef90-4"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">EDITION</span> <span class="o">=</span> <span class="s">"Enterprise"</span><span class="p">;</span>
+<a name="rest_code_33c058d56cc149b78749a984ee27ef90-5"></a>
+<a name="rest_code_33c058d56cc149b78749a984ee27ef90-6"></a><span class="cp">#else</span>
+<a name="rest_code_33c058d56cc149b78749a984ee27ef90-7"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">EDITION</span> <span class="o">=</span> <span class="s">"Community"</span><span class="p">;</span>
+<a name="rest_code_33c058d56cc149b78749a984ee27ef90-8"></a>
+<a name="rest_code_33c058d56cc149b78749a984ee27ef90-9"></a><span class="cp">#endif</span>
 </pre>
 <p>De esta forma se utiliza una cadena u otra en función del “sabor” con que compilemos.</p>
 <p>Si ahora ejecutamos <code>gradle clean task</code> en la raíz de nuestro proyecto, veremos que tenemos más tareas disponibles, antes teníamos <code>installMainExecutable</code> y ahora ha sido reemplazada por <code>installCommunityMainExecutable</code> y <code>installEnterpriseMainExecutable</code>.</p>
 <p>Si ejecutamos estas dos tareas, tendremos nuestra aplicación instalada en los dos sabores.</p>
-<pre class="code bash"><a name="rest_code_69b791cc162941e3a0d611387d4aa349-1"></a><span class="nv">$gradle</span> installEnterpriseMainExecutable installCommunityMainExecutable
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-2"></a>
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-3"></a>:compileEnterpriseHelloSharedLibraryHelloCpp
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-4"></a>:linkEnterpriseHelloSharedLibrary
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-5"></a>:enterpriseHelloSharedLibrary
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-6"></a>:compileEnterpriseMainExecutableMainCpp
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-7"></a>:linkEnterpriseMainExecutable
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-8"></a>:enterpriseMainExecutable
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-9"></a>:installEnterpriseMainExecutable
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-10"></a>:compileCommunityHelloSharedLibraryHelloCpp
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-11"></a>:linkCommunityHelloSharedLibrary
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-12"></a>:communityHelloSharedLibrary
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-13"></a>:compileCommunityMainExecutableMainCpp
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-14"></a>:linkCommunityMainExecutable
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-15"></a>:communityMainExecutable
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-16"></a>:installCommunityMainExecutable
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-17"></a>
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-18"></a>BUILD SUCCESSFUL
-<a name="rest_code_69b791cc162941e3a0d611387d4aa349-19"></a>Total <span class="nb">time</span>: 9.414 secs
+<pre class="code bash"><a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-1"></a>$gradle installEnterpriseMainExecutable installCommunityMainExecutable
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-2"></a>
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-3"></a>:compileEnterpriseHelloSharedLibraryHelloCpp
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-4"></a>:linkEnterpriseHelloSharedLibrary
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-5"></a>:enterpriseHelloSharedLibrary
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-6"></a>:compileEnterpriseMainExecutableMainCpp
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-7"></a>:linkEnterpriseMainExecutable
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-8"></a>:enterpriseMainExecutable
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-9"></a>:installEnterpriseMainExecutable
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-10"></a>:compileCommunityHelloSharedLibraryHelloCpp
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-11"></a>:linkCommunityHelloSharedLibrary
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-12"></a>:communityHelloSharedLibrary
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-13"></a>:compileCommunityMainExecutableMainCpp
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-14"></a>:linkCommunityMainExecutable
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-15"></a>:communityMainExecutable
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-16"></a>:installCommunityMainExecutable
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-17"></a>
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-18"></a>BUILD SUCCESSFUL
+<a name="rest_code_f7dda2119c0d4ceea54746f4c48bfa74-19"></a>Total time: 9.414 secs
 </pre>
 <p>Ahora podemos ejecutar nuestra aplicación en los dos sabores:</p>
 <div class="section" id="community">
-<h5><a class="toc-backref" href=".#id14">Community</a></h5>
-<pre class="code bash"><a name="rest_code_26364c805b1648afbe445f3e5f286d9c-1"></a><span class="nv">$ </span>build/install/mainExecutable/community/main
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-2"></a>1.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-3"></a>2.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-4"></a>3.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-5"></a>4.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-6"></a>5.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-7"></a>6.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-8"></a>7.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-9"></a>8.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-10"></a>9.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
-<a name="rest_code_26364c805b1648afbe445f3e5f286d9c-11"></a>10.     Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<h5><a class="toc-backref" href="#id14">Community</a></h5>
+<pre class="code bash"><a name="rest_code_d28379490d12415fbeaea2558c1b37bc-1"></a>$ build/install/mainExecutable/community/main
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-2"></a>1.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-3"></a>2.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-4"></a>3.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-5"></a>4.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-6"></a>5.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-7"></a>6.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-8"></a>7.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-9"></a>8.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-10"></a>9.      Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
+<a name="rest_code_d28379490d12415fbeaea2558c1b37bc-11"></a>10.     Hello Mr. Pepito        <span class="o">(</span>Community<span class="o">)</span>
 </pre>
 </div>
 <div class="section" id="enterprise">
-<h5><a class="toc-backref" href=".#id15">Enterprise</a></h5>
-<pre class="code bash"><a name="rest_code_4f5b698594794facb4d0bccd7839eccb-1"></a><span class="nv">$ </span>build/install/mainExecutable/enterprise/main
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-2"></a>1.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-3"></a>2.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-4"></a>3.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-5"></a>4.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-6"></a>5.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-7"></a>6.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-8"></a>7.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-9"></a>8.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-10"></a>9.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
-<a name="rest_code_4f5b698594794facb4d0bccd7839eccb-11"></a>10.     Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<h5><a class="toc-backref" href="#id15">Enterprise</a></h5>
+<pre class="code bash"><a name="rest_code_0c5cec002ed44543942b490050e3139f-1"></a>$ build/install/mainExecutable/enterprise/main
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-2"></a>1.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-3"></a>2.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-4"></a>3.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-5"></a>4.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-6"></a>5.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-7"></a>6.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-8"></a>7.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-9"></a>8.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-10"></a>9.      Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
+<a name="rest_code_0c5cec002ed44543942b490050e3139f-11"></a>10.     Hello Mr. Pepito        <span class="o">(</span>Enterprise<span class="o">)</span>
 </pre>
 </div>
 </div>
 <div class="section" id="release-o-debug">
-<h4><a class="toc-backref" href=".#id16">Release o Debug</a></h4>
-<p>Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añadir el modo Release para que active algunas optimizaciones <a class="footnote-reference" href=".#id6" id="id3">[3]</a>.</p>
-<pre class="code groovy"><a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-1"></a><span class="c1">// build.gradle</span>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-2"></a>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-3"></a><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-4"></a><span class="n">model</span> <span class="o">{</span>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-5"></a>    <span class="n">buildTypes</span> <span class="o">{</span>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-6"></a>        <span class="n">debug</span>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-7"></a>        <span class="n">release</span>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-8"></a>    <span class="o">}</span>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-9"></a>
-<a name="rest_code_3bf53fce2caf4e75b409a3a4607facab-10"></a><span class="c1">// ... the rest of file below doesn't change</span>
+<h4><a class="toc-backref" href="#id16">Release o Debug</a></h4>
+<p>Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añadir el modo Release para que active algunas optimizaciones <a class="footnote-reference" href="#id6" id="id3">[3]</a>.</p>
+<pre class="code groovy"><a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-1"></a><span class="c1">// build.gradle</span>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-2"></a>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-3"></a><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-4"></a><span class="n">model</span> <span class="o">{</span>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-5"></a>    <span class="n">buildTypes</span> <span class="o">{</span>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-6"></a>        <span class="n">debug</span>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-7"></a>        <span class="n">release</span>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-8"></a>    <span class="o">}</span>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-9"></a>
+<a name="rest_code_37e50d4d70fb4ede920b2a49fc0bd13c-10"></a><span class="c1">// ... the rest of file below doesn't change</span>
 </pre>
 <p>Si ahora ejecutamos <code>gradle clean task</code> veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo <code>installCommunityMainExecutable</code> se habrá desdoblado en <code>installDebugCommunityMainExecutable</code> y <code>installReleaseCommunityMainExecutable</code>.</p>
 </div>
 <div class="section" id="multi-plataforma">
-<h4><a class="toc-backref" href=".#id17">Multi-plataforma</a></h4>
+<h4><a class="toc-backref" href="#id17">Multi-plataforma</a></h4>
 <p>También tenemos las posibilidad de utilizar las características de compilación cruzada que nos ofrecen los compiladores y generar componentes nativos para otras plataformas. El proceso es el mismo, simplemente tenemos que dar te alta las plataformas que vamos a soportar.</p>
 <p>Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herramientas ( <a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas">Toolchains</a> ) necesaria, es decir, si en un sistema de 64 bits queremos compilar para 32 bits, tendremos que tener instaladas las librerías necesarias para 32 bits.</p>
-<pre class="code groovy"><a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-1"></a><span class="c1">// build.gradle</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-2"></a>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-3"></a><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-4"></a><span class="n">model</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-5"></a>    <span class="n">buildTypes</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-6"></a>        <span class="n">debug</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-7"></a>        <span class="n">release</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-8"></a>    <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-9"></a>    <span class="n">platforms</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-10"></a>        <span class="n">x86</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-11"></a>            <span class="n">architecture</span> <span class="s2">"x86"</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-12"></a>        <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-13"></a>        <span class="n">x64</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-14"></a>            <span class="n">architecture</span> <span class="s2">"x86_64"</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-15"></a>        <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-16"></a>        <span class="n">itanium</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-17"></a>            <span class="n">architecture</span> <span class="s2">"ia-64"</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-18"></a>        <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-19"></a>    <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-20"></a>    <span class="n">flavors</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-21"></a>        <span class="n">community</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-22"></a>        <span class="n">enterprise</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-23"></a>    <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-24"></a><span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-25"></a><span class="n">libraries</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-26"></a>    <span class="n">hello</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-27"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-28"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">flavor</span> <span class="o">==</span> <span class="n">flavors</span><span class="o">.</span><span class="na">enterprise</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-29"></a>                <span class="n">cppCompiler</span><span class="o">.</span><span class="na">define</span> <span class="s2">"ENTERPRISE"</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-30"></a>            <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-31"></a>        <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-32"></a>    <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-33"></a><span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-34"></a><span class="n">executables</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-35"></a>    <span class="n">main</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-36"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-37"></a>            <span class="n">lib</span> <span class="n">libraries</span><span class="o">.</span><span class="na">hello</span><span class="o">.</span><span class="na">shared</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-38"></a>        <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-39"></a>    <span class="o">}</span>
-<a name="rest_code_7d57dfa23bd84e94be57ec216374d54f-40"></a><span class="o">}</span>
+<pre class="code groovy"><a name="rest_code_fd092532de8b4aee9c521105091fe8bd-1"></a><span class="c1">// build.gradle</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-2"></a>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-3"></a><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'cpp'</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-4"></a><span class="n">model</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-5"></a>    <span class="n">buildTypes</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-6"></a>        <span class="n">debug</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-7"></a>        <span class="n">release</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-8"></a>    <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-9"></a>    <span class="n">platforms</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-10"></a>        <span class="n">x86</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-11"></a>            <span class="n">architecture</span> <span class="s2">"x86"</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-12"></a>        <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-13"></a>        <span class="n">x64</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-14"></a>            <span class="n">architecture</span> <span class="s2">"x86_64"</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-15"></a>        <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-16"></a>        <span class="n">itanium</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-17"></a>            <span class="n">architecture</span> <span class="s2">"ia-64"</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-18"></a>        <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-19"></a>    <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-20"></a>    <span class="n">flavors</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-21"></a>        <span class="n">community</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-22"></a>        <span class="n">enterprise</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-23"></a>    <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-24"></a><span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-25"></a><span class="n">libraries</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-26"></a>    <span class="n">hello</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-27"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-28"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">flavor</span> <span class="o">==</span> <span class="n">flavors</span><span class="o">.</span><span class="na">enterprise</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-29"></a>                <span class="n">cppCompiler</span><span class="o">.</span><span class="na">define</span> <span class="s2">"ENTERPRISE"</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-30"></a>            <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-31"></a>        <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-32"></a>    <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-33"></a><span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-34"></a><span class="n">executables</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-35"></a>    <span class="n">main</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-36"></a>        <span class="n">binaries</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-37"></a>            <span class="n">lib</span> <span class="n">libraries</span><span class="o">.</span><span class="na">hello</span><span class="o">.</span><span class="na">shared</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-38"></a>        <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-39"></a>    <span class="o">}</span>
+<a name="rest_code_fd092532de8b4aee9c521105091fe8bd-40"></a><span class="o">}</span>
 </pre>
 <p>Ejecutando <code>gradle clean task</code> podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.</p>
 </div>
 </div>
 <div class="section" id="pruebalo-tu-mism">
-<h3><a class="toc-backref" href=".#id18">Pruébalo tú mism@</a></h3>
+<h3><a class="toc-backref" href="#id18">Pruébalo tú mism@</a></h3>
 <p>El proyecto se encuentra en <a class="reference external" href="https://github.com/carlosvin/cpp_gradle">https://github.com/carlosvin/cpp_gradle</a>.</p>
 <p>Para poder probar necesitas:</p>
 <ul class="simple">
@@ -518,7 +518,7 @@
 </div>
 </div>
 <div class="section" id="conclusiones">
-<h2><a class="toc-backref" href=".#id19">Conclusiones</a></h2>
+<h2><a class="toc-backref" href="#id19">Conclusiones</a></h2>
 <p>Con una configuración mínima, tenemos muchas posibilidades de construcción de aplicaciones nativas multi-plataforma.</p>
 <p>Tiene un futuro prometedor, veremos como termina. Aunque si sigue los pasos del soporte para <a class="reference external" href="http://www.java.com">Java</a> o <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a>, seguro que llega a buen puerto.</p>
 <p>Podemos utilizar otras características de <a class="reference external" href="http://www.gradle.org">Gradle</a> y aplicarlas a nuestros proyectos C++, como análisis estáticos de código, generación de informes (pruebas, cobertura, calidad, etc.), fácil incorporación a sistemas de integración continua.</p>
@@ -550,7 +550,7 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.</p>
 <col>
 </colgroup>
 <tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href=".#id1">[1]</a></td>
+<td class="label"><a class="fn-backref" href="#id1">[1]</a></td>
 <td>Realmente no es necesario tener instalado Gradle, si utilizamos el wrapper, pero esto no lo vamos a tratar hoy, <a class="reference external" href="http://www.gradle.org/docs/current/userguide/nativeBinaries.html">si queréis más información</a>.</td>
 </tr></tbody>
 </table>
@@ -560,7 +560,7 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.</p>
 <col>
 </colgroup>
 <tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href=".#id2">[2]</a></td>
+<td class="label"><a class="fn-backref" href="#id2">[2]</a></td>
 <td>.bat en Windows y sin extensión en Linux</td>
 </tr></tbody>
 </table>
@@ -570,7 +570,7 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.</p>
 <col>
 </colgroup>
 <tbody valign="top"><tr>
-<td class="label"><a class="fn-backref" href=".#id3">[3]</a></td>
+<td class="label"><a class="fn-backref" href="#id3">[3]</a></td>
 <td>También podemos definir el tipo de optimizaciones que vamos a utilizar.</td>
 </tr></tbody>
 </table>
@@ -579,7 +579,7 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.</p>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../categories/build-automation-software/" rel="tag">Build Automation Software</a></li>
-            <li><a class="tag p-category" href="../../categories/c++/" rel="tag">C++</a></li>
+            <li><a class="tag p-category" href="../../categories/c%2B%2B/" rel="tag">C++</a></li>
             <li><a class="tag p-category" href="../../categories/dependency-management/" rel="tag">Dependency Management</a></li>
             <li><a class="tag p-category" href="../../categories/gradle/" rel="tag">Gradle</a></li>
         </ul>
@@ -602,7 +602,7 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2015         <a href="mailto:carlosvin@gmail.com">Carlos Martín Sánchez</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2016         <a href="mailto:carlosvin@gmail.com">Carlos Martín Sánchez</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
    <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>
             
