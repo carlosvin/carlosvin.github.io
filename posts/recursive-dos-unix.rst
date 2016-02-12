@@ -13,3 +13,4 @@ Hay un forma bastante sencilla de convertir todos los archivos en formato Window
 	
 	find . -type f -print0 | xargs -0 dos2unix
   
+Lo he sacado, como no, de http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory
