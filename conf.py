@@ -486,7 +486,7 @@ PRETTY_URLS = True
 # RSS_LINK = None
 
 # Show only teasers in the RSS feed? Default to True
-RSS_TEASERS = True
+FEED_TEASERS = True
 
 # A search form to search this site, for the sidebar. You can use a google
 # custom search (http://www.google.com/cse/)
