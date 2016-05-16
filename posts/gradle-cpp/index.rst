@@ -77,7 +77,7 @@ Podemos crear la estructura que queramos, pero resulta más fácil seguir la que
                 Carpeta donde van los fuentes C++.
 
                 :main.cpp:
-                    Código fuente con la función main. 
+                    Código fuente con la función main.
                      
 
     :build:
@@ -93,11 +93,11 @@ Va a consistir en un ejecutable que hará uso de la funcionalidad de la librerí
 
     // main.cpp
     #include "Hello.h"
-    int main(int argc, char ** argv) 
-    {   
+    int main(int argc, char ** argv)
+    {
         Hello hello ("Pepito");
         hello.sayHello(10);
-        return 0; 
+        return 0;
     }
 
 Esta librería permite saludar n_ veces a una persona especificada en su constructor.
@@ -105,7 +105,7 @@ Esta librería permite saludar n_ veces a una persona especificada en su constru
 .. code-block:: cpp
 
     // Hello.h
-    class Hello  
+    class Hello
     {
         private:
             const char * who;
@@ -125,19 +125,19 @@ Lo único que necesitamos para construir nuestra aplicación con Gradle_ es: ten
 
 .. code-block:: groovy
 
-    // build.gradle
-    apply plugin: 'cpp'
+  // build.gradle
+  apply plugin: 'cpp'
 
-    libraries {     
-        hello {} 
-    }
-    executables {     
-        main {
-            binaries.all {
-                lib libraries.hello.shared         
-            }
+  model {
+    components {
+      hello(NativeLibrarySpec) {}
+      main(NativeExecutableSpec) {
+        binaries.all {
+          lib library: "hello"
         }
+      }
     }
+  }
 
 Con este fichero tan simple, conseguiremos compilar e instalar nuestra aplicación, en modo Debug para la plataforma donde estamos ejecutando Gradle_, en mi caso es Linux X64.
 
@@ -150,16 +150,16 @@ Una vez que ha terminado, podemos ejecutar el programa llamando al script :code:
 .. code-block:: bash
 
     $ build/install/mainExecutable/main
-    1.  Hello Mr. Pepito (Community) 
-    2.  Hello Mr. Pepito (Community) 
-    3.  Hello Mr. Pepito (Community) 
-    4.  Hello Mr. Pepito (Community) 
-    5.  Hello Mr. Pepito (Community) 
-    6.  Hello Mr. Pepito (Community) 
-    7.  Hello Mr. Pepito (Community) 
-    8.  Hello Mr. Pepito (Community) 
-    9.  Hello Mr. Pepito (Community) 
-    10. Hello Mr. Pepito (Community) 
+    1.  Hello Mr. Pepito (Community)
+    2.  Hello Mr. Pepito (Community)
+    3.  Hello Mr. Pepito (Community)
+    4.  Hello Mr. Pepito (Community)
+    5.  Hello Mr. Pepito (Community)
+    6.  Hello Mr. Pepito (Community)
+    7.  Hello Mr. Pepito (Community)
+    8.  Hello Mr. Pepito (Community)
+    9.  Hello Mr. Pepito (Community)
+    10. Hello Mr. Pepito (Community)
 
 
 Distintos “Sabores”
@@ -171,27 +171,27 @@ Con unas pocas líneas más, podemos generar distintas versiones de la misma apl
 
     //build.gradle
     apply plugin: 'cpp'
+
     model {
-        flavors {
-            community
-            enterprise
-        }
-    }
-    libraries {
-        hello {
-            binaries.all {             
-                if (flavor == flavors.enterprise) {
-			cppCompiler.define "ENTERPRISE"
-                }
+      flavors {
+          community
+          enterprise
+      }
+
+      components {
+        hello(NativeLibrarySpec) {
+          binaries.all {
+            if (flavor == flavors.enterprise) {
+              cppCompiler.define "ENTERPRISE"
             }
+          }
         }
-    }
-    executables {
-        main {
-            binaries.all {
-                lib libraries.hello.shared
-            }
+        main(NativeExecutableSpec) {
+          binaries.all {
+            lib library: "hello"
+  		    }
         }
+      }
     }
 
 Además tenemos que preparar nuestra aplicación para utilizar estos parámetros de compilación.
@@ -200,11 +200,11 @@ Además tenemos que preparar nuestra aplicación para utilizar estos parámetros
 .. code-block:: cpp
 
     // Msg.h
-    
+
     #ifdef ENTERPRISE
     static const char * EDITION = "Enterprise";
 
-    #else 
+    #else
     static const char * EDITION = "Community";
 
     #endif
@@ -220,23 +220,23 @@ Si ejecutamos estas dos tareas, tendremos nuestra aplicación instalada en los d
 
     $gradle installEnterpriseMainExecutable installCommunityMainExecutable
 
-    :compileEnterpriseHelloSharedLibraryHelloCpp 
-    :linkEnterpriseHelloSharedLibrary 
-    :enterpriseHelloSharedLibrary 
-    :compileEnterpriseMainExecutableMainCpp 
-    :linkEnterpriseMainExecutable 
-    :enterpriseMainExecutable 
-    :installEnterpriseMainExecutable 
-    :compileCommunityHelloSharedLibraryHelloCpp 
-    :linkCommunityHelloSharedLibrary 
-    :communityHelloSharedLibrary 
-    :compileCommunityMainExecutableMainCpp 
-    :linkCommunityMainExecutable 
-    :communityMainExecutable 
+    :compileEnterpriseHelloSharedLibraryHelloCpp
+    :linkEnterpriseHelloSharedLibrary
+    :enterpriseHelloSharedLibrary
+    :compileEnterpriseMainExecutableMainCpp
+    :linkEnterpriseMainExecutable
+    :enterpriseMainExecutable
+    :installEnterpriseMainExecutable
+    :compileCommunityHelloSharedLibraryHelloCpp
+    :linkCommunityHelloSharedLibrary
+    :communityHelloSharedLibrary
+    :compileCommunityMainExecutableMainCpp
+    :linkCommunityMainExecutable
+    :communityMainExecutable
     :installCommunityMainExecutable
 
     BUILD SUCCESSFUL
-    Total time: 9.414 secs 
+    Total time: 9.414 secs
 
 Ahora podemos ejecutar nuestra aplicación en los dos sabores:
 
@@ -247,14 +247,14 @@ Community
 
     $ build/install/mainExecutable/community/main
     1.      Hello Mr. Pepito        (Community)
-    2.      Hello Mr. Pepito        (Community) 
-    3.      Hello Mr. Pepito        (Community) 
-    4.      Hello Mr. Pepito        (Community) 
-    5.      Hello Mr. Pepito        (Community) 
-    6.      Hello Mr. Pepito        (Community) 
-    7.      Hello Mr. Pepito        (Community) 
-    8.      Hello Mr. Pepito        (Community) 
-    9.      Hello Mr. Pepito        (Community) 
+    2.      Hello Mr. Pepito        (Community)
+    3.      Hello Mr. Pepito        (Community)
+    4.      Hello Mr. Pepito        (Community)
+    5.      Hello Mr. Pepito        (Community)
+    6.      Hello Mr. Pepito        (Community)
+    7.      Hello Mr. Pepito        (Community)
+    8.      Hello Mr. Pepito        (Community)
+    9.      Hello Mr. Pepito        (Community)
     10.     Hello Mr. Pepito        (Community)
 
 
@@ -264,15 +264,15 @@ Enterprise
 .. code-block:: bash
 
     $ build/install/mainExecutable/enterprise/main
-    1.      Hello Mr. Pepito        (Enterprise) 
-    2.      Hello Mr. Pepito        (Enterprise) 
-    3.      Hello Mr. Pepito        (Enterprise) 
-    4.      Hello Mr. Pepito        (Enterprise) 
-    5.      Hello Mr. Pepito        (Enterprise) 
-    6.      Hello Mr. Pepito        (Enterprise) 
-    7.      Hello Mr. Pepito        (Enterprise) 
-    8.      Hello Mr. Pepito        (Enterprise) 
-    9.      Hello Mr. Pepito        (Enterprise) 
+    1.      Hello Mr. Pepito        (Enterprise)
+    2.      Hello Mr. Pepito        (Enterprise)
+    3.      Hello Mr. Pepito        (Enterprise)
+    4.      Hello Mr. Pepito        (Enterprise)
+    5.      Hello Mr. Pepito        (Enterprise)
+    6.      Hello Mr. Pepito        (Enterprise)
+    7.      Hello Mr. Pepito        (Enterprise)
+    8.      Hello Mr. Pepito        (Enterprise)
+    9.      Hello Mr. Pepito        (Enterprise)
     10.     Hello Mr. Pepito        (Enterprise)
 
 Release o Debug
@@ -287,11 +287,11 @@ Por defecto Gradle compila nuestra aplicación en modo Debug, pero podemos añad
     apply plugin: 'cpp'
     model {
         buildTypes {
-            debug         
+            debug
             release
         }
-    
-    // ... the rest of file below doesn't change 
+
+    // ... the rest of file below doesn't change
 
 Si ahora ejecutamos :code:`gradle clean task` veremos que tenemos más tareas, se habrán desdoblado las que teníamos, por ejemplo :code:`installCommunityMainExecutable` se habrá desdoblado en :code:`installDebugCommunityMainExecutable` y :code:`installReleaseCommunityMainExecutable`.
 
@@ -305,53 +305,54 @@ Esto solo funcionará si en nuestro sistema tenemos instalada la cadena de herra
 
 .. code-block:: groovy
 
-    // build.gradle
+  // build.gradle
+  apply plugin: 'cpp'
 
-    apply plugin: 'cpp'
-    model {
-        buildTypes {
-            debug
-            release
-        }
-        platforms {
-            x86 {
-                architecture "x86"
-            }
-            x64 {
-                architecture "x86_64"
-            }
-            itanium {
-                architecture "ia-64"
-            }
-        } 
-        flavors {
-            community
-            enterprise
-        }
+  model {
+    buildTypes {
+      debug
+      release
     }
-    libraries {
-        hello {
-            binaries.all {
-                if (flavor == flavors.enterprise) {
-                    cppCompiler.define "ENTERPRISE"
-                }
-            }
-        }
+
+    platforms {
+      x86 {
+        architecture "x86"
+      }
+      x64 {
+        architecture "x86_64"
+      }
+      itanium {
+        architecture "ia-64"
+      }
     }
-    executables {
-        main {
-            binaries.all {
-                lib libraries.hello.shared
-            }
-        }
+
+    flavors {
+      community
+      enterprise
     }
+
+    components {
+      hello(NativeLibrarySpec) {
+        binaries.all {
+          if (flavor == flavors.enterprise) {
+            cppCompiler.define "ENTERPRISE"
+          }
+        }
+      }
+      main(NativeExecutableSpec) {
+        binaries.all {
+          lib library: "hello"
+        }
+      }
+    }
+  }
 
 Ejecutando :code:`gradle clean task` podremos ver las distintas opciones de construción que tenemos, en nuestro caso veremos que podemos construir distintas versiones de nuestra aplicación en distintos sabores, para distintas plataformas en Debug o Release.
 
 Pruébalo tú mism@
 -----------------
 
-El proyecto se encuentra en https://github.com/carlosvin/cpp_gradle. 
+El proyecto se encuentra en https://github.com/carlosvin/cpp_gradle.
 
 Para poder probar necesitas:
 
@@ -371,7 +372,7 @@ Conclusiones
 
 Con una configuración mínima, tenemos muchas posibilidades de construcción de aplicaciones nativas multi-plataforma.
 
-Tiene un futuro prometedor, veremos como termina. Aunque si sigue los pasos del soporte para Java_ o Android_, seguro que llega a buen puerto. 
+Tiene un futuro prometedor, veremos como termina. Aunque si sigue los pasos del soporte para Java_ o Android_, seguro que llega a buen puerto.
 
 Podemos utilizar otras características de Gradle_ y aplicarlas a nuestros proyectos C++, como análisis estáticos de código, generación de informes (pruebas, cobertura, calidad, etc.), fácil incorporación a sistemas de integración continua.
 
@@ -401,7 +402,7 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
 .. _Android: http://developer.android.com/sdk/installing/studio-build.html
 .. _`Instala Gradle`: http://www.gradle.org/docs/current/userguide/installation.html
 .. _GCC: https://gcc.gnu.org/
-.. _`Getting Started Gradle Native`: http://gradle.org/getting-started-native/ 
+.. _`Getting Started Gradle Native`: http://gradle.org/getting-started-native/
 
 .. [n] 'n' es un número entero positivo
 
@@ -413,4 +414,3 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
 
 .. [3]
    También podemos definir el tipo de optimizaciones que vamos a utilizar.
-

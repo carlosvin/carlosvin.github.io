@@ -10,9 +10,9 @@ Introduction
 
 I am more and more worried about building, dependency management and distribution of my projects. I'd like to find a tool unifies those processes with  independence of the language. I know several tools those almost fit to what I'm looking for, like I know several tools those almost fit to what I'm looking for, like SCons_, Autotools_, Ant_, Maven_ and lately Gradle_.
 
-I've made several projects with Gradle, but always I was focused in Java_ and Android_ projects. 
+I've made several projects with Gradle, but always I was focused in Java_ and Android_ projects.
 In Java_ projects I've found a Maven_ replacement, because it is faster, easier and less verbose.
-About Android_ projects I suffered the early adoption of `Android Studio + Gradle`_, although currently I think the are more mature and they work fine. 
+About Android_ projects I suffered the early adoption of `Android Studio + Gradle`_, although currently I think the are more mature and they work fine.
 
 First of all, I have to say: building C/C++/Objective-C projects with Gradle_ is in incubation_ phase, although now we can perform advanced tasks like:
 
@@ -32,7 +32,7 @@ Case study
 
 I've extracted all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions "Community" and "Enterprise".
 
-The application consists of an executable and a dynamic library. The executable will use the library. 
+The application consists of an executable and a dynamic library. The executable will use the library.
 
 Gradle_ also is able to generate a distributable version and a debug version.
 
@@ -41,7 +41,7 @@ You can fork the code on https://github.com/carlosvin/cpp_gradle.
 Project Structure
 -----------------
 
-We can create whichever directory structure, but it is easier using the proposed by Gradle, if not we'll have to specify where the code is located. 
+We can create whichever directory structure, but it is easier using the proposed by Gradle, if not we'll have to specify where the code is located.
 
 This is the project structure:
 
@@ -84,7 +84,7 @@ This is the project structure:
                      
 
     :build:
-        Folder created automatically by Gradle_ where it leaves all execution results like unit tests reports, compiled files, package distributions, etc. 
+        Folder created automatically by Gradle_ where it leaves all execution results like unit tests reports, compiled files, package distributions, etc.
 
 C++ Application
 ---------------
@@ -96,11 +96,11 @@ It consists of an executable that uses the functionality implemented at :code:`h
 
     // main.cpp
     #include "Hello.h"
-    int main(int argc, char ** argv) 
-    {   
+    int main(int argc, char ** argv)
+    {
         Hello hello ("Pepito");
         hello.sayHello(10);
-        return 0; 
+        return 0;
     }
 
 :code:`hello` library allows greet n_ times to someone who is passed as argument to constructor class.
@@ -108,7 +108,7 @@ It consists of an executable that uses the functionality implemented at :code:`h
 .. code-block:: cpp
 
     // Hello.h
-    class Hello  
+    class Hello
     {
         private:
             const char * who;
@@ -128,19 +128,20 @@ The only we need to build the application with Gradle_ is: having Gradle_ [1]_ a
 
 .. code-block:: groovy
 
-    // build.gradle
-    apply plugin: 'cpp'
+  // build.gradle
+  apply plugin: 'cpp'
 
-    libraries {     
-        hello {} 
-    }
-    executables {     
-        main {
-            binaries.all {
-                lib libraries.hello.shared         
-            }
+  model {
+    components {
+      hello(NativeLibrarySpec) {}
+      main(NativeExecutableSpec) {
+        binaries.all {
+          lib library: "hello"
         }
+      }
     }
+  }
+
 
 With this simple file, we'll be able to compile and install the application in Debug mode for the platform where we are executing Gradle_ (in my case X64).
 
@@ -153,50 +154,51 @@ Once execution has finished, we can run the program calling to :code:`build/inst
 .. code-block:: bash
 
     $ build/install/mainExecutable/main
-    1.  Hello Mr. Pepito (Community) 
-    2.  Hello Mr. Pepito (Community) 
-    3.  Hello Mr. Pepito (Community) 
-    4.  Hello Mr. Pepito (Community) 
-    5.  Hello Mr. Pepito (Community) 
-    6.  Hello Mr. Pepito (Community) 
-    7.  Hello Mr. Pepito (Community) 
-    8.  Hello Mr. Pepito (Community) 
-    9.  Hello Mr. Pepito (Community) 
-    10. Hello Mr. Pepito (Community) 
+    1.  Hello Mr. Pepito (Community)
+    2.  Hello Mr. Pepito (Community)
+    3.  Hello Mr. Pepito (Community)
+    4.  Hello Mr. Pepito (Community)
+    5.  Hello Mr. Pepito (Community)
+    6.  Hello Mr. Pepito (Community)
+    7.  Hello Mr. Pepito (Community)
+    8.  Hello Mr. Pepito (Community)
+    9.  Hello Mr. Pepito (Community)
+    10. Hello Mr. Pepito (Community)
 
 
 Different "Flavors"
 ~~~~~~~~~~~~~~~~~~~
 
-With a few lines more we can generate different versions of same application. 
+With a few lines more we can generate different versions of same application.
 In our example we are going to build "Community" and "Enterprise" flavors.
 
 .. code-block:: groovy
 
     //build.gradle
     apply plugin: 'cpp'
+
     model {
-        flavors {
-            community
-            enterprise
-        }
-    }
-    libraries {
-        hello {
-            binaries.all {             
-                if (flavor == flavors.enterprise) {
-			cppCompiler.define "ENTERPRISE"
-                }
+      flavors {
+          community
+          enterprise
+      }
+
+      components {
+        hello(NativeLibrarySpec) {
+          binaries.all {
+            if (flavor == flavors.enterprise) {
+              cppCompiler.define "ENTERPRISE"
             }
+          }
         }
-    }
-    executables {
-        main {
-            binaries.all {
-                lib libraries.hello.shared
-            }
+        main(NativeExecutableSpec) {
+          binaries.all {
+            lib library: "hello"
+  		    }
         }
+      }
     }
+
 
 Besides, we have to make our application ready to use compilation parameters.
 
@@ -204,20 +206,20 @@ Besides, we have to make our application ready to use compilation parameters.
 .. code-block:: cpp
 
     // Msg.h
-    
+
     #ifdef ENTERPRISE
     static const char * EDITION = "Enterprise";
 
-    #else 
+    #else
     static const char * EDITION = "Community";
 
     #endif
 
 
-In this way it selects a string depending on used flavor. 
+In this way it selects a string depending on used flavor.
 
 
-If we execute :code:`gradle clean task` in the root folder, we'll get more available tasks. 
+If we execute :code:`gradle clean task` in the root folder, we'll get more available tasks.
 Before, we had :code:`installMainExecutable` which has been replaced by :code:`installCommunityMainExecutable` and :code:`installEnterpriseMainExecutable`.
 
 If we execute both tasks, we'll get the installed application in both flavors:
@@ -226,23 +228,23 @@ If we execute both tasks, we'll get the installed application in both flavors:
 
     $gradle installEnterpriseMainExecutable installCommunityMainExecutable
 
-    :compileEnterpriseHelloSharedLibraryHelloCpp 
-    :linkEnterpriseHelloSharedLibrary 
-    :enterpriseHelloSharedLibrary 
-    :compileEnterpriseMainExecutableMainCpp 
-    :linkEnterpriseMainExecutable 
-    :enterpriseMainExecutable 
-    :installEnterpriseMainExecutable 
-    :compileCommunityHelloSharedLibraryHelloCpp 
-    :linkCommunityHelloSharedLibrary 
-    :communityHelloSharedLibrary 
-    :compileCommunityMainExecutableMainCpp 
-    :linkCommunityMainExecutable 
-    :communityMainExecutable 
+    :compileEnterpriseHelloSharedLibraryHelloCpp
+    :linkEnterpriseHelloSharedLibrary
+    :enterpriseHelloSharedLibrary
+    :compileEnterpriseMainExecutableMainCpp
+    :linkEnterpriseMainExecutable
+    :enterpriseMainExecutable
+    :installEnterpriseMainExecutable
+    :compileCommunityHelloSharedLibraryHelloCpp
+    :linkCommunityHelloSharedLibrary
+    :communityHelloSharedLibrary
+    :compileCommunityMainExecutableMainCpp
+    :linkCommunityMainExecutable
+    :communityMainExecutable
     :installCommunityMainExecutable
 
     BUILD SUCCESSFUL
-    Total time: 9.414 secs 
+    Total time: 9.414 secs
 
 Now we can run the application in both flavors:
 
@@ -253,14 +255,14 @@ Community
 
     $ build/install/mainExecutable/community/main
     1.      Hello Mr. Pepito        (Community)
-    2.      Hello Mr. Pepito        (Community) 
-    3.      Hello Mr. Pepito        (Community) 
-    4.      Hello Mr. Pepito        (Community) 
-    5.      Hello Mr. Pepito        (Community) 
-    6.      Hello Mr. Pepito        (Community) 
-    7.      Hello Mr. Pepito        (Community) 
-    8.      Hello Mr. Pepito        (Community) 
-    9.      Hello Mr. Pepito        (Community) 
+    2.      Hello Mr. Pepito        (Community)
+    3.      Hello Mr. Pepito        (Community)
+    4.      Hello Mr. Pepito        (Community)
+    5.      Hello Mr. Pepito        (Community)
+    6.      Hello Mr. Pepito        (Community)
+    7.      Hello Mr. Pepito        (Community)
+    8.      Hello Mr. Pepito        (Community)
+    9.      Hello Mr. Pepito        (Community)
     10.     Hello Mr. Pepito        (Community)
 
 
@@ -270,15 +272,15 @@ Enterprise
 .. code-block:: bash
 
     $ build/install/mainExecutable/enterprise/main
-    1.      Hello Mr. Pepito        (Enterprise) 
-    2.      Hello Mr. Pepito        (Enterprise) 
-    3.      Hello Mr. Pepito        (Enterprise) 
-    4.      Hello Mr. Pepito        (Enterprise) 
-    5.      Hello Mr. Pepito        (Enterprise) 
-    6.      Hello Mr. Pepito        (Enterprise) 
-    7.      Hello Mr. Pepito        (Enterprise) 
-    8.      Hello Mr. Pepito        (Enterprise) 
-    9.      Hello Mr. Pepito        (Enterprise) 
+    1.      Hello Mr. Pepito        (Enterprise)
+    2.      Hello Mr. Pepito        (Enterprise)
+    3.      Hello Mr. Pepito        (Enterprise)
+    4.      Hello Mr. Pepito        (Enterprise)
+    5.      Hello Mr. Pepito        (Enterprise)
+    6.      Hello Mr. Pepito        (Enterprise)
+    7.      Hello Mr. Pepito        (Enterprise)
+    8.      Hello Mr. Pepito        (Enterprise)
+    9.      Hello Mr. Pepito        (Enterprise)
     10.     Hello Mr. Pepito        (Enterprise)
 
 Release or Debug
@@ -293,72 +295,74 @@ By default Gradle_ compiles in Debug mode, but we can add the Release mode which
     apply plugin: 'cpp'
     model {
         buildTypes {
-            debug         
+            debug
             release
         }
-    
-    // ... the rest of file below doesn't change 
+
+    // ... the rest of file below doesn't change
 
 If we execute :code:`gradle clean task` we'll get more tasks, they have been split, for example :code:`installCommunityMainExecutable` has been split in :code:`installDebugCommunityMainExecutable` and :code:`installReleaseCommunityMainExecutable`.
 
 Multi-platform
 ~~~~~~~~~~~~~~
 
-Also we can use cross-compiling features provided by compilers and generate native components for other platforms. 
+Also we can use cross-compiling features provided by compilers and generate native components for other platforms.
 To do that we just have to add the supported platforms.
 
 This only works if we have installed the Toolchain_ for the target platform.
 
 .. code-block:: groovy
 
-    // build.gradle
+  // build.gradle
+  apply plugin: 'cpp'
 
-    apply plugin: 'cpp'
-    model {
-        buildTypes {
-            debug
-            release
-        }
-        platforms {
-            x86 {
-                architecture "x86"
-            }
-            x64 {
-                architecture "x86_64"
-            }
-            itanium {
-                architecture "ia-64"
-            }
-        } 
-        flavors {
-            community
-            enterprise
-        }
-    }
-    libraries {
-        hello {
-            binaries.all {
-                if (flavor == flavors.enterprise) {
-                    cppCompiler.define "ENTERPRISE"
-                }
-            }
-        }
-    }
-    executables {
-        main {
-            binaries.all {
-                lib libraries.hello.shared
-            }
-        }
+  model {
+    buildTypes {
+      debug
+      release
     }
 
-When execute :code:`gradle clean task` we'll see the different building options we have. 
+    platforms {
+      x86 {
+        architecture "x86"
+      }
+      x64 {
+        architecture "x86_64"
+      }
+      itanium {
+        architecture "ia-64"
+      }
+    }
+
+    flavors {
+      community
+      enterprise
+    }
+
+    components {
+      hello(NativeLibrarySpec) {
+        binaries.all {
+          if (flavor == flavors.enterprise) {
+            cppCompiler.define "ENTERPRISE"
+          }
+        }
+      }
+      main(NativeExecutableSpec) {
+        binaries.all {
+          lib library: "hello"
+        }
+      }
+    }
+  }
+
+
+When execute :code:`gradle clean task` we'll see the different building options we have.
 In this example, we can build different versions of the application in different flavors for different platforms in Debug or Release mode.
 
 Try it yourself
 ---------------
 
-The project is on https://github.com/carlosvin/cpp_gradle. 
+The project is on https://github.com/carlosvin/cpp_gradle.
 
 Requirements:
 
@@ -382,7 +386,7 @@ Gradle_ for C++ has a promising future,  I hope it follows the steps of Java_ an
 
 It is well supported by continuous integration systems.
 
-It has many plugins and features.  
+It has many plugins and features.
 
 Gradle_ for C++ is a feature under development, we have to be careful:
 
@@ -409,7 +413,7 @@ I recommend you to `Try it yourself`_.
 .. _Makefile: https://www.gnu.org/software/make/manual/html_node/Makefiles.html
 .. _Android: http://developer.android.com/sdk/installing/studio-build.html
 .. _GCC: https://gcc.gnu.org/
-.. _`Getting Started Gradle Native`: http://gradle.org/getting-started-native/ 
+.. _`Getting Started Gradle Native`: http://gradle.org/getting-started-native/
 
 .. [n] 'n' Positive integer
 
@@ -421,4 +425,3 @@ I recommend you to `Try it yourself`_.
 
 .. [3]
    We can also specify/modify the kind of optimizations.
-
