@@ -2,7 +2,6 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
-<base href="http://carlosvin.github.io/en/posts/debug-libtool-lib/">
 <meta name="description" content="Cómo depurar un librería generada con libtool">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Depurar librería generada con libtool | Carlos says "bla bla"</title>
@@ -115,15 +114,15 @@
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <p>Trabajando con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a> <a class="footnote-reference" href="#id3" id="id1">[1]</a>, cuando vamos a depurar un ejecutable que utiliza una librería generada con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>, es posible que nos encontremos con el siguiente error:</p>
-<pre class="code bash"><a name="rest_code_d67f97f1232245a4b0b869b474d265c1-1"></a>$ gdb ./tests-mylib
-<a name="rest_code_d67f97f1232245a4b0b869b474d265c1-2"></a><span class="s2">"tests-mylib"</span>: not in executable format: File format not recognized
+<pre class="code bash"><a name="rest_code_e945ef6d15b546959d25f3f399907a48-1"></a>$ gdb ./tests-mylib
+<a name="rest_code_e945ef6d15b546959d25f3f399907a48-2"></a><span class="s2">"tests-mylib"</span>: not in executable format: File format not recognized
 </pre>
 <p><code>libmylib.so</code> es una librería dinámica generada con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>
 <code>tests-mylib</code> es un ejecutable que utiliza la librería mylib</p>
 <p>Para los que estéis pensando que se me ha olvidado poner la opción de compilación <code>-g</code>, lo siento, pero este error ocurre aunque utilicemos <code>-g</code>.</p>
 <p>El error es debido a que estamos intentando ejecutar un script generado por <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>, es una envoltura sobre el programa real, para facilitar la ejecución de éste <a class="citation-reference" href="#libtooldoc" id="id2">[libtooldoc]</a>.</p>
 <p>Para poder depurar nuestro programa de prueba <code>tests-mylib</code></p>
-<pre class="code bash"><a name="rest_code_97fdd1cf5202433bad4ceaeca4a82e9a-1"></a>libtool --mode<span class="o">=</span>execute gdb tests-mylib
+<pre class="code bash"><a name="rest_code_89586e851dcf471b915ae117da07ebf9-1"></a>libtool --mode<span class="o">=</span>execute gdb tests-mylib
 </pre>
 <table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup>
