@@ -137,9 +137,5 @@ Ahora podemos abrir nuestro navegador y escribir a.domain.com y nos mostrará el
 
 
 
-Ejecutando el ejemplo
-=====================
-
-
 .. _NGINX: https://www.nginx.com
 .. _nginx-proxy: https://github.com/jwilder/nginx-proxy
