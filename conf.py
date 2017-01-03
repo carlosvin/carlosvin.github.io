@@ -5,10 +5,13 @@ import time
 
 BLOG_AUTHOR = u"Carlos Martín Sánchez"
 BLOG_TITLE = u'Carlos says "bla bla"'
-SITE_URL = "http://carlosvin.github.io/"
+SITE_URL = "https://carlosvin.github.io/"
 # BASE_URL = "http://getnikola.com/"
 BLOG_EMAIL = "carlosvin@gmail.com"
-BLOG_DESCRIPTION = "Web personal de Carlos Martín Sánchez: Cuento lo que pasa por la web o por mi cabeza."
+BLOG_DESCRIPTION = {
+    "es" : u"Qué está pasando por mi cabeza y alrededores",
+    "en" : u"What is going on in my mind and its surroundings",
+}
 
 WRITE_TAG_CLOUD = True
 
