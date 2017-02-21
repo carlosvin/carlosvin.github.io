@@ -1,16 +1,17 @@
-.. title: Convertir archivos en formato Windows a formato Unix
+.. title: Convert files formats: Windows to Unix
 .. slug: recursive-dos-unix
 .. date: 2016/02/12 10:34:00
 .. tags: Useful Commands, Unix, Windows
-.. description: Convertir archivos en formato Windows a formato Unix
+.. description: Convert Windows formatted files to Unix format per directory recursively
 .. type: micro
 
-Si alguna vez has programado desde un entorno Windows para entornos Unix, seguramente habrás tenido este problema: Los archivos que instalas en tu entorno Unix tienen formato Windows.
+If you are developing from a Windows environment to a Unix target environment, most likely you have had this issue: 
+You install source files in Windows format in your Unix environment.  
 
-Hay un forma bastante sencilla de convertir todos los archivos que tienes en un directorio de formato Windows a Unix.
+There is a way quite simple to convert all your files from Windows to Unix format:
 
 .. code-block:: bash
-
+	
 	find . -type f -print0 | xargs -0 dos2unix
-
-Lo he sacado, como no, de http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory
+  
+I got it, of course, form http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory

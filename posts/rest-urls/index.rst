@@ -1,302 +1,304 @@
-.. title: Creando REST URLs
+.. title: REST URLs
 .. slug: rest-urls
-.. date: 2015/07/26 18:00:00
+.. date: 2015/08/16 14:00:00
 .. tags: REST, API, Web Services
 .. link:
-.. description: Crear REST API: URLs
+.. description: Design REST API: URLs
 .. type: text
 
-Las primeras veces que me puse a diseñar una API_ REST_ cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de URLs_ REST_ con ejemplos.
+First time I designed a REST_ API_ I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about REST_ URL_ with examples.
 
-.. contents:: Índice
+.. contents:: Index
 
-Fundamentos REST_
-=================
-
-- Utilizamos URLs_ para acceder a recursos.
-- Utilizamos *verbos* para modificar recursos.
-- Nuestros *verbos* están proporcionados por el protocolo HTTP_.
-- Los *verbos* tienen un equivalente directo con las operaciones CRUD_ [#]_.
-- Para acceder a un recurso existente necesitamos su identificador.
-
-Verbos REST_
-------------
-
-POST
- (**C**) Utilizado para **crear** nuevos recursos.
-GET
- (**R**) Utilizado para **leer** un recursos existentes en el sistema.
-PUT
- (**U**) Utilizado para **actualizar** recursos existentes.
-DELETE
- (**D**) Utilizado para **borrar** recursos existentes.
-
-En una tabla quedará más claro
-
-===========  ============  ========================
-Verbo REST_  Acción CRUD_  Debe exisitir el recurso
------------  ------------  ------------------------
-POST         Crear         No
-GET          Leer          Sí
-PUT          Actualizar    Sí
-DELETE       Borrar        Sí
-===========  ============  ========================
-
-Acceso a Recursos
------------------
-
-Un recurso es *a lo que quieres acceder*. Por ejemplo, un coche.
-
-Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:
-
-*Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV*.
-
-De esta forma el dependiente sabe cuál es y te puede dar la información.
-
-"Fiat Bravo 1.9 Emotion 120CV" es nuestro **identificador**.
-
-Trasladando el ejemplo a las APIs_ REST_:
-
-::
-
-  GET   http://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
-
-De esta forma nuestra API_ nos puede proporcionar información del coche.
-
-Esto es un ejemplo muy simplificado, pero realmente cuando accedemos a un recurso concreto solemos utilizar algo que lo identifique de forma unívoca. Una práctica común y recomendable es utilizar UUID_.
-
-::
-
-  GET  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-
-Pero nuestra API_, al igual que una tienda, no tiene por qué ser tan estricta, podemos preguntar por los coches que tienen ciertas caracteríticas, podemos ir al concesionario y decir:
-
-*Hola buenos días, quiero un Fiat Bravo*.
-
-Y el dependiente, amablemente, te mostrará todos los Fiat Bravo que tiene. Veamos cómo podemos decir esto a nuestra API_.
-
-::
-
-  GET  http://tiendadecoches.es/api/coches/?marca=fiat&modelo=bravo
-
-Nuestra API_ nos devolverá todos los coches que son marca Fiat y modelo Bravo.
-
-Marca y modelo en este caso son lo que llamamos **parámetros de consulta** (query parameters).
-
-Como os habréis dado cuenta durante el ejemplo, para obtener información de un recurso siempre hemos utilizado el *verbo* **GET**.
-
-Modificar Recursos
-------------------
-
-Nuestra API_ también nos puede permitir modificar un recurso, al igual que para pedir información, para modificar un recurso necesitamos especificar qué recurso queremos modificar, así que necesitamos otra vez un *identificador*.
-
-Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo único que cambia es el verbo, queremos **modificar** así que utilizamos el verbo equivalente que nos proporciona el protocolo HTTP_: **PUT**.
-
-::
-
-  PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-
-Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.
-
-Tenemos que enviar la nueva cilindrada a esta URL_  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f por HTTP_ utilizando el verbo **PUT**.
-
-El protocolo HTTP_ nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.
-
-Podemos enviarlo en JSON_ o XML_ o como queramos, solo tenemos que estar seguros de que el formato que enviamos es lo que espera recibir el servidor.
-
-.. note::
-
-  Cuando definimos una API_ REST_ tenemos que definir también el formato en que vamos a enviar los datos.
-
-Ejemplo en JSON_::
-
-  { cilindrada: 100 }
-
-
-Borrar Recursos
----------------
-
-Continuando con el ejemplo de los coches, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la URL_ que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos **borrar (DELETE)**.
-
-::
-
-  DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
-
-En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.
-
-Crear Recursos
---------------
-
-Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.
-
-::
-
-  POST   http://tiendadecoches.es/api/coches/
-
-Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.
-
-En nuestro ejemplo, queremos crear un coche, así que ponemos toda la información necesaria para crear un coche dentro de la llamada POST de HTTP_, algo muy parecido como hemos hecho en el apartado `Modificar Recursos`_, pero en este caso mandamos **toda la información necesaria**, no solo la cilindrada.
-
-Ejemplo en JSON_::
-
-  {
-  "marca": "Fiat",
-  "modelo": "Bravo"
-  "anio": 2010
-  "puertas": 5,
-  "cilindrada": 120,
-  "version": "Emotion",
-  "climatizador": true,
-  "ac": false,
-  "fuel": "Diesel"
-  }
-
-Podemos delegar en el sistema, para que cuando pidamos la creación de un recurso nuevo, nos asigne un nuevo **identificador**, o simplemente enviarlo con el resto de información::
-
-  {
-  "identificador": "cce05bee-386b-11e5-a151-feff819cdc9f"
-  "marca": "Fiat",
-  "modelo": "Bravo"
-  "anio": 2010
-  "puertas": 5,
-  "cilindrada": 120,
-  "version": "Emotion",
-  "climatizador": true,
-  "ac": false,
-  "fuel": "Diesel"
-  }
-
-
-Colecciones
------------
-
-Algo que no quiero pasar por alto, porque al menos para mí no fue obvio, es el manejo de colecciones. Realmente ya está explicado, porque todas las acciones que hemos visto previamente sobre los coches, estaba aplicando realmente a una colección de coches.
-
-Pero, ¿qué pasa si un recurso tiene a su vez una colección? Siguiendo con los coches, un coche puede tener una lista de aceites con los que puede funcionar, así que nuestra API_ debería permitir obtener, modificar, borrar o crear elementos en la lista.
-
-.. note::
-
-  Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.
-
-
-Añadir un elemento a la colección
-*********************************
-
-Si queremos añadir un elemento a la colección de coches lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de `Crear Recursos`_.
-
-Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe::
-
-  POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-
-  {
-  "tipo": "5W30",
-  "otros_datos": "este es el mejor del mundo para este coche"
-  }
-
-
-Si queremos añadir otro aceite::
-
-  POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-
-  {
-  "tipo": "10W30",
-  "otros_datos": "otras cosas sobre aceites de coche",
-  }
-
-Modificar un elemento de la colección
-*************************************
-
-Si queremos modificar los datos del aceite *5W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
-
-  PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
-
-  {
-  "tipo": "5W30",
-  "otros_datos": "este ya no es el mejor del mundo para este coche"
-  }
-
-
-Borrar un elemento de la colección
-**********************************
-
-Para borrar un aceite *10W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
-
-  DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
-
-Leer un elemento de la colección
-********************************
-
-Para obtener la información del aceite *10W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
-
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
-
-
-Listar elementos de la colección
-********************************
-
-Como hemos visto en `Leer un elemento de la colección`_, podemos obtener información de cualquier elemento de la colección, pero también podemos obtener varios elementos de la colección, ordenarlos, paginarlos y aplicar cualquier tipo de acciones típicas de una colección.
-
-Podemos obtener todos los aceites soportados por el coche *cce05bee-386b-11e5-a151-feff819cdc9f*, es tan simple como::
-
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
-
-Pero también podemos proporcionar otras funcionalidades en nuestra API_, como obtener los resultados ordenados::
-
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&orden=ascendente
-
-Podemos pedir al API_ que nos devuelva los 10 primeros aceites del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
-
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
-
-Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación::
-
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&numero_de_elementos=3
-
-En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche *cce05bee-386b-11e5-a151-feff819cdc9f* y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente::
-
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&numero_de_elementos=3
-
-Todas estas funcionalidades, son posibles gracias a los **parámetros de consulta**.
-
-Típico error
+REST_ Basics
 ============
 
-La primera vez que intenté diseñar un API_ REST_ lo que hice fué otra cosa, era una API_, pero no REST_.
+- Using URLs_ for get resources.
+- Using *verbs* for modify resources.
+- The *verbs* are provided by the HTTP_ protocol.
+- The *verbs* have a direct equivalency with CRUD_ [#]_.
+- To access to an existent resource we need an identifier.
 
-Mi principal error fue en la construción de las URLs_, incluí *verbos* sin tener en cuenta que los verbos ya me los proporcionaba el protocolo HTTP_.
+REST_ Verbs
+-----------
 
-Por ejemplo, creaba URLs_ del tipo:
+POST
+ **Create** new resources.
+GET
+ **Read** already existing resources.
+PUT
+ **Update** already existing resources.
+DELETE
+ **Delete** already existing resources.
+
+It is clearer in the following table
+
+===========  ============  ===================
+REST_ Verb   CRUD_ Action  Resource must exist
+-----------  ------------  -------------------
+POST         Create        No
+GET          Read          Yes
+PUT          Update        Yes
+DELETE       Delete        Yes
+===========  ============  ===================
+
+Accessing to Resources
+----------------------
+
+A resource is *what we want to get*. For example, a car.
+
+To be able to get a car, that information is not enough, you can't go to your car dealer and ask for whatever car, you have to specify which one you want:
+
+*Good morning. I'd like to have a Fiat Bravo 1.9 Emotion 120CV*.
+
+In this manner the sheller knows which one is.
+
+"Fiat Bravo 1.9 Emotion 120CV" is the **identifier**.
+
+Transferring the example to REST_ APIs_:
 
 ::
 
-	POST	http://example.com/api/coches/seat-ibiza/borrar-rueda/3
+  GET   http://cardealer.com/api/cars/fiat-bravo-19-emotion-120cv
 
-Cuando lo correcto sería
+Now our API_ can supply the car info.
+
+This is a very simple example, but actually when we access to a specific resource, we have to use something to identify it, a common and recommendable practice is use UUID_.
 
 ::
 
-	DELETE	http://example.com/api/coches/seat-ibiza/ruedas/3
+  GET  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+
+But our API_, like a shop, it hasn't to be so strict. We can ask for cars with several features:
+
+*Good morning, I want a Fiat Bravo*.
+
+Then, the dealer kindly will show you all Fiat Bravo he has available. Let's see how API_ says that.
+
+::
+
+  GET  http://cardealer.com/api/cars/?brand=fiat&model=bravo
+
+API_ will return all cars with Fiat brand and Bravo model.
+
+Brand and model are so called **query parameters**.
+
+As you might already notice, to get resource information, we have always used **GET** *verb*
+
+Update resources
+----------------
+
+The API_ should also support updating resources. Like reading resources, to update a resource we have to specify which resource we want to update, so we again need an *identifier*.
+
+Before, we wanted to get information (read) and we used **GET** *verb*. Now the only difference is the verb.
+
+We want to **update** so we use the equivalency HTTP_ verb: **PUT**.
+
+::
+
+  PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+
+Actually something else is missing, we have to say what thing of the car we want to change, for example, let's imagine we want to change the engine power and set it to 100CV.
+
+We have to send the new engine power to following URL_  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f through HTTP_ using **PUT** verb.
+
+HTTP_ protocol allows sending data within PUT message, we have to choose a sending format.
+
+We can use JSON_ or XML_ or whatever, we only have to ensure that sent format is expected in server side.
+
+.. note::
+
+  Designing a REST_ API_ requires select a sending data format.
+
+JSON_ example::
+
+  { enginePower: 100 }
 
 
-Video Tutoriales
-================
+Delete Resources
+----------------
 
-Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:
+Let's imagine that now we are the car dealer and we don't want to shell the Fiat Bravo Emotion 1.9CV anymore (the cce05bee-386b-11e5-a151-feff819cdc9f).
+We'll keep the URL_ that identifies the resource, but we change the verb: we don't want to read (GET), we don't want to update (PUT), we want to **to delete (DELETE)**.
+
+::
+
+  DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+
+We don't have to supply any additional info, only de verb (DELETE) and the resource identifier.
+
+Create Resources
+----------------
+
+And the last verb is **to create (POST)**. In this case we don't have to identify the resource, because it still doesn't exist.
+
+::
+
+  POST   http://cardealer.com/api/cars/
+
+But we have to send the data to create the resource.
+
+Following with the example, let's create a new car, so we include the necessary data within POST HTTP_ message, it is something similar what we did at section `Update resources`_, but we are going to send **all required data**, not only the engine power.
+
+JSON_ example::
+
+  {
+  "brand": "Fiat",
+  "model": "Bravo"
+  "year": 2010
+  "doors": 5,
+  "enginePower": 120,
+  "version": "Emotion",
+  "clima": true,
+  "ac": false,
+  "fuel": "Diesel"
+  }
+
+We can delegate on the system to assign a new **identifier**, or simply send it within the message::
+
+  {
+  "identifier": "cce05bee-386b-11e5-a151-feff819cdc9f"
+  "brand": "Fiat",
+  "model": "Bravo"
+  "year": 2010
+  "doors": 5,
+  "enginePower": 120,
+  "version": "Emotion",
+  "clima": true,
+  "ac": false,
+  "fuel": "Diesel"
+  }
+
+
+Collections
+-----------
+
+All actions we have already explained were actually applied over a cars collection.
+
+But, what happen if a resource has a nested collection?
+
+Continuing with cars example, a car can use a set of engine oils. So the API_ must allow update, delete or create elements in the set.
+
+.. note::
+
+  For the example we will assume that *the oil identifier* is the attribute *type*.
+
+
+Add an element to collection
+***************************
+
+When we add a car to cars collection, what we do is create a new car, so it is the case of `Create Resources`_.
+
+To add a new engine oil to the car cce05bee-386b-11e5-a151-feff819cdc9f, that already exists::
+
+  POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+
+  {
+  "type": "5W30",
+  "otherInfo": "This is the best oil for this car"
+  }
+
+
+If we want to add another one::
+
+  POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+
+  {
+  "type": "10W30",
+  "otherInfo": "This is very good for cold weather"
+  }
+
+Update a collection item
+************************
+
+If we want to update the info of oil *5W30* of car *cce05bee-386b-11e5-a151-feff819cdc9f*::
+
+  PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/5W30/
+
+  {
+  "type": "5W30",
+  "otherInfo": "This is no longer the best oil for this car"
+  }
+
+
+Delete a collection item
+************************
+
+To delete an oil *10W30* from car *cce05bee-386b-11e5-a151-feff819cdc9f*::
+
+  DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
+
+
+Read a collection item
+**********************
+
+To get the oil info *10W30* of the car *cce05bee-386b-11e5-a151-feff819cdc9f*::
+
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
+
+
+List collection items
+*********************
+
+As we have seen at `Read a collection item`_, we can get the info of every collection element, but we also can get multiple collection elements, sorted, paged and apply typical collection actions.
+
+We can get all supported oils for a car *cce05bee-386b-11e5-a151-feff819cdc9f*, it is as simple as::
+
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+
+We can also get sorted items::
+
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?sort_by=type&order=asc
+
+We can ask API_ to return the first 10 oils for car *cce05bee-386b-11e5-a151-feff819cdc9f*::
+
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?number_of_elements=10
+
+API_ can support also pagination::
+
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=3&number_of_elements=2
+
+Above request is telling API_ that returns the page 3 of all oils of car *cce05bee-386b-11e5-a151-feff819cdc9f* and it has to shown 2 oils per page. If we want to go to next page::
+
+  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=4&number_of_elements=2
+
+All those features are supported by **query parameters**.
+
+Common mistake
+==============
+
+First time I tried to design a API_ REST_ I designed an API_, but REST_.
+
+My main mistake was the URLs_ design, I added my own *verbs* skipping HTTP_ *verbs*.
+
+For example::
+
+	POST	http://example.com/api/cars/ford-focus/delete-oil/5W30
+
+The right::
+
+	DELETE	http://example.com/api/cars/ford-focus/oils/5W30
+
+
+Video Tutorials
+===============
+
+These 2 videos help me to understand REST_ URLs_, I encourage you to watch them full:
 
 .. youtube:: NjpKwiRORI4
 .. youtube:: gYKJqUZXuBw
 
 
-.. _API: https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones
-.. _APIs: https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones
-.. _REST: https://es.wikipedia.org/wiki/Representational_State_Transfer
-.. _URL: https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme
-.. _URLs: https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme
-.. _HTTP: https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol
-.. _CRUD: https://es.wikipedia.org/wiki/CRUD
+.. _API: https://en.wikipedia.org/wiki/Application_programming_interface
+.. _APIs: https://en.wikipedia.org/wiki/Application_programming_interface
+.. _REST: https://en.wikipedia.org/wiki/Representational_state_transfer
+.. _URL: https://en.wikipedia.org/wiki/Uniform_resource_locator
+.. _URLs: https://en.wikipedia.org/wiki/Uniform_resource_locator
+.. _HTTP: https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
+.. _CRUD: https://en.wikipedia.org/wiki/CRUD
 .. _`REST Tutorial`: http://www.restapitutorial.com/
-.. _UUID: https://es.wikipedia.org/wiki/Universally_unique_identifier
-.. _JSON: https://es.wikipedia.org/wiki/JSON
-.. _XML: https://es.wikipedia.org/wiki/XML
+.. _UUID: https://en.wikipedia.org/wiki/Universally_unique_identifier
+.. _JSON: https://en.wikipedia.org/wiki/JSON
+.. _XML: https://en.wikipedia.org/wiki/XML
 
 .. [#] Create, Read, Update, Delete

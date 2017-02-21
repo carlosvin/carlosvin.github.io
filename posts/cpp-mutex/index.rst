@@ -1,32 +1,30 @@
 .. title: Mutex C++
 .. slug: cpp-mutex
 .. date: 2014/04/24 17:50:00
-.. tags: C++, pthread
 .. link: 
-.. description: Un capa que facilita el uso de los mutex de pthread en C++98 y una mejor solución en C++11_
+.. description: Ease pthread mutex C++98 and a better C++11 mutex solution
 .. type: text
 
-En `C++11`_ se han introducido muchas mejoras que nos ayudan a desarrollar sistemas multi-hilo. Voy a centrarme en los mutex_. 
+`C++11`_ has added many improvements to help us developing multi-thread systems. I'm going to talk about mutex_. 
 
-En las versiones anteriores a `C++11`_ una forma de obtener un mutex_ es el que nos proporciona la librería pthread_, pero para utilizarlo debíabos inicializarlo y destruirlo en estilo C_, en definitiva, tienes que hacer algo más que lock/unlock cada vez que trabajas con un mutex.
+In `previous C++11 compiler versions`_, we can get a pthread_ mutex_, but we must initialize and destroy in C_ style; in the end you must do more things than just lock/unlock.
 
-`C++11`_ nos proporciona una `clase mutex`_, que nos abstrae de cosas que no son lock/unclock. Os recomiendo que echéis un vistazo y veáis lo limpio que queda el código: `Clase mutex de C++11`_.
+`C++11`_ provides `mutex class`_, we just lock/unclock the object. I recommend you take a look at `C++11 mutex class`_.
 
-Si sigues trabajando con `versiones de compiladores previos a C++11`_, hace tiempo me hice un wrapper que te ayuda a abstraerte del mutex de pthread, lo dejo aquí abajo por si a alguien le resulta útil. 
+If you still work with `previous C++11 compiler versions`_, a time ago, I made a wrapper class that helps to work with pthread_ mutex_. You just lock/unlock the Mutex object.
 
-Abajo está un `Gist del Código`_, he vuelto a escribir el código de cabeza y puede ser que haya algún error, lo revisaré, pero lo importante es la idea de hacer una clase que envuelva la inicialización del mutex de pthread. 
+Then I leave my code proposal (`Gist code`_).
 
 .. TEASER_END
 
 .. gist:: 11257689
 
 
-
-.. _mutex: http://es.wikipedia.org/wiki/Exclusi%C3%B3n_mutua_(inform%C3%A1tica)
-.. _`C++11`: http://es.wikipedia.org/wiki/C%2B%2B11
+.. _mutex: http://en.wikipedia.org/wiki/Mutex
+.. _`C++11`: http://en.wikipedia.org/wiki/C%2B%2B11
 .. _C: http://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)
-.. _`clase mutex`: http://es.cppreference.com/w/cpp/thread/mutex
-.. _`clase mutex de C++11`: http://es.cppreference.com/w/cpp/thread/mutex
+.. _`mutex class`: http://en.cppreference.com/w/cpp/thread/mutex
+.. _`C++11 mutex class`: http://en.cppreference.com/w/cpp/thread/mutex
 .. _pthread: http://en.wikipedia.org/wiki/POSIX_Threads
-.. _`versiones de compiladores previos a C++11`: http://clang.llvm.org/cxx_status.html
-.. _`Gist del Código`: https://gist.github.com/carlosvin/11257689
+.. _`previous C++11 compiler versions`: http://clang.llvm.org/cxx_status.html
+.. _`Gist code`: https://gist.github.com/carlosvin/11257689

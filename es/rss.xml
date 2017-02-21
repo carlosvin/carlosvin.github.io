@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Carlos says "bla bla"</title><link>https://carlosvin.github.io/</link><description>Qué está pasando por mi cabeza y alrededores</description><atom:link rel="self" type="application/rss+xml" href="https://carlosvin.github.io/es/rss.xml"></atom:link><language>es</language><lastBuildDate>Tue, 21 Feb 2017 17:47:10 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Contenedores Docker multi-dominio</title><link>https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;div class="contents topic" id="contenido"&gt;
+&lt;p class="topic-title first"&gt;Contenido&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#caso-de-uso" id="id1"&gt;Caso de Uso&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#como-configurar-un-proxy-inverso-multi-dominio" id="id2"&gt;Cómo configurar un Proxy Inverso Multi-Dominio&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#estructura-del-proyecto-de-ejemplo" id="id3"&gt;Estructura del proyecto de ejemplo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#configuracion-de-la-arquitectura-docker-compose" id="id4"&gt;Configuración de la arquitectura (docker-compose)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#configuracion-de-la-imagen-de-la-aplicacion" id="id5"&gt;Configuración de la imágen de la aplicación&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#anadiendo-los-nombres-de-dominio-a-tu-configuracion" id="id6"&gt;Añadiendo los nombres de dominio a tu configuración&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#todo-listo" id="id7"&gt;¡Todo listo!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="caso-de-uso"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#id1"&gt;Caso de Uso&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Tenemos varias aplicaciones servidoras a la vez en un mismo entorno de desarrollo, cada una encapsulada en un contenedor, llamémosles de ahora en adelante "Contenedor A" y "Contenedor B".&lt;/p&gt;
+&lt;p&gt;Utilizando docker estas aplicaciones tienen la misma dirección IP en nuestra máquina, una forma de distinguirlas es cambiando el puerto que exponen.&lt;/p&gt;
+&lt;div class="figure"&gt;
+&lt;a class="reference external image-reference" href="https://carlosvin.github.io/galleries/docker-multidomain/ip.png"&gt;&lt;img alt="/galleries/docker-multidomain/ip.thumbnail.png" src="https://carlosvin.github.io/galleries/docker-multidomain/ip.thumbnail.png"&gt;&lt;/a&gt;
+&lt;p class="caption"&gt;Aplicaciones exponiendo la misma dirección IP utilizando diferentes puertos para diferenciar las aplicaciones&lt;/p&gt;
+&lt;/div&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Si queremos llamar a la "aplicación A" haremos algo así: GET &lt;a class="reference external" href="http://10.20.30.40:8080/colors/red"&gt;http://10.20.30.40:8080/colors/red&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Si queremos llamar a la "aplicación B" haremos algo así: GET &lt;a class="reference external" href="http://10.20.30.40:8081/fruits/tomato"&gt;http://10.20.30.40:8081/fruits/tomato&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Pero esto es un poco confuso, ¿8080 sigfica que accedemos a las "aplicación A" y 8081 significa "aplicación B"?&lt;/p&gt;
+&lt;p&gt;Sería mucho más sencillo de recordar algo así:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Si queremos llamar a la "aplicación A" haremos algo así: GET &lt;a class="reference external" href="http://a.domain.com/colors/red"&gt;http://a.domain.com/colors/red&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Si queremos llamar a la "aplicación B" haremos algo así: GET &lt;a class="reference external" href="http://b.domain.com/fruits/tomato"&gt;http://b.domain.com/fruits/tomato&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="figure"&gt;
+&lt;a class="reference external image-reference" href="https://carlosvin.github.io/galleries/docker-multidomain/domain.png"&gt;&lt;img alt="/galleries/docker-multidomain/domain.thumbnail.png" src="https://carlosvin.github.io/galleries/docker-multidomain/domain.thumbnail.png"&gt;&lt;/a&gt;
+&lt;p class="caption"&gt;Diferenciando aplicaciones por nombre de dominio&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Obtener este valor semántico extra es más sencillo de lo que parece.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="como-configurar-un-proxy-inverso-multi-dominio"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#id2"&gt;Cómo configurar un Proxy Inverso Multi-Dominio&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Dije que era fácil porque no vamos a tener que hacer casi nada, ya que otro contenedor hará casi todo el trabajo por nosotros. Vamos a utilizar &lt;a class="reference external" href="https://github.com/jwilder/nginx-proxy"&gt;nginx-proxy&lt;/a&gt;, que generará automáticamente las configuraciones necesarias para &lt;a class="reference external" href="https://www.nginx.com"&gt;NGINX&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Nota&lt;/p&gt;
+&lt;p class="last"&gt;Puedes descargar el ejemplo completo desde: &lt;a class="reference external" href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain"&gt;https://github.com/carlosvin/docker-reverse-proxy-multi-domain&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Así que al final no tendremos 2 contenedores, sino también tendremos un tercero que hará las veces de proxy.&lt;/p&gt;
+&lt;div class="figure"&gt;
+&lt;a class="reference external image-reference" href="https://carlosvin.github.io/galleries/docker-multidomain/proxy.png"&gt;&lt;img alt="/galleries/docker-multidomain/proxy.thumbnail.png" src="https://carlosvin.github.io/galleries/docker-multidomain/proxy.thumbnail.png"&gt;&lt;/a&gt;
+&lt;p class="caption"&gt;Los 2 contenedores y el proxy&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="estructura-del-proyecto-de-ejemplo"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#id3"&gt;Estructura del proyecto de ejemplo&lt;/a&gt;&lt;/h3&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;docker-compose.yaml (Archivo con la configuración descrita en la imágen previa)&lt;/li&gt;
+&lt;li&gt;a (Directorio para la aplicación A)&lt;ul&gt;
+&lt;li&gt;Dockerfile (Archivo con la configuración del contenedor A)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;b (Directorio para la aplicación B)&lt;ul&gt;
+&lt;li&gt;Dockerfile (Archivo con la configuración del contenedor B)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://carlosvin.github.io/listings/docker-reverse-proxy-multi-domain"&gt;Ver proyecto&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuracion-de-la-arquitectura-docker-compose"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#id4"&gt;Configuración de la arquitectura (docker-compose)&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;La parte más importante es la configuración de las relaciones entre los contenedores.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://carlosvin.github.io/listings/docker-reverse-proxy-multi-domain/docker-compose.yaml.html"&gt;docker-reverse-proxy-multi-domain/docker-compose.yaml&lt;/a&gt;  &lt;a class="reference external" href="https://carlosvin.github.io/listings/docker-reverse-proxy-multi-domain/docker-compose.yaml"&gt;(Código fuente)&lt;/a&gt;&lt;/p&gt;
+&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-1"&gt; 1&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-2"&gt; 2&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-3"&gt; 3&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-4"&gt; 4&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-5"&gt; 5&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-6"&gt; 6&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-7"&gt; 7&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-8"&gt; 8&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-9"&gt; 9&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-10"&gt;10&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-11"&gt;11&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-12"&gt;12&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-13"&gt;13&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-14"&gt;14&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-15"&gt;15&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-16"&gt;16&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-17"&gt;17&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-18"&gt;18&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-19"&gt;19&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-20"&gt;20&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-21"&gt;21&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-22"&gt;22&lt;/a&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre class="code yaml"&gt;&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-1"&gt;&lt;/a&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;a&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-2"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;build&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;a&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-3"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;environment&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-4"&gt;&lt;/a&gt;    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;VIRTUAL_HOST&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;a.domain.com&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-5"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;restart&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;always&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-6"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-7"&gt;&lt;/a&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;b&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-8"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;build&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;b&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-9"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;environment&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-10"&gt;&lt;/a&gt;    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;VIRTUAL_HOST&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;b.domain.com&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-11"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;restart&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;always&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-13"&gt;&lt;/a&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;nginx-proxy&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-14"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;image&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;jwilder/nginx-proxy&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-15"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;ports&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-16"&gt;&lt;/a&gt;    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"80:80"&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-17"&gt;&lt;/a&gt;    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="s"&gt;"443:443"&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-18"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;volumes&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-19"&gt;&lt;/a&gt;    &lt;span class="p p-Indicator"&gt;-&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;/var/run/docker.sock:/tmp/docker.sock:ro&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-21"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;restart&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;always&lt;/span&gt;
+&lt;a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-22"&gt;&lt;/a&gt;  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;privileged&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ul class="simple"&gt;
+&lt;li&gt;En la línea 4 y 10 es donde configuramos el nombre de dominio que queremos utilizar para cada aplicación.&lt;/li&gt;
+&lt;li&gt;A partir de la línea 13 configuramos el proxy (esta es la parte de copiar y pegar).&lt;/li&gt;
+&lt;li&gt;En la línea 2 y 8 estamos indicando a docker-compose que tiene que construir las imágenes dentro del directorio indicado. Por ejemplo, en la línea 2, estamos indicando que docker-compose tiene que construir la imágen docker utilizando ./a/Dockerfile.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuracion-de-la-imagen-de-la-aplicacion"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#id5"&gt;Configuración de la imágen de la aplicación&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;A continuación vamos a comentar la configuración de la imágen del contenedor para la aplicación A.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://carlosvin.github.io/listings/docker-reverse-proxy-multi-domain/a/Dockerfile.html"&gt;docker-reverse-proxy-multi-domain/a/Dockerfile&lt;/a&gt;  &lt;a class="reference external" href="https://carlosvin.github.io/listings/docker-reverse-proxy-multi-domain/a/Dockerfile"&gt;(Código fuente)&lt;/a&gt;&lt;/p&gt;
+&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_63a9728999ec44979658322c858971c4-1"&gt;1&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_63a9728999ec44979658322c858971c4-2"&gt;2&lt;/a&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre class="code docker"&gt;&lt;a name="rest_code_63a9728999ec44979658322c858971c4-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; httpd:2.4&lt;/span&gt;
+&lt;a name="rest_code_63a9728999ec44979658322c858971c4-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;&amp;lt;h1&amp;gt;A&amp;lt;/h1&amp;gt;App A works!&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;"&lt;/span&gt; &amp;gt; /usr/local/apache2/htdocs/index.html
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;Línea 1: Importamos una imágen con un servidor apache.&lt;/p&gt;
+&lt;p&gt;Línea 2: Servimos un archivo que muestra "Host A" como página por defecto.&lt;/p&gt;
+&lt;p&gt;La configuración para la aplicación B, es prácticamente la misma:&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://carlosvin.github.io/listings/docker-reverse-proxy-multi-domain/b/Dockerfile.html"&gt;docker-reverse-proxy-multi-domain/b/Dockerfile&lt;/a&gt;  &lt;a class="reference external" href="https://carlosvin.github.io/listings/docker-reverse-proxy-multi-domain/b/Dockerfile"&gt;(Código fuente)&lt;/a&gt;&lt;/p&gt;
+&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_78fba776211b47a4a1ae1d8be40c4192-1"&gt;1&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_78fba776211b47a4a1ae1d8be40c4192-2"&gt;2&lt;/a&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre class="code docker"&gt;&lt;a name="rest_code_78fba776211b47a4a1ae1d8be40c4192-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; httpd:2.4&lt;/span&gt;
+&lt;a name="rest_code_78fba776211b47a4a1ae1d8be40c4192-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;RUN&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;&amp;lt;h1&amp;gt;B&amp;lt;/h1&amp;gt;App B works!&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;"&lt;/span&gt; &amp;gt; /usr/local/apache2/htdocs/index.html
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;
+&lt;div class="section" id="anadiendo-los-nombres-de-dominio-a-tu-configuracion"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#id6"&gt;Añadiendo los nombres de dominio a tu configuración&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;En Linux simplemente tenemos mapear la dirección local a los nombres de dominio que hayas elegido, en nuestro ejemplo es a.domain.com y b.domain.com.&lt;/p&gt;
+&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-1"&gt;1&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-2"&gt;2&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-3"&gt;3&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-4"&gt;4&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-5"&gt;5&lt;/a&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre class="code bash"&gt;&lt;a name="rest_code_067768312e59486ab6a3db2c6f4faa04-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;#/etc/hosts&lt;/span&gt;
+&lt;a name="rest_code_067768312e59486ab6a3db2c6f4faa04-2"&gt;&lt;/a&gt;&lt;span class="m"&gt;127&lt;/span&gt;.0.0.1             localhost.localdomain localhost
+&lt;a name="rest_code_067768312e59486ab6a3db2c6f4faa04-3"&gt;&lt;/a&gt;::1                 localhost6.localdomain6 localhost6
+&lt;a name="rest_code_067768312e59486ab6a3db2c6f4faa04-4"&gt;&lt;/a&gt;&lt;span class="m"&gt;127&lt;/span&gt;.0.0.1   a.domain.com
+&lt;a name="rest_code_067768312e59486ab6a3db2c6f4faa04-5"&gt;&lt;/a&gt;&lt;span class="m"&gt;127&lt;/span&gt;.0.0.1   b.domain.com
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;Simplemente he añadido las líneas 4 y 5.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="todo-listo"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#id7"&gt;¡Todo listo!&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Ya solo nos queda probar el ejemplo.&lt;/p&gt;
+&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_654020bc94f04fe79f5b086bcb397829-1"&gt;1&lt;/a&gt;
+&lt;a href="https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/#rest_code_654020bc94f04fe79f5b086bcb397829-2"&gt;2&lt;/a&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre class="code bash"&gt;&lt;a name="rest_code_654020bc94f04fe79f5b086bcb397829-1"&gt;&lt;/a&gt;docker-compose build
+&lt;a name="rest_code_654020bc94f04fe79f5b086bcb397829-2"&gt;&lt;/a&gt;docker-compose up
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;Ya están las tres contenedores arrancados.&lt;/p&gt;
+&lt;p&gt;Ahora podemos abrir nuestro navegador y escribir a.domain.com y nos mostrará el texto &lt;em&gt;App A works!&lt;/em&gt;. Si escribimos b.domain.com entonces veremos &lt;em&gt;App B works!&lt;/em&gt;.&lt;/p&gt;
+&lt;div class="figure"&gt;
+&lt;a class="reference external image-reference" href="https://carlosvin.github.io/galleries/docker-multidomain/a.screenshot.png"&gt;&lt;img alt="/galleries/docker-multidomain/a.screenshot.thumbnail.png" src="https://carlosvin.github.io/galleries/docker-multidomain/a.screenshot.thumbnail.png"&gt;&lt;/a&gt;
+&lt;p class="caption"&gt;a.domain.com en el navegador&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="figure"&gt;
+&lt;a class="reference external image-reference" href="https://carlosvin.github.io/galleries/docker-multidomain/b.screenshot.png"&gt;&lt;img alt="/galleries/docker-multidomain/b.screenshot.thumbnail.png" src="https://carlosvin.github.io/galleries/docker-multidomain/b.screenshot.thumbnail.png"&gt;&lt;/a&gt;
+&lt;p class="caption"&gt;b.domain.com en el navegador&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Nota&lt;/p&gt;
+&lt;p class="last"&gt;En la mayoría de distribuciones Linux necesitarás privilegios para ejecutar los comandos docker (sudo).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>Docker</category><category>Microservices</category><guid>https://carlosvin.github.io/es/posts/reverse-proxy-multidomain-docker/</guid><pubDate>Thu, 24 Nov 2016 20:00:00 GMT</pubDate></item><item><title>Comparación frameworks REST para RUST</title><link>https://carlosvin.github.io/es/posts/rust-rest-framework-comparison/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Estoy empezando a hacer mis primeros pinitos con &lt;a class="reference external" href="https://www.rust-lang.org/"&gt;Rust&lt;/a&gt;, es un lenguage de programación que promete ser tan rápido como &lt;a class="reference external" href="https://en.wikipedia.org/wiki/C%2B%2B"&gt;C/C++&lt;/a&gt;, pero más seguro en cuanto a la gestión de memoria ser refiere. Básicamente, no permite al programador hacer "cosas malas" con la memoria como: olvidarse de liberar la memoria que no se va a utilizar o liberar memoria que no es tuya. En estos casos, &lt;a class="reference external" href="https://www.rust-lang.org/"&gt;Rust&lt;/a&gt; simplemente no compilará.&lt;/p&gt;
+&lt;p&gt;Para aprender he pensado en hacer algún pequeño proyecto, tengo algunas ideas, pero todas pasan por ofrecer una &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt;, así que me he puesto a buscar frameworks que me faciliten esta tarea y me he llevado una grata sorpresa al encontrar una muy &lt;a class="reference external" href="https://github.com/flosse/rust-web-framework-comparison"&gt;buena comparativa con el estado de los frameworks REST para Rust&lt;/a&gt;, a continuación os dejo el enlace:&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://github.com/flosse/rust-web-framework-comparison"&gt;https://github.com/flosse/rust-web-framework-comparison&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Frameworks</category><category>Programming Languages</category><category>REST</category><category>Rustlang</category><guid>https://carlosvin.github.io/es/posts/rust-rest-framework-comparison/</guid><pubDate>Thu, 14 Apr 2016 18:40:00 GMT</pubDate></item><item><title>Convertir archivos en formato Windows a formato Unix</title><link>https://carlosvin.github.io/es/posts/recursive-dos-unix/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Si alguna vez has programado desde un entorno Windows para entornos Unix, seguramente habrás tenido este problema: Los archivos que instalas en tu entorno Unix tienen formato Windows.&lt;/p&gt;
+&lt;p&gt;Hay un forma bastante sencilla de convertir todos los archivos que tienes en un directorio de formato Windows a Unix.&lt;/p&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_9a0decc09f804cf0aaf401dfe3accefa-1"&gt;&lt;/a&gt;find . -type f -print0 &lt;span class="p"&gt;|&lt;/span&gt; xargs -0 dos2unix
+&lt;/pre&gt;&lt;p&gt;Lo he sacado, como no, de &lt;a class="reference external" href="http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory"&gt;http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Unix</category><category>Useful Commands</category><category>Windows</category><guid>https://carlosvin.github.io/es/posts/recursive-dos-unix/</guid><pubDate>Fri, 12 Feb 2016 09:34:00 GMT</pubDate></item><item><title>Creando REST URLs</title><link>https://carlosvin.github.io/es/posts/rest-urls/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Las primeras veces que me puse a diseñar una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; con ejemplos.&lt;/p&gt;
+&lt;div class="contents topic" id="indice"&gt;
+&lt;p class="topic-title first"&gt;Índice&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#fundamentos-rest" id="id3"&gt;Fundamentos REST&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#verbos-rest" id="id4"&gt;Verbos REST&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#acceso-a-recursos" id="id5"&gt;Acceso a Recursos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#modificar-recursos" id="id6"&gt;Modificar Recursos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#borrar-recursos" id="id7"&gt;Borrar Recursos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#crear-recursos" id="id8"&gt;Crear Recursos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#colecciones" id="id9"&gt;Colecciones&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#anadir-un-elemento-a-la-coleccion" id="id10"&gt;Añadir un elemento a la colección&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#modificar-un-elemento-de-la-coleccion" id="id11"&gt;Modificar un elemento de la colección&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#borrar-un-elemento-de-la-coleccion" id="id12"&gt;Borrar un elemento de la colección&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#leer-un-elemento-de-la-coleccion" id="id13"&gt;Leer un elemento de la colección&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#listar-elementos-de-la-coleccion" id="id14"&gt;Listar elementos de la colección&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#tipico-error" id="id15"&gt;Típico error&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#video-tutoriales" id="id16"&gt;Video Tutoriales&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="fundamentos-rest"&gt;
+&lt;h2&gt;Fundamentos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Utilizamos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; para acceder a recursos.&lt;/li&gt;
+&lt;li&gt;Utilizamos &lt;em&gt;verbos&lt;/em&gt; para modificar recursos.&lt;/li&gt;
+&lt;li&gt;Nuestros &lt;em&gt;verbos&lt;/em&gt; están proporcionados por el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Los &lt;em&gt;verbos&lt;/em&gt; tienen un equivalente directo con las operaciones &lt;a class="reference external" href="https://es.wikipedia.org/wiki/CRUD"&gt;CRUD&lt;/a&gt; &lt;a class="footnote-reference" href="https://carlosvin.github.io/es/posts/rest-urls/#id2" id="id1"&gt;[1]&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Para acceder a un recurso existente necesitamos su identificador.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="section" id="verbos-rest"&gt;
+&lt;h3&gt;Verbos &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/h3&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;POST&lt;/dt&gt;
+&lt;dd&gt;(&lt;strong&gt;C&lt;/strong&gt;) Utilizado para &lt;strong&gt;crear&lt;/strong&gt; nuevos recursos.&lt;/dd&gt;
+&lt;dt&gt;GET&lt;/dt&gt;
+&lt;dd&gt;(&lt;strong&gt;R&lt;/strong&gt;) Utilizado para &lt;strong&gt;leer&lt;/strong&gt; un recursos existentes en el sistema.&lt;/dd&gt;
+&lt;dt&gt;PUT&lt;/dt&gt;
+&lt;dd&gt;(&lt;strong&gt;U&lt;/strong&gt;) Utilizado para &lt;strong&gt;actualizar&lt;/strong&gt; recursos existentes.&lt;/dd&gt;
+&lt;dt&gt;DELETE&lt;/dt&gt;
+&lt;dd&gt;(&lt;strong&gt;D&lt;/strong&gt;) Utilizado para &lt;strong&gt;borrar&lt;/strong&gt; recursos existentes.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;En una tabla quedará más claro&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="23%"&gt;
+&lt;col width="26%"&gt;
+&lt;col width="51%"&gt;
+&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;Verbo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Acción &lt;a class="reference external" href="https://es.wikipedia.org/wiki/CRUD"&gt;CRUD&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Debe exisitir el recurso&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;POST&lt;/td&gt;
+&lt;td&gt;Crear&lt;/td&gt;
+&lt;td&gt;No&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;GET&lt;/td&gt;
+&lt;td&gt;Leer&lt;/td&gt;
+&lt;td&gt;Sí&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;PUT&lt;/td&gt;
+&lt;td&gt;Actualizar&lt;/td&gt;
+&lt;td&gt;Sí&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;DELETE&lt;/td&gt;
+&lt;td&gt;Borrar&lt;/td&gt;
+&lt;td&gt;Sí&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class="section" id="acceso-a-recursos"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id5"&gt;Acceso a Recursos&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Un recurso es &lt;em&gt;a lo que quieres acceder&lt;/em&gt;. Por ejemplo, un coche.&lt;/p&gt;
+&lt;p&gt;Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;De esta forma el dependiente sabe cuál es y te puede dar la información.&lt;/p&gt;
+&lt;p&gt;"Fiat Bravo 1.9 Emotion 120CV" es nuestro &lt;strong&gt;identificador&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Trasladando el ejemplo a las &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;APIs&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET   http://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
+&lt;/pre&gt;
+&lt;p&gt;De esta forma nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; nos puede proporcionar información del coche.&lt;/p&gt;
+&lt;p&gt;Esto es un ejemplo muy simplificado, pero realmente cuando accedemos a un recurso concreto solemos utilizar algo que lo identifique de forma unívoca. Una práctica común y recomendable es utilizar &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Universally_unique_identifier"&gt;UUID&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+&lt;/pre&gt;
+&lt;p&gt;Pero nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, al igual que una tienda, no tiene por qué ser tan estricta, podemos preguntar por los coches que tienen ciertas caracteríticas, podemos ir al concesionario y decir:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Hola buenos días, quiero un Fiat Bravo&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Y el dependiente, amablemente, te mostrará todos los Fiat Bravo que tiene. Veamos cómo podemos decir esto a nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET  http://tiendadecoches.es/api/coches/?marca=fiat&amp;amp;modelo=bravo
+&lt;/pre&gt;
+&lt;p&gt;Nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; nos devolverá todos los coches que son marca Fiat y modelo Bravo.&lt;/p&gt;
+&lt;p&gt;Marca y modelo en este caso son lo que llamamos &lt;strong&gt;parámetros de consulta&lt;/strong&gt; (query parameters).&lt;/p&gt;
+&lt;p&gt;Como os habréis dado cuenta durante el ejemplo, para obtener información de un recurso siempre hemos utilizado el &lt;em&gt;verbo&lt;/em&gt; &lt;strong&gt;GET&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="modificar-recursos"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id6"&gt;Modificar Recursos&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; también nos puede permitir modificar un recurso, al igual que para pedir información, para modificar un recurso necesitamos especificar qué recurso queremos modificar, así que necesitamos otra vez un &lt;em&gt;identificador&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo único que cambia es el verbo, queremos &lt;strong&gt;modificar&lt;/strong&gt; así que utilizamos el verbo equivalente que nos proporciona el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;: &lt;strong&gt;PUT&lt;/strong&gt;.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+&lt;/pre&gt;
+&lt;p&gt;Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.&lt;/p&gt;
+&lt;p&gt;Tenemos que enviar la nueva cilindrada a esta &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URL&lt;/a&gt;  &lt;a class="reference external" href="http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f"&gt;http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f&lt;/a&gt; por &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; utilizando el verbo &lt;strong&gt;PUT&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;El protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt; nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.&lt;/p&gt;
+&lt;p&gt;Podemos enviarlo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt; o &lt;a class="reference external" href="https://es.wikipedia.org/wiki/XML"&gt;XML&lt;/a&gt; o como queramos, solo tenemos que estar seguros de que el formato que enviamos es lo que espera recibir el servidor.&lt;/p&gt;
+&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Nota&lt;/p&gt;
+&lt;p class="last"&gt;Cuando definimos una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; tenemos que definir también el formato en que vamos a enviar los datos.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Ejemplo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+{ cilindrada: 100 }
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="borrar-recursos"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id7"&gt;Borrar Recursos&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Continuando con el ejemplo de los coches, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URL&lt;/a&gt; que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos &lt;strong&gt;borrar (DELETE)&lt;/strong&gt;.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+&lt;/pre&gt;
+&lt;p&gt;En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="crear-recursos"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id8"&gt;Crear Recursos&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+POST   http://tiendadecoches.es/api/coches/
+&lt;/pre&gt;
+&lt;p&gt;Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.&lt;/p&gt;
+&lt;p&gt;En nuestro ejemplo, queremos crear un coche, así que ponemos toda la información necesaria para crear un coche dentro de la llamada POST de &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;, algo muy parecido como hemos hecho en el apartado &lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#modificar-recursos"&gt;Modificar Recursos&lt;/a&gt;, pero en este caso mandamos &lt;strong&gt;toda la información necesaria&lt;/strong&gt;, no solo la cilindrada.&lt;/p&gt;
+&lt;p&gt;Ejemplo en &lt;a class="reference external" href="https://es.wikipedia.org/wiki/JSON"&gt;JSON&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+{
+"marca": "Fiat",
+"modelo": "Bravo"
+"anio": 2010
+"puertas": 5,
+"cilindrada": 120,
+"version": "Emotion",
+"climatizador": true,
+"ac": false,
+"fuel": "Diesel"
+}
+&lt;/pre&gt;
+&lt;p&gt;Podemos delegar en el sistema, para que cuando pidamos la creación de un recurso nuevo, nos asigne un nuevo &lt;strong&gt;identificador&lt;/strong&gt;, o simplemente enviarlo con el resto de información:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+{
+"identificador": "cce05bee-386b-11e5-a151-feff819cdc9f"
+"marca": "Fiat",
+"modelo": "Bravo"
+"anio": 2010
+"puertas": 5,
+"cilindrada": 120,
+"version": "Emotion",
+"climatizador": true,
+"ac": false,
+"fuel": "Diesel"
+}
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="colecciones"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id9"&gt;Colecciones&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Algo que no quiero pasar por alto, porque al menos para mí no fue obvio, es el manejo de colecciones. Realmente ya está explicado, porque todas las acciones que hemos visto previamente sobre los coches, estaba aplicando realmente a una colección de coches.&lt;/p&gt;
+&lt;p&gt;Pero, ¿qué pasa si un recurso tiene a su vez una colección? Siguiendo con los coches, un coche puede tener una lista de aceites con los que puede funcionar, así que nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; debería permitir obtener, modificar, borrar o crear elementos en la lista.&lt;/p&gt;
+&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Nota&lt;/p&gt;
+&lt;p class="last"&gt;Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="anadir-un-elemento-a-la-coleccion"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id10"&gt;Añadir un elemento a la colección&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Si queremos añadir un elemento a la colección de coches lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de &lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#crear-recursos"&gt;Crear Recursos&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+
+{
+"tipo": "5W30",
+"otros_datos": "este es el mejor del mundo para este coche"
+}
+&lt;/pre&gt;
+&lt;p&gt;Si queremos añadir otro aceite:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+
+{
+"tipo": "10W30",
+"otros_datos": "otras cosas sobre aceites de coche",
+}
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="modificar-un-elemento-de-la-coleccion"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id11"&gt;Modificar un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Si queremos modificar los datos del aceite &lt;em&gt;5W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
+
+{
+"tipo": "5W30",
+"otros_datos": "este ya no es el mejor del mundo para este coche"
+}
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="borrar-un-elemento-de-la-coleccion"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id12"&gt;Borrar un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Para borrar un aceite &lt;em&gt;10W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="leer-un-elemento-de-la-coleccion"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id13"&gt;Leer un elemento de la colección&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Para obtener la información del aceite &lt;em&gt;10W30&lt;/em&gt; del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="listar-elementos-de-la-coleccion"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id14"&gt;Listar elementos de la colección&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Como hemos visto en &lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/rest-urls/#leer-un-elemento-de-la-coleccion"&gt;Leer un elemento de la colección&lt;/a&gt;, podemos obtener información de cualquier elemento de la colección, pero también podemos obtener varios elementos de la colección, ordenarlos, paginarlos y aplicar cualquier tipo de acciones típicas de una colección.&lt;/p&gt;
+&lt;p&gt;Podemos obtener todos los aceites soportados por el coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;, es tan simple como:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+&lt;/pre&gt;
+&lt;p&gt;Pero también podemos proporcionar otras funcionalidades en nuestra &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, como obtener los resultados ordenados:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&amp;amp;orden=ascendente
+&lt;/pre&gt;
+&lt;p&gt;Podemos pedir al &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; que nos devuelva los 10 primeros aceites del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
+&lt;/pre&gt;
+&lt;p&gt;Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&amp;amp;numero_de_elementos=3
+&lt;/pre&gt;
+&lt;p&gt;En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche &lt;em&gt;cce05bee-386b-11e5-a151-feff819cdc9f&lt;/em&gt; y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&amp;amp;numero_de_elementos=3
+&lt;/pre&gt;
+&lt;p&gt;Todas estas funcionalidades, son posibles gracias a los &lt;strong&gt;parámetros de consulta&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="tipico-error"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id15"&gt;Típico error&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;La primera vez que intenté diseñar un &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt; &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt; lo que hice fué otra cosa, era una &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones"&gt;API&lt;/a&gt;, pero no &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer"&gt;REST&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Mi principal error fue en la construción de las &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt;, incluí &lt;em&gt;verbos&lt;/em&gt; sin tener en cuenta que los verbos ya me los proporcionaba el protocolo &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol"&gt;HTTP&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Por ejemplo, creaba &lt;a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme"&gt;URLs&lt;/a&gt; del tipo:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+POST    http://example.com/api/coches/seat-ibiza/borrar-rueda/3
+&lt;/pre&gt;
+&lt;p&gt;Cuando lo correcto sería&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="video-tutoriales"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id16"&gt;Video Tutoriales&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:&lt;/p&gt;
+&lt;div class="youtube-video"&gt;
+&lt;iframe width="425" height="344" src="https://www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;
+&lt;/div&gt;&lt;div class="youtube-video"&gt;
+&lt;iframe width="425" height="344" src="https://www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;
+&lt;/div&gt;&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://carlosvin.github.io/es/posts/rest-urls/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Create, Read, Update, Delete&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>API</category><category>REST</category><category>Web Services</category><guid>https://carlosvin.github.io/es/posts/rest-urls/</guid><pubDate>Sun, 16 Aug 2015 12:00:00 GMT</pubDate></item><item><title>Gestión de dependencias C++: Biicode</title><link>https://carlosvin.github.io/es/posts/first-biicode-poco/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Hace tiempo que estoy interesado la construcción, gestión de dependencias, empaquetado y despliegue de proyectos software. Para &lt;a class="reference external" href="http://java.com/en/download/whatis_java.jsp"&gt;Java&lt;/a&gt;, &lt;a class="reference external" href="http://www.scala-lang.org/"&gt;Scala&lt;/a&gt;, &lt;a class="reference external" href="http://www.python.org/"&gt;Python&lt;/a&gt;, etc. Es bastante sencillo ya que hay herramientas como &lt;a class="reference external" href="http://maven.apache.org/"&gt;Maven&lt;/a&gt;, &lt;a class="reference external" href="http://www.gradle.org/"&gt;Gradle&lt;/a&gt;, &lt;a class="reference external" href="https://pypi.python.org/pypi/pip"&gt;pip&lt;/a&gt;, &lt;a class="reference external" href="http://www.scala-sbt.org/"&gt;Sbt&lt;/a&gt;, etc. Pero para C++_, lo más parecido que he encontrado es &lt;a class="reference external" href="http://maven.apache.org/"&gt;Maven&lt;/a&gt; con el plugin &lt;a class="reference external" href="http://maven-nar.github.io/"&gt;Nar&lt;/a&gt; o &lt;a class="reference external" href="http://www.gradle.org/"&gt;Gradle&lt;/a&gt; con su &lt;a class="reference external" href="https://gradle.org/docs/current/userguide/nativeBinaries.html"&gt;plugin cpp&lt;/a&gt; (que está en desarrollo).&lt;/p&gt;
+&lt;p&gt;Hace tiempo que conozco &lt;a class="reference external" href="https://www.biicode.org/"&gt;Biicode&lt;/a&gt;, pero no había sacado nunca tiempo para probarlo, hasta hoy.&lt;/p&gt;
+&lt;p&gt;El funcionamiento general es muy sencillo.&lt;/p&gt;
+&lt;p&gt;Necesitamos &lt;a class="reference external" href="http://docs.biicode.com/c++/installation.html"&gt;instalar biicode en nuestra máquina&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Yo he creado un pequeño ejemplo utilizando el sistema de log de la librería &lt;a class="reference external" href="http://pocoproject.org/"&gt;Poco&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;He ejecutado este comando para crear mi proyecto, al que he llamado bii_log. Eso sí, lo tengo que crear debajo de mi nombre de usuario en &lt;a class="reference external" href="https://www.biicode.org/"&gt;Biicode&lt;/a&gt;, por si posteriormente lo quiero publicar.&lt;/p&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_ec2e58a4b3ac402fbc4e49b782ba7b04-1"&gt;&lt;/a&gt;bii new carlovin/bii_log --hello&lt;span class="o"&gt;=&lt;/span&gt;cpp
+&lt;/pre&gt;&lt;p&gt;Se ha creado una estructura de directorios y ficheros con nuestro proyecto. Aunque los únicos ficheros que vamos a tocar son:&lt;/p&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_4a6a482d074a4725a05e0c3086817279-1"&gt;&lt;/a&gt;blocks/carlosvin/bii_log/main.cpp
+&lt;a name="rest_code_4a6a482d074a4725a05e0c3086817279-2"&gt;&lt;/a&gt;blocks/carlosvin/bii_log/biicode.conf
+&lt;/pre&gt;&lt;p&gt;En el fichero biicode.conf vamos a configurar nuestras dependencias, en nuestro caso la librería &lt;a class="reference external" href="http://pocoproject.org/"&gt;Poco&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="code yaml"&gt;&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Biicode configuration file&lt;/span&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-3"&gt;&lt;/a&gt;&lt;span class="p p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;requirements&lt;/span&gt;&lt;span class="p p-Indicator"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-4"&gt;&lt;/a&gt;    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;fenix/poco(develop)&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-6"&gt;&lt;/a&gt;&lt;span class="p p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;parent&lt;/span&gt;&lt;span class="p p-Indicator"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-7"&gt;&lt;/a&gt;        &lt;span class="l l-Scalar l-Scalar-Plain"&gt;carlosvin/bii_log&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-9"&gt;&lt;/a&gt;&lt;span class="p p-Indicator"&gt;[&lt;/span&gt;&lt;span class="nv"&gt;includes&lt;/span&gt;&lt;span class="p p-Indicator"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_f929639d1ec84e969d3c0bf99339e524-10"&gt;&lt;/a&gt;    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;Poco/*.h&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;fenix/poco/Foundation/include&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;En la sección [includes], estamos redefiniendo la ruta a nuestros ficheros de cabeceras, porque si no lo hiciéramos tendríamos que hacer algo así:&lt;/p&gt;
+&lt;pre class="code cpp"&gt;&lt;a name="rest_code_8b8dbd3e015b4b5db6f6e473200d21a6-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"fenix/poco/Foundation/include/Logger.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Gracias a esta línea, en nuestro código tendremos includes más claros como:&lt;/p&gt;
+&lt;pre class="code cpp"&gt;&lt;a name="rest_code_a4a9a76a09804dd38e235aac799bf42d-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"Poco/Logger.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Así de fácil, ya podemos utilizar la librería &lt;a class="reference external" href="http://pocoproject.org/"&gt;Poco&lt;/a&gt; en nuestro proyecto, por ejemplo:&lt;/p&gt;
+&lt;pre class="code cpp"&gt;&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"Poco/FileChannel.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-2"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"Poco/FormattingChannel.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-3"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"Poco/PatternFormatter.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-4"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"Poco/Logger.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-5"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"Poco/AutoPtr.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-6"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-9"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-10"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-11"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;Poco&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-13"&gt;&lt;/a&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-14"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;FileChannel&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-15"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"path"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"log/sample.log"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"rotation"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"100 K"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-17"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"archive"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"timestamp"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-18"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-19"&gt;&lt;/a&gt;        &lt;span class="c1"&gt;//AutoPtr&amp;lt;ConsoleChannel&amp;gt; pCons(new ConsoleChannel);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-20"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;PatternFormatter&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"pattern"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%Y-%m-%d %H:%M:%S %s: %t"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-22"&gt;&lt;/a&gt;        &lt;span class="n"&gt;AutoPtr&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pFC&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;FormattingChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pPF&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pChannel&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-23"&gt;&lt;/a&gt;        &lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;setChannel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pFC&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-24"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-25"&gt;&lt;/a&gt;        &lt;span class="n"&gt;Logger&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"TestChannel"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-26"&gt;&lt;/a&gt;        &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-27"&gt;&lt;/a&gt;                &lt;span class="n"&gt;poco_information&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"This is a info"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-28"&gt;&lt;/a&gt;                &lt;span class="n"&gt;poco_warning&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"This is a warning"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-29"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-30"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-31"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Para compilar el proyecto simplemente hay que ejecutar:&lt;/p&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_e7f62c77c5274209ae99b11500832125-1"&gt;&lt;/a&gt;bii cpp:build
+&lt;/pre&gt;&lt;p&gt;Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utilizado &lt;a class="reference external" href="http://pocoproject.org/"&gt;Poco&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_d7fd572852824633a27b100348519e93-1"&gt;&lt;/a&gt;bii publish
+&lt;/pre&gt;&lt;p&gt;Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi &lt;a class="reference external" href="https://eclipse.org"&gt;Eclipse&lt;/a&gt; con &lt;a class="reference external" href="https://eclipse.org/cdt/"&gt;CDT&lt;/a&gt; indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos.&lt;/p&gt;
+&lt;p&gt;También he leído un artículo sobre lo bien que se integra con &lt;a class="reference external" href="https://www.jetbrains.com/clion/"&gt;CLion&lt;/a&gt;: &lt;a class="reference external" href="http://blog.jetbrains.com/clion/2015/03/when-clion-met-biicode/"&gt;When CLion met biicode&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>Biicode</category><category>Build Automation Software</category><category>C++</category><category>Dependency Management</category><category>Poco</category><guid>https://carlosvin.github.io/es/posts/first-biicode-poco/</guid><pubDate>Thu, 14 May 2015 18:00:00 GMT</pubDate></item><item><title>Mantenimiento de Software</title><link>https://carlosvin.github.io/es/posts/software-maintenance/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Hace unos días en el trabajo tuve que rellenar un documento en el que debía indicar el tipo de mantenimiento que debía hacer y sólo tenía dos opciones: correctivo y adaptativo. Esto me extrañó, porque el cambio que yo quería hacer no terminaba de encajar en ninguno de los dos tipos.&lt;/p&gt;
+&lt;p&gt;Haciendo memoria sobre lo que había dado en mi primera asignatura de Ingeniería del Software, conseguí recordar tres tipos, pero me parecía que me faltaba un tipo.&lt;/p&gt;
+&lt;p&gt;Hoy por casualidad he encontrado mis apuntes de Ingeniería del Software y estos son los tipos de mantenimiento ordenados de más a menos porcentaje de tiempo dedicado.&lt;/p&gt;
+&lt;table class="docutils field-list" frame="void" rules="none"&gt;
+&lt;col class="field-name"&gt;
+&lt;col class="field-body"&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Perfectivo:&lt;/th&gt;&lt;td class="field-body"&gt;Actividades para mejorar o añadir nuevas funcionalidades requeridas por el usuario.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Adaptativo:&lt;/th&gt;&lt;td class="field-body"&gt;Actividades para adaptar el sistema a los cambios en su entorno tecnológico (Hardware o software).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Correctivo:&lt;/th&gt;&lt;td class="field-body"&gt;Corregir defectos en el hardware o software detectados por el usuario durante la explotación del sistema.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class="field"&gt;&lt;th class="field-name"&gt;Preventivo:&lt;/th&gt;&lt;td class="field-body"&gt;Actividades para facilitar el mantenimiento del futuro sistema.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;</description><category>Software Engineering</category><category>Software Maintenance</category><guid>https://carlosvin.github.io/es/posts/software-maintenance/</guid><pubDate>Sat, 11 Oct 2014 19:00:00 GMT</pubDate></item><item><title>Construir un proyecto C++ con Gradle</title><link>https://carlosvin.github.io/es/posts/gradle-cpp/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div class="section" id="introduccion"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/gradle-cpp/#id7"&gt;Introducción&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;La construcción, gestión de dependencias y distribución de mis proyectos es algo que cada vez me preocupa más, me gustaría encontrar una herramienta que unificara este proceso y fuese independiente del lenguaje, lo más parecido con lo que he trabajado ha sido &lt;a class="reference external" href="http://www.scons.org"&gt;SCons&lt;/a&gt;, &lt;a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction"&gt;Autotools&lt;/a&gt;, &lt;a class="reference external" href="http://ant.apache.org"&gt;Ant&lt;/a&gt;, &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt; y últimamente &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Llevo un tiempo haciendo algunas cosas con &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;, pero siempre centrado en proyectos &lt;a class="reference external" href="http://www.java.com"&gt;Java&lt;/a&gt; utilizándolo como reemplazo a &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt;, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos &lt;a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html"&gt;Android&lt;/a&gt; y he sufrido la pareja &lt;a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html"&gt;Android Studio + Gradle&lt;/a&gt; en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.&lt;/p&gt;
+&lt;p&gt;Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-C con &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt; se encuentra en fase de &lt;a class="reference external" href="http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating"&gt;incubación&lt;/a&gt;, aunque ya permite hacer algunas tareas avanzadas como:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.&lt;/li&gt;
+&lt;li&gt;Gestionar las dependencias entre estos artefactos (sin versiones).&lt;/li&gt;
+&lt;li&gt;Generar distintos “sabores” de aplicaciones, por ejemplo: podremos generar una aplicación “Community” y otra con más características habilitadas llamada “Enterprise”.&lt;/li&gt;
+&lt;li&gt;Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas ( &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas"&gt;Toolchains&lt;/a&gt; ) que tengamos instaladas en la máquina de compilación.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Como decía todavía tiene limitaciones, aunque están trabajando en ello y &lt;a class="reference external" href="http://www.gradleware.com/resources/cpp/"&gt;si consiguen lo que tienen planeado&lt;/a&gt; dejaré &lt;a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction"&gt;Autotools&lt;/a&gt; (me arrepentiré de haber dicho esto).&lt;/p&gt;
+&lt;div class="contents topic" id="indice"&gt;
+&lt;p class="topic-title first"&gt;índice&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#introduccion" id="id7"&gt;Introducción&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#un-caso-practico" id="id8"&gt;Un caso práctico&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#estructura-del-proyecto" id="id9"&gt;Estructura del proyecto&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#la-aplicacion-c" id="id10"&gt;La Aplicación C++&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#construyendo-con-gradle" id="id11"&gt;Construyendo con Gradle&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#caso-basico" id="id12"&gt;Caso básico&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#distintos-sabores" id="id13"&gt;Distintos “Sabores”&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#community" id="id14"&gt;Community&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#enterprise" id="id15"&gt;Enterprise&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#release-o-debug" id="id16"&gt;Release o Debug&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#multi-plataforma" id="id17"&gt;Multi-plataforma&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#pruebalo-tu-mism" id="id18"&gt;Pruébalo tú mism@&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/gradle-cpp/#conclusiones" id="id19"&gt;Conclusiones&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href="https://carlosvin.github.io/es/posts/gradle-cpp/"&gt;Leer más…&lt;/a&gt; (quedan 6 minutos de lectura)&lt;/p&gt;&lt;/div&gt;</description><category>Build Automation Software</category><category>C++</category><category>Dependency Management</category><category>Gradle</category><guid>https://carlosvin.github.io/es/posts/gradle-cpp/</guid><pubDate>Sat, 27 Sep 2014 10:00:00 GMT</pubDate></item><item><title>Cómo funcionan los algoritmos de ordenación (Bailando)</title><link>https://carlosvin.github.io/es/posts/sorting-algorithm-dancing/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;He encontrado por ahí un grupo tecnológico-artístico llamados &lt;a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos"&gt;AlgoRythmics&lt;/a&gt;, que enseñan cómo funcionan los algoritmos de ordenación más conocidos.&lt;/p&gt;
+&lt;p&gt;Siempre puedes consultar en la wikipedia &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Algoritmo_de_ordenamiento#Lista_de_algoritmos_de_ordenamiento"&gt;Algoritmos de ordenamiento&lt;/a&gt;, aunque no creo que sea tan rápido ni tan divertido para aprender como con &lt;a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos"&gt;AlgoRythmics&lt;/a&gt;, os dejo el ejemplo del &lt;a class="reference external" href="http://es.wikipedia.org/wiki/Quicksort"&gt;Quicksort&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="youtube-video"&gt;
+&lt;iframe width="425" height="344" src="https://www.youtube.com/embed/ywWBy6J5gz8?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>Algorithm</category><category>Programming</category><category>Sorting</category><guid>https://carlosvin.github.io/es/posts/sorting-algorithm-dancing/</guid><pubDate>Mon, 16 Jun 2014 18:45:00 GMT</pubDate></item><item><title>Bases de Datos Embebidas Java: Comparación de Rendimiento</title><link>https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div class="section" id="bases-de-datos-embebidas"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#id1"&gt;Bases de datos embebidas&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Se trata de bases de datos que carecen de servidor, están inscrustadas en la propia aplicación y suelen estar almacenadas en ficheros locales. Esto último unido a que suelen tener un modo de funcionamiento en el que mantienen los datos en memoria hace que puedan tener un rendimiento muy alto.&lt;/p&gt;
+&lt;p&gt;Eso sí, este gran grado acoplamiento a la aplicación, hace que tengan peor rendimiento cuando se comparten entre varias aplicaciones debido a colisiones de acceso.&lt;/p&gt;
+&lt;p&gt;Otra ventaja es que no tenemos que encargarnos de mantener y gestionar un servidor de bases de datos.&lt;/p&gt;
+&lt;p&gt;Voy a hacer una comparativa de rendimiento entre 3 bases de datos embebidas &lt;a class="reference external" href="http://es.wikipedia.org/wiki/ACID"&gt;ACID&lt;/a&gt; (transaccionales), las &lt;a class="reference external" href="http://es.wikipedia.org/wiki/NoSQL"&gt;NoSQL&lt;/a&gt; no entran en esta comparativa que están en otra liga de rendimiento.&lt;/p&gt;
+&lt;div class="contents topic" id="contenidos"&gt;
+&lt;p class="topic-title first"&gt;Contenidos&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#bases-de-datos-embebidas" id="id1"&gt;Bases de datos embebidas&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#sqlite" id="id2"&gt;SQLite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#derby-o-javadb" id="id3"&gt;Derby o JavaDB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#objectdb" id="id4"&gt;ObjectDB&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#los-tests" id="id5"&gt;Los Tests&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#interfaz-db" id="id6"&gt;Interfaz DB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#las-bases-de-datos-jdbc" id="id7"&gt;Las Bases de Datos JDBC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#el-codigo-fuente" id="id8"&gt;El código fuente&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/#resultados-de-los-tests" id="id9"&gt;Resultados de los tests&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href="https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/"&gt;Leer más…&lt;/a&gt; (quedan 4 minutos de lectura)&lt;/p&gt;&lt;/div&gt;</description><category>database</category><category>embedded</category><category>Java</category><guid>https://carlosvin.github.io/es/posts/java-embedded-db-performance-comparison/</guid><pubDate>Sat, 07 Jun 2014 16:09:00 GMT</pubDate></item><item><title>Distintas formas de serialización en Java: Comparación de rendimiento</title><link>https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Hace poco, he tenido que serializar/deserializar unos datos en &lt;a class="reference external" href="http://www.java.com/"&gt;Java&lt;/a&gt;, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado &lt;a class="reference external" href="http://www.json.org/"&gt;JSON&lt;/a&gt; o &lt;a class="reference external" href="http://en.wikipedia.org/wiki/XML"&gt;XML&lt;/a&gt;). Recordaba haber serializado objetos implementando el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html"&gt;Serializable&lt;/a&gt;, pero había visto por Internet otra forma implementando el interfaz &lt;a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html"&gt;Externalizable&lt;/a&gt;, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo.&lt;/p&gt;
+&lt;div class="contents topic" id="cuando-utilizar-serializable-o-externalizable"&gt;
+&lt;p class="topic-title first"&gt;Cuándo utilizar Serializable o Externalizable&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/#serializable" id="id3"&gt;Serializable&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/#externalizable" id="id4"&gt;Externalizable&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/#pruebas-de-rendimiento-serializable-vs-externalizable" id="id5"&gt;Pruebas de Rendimiento (Serializable vs Externalizable)&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-serializable" id="id6"&gt;Utilizando el interfaz Serializable&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-externalizable-mal" id="id7"&gt;Utilizando el interfaz Externalizable (mal)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-externalizable-bien" id="id8"&gt;Utilizando el interfaz Externalizable (bien)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/#analizando-los-resultados" id="id9"&gt;Analizando los resultados&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href="https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/"&gt;Leer más…&lt;/a&gt; (quedan 3 minutos de lectura)&lt;/p&gt;&lt;/div&gt;</description><category>Java</category><guid>https://carlosvin.github.io/es/posts/serialization-java-serializable-externalizable/</guid><pubDate>Tue, 13 May 2014 15:00:00 GMT</pubDate></item></channel></rss>

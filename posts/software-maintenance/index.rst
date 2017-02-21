@@ -1,26 +1,26 @@
-.. title: Mantenimiento de Software
+.. title: Software Maintenance
 .. slug: software-maintenance
 .. date: 2014/10/11 21:00:00
 .. tags: Software Engineering, Software Maintenance
-.. description: Breve descripción sobre los distintos tipos de mantenimiento de software
+.. description: Brief description about different types of software maintenance
 .. type: text
 
-Hace unos días en el trabajo tuve que rellenar un documento en el que debía indicar el tipo de mantenimiento que debía hacer y sólo tenía dos opciones: correctivo y adaptativo. Esto me extrañó, porque el cambio que yo quería hacer no terminaba de encajar en ninguno de los dos tipos. 
+Few days ago at work, I had to fulfill a document where I had to select a type of software maintenance that I was going to apply. 
 
-Haciendo memoria sobre lo que había dado en mi primera asignatura de Ingeniería del Software, conseguí recordar tres tipos, pero me parecía que me faltaba un tipo.
+The fact was I had only two choices, it seemed me very weird because during my degree I studied 3 or 4 kinds of software maintenance. 
 
-Hoy por casualidad he encontrado mis apuntes de Ingeniería del Software y estos son los tipos de mantenimiento ordenados de más a menos porcentaje de tiempo dedicado.
+Today I have found my Software Engineering class notes, then the types of Software Maintenance sorted descending by percentage of time spent:
 
-:Perfectivo:
-	Actividades para mejorar o añadir nuevas funcionalidades requeridas por el usuario.
+:Perfective:
+	Activities to improve or add new functionalities required by the user. 
 
-:Adaptativo:
-	Actividades para adaptar el sistema a los cambios en su entorno tecnológico (Hardware o software).
+:Adaptative:
+	Activities to adapt the system to technological environment changes  (hardware or software).
 
-:Correctivo:
-	Corregir defectos en el hardware o software detectados por el usuario durante la explotación del sistema. 
+:Corrective:
+	Fix defects in hardware or software detected by user running the production system.
 
-:Preventivo:
-	Actividades para facilitar el mantenimiento del futuro sistema.
+:Preventive:
+	Activities to ease the future system maintenance.
 
 

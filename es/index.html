@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Qué está pasando por mi cabeza y alrededores">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carlos says "bla bla"</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (es)" href="rss.xml">
+<link rel="canonical" href="https://carlosvin.github.io/es/">
+<link rel="next" href="index-2.html" type="text/html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]-->
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ir al contenido principal</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Mostrar navegación</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://carlosvin.github.io/es/">
+
+                <span id="blog-title">Carlos says "bla bla"</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="archive.html">Archivos</a>
+                </li>
+<li>
+<a href="categories/index.html">Categorías</a>
+                </li>
+<li>
+<a href="rss.xml">RSS</a>
+
+                
+            </li>
+</ul>
+<form method="get" action="http://www.google.com/search" class="navbar-form navbar-right" role="search">
+<div class="form-group">
+<input type="text" name="q" class="form-control" placeholder="Search">
+</div>
+<button type="submit" class="btn btn-primary">
+	<span class="glyphicon glyphicon-search"></span>
+</button>
+<input type="hidden" name="sitesearch" value="https://carlosvin.github.io/">
+</form>
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+            </li>
+<li><a href="https://carlosvin.github.io/" rel="alternate" hreflang="en">English</a></li>
+
+                
+                    
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+
+    
+<div class="postindex">
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/reverse-proxy-multidomain-docker/" class="u-url">Contenedores Docker multi-dominio</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/reverse-proxy-multidomain-docker/" rel="bookmark"><time class="published dt-published" datetime="2016-11-24T21:00:00+01:00" title="2016-11-24">2016-11-24</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/reverse-proxy-multidomain-docker/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<div class="contents topic" id="contenido">
+<p class="topic-title first">Contenido</p>
+<ul class="simple">
+<li><a class="reference internal" href="posts/reverse-proxy-multidomain-docker/#caso-de-uso" id="id1">Caso de Uso</a></li>
+<li>
+<a class="reference internal" href="posts/reverse-proxy-multidomain-docker/#como-configurar-un-proxy-inverso-multi-dominio" id="id2">Cómo configurar un Proxy Inverso Multi-Dominio</a><ul>
+<li><a class="reference internal" href="posts/reverse-proxy-multidomain-docker/#estructura-del-proyecto-de-ejemplo" id="id3">Estructura del proyecto de ejemplo</a></li>
+<li><a class="reference internal" href="posts/reverse-proxy-multidomain-docker/#configuracion-de-la-arquitectura-docker-compose" id="id4">Configuración de la arquitectura (docker-compose)</a></li>
+<li><a class="reference internal" href="posts/reverse-proxy-multidomain-docker/#configuracion-de-la-imagen-de-la-aplicacion" id="id5">Configuración de la imágen de la aplicación</a></li>
+<li><a class="reference internal" href="posts/reverse-proxy-multidomain-docker/#anadiendo-los-nombres-de-dominio-a-tu-configuracion" id="id6">Añadiendo los nombres de dominio a tu configuración</a></li>
+<li><a class="reference internal" href="posts/reverse-proxy-multidomain-docker/#todo-listo" id="id7">¡Todo listo!</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="caso-de-uso">
+<h2><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id1">Caso de Uso</a></h2>
+<p>Tenemos varias aplicaciones servidoras a la vez en un mismo entorno de desarrollo, cada una encapsulada en un contenedor, llamémosles de ahora en adelante "Contenedor A" y "Contenedor B".</p>
+<p>Utilizando docker estas aplicaciones tienen la misma dirección IP en nuestra máquina, una forma de distinguirlas es cambiando el puerto que exponen.</p>
+<div class="figure">
+<a class="reference external image-reference" href="../galleries/docker-multidomain/ip.png"><img alt="/galleries/docker-multidomain/ip.thumbnail.png" src="../galleries/docker-multidomain/ip.thumbnail.png"></a>
+<p class="caption">Aplicaciones exponiendo la misma dirección IP utilizando diferentes puertos para diferenciar las aplicaciones</p>
+</div>
+<ul class="simple">
+<li>Si queremos llamar a la "aplicación A" haremos algo así: GET <a class="reference external" href="http://10.20.30.40:8080/colors/red">http://10.20.30.40:8080/colors/red</a>
+</li>
+<li>Si queremos llamar a la "aplicación B" haremos algo así: GET <a class="reference external" href="http://10.20.30.40:8081/fruits/tomato">http://10.20.30.40:8081/fruits/tomato</a>
+</li>
+</ul>
+<p>Pero esto es un poco confuso, ¿8080 sigfica que accedemos a las "aplicación A" y 8081 significa "aplicación B"?</p>
+<p>Sería mucho más sencillo de recordar algo así:</p>
+<ul class="simple">
+<li>Si queremos llamar a la "aplicación A" haremos algo así: GET <a class="reference external" href="http://a.domain.com/colors/red">http://a.domain.com/colors/red</a>
+</li>
+<li>Si queremos llamar a la "aplicación B" haremos algo así: GET <a class="reference external" href="http://b.domain.com/fruits/tomato">http://b.domain.com/fruits/tomato</a>
+</li>
+</ul>
+<div class="figure">
+<a class="reference external image-reference" href="../galleries/docker-multidomain/domain.png"><img alt="/galleries/docker-multidomain/domain.thumbnail.png" src="../galleries/docker-multidomain/domain.thumbnail.png"></a>
+<p class="caption">Diferenciando aplicaciones por nombre de dominio</p>
+</div>
+<p>Obtener este valor semántico extra es más sencillo de lo que parece.</p>
+</div>
+<div class="section" id="como-configurar-un-proxy-inverso-multi-dominio">
+<h2><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id2">Cómo configurar un Proxy Inverso Multi-Dominio</a></h2>
+<p>Dije que era fácil porque no vamos a tener que hacer casi nada, ya que otro contenedor hará casi todo el trabajo por nosotros. Vamos a utilizar <a class="reference external" href="https://github.com/jwilder/nginx-proxy">nginx-proxy</a>, que generará automáticamente las configuraciones necesarias para <a class="reference external" href="https://www.nginx.com">NGINX</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Puedes descargar el ejemplo completo desde: <a class="reference external" href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain">https://github.com/carlosvin/docker-reverse-proxy-multi-domain</a></p>
+</div>
+<p>Así que al final no tendremos 2 contenedores, sino también tendremos un tercero que hará las veces de proxy.</p>
+<div class="figure">
+<a class="reference external image-reference" href="../galleries/docker-multidomain/proxy.png"><img alt="/galleries/docker-multidomain/proxy.thumbnail.png" src="../galleries/docker-multidomain/proxy.thumbnail.png"></a>
+<p class="caption">Los 2 contenedores y el proxy</p>
+</div>
+<div class="section" id="estructura-del-proyecto-de-ejemplo">
+<h3><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id3">Estructura del proyecto de ejemplo</a></h3>
+<ul class="simple">
+<li>docker-compose.yaml (Archivo con la configuración descrita en la imágen previa)</li>
+<li>a (Directorio para la aplicación A)<ul>
+<li>Dockerfile (Archivo con la configuración del contenedor A)</li>
+</ul>
+</li>
+<li>b (Directorio para la aplicación B)<ul>
+<li>Dockerfile (Archivo con la configuración del contenedor B)</li>
+</ul>
+</li>
+</ul>
+<p><a class="reference external" href="../listings/docker-reverse-proxy-multi-domain">Ver proyecto</a>.</p>
+</div>
+<div class="section" id="configuracion-de-la-arquitectura-docker-compose">
+<h3><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id4">Configuración de la arquitectura (docker-compose)</a></h3>
+<p>La parte más importante es la configuración de las relaciones entre los contenedores.</p>
+<p><a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/docker-compose.yaml.html">docker-reverse-proxy-multi-domain/docker-compose.yaml</a>  <a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/docker-compose.yaml">(Código fuente)</a></p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-1"> 1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-2"> 2</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-3"> 3</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-4"> 4</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-5"> 5</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-6"> 6</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-7"> 7</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-8"> 8</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-9"> 9</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-10">10</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-11">11</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-12">12</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-13">13</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-14">14</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-15">15</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-16">16</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-17">17</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-18">18</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-19">19</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-20">20</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-21">21</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-22">22</a></pre></div></td>
+<td class="code"><pre class="code yaml"><a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-1"></a><span class="l l-Scalar l-Scalar-Plain">a</span><span class="p p-Indicator">:</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-2"></a>  <span class="l l-Scalar l-Scalar-Plain">build</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-3"></a>  <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-4"></a>    <span class="l l-Scalar l-Scalar-Plain">VIRTUAL_HOST</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a.domain.com</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-5"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-6"></a>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-7"></a><span class="l l-Scalar l-Scalar-Plain">b</span><span class="p p-Indicator">:</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-8"></a>  <span class="l l-Scalar l-Scalar-Plain">build</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">b</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-9"></a>  <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-10"></a>    <span class="l l-Scalar l-Scalar-Plain">VIRTUAL_HOST</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">b.domain.com</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-11"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-12"></a>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-13"></a><span class="l l-Scalar l-Scalar-Plain">nginx-proxy</span><span class="p p-Indicator">:</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-14"></a>  <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">jwilder/nginx-proxy</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-15"></a>  <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-16"></a>    <span class="p p-Indicator">-</span> <span class="s">"80:80"</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-17"></a>    <span class="p p-Indicator">-</span> <span class="s">"443:443"</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-18"></a>  <span class="l l-Scalar l-Scalar-Plain">volumes</span><span class="p p-Indicator">:</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-19"></a>    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/tmp/docker.sock:ro</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-20"></a>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-21"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-22"></a>  <span class="l l-Scalar l-Scalar-Plain">privileged</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></td>
+</tr></table>
+<ul class="simple">
+<li>En la línea 4 y 10 es donde configuramos el nombre de dominio que queremos utilizar para cada aplicación.</li>
+<li>A partir de la línea 13 configuramos el proxy (esta es la parte de copiar y pegar).</li>
+<li>En la línea 2 y 8 estamos indicando a docker-compose que tiene que construir las imágenes dentro del directorio indicado. Por ejemplo, en la línea 2, estamos indicando que docker-compose tiene que construir la imágen docker utilizando ./a/Dockerfile.</li>
+</ul>
+</div>
+<div class="section" id="configuracion-de-la-imagen-de-la-aplicacion">
+<h3><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id5">Configuración de la imágen de la aplicación</a></h3>
+<p>A continuación vamos a comentar la configuración de la imágen del contenedor para la aplicación A.</p>
+<p><a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/a/Dockerfile.html">docker-reverse-proxy-multi-domain/a/Dockerfile</a>  <a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/a/Dockerfile">(Código fuente)</a></p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_63a9728999ec44979658322c858971c4-1">1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_63a9728999ec44979658322c858971c4-2">2</a></pre></div></td>
+<td class="code"><pre class="code docker"><a name="rest_code_63a9728999ec44979658322c858971c4-1"></a><span class="k">FROM</span><span class="s"> httpd:2.4</span>
+<a name="rest_code_63a9728999ec44979658322c858971c4-2"></a><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/local/apache2/htdocs/index.html
+</pre></td>
+</tr></table>
+<p>Línea 1: Importamos una imágen con un servidor apache.</p>
+<p>Línea 2: Servimos un archivo que muestra "Host A" como página por defecto.</p>
+<p>La configuración para la aplicación B, es prácticamente la misma:</p>
+<p><a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/b/Dockerfile.html">docker-reverse-proxy-multi-domain/b/Dockerfile</a>  <a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/b/Dockerfile">(Código fuente)</a></p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_78fba776211b47a4a1ae1d8be40c4192-1">1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_78fba776211b47a4a1ae1d8be40c4192-2">2</a></pre></div></td>
+<td class="code"><pre class="code docker"><a name="rest_code_78fba776211b47a4a1ae1d8be40c4192-1"></a><span class="k">FROM</span><span class="s"> httpd:2.4</span>
+<a name="rest_code_78fba776211b47a4a1ae1d8be40c4192-2"></a><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/local/apache2/htdocs/index.html
+</pre></td>
+</tr></table>
+</div>
+<div class="section" id="anadiendo-los-nombres-de-dominio-a-tu-configuracion">
+<h3><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id6">Añadiendo los nombres de dominio a tu configuración</a></h3>
+<p>En Linux simplemente tenemos mapear la dirección local a los nombres de dominio que hayas elegido, en nuestro ejemplo es a.domain.com y b.domain.com.</p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-1">1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-2">2</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-3">3</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-4">4</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-5">5</a></pre></div></td>
+<td class="code"><pre class="code bash"><a name="rest_code_067768312e59486ab6a3db2c6f4faa04-1"></a><span class="c1">#/etc/hosts</span>
+<a name="rest_code_067768312e59486ab6a3db2c6f4faa04-2"></a><span class="m">127</span>.0.0.1             localhost.localdomain localhost
+<a name="rest_code_067768312e59486ab6a3db2c6f4faa04-3"></a>::1                 localhost6.localdomain6 localhost6
+<a name="rest_code_067768312e59486ab6a3db2c6f4faa04-4"></a><span class="m">127</span>.0.0.1   a.domain.com
+<a name="rest_code_067768312e59486ab6a3db2c6f4faa04-5"></a><span class="m">127</span>.0.0.1   b.domain.com
+</pre></td>
+</tr></table>
+<p>Simplemente he añadido las líneas 4 y 5.</p>
+</div>
+<div class="section" id="todo-listo">
+<h3><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id7">¡Todo listo!</a></h3>
+<p>Ya solo nos queda probar el ejemplo.</p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_654020bc94f04fe79f5b086bcb397829-1">1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_654020bc94f04fe79f5b086bcb397829-2">2</a></pre></div></td>
+<td class="code"><pre class="code bash"><a name="rest_code_654020bc94f04fe79f5b086bcb397829-1"></a>docker-compose build
+<a name="rest_code_654020bc94f04fe79f5b086bcb397829-2"></a>docker-compose up
+</pre></td>
+</tr></table>
+<p>Ya están las tres contenedores arrancados.</p>
+<p>Ahora podemos abrir nuestro navegador y escribir a.domain.com y nos mostrará el texto <em>App A works!</em>. Si escribimos b.domain.com entonces veremos <em>App B works!</em>.</p>
+<div class="figure">
+<a class="reference external image-reference" href="../galleries/docker-multidomain/a.screenshot.png"><img alt="/galleries/docker-multidomain/a.screenshot.thumbnail.png" src="../galleries/docker-multidomain/a.screenshot.thumbnail.png"></a>
+<p class="caption">a.domain.com en el navegador</p>
+</div>
+<div class="figure">
+<a class="reference external image-reference" href="../galleries/docker-multidomain/b.screenshot.png"><img alt="/galleries/docker-multidomain/b.screenshot.thumbnail.png" src="../galleries/docker-multidomain/b.screenshot.thumbnail.png"></a>
+<p class="caption">b.domain.com en el navegador</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">En la mayoría de distribuciones Linux necesitarás privilegios para ejecutar los comandos docker (sudo).</p>
+</div>
+</div>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/rust-rest-framework-comparison/" class="u-url">Comparación frameworks REST para RUST</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/rust-rest-framework-comparison/" rel="bookmark"><time class="published dt-published" datetime="2016-04-14T20:40:00+02:00" title="2016-04-14">2016-04-14</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/rust-rest-framework-comparison/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Estoy empezando a hacer mis primeros pinitos con <a class="reference external" href="https://www.rust-lang.org/">Rust</a>, es un lenguage de programación que promete ser tan rápido como <a class="reference external" href="https://en.wikipedia.org/wiki/C%2B%2B">C/C++</a>, pero más seguro en cuanto a la gestión de memoria ser refiere. Básicamente, no permite al programador hacer "cosas malas" con la memoria como: olvidarse de liberar la memoria que no se va a utilizar o liberar memoria que no es tuya. En estos casos, <a class="reference external" href="https://www.rust-lang.org/">Rust</a> simplemente no compilará.</p>
+<p>Para aprender he pensado en hacer algún pequeño proyecto, tengo algunas ideas, pero todas pasan por ofrecer una <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> <a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a>, así que me he puesto a buscar frameworks que me faciliten esta tarea y me he llevado una grata sorpresa al encontrar una muy <a class="reference external" href="https://github.com/flosse/rust-web-framework-comparison">buena comparativa con el estado de los frameworks REST para Rust</a>, a continuación os dejo el enlace:</p>
+<p><a class="reference external" href="https://github.com/flosse/rust-web-framework-comparison">https://github.com/flosse/rust-web-framework-comparison</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/recursive-dos-unix/" class="u-url">Convertir archivos en formato Windows a formato Unix</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/recursive-dos-unix/" rel="bookmark"><time class="published dt-published" datetime="2016-02-12T10:34:00+01:00" title="2016-02-12">2016-02-12</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/recursive-dos-unix/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Si alguna vez has programado desde un entorno Windows para entornos Unix, seguramente habrás tenido este problema: Los archivos que instalas en tu entorno Unix tienen formato Windows.</p>
+<p>Hay un forma bastante sencilla de convertir todos los archivos que tienes en un directorio de formato Windows a Unix.</p>
+<pre class="code bash"><a name="rest_code_9a0decc09f804cf0aaf401dfe3accefa-1"></a>find . -type f -print0 <span class="p">|</span> xargs -0 dos2unix
+</pre>
+<p>Lo he sacado, como no, de <a class="reference external" href="http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory">http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/rest-urls/" class="u-url">Creando REST URLs</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/rest-urls/" rel="bookmark"><time class="published dt-published" datetime="2015-08-16T14:00:00+02:00" title="2015-08-16">2015-08-16</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/rest-urls/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Las primeras veces que me puse a diseñar una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> con ejemplos.</p>
+<div class="contents topic" id="indice">
+<p class="topic-title first">Índice</p>
+<ul class="simple">
+<li>
+<a class="reference internal" href="posts/rest-urls/#fundamentos-rest" id="id3">Fundamentos REST</a><ul>
+<li><a class="reference internal" href="posts/rest-urls/#verbos-rest" id="id4">Verbos REST</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#acceso-a-recursos" id="id5">Acceso a Recursos</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#modificar-recursos" id="id6">Modificar Recursos</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#borrar-recursos" id="id7">Borrar Recursos</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#crear-recursos" id="id8">Crear Recursos</a></li>
+<li>
+<a class="reference internal" href="posts/rest-urls/#colecciones" id="id9">Colecciones</a><ul>
+<li><a class="reference internal" href="posts/rest-urls/#anadir-un-elemento-a-la-coleccion" id="id10">Añadir un elemento a la colección</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#modificar-un-elemento-de-la-coleccion" id="id11">Modificar un elemento de la colección</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#borrar-un-elemento-de-la-coleccion" id="id12">Borrar un elemento de la colección</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#leer-un-elemento-de-la-coleccion" id="id13">Leer un elemento de la colección</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#listar-elementos-de-la-coleccion" id="id14">Listar elementos de la colección</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="posts/rest-urls/#tipico-error" id="id15">Típico error</a></li>
+<li><a class="reference internal" href="posts/rest-urls/#video-tutoriales" id="id16">Video Tutoriales</a></li>
+</ul>
+</div>
+<div class="section" id="fundamentos-rest">
+<h2>Fundamentos <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
+</h2>
+<ul class="simple">
+<li>Utilizamos <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> para acceder a recursos.</li>
+<li>Utilizamos <em>verbos</em> para modificar recursos.</li>
+<li>Nuestros <em>verbos</em> están proporcionados por el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</li>
+<li>Los <em>verbos</em> tienen un equivalente directo con las operaciones <a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a> <a class="footnote-reference" href="posts/rest-urls/#id2" id="id1">[1]</a>.</li>
+<li>Para acceder a un recurso existente necesitamos su identificador.</li>
+</ul>
+<div class="section" id="verbos-rest">
+<h3>Verbos <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
+</h3>
+<dl class="docutils">
+<dt>POST</dt>
+<dd>(<strong>C</strong>) Utilizado para <strong>crear</strong> nuevos recursos.</dd>
+<dt>GET</dt>
+<dd>(<strong>R</strong>) Utilizado para <strong>leer</strong> un recursos existentes en el sistema.</dd>
+<dt>PUT</dt>
+<dd>(<strong>U</strong>) Utilizado para <strong>actualizar</strong> recursos existentes.</dd>
+<dt>DELETE</dt>
+<dd>(<strong>D</strong>) Utilizado para <strong>borrar</strong> recursos existentes.</dd>
+</dl>
+<p>En una tabla quedará más claro</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%">
+<col width="26%">
+<col width="51%">
+</colgroup>
+<tbody valign="top">
+<tr>
+<td>Verbo <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
+</td>
+<td>Acción <a class="reference external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a>
+</td>
+<td>Debe exisitir el recurso</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>Crear</td>
+<td>No</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>Leer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>Actualizar</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>Borrar</td>
+<td>Sí</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="acceso-a-recursos">
+<h3><a class="toc-backref" href="posts/rest-urls/#id5">Acceso a Recursos</a></h3>
+<p>Un recurso es <em>a lo que quieres acceder</em>. Por ejemplo, un coche.</p>
+<p>Para poder acceder a un coche no es suficiente con esta información, no puedes ir a un concesionario y preguntar por un coche en general, tienes que decir qué coche quieres. Así que llegas al concesionario y dices:</p>
+<p><em>Hola, buenos días. Quiero información sobre el Fiat Bravo 1.9 Emotion 120CV</em>.</p>
+<p>De esta forma el dependiente sabe cuál es y te puede dar la información.</p>
+<p>"Fiat Bravo 1.9 Emotion 120CV" es nuestro <strong>identificador</strong>.</p>
+<p>Trasladando el ejemplo a las <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">APIs</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
+</pre>
+<p>De esta forma nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> nos puede proporcionar información del coche.</p>
+<p>Esto es un ejemplo muy simplificado, pero realmente cuando accedemos a un recurso concreto solemos utilizar algo que lo identifique de forma unívoca. Una práctica común y recomendable es utilizar <a class="reference external" href="https://es.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>.</p>
+<pre class="literal-block">
+GET  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>Pero nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, al igual que una tienda, no tiene por qué ser tan estricta, podemos preguntar por los coches que tienen ciertas caracteríticas, podemos ir al concesionario y decir:</p>
+<p><em>Hola buenos días, quiero un Fiat Bravo</em>.</p>
+<p>Y el dependiente, amablemente, te mostrará todos los Fiat Bravo que tiene. Veamos cómo podemos decir esto a nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>.</p>
+<pre class="literal-block">
+GET  http://tiendadecoches.es/api/coches/?marca=fiat&amp;modelo=bravo
+</pre>
+<p>Nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> nos devolverá todos los coches que son marca Fiat y modelo Bravo.</p>
+<p>Marca y modelo en este caso son lo que llamamos <strong>parámetros de consulta</strong> (query parameters).</p>
+<p>Como os habréis dado cuenta durante el ejemplo, para obtener información de un recurso siempre hemos utilizado el <em>verbo</em> <strong>GET</strong>.</p>
+</div>
+<div class="section" id="modificar-recursos">
+<h3><a class="toc-backref" href="posts/rest-urls/#id6">Modificar Recursos</a></h3>
+<p>Nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> también nos puede permitir modificar un recurso, al igual que para pedir información, para modificar un recurso necesitamos especificar qué recurso queremos modificar, así que necesitamos otra vez un <em>identificador</em>.</p>
+<p>Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo único que cambia es el verbo, queremos <strong>modificar</strong> así que utilizamos el verbo equivalente que nos proporciona el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>: <strong>PUT</strong>.</p>
+<pre class="literal-block">
+PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.</p>
+<p>Tenemos que enviar la nueva cilindrada a esta <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URL</a>  <a class="reference external" href="http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f">http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f</a> por <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> utilizando el verbo <strong>PUT</strong>.</p>
+<p>El protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.</p>
+<p>Podemos enviarlo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a> o <a class="reference external" href="https://es.wikipedia.org/wiki/XML">XML</a> o como queramos, solo tenemos que estar seguros de que el formato que enviamos es lo que espera recibir el servidor.</p>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Cuando definimos una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> tenemos que definir también el formato en que vamos a enviar los datos.</p>
+</div>
+<p>Ejemplo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a>:</p>
+<pre class="literal-block">
+{ cilindrada: 100 }
+</pre>
+</div>
+<div class="section" id="borrar-recursos">
+<h3><a class="toc-backref" href="posts/rest-urls/#id7">Borrar Recursos</a></h3>
+<p>Continuando con el ejemplo de los coches, imaginemos que ahora somos el concesionario, y que ya no queremos vender más ese Fiat Bravo (concretamente el cce05bee-386b-11e5-a151-feff819cdc9f). Seguiremos manteniendo la <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URL</a> que identifica el recurso, pero cambiamos el verbo, no queremos leer (GET), ni modificar (PUT), queremos <strong>borrar (DELETE)</strong>.</p>
+<pre class="literal-block">
+DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.</p>
+</div>
+<div class="section" id="crear-recursos">
+<h3><a class="toc-backref" href="posts/rest-urls/#id8">Crear Recursos</a></h3>
+<p>Y nos queda último verbo, crear (POST). En este caso no hay que identificar el recurso, porque no existe todavía.</p>
+<pre class="literal-block">
+POST   http://tiendadecoches.es/api/coches/
+</pre>
+<p>Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.</p>
+<p>En nuestro ejemplo, queremos crear un coche, así que ponemos toda la información necesaria para crear un coche dentro de la llamada POST de <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>, algo muy parecido como hemos hecho en el apartado <a class="reference internal" href="posts/rest-urls/#modificar-recursos">Modificar Recursos</a>, pero en este caso mandamos <strong>toda la información necesaria</strong>, no solo la cilindrada.</p>
+<p>Ejemplo en <a class="reference external" href="https://es.wikipedia.org/wiki/JSON">JSON</a>:</p>
+<pre class="literal-block">
+{
+"marca": "Fiat",
+"modelo": "Bravo"
+"anio": 2010
+"puertas": 5,
+"cilindrada": 120,
+"version": "Emotion",
+"climatizador": true,
+"ac": false,
+"fuel": "Diesel"
+}
+</pre>
+<p>Podemos delegar en el sistema, para que cuando pidamos la creación de un recurso nuevo, nos asigne un nuevo <strong>identificador</strong>, o simplemente enviarlo con el resto de información:</p>
+<pre class="literal-block">
+{
+"identificador": "cce05bee-386b-11e5-a151-feff819cdc9f"
+"marca": "Fiat",
+"modelo": "Bravo"
+"anio": 2010
+"puertas": 5,
+"cilindrada": 120,
+"version": "Emotion",
+"climatizador": true,
+"ac": false,
+"fuel": "Diesel"
+}
+</pre>
+</div>
+<div class="section" id="colecciones">
+<h3><a class="toc-backref" href="posts/rest-urls/#id9">Colecciones</a></h3>
+<p>Algo que no quiero pasar por alto, porque al menos para mí no fue obvio, es el manejo de colecciones. Realmente ya está explicado, porque todas las acciones que hemos visto previamente sobre los coches, estaba aplicando realmente a una colección de coches.</p>
+<p>Pero, ¿qué pasa si un recurso tiene a su vez una colección? Siguiendo con los coches, un coche puede tener una lista de aceites con los que puede funcionar, así que nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> debería permitir obtener, modificar, borrar o crear elementos en la lista.</p>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.</p>
+</div>
+<div class="section" id="anadir-un-elemento-a-la-coleccion">
+<h4><a class="toc-backref" href="posts/rest-urls/#id10">Añadir un elemento a la colección</a></h4>
+<p>Si queremos añadir un elemento a la colección de coches lo que vamos a hacer es crear un nuevo coche, así que estamos en el caso de <a class="reference internal" href="posts/rest-urls/#crear-recursos">Crear Recursos</a>.</p>
+<p>Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe:</p>
+<pre class="literal-block">
+POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+
+{
+"tipo": "5W30",
+"otros_datos": "este es el mejor del mundo para este coche"
+}
+</pre>
+<p>Si queremos añadir otro aceite:</p>
+<pre class="literal-block">
+POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+
+{
+"tipo": "10W30",
+"otros_datos": "otras cosas sobre aceites de coche",
+}
+</pre>
+</div>
+<div class="section" id="modificar-un-elemento-de-la-coleccion">
+<h4><a class="toc-backref" href="posts/rest-urls/#id11">Modificar un elemento de la colección</a></h4>
+<p>Si queremos modificar los datos del aceite <em>5W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
+
+{
+"tipo": "5W30",
+"otros_datos": "este ya no es el mejor del mundo para este coche"
+}
+</pre>
+</div>
+<div class="section" id="borrar-un-elemento-de-la-coleccion">
+<h4><a class="toc-backref" href="posts/rest-urls/#id12">Borrar un elemento de la colección</a></h4>
+<p>Para borrar un aceite <em>10W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+</pre>
+</div>
+<div class="section" id="leer-un-elemento-de-la-coleccion">
+<h4><a class="toc-backref" href="posts/rest-urls/#id13">Leer un elemento de la colección</a></h4>
+<p>Para obtener la información del aceite <em>10W30</em> del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+</pre>
+</div>
+<div class="section" id="listar-elementos-de-la-coleccion">
+<h4><a class="toc-backref" href="posts/rest-urls/#id14">Listar elementos de la colección</a></h4>
+<p>Como hemos visto en <a class="reference internal" href="posts/rest-urls/#leer-un-elemento-de-la-coleccion">Leer un elemento de la colección</a>, podemos obtener información de cualquier elemento de la colección, pero también podemos obtener varios elementos de la colección, ordenarlos, paginarlos y aplicar cualquier tipo de acciones típicas de una colección.</p>
+<p>Podemos obtener todos los aceites soportados por el coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>, es tan simple como:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+</pre>
+<p>Pero también podemos proporcionar otras funcionalidades en nuestra <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, como obtener los resultados ordenados:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&amp;orden=ascendente
+</pre>
+<p>Podemos pedir al <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> que nos devuelva los 10 primeros aceites del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
+</pre>
+<p>Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&amp;numero_de_elementos=3
+</pre>
+<p>En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche <em>cce05bee-386b-11e5-a151-feff819cdc9f</em> y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente:</p>
+<pre class="literal-block">
+GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&amp;numero_de_elementos=3
+</pre>
+<p>Todas estas funcionalidades, son posibles gracias a los <strong>parámetros de consulta</strong>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="tipico-error">
+<h2><a class="toc-backref" href="posts/rest-urls/#id15">Típico error</a></h2>
+<p>La primera vez que intenté diseñar un <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a> <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a> lo que hice fué otra cosa, era una <a class="reference external" href="https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones">API</a>, pero no <a class="reference external" href="https://es.wikipedia.org/wiki/Representational_State_Transfer">REST</a>.</p>
+<p>Mi principal error fue en la construción de las <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a>, incluí <em>verbos</em> sin tener en cuenta que los verbos ya me los proporcionaba el protocolo <a class="reference external" href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</p>
+<p>Por ejemplo, creaba <a class="reference external" href="https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme">URLs</a> del tipo:</p>
+<pre class="literal-block">
+POST    http://example.com/api/coches/seat-ibiza/borrar-rueda/3
+</pre>
+<p>Cuando lo correcto sería</p>
+<pre class="literal-block">
+DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
+</pre>
+</div>
+<div class="section" id="video-tutoriales">
+<h2><a class="toc-backref" href="posts/rest-urls/#id16">Video Tutoriales</a></h2>
+<p>Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:</p>
+<div class="youtube-video">
+<iframe width="425" height="344" src="https://www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;hd=1&amp;wmode=transparent"></iframe>
+</div>
+<div class="youtube-video">
+<iframe width="425" height="344" src="https://www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;hd=1&amp;wmode=transparent"></iframe>
+</div>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="posts/rest-urls/#id1">[1]</a></td>
+<td>Create, Read, Update, Delete</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/first-biicode-poco/" class="u-url">Gestión de dependencias C++: Biicode</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/first-biicode-poco/" rel="bookmark"><time class="published dt-published" datetime="2015-05-14T20:00:00+02:00" title="2015-05-14">2015-05-14</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/first-biicode-poco/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Hace tiempo que estoy interesado la construcción, gestión de dependencias, empaquetado y despliegue de proyectos software. Para <a class="reference external" href="http://java.com/en/download/whatis_java.jsp">Java</a>, <a class="reference external" href="http://www.scala-lang.org/">Scala</a>, <a class="reference external" href="http://www.python.org/">Python</a>, etc. Es bastante sencillo ya que hay herramientas como <a class="reference external" href="http://maven.apache.org/">Maven</a>, <a class="reference external" href="http://www.gradle.org/">Gradle</a>, <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>, <a class="reference external" href="http://www.scala-sbt.org/">Sbt</a>, etc. Pero para C++_, lo más parecido que he encontrado es <a class="reference external" href="http://maven.apache.org/">Maven</a> con el plugin <a class="reference external" href="http://maven-nar.github.io/">Nar</a> o <a class="reference external" href="http://www.gradle.org/">Gradle</a> con su <a class="reference external" href="https://gradle.org/docs/current/userguide/nativeBinaries.html">plugin cpp</a> (que está en desarrollo).</p>
+<p>Hace tiempo que conozco <a class="reference external" href="https://www.biicode.org/">Biicode</a>, pero no había sacado nunca tiempo para probarlo, hasta hoy.</p>
+<p>El funcionamiento general es muy sencillo.</p>
+<p>Necesitamos <a class="reference external" href="http://docs.biicode.com/c++/installation.html">instalar biicode en nuestra máquina</a>.</p>
+<p>Yo he creado un pequeño ejemplo utilizando el sistema de log de la librería <a class="reference external" href="http://pocoproject.org/">Poco</a>.</p>
+<p>He ejecutado este comando para crear mi proyecto, al que he llamado bii_log. Eso sí, lo tengo que crear debajo de mi nombre de usuario en <a class="reference external" href="https://www.biicode.org/">Biicode</a>, por si posteriormente lo quiero publicar.</p>
+<pre class="code bash"><a name="rest_code_ec2e58a4b3ac402fbc4e49b782ba7b04-1"></a>bii new carlovin/bii_log --hello<span class="o">=</span>cpp
+</pre>
+<p>Se ha creado una estructura de directorios y ficheros con nuestro proyecto. Aunque los únicos ficheros que vamos a tocar son:</p>
+<pre class="code bash"><a name="rest_code_4a6a482d074a4725a05e0c3086817279-1"></a>blocks/carlosvin/bii_log/main.cpp
+<a name="rest_code_4a6a482d074a4725a05e0c3086817279-2"></a>blocks/carlosvin/bii_log/biicode.conf
+</pre>
+<p>En el fichero biicode.conf vamos a configurar nuestras dependencias, en nuestro caso la librería <a class="reference external" href="http://pocoproject.org/">Poco</a>.</p>
+<pre class="code yaml"><a name="rest_code_f929639d1ec84e969d3c0bf99339e524-1"></a><span class="c1"># Biicode configuration file</span>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-2"></a>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-3"></a><span class="p p-Indicator">[</span><span class="nv">requirements</span><span class="p p-Indicator">]</span>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-4"></a>    <span class="l l-Scalar l-Scalar-Plain">fenix/poco(develop)</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-5"></a>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-6"></a><span class="p p-Indicator">[</span><span class="nv">parent</span><span class="p p-Indicator">]</span>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-7"></a>        <span class="l l-Scalar l-Scalar-Plain">carlosvin/bii_log</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-8"></a>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-9"></a><span class="p p-Indicator">[</span><span class="nv">includes</span><span class="p p-Indicator">]</span>
+<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-10"></a>    <span class="l l-Scalar l-Scalar-Plain">Poco/*.h</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fenix/poco/Foundation/include</span>
+</pre>
+<p>En la sección [includes], estamos redefiniendo la ruta a nuestros ficheros de cabeceras, porque si no lo hiciéramos tendríamos que hacer algo así:</p>
+<pre class="code cpp"><a name="rest_code_8b8dbd3e015b4b5db6f6e473200d21a6-1"></a><span class="cp">#include</span> <span class="cpf">"fenix/poco/Foundation/include/Logger.h"</span><span class="cp"></span>
+</pre>
+<p>Gracias a esta línea, en nuestro código tendremos includes más claros como:</p>
+<pre class="code cpp"><a name="rest_code_a4a9a76a09804dd38e235aac799bf42d-1"></a><span class="cp">#include</span> <span class="cpf">"Poco/Logger.h"</span><span class="cp"></span>
+</pre>
+<p>Así de fácil, ya podemos utilizar la librería <a class="reference external" href="http://pocoproject.org/">Poco</a> en nuestro proyecto, por ejemplo:</p>
+<pre class="code cpp"><a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-1"></a><span class="cp">#include</span> <span class="cpf">"Poco/FileChannel.h"</span><span class="cp"></span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-2"></a><span class="cp">#include</span> <span class="cpf">"Poco/FormattingChannel.h"</span><span class="cp"></span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-3"></a><span class="cp">#include</span> <span class="cpf">"Poco/PatternFormatter.h"</span><span class="cp"></span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-4"></a><span class="cp">#include</span> <span class="cpf">"Poco/Logger.h"</span><span class="cp"></span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-5"></a><span class="cp">#include</span> <span class="cpf">"Poco/AutoPtr.h"</span><span class="cp"></span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-6"></a>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-7"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FileChannel</span><span class="p">;</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-8"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FormattingChannel</span><span class="p">;</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-9"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">PatternFormatter</span><span class="p">;</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-10"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">Logger</span><span class="p">;</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-11"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">AutoPtr</span><span class="p">;</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-12"></a>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-13"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-14"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FileChannel</span><span class="o">&gt;</span> <span class="n">pChannel</span><span class="p">(</span><span class="k">new</span> <span class="n">FileChannel</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-15"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"path"</span><span class="p">,</span> <span class="s">"log/sample.log"</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-16"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"rotation"</span><span class="p">,</span> <span class="s">"100 K"</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-17"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"archive"</span><span class="p">,</span> <span class="s">"timestamp"</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-18"></a>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-19"></a>        <span class="c1">//AutoPtr&lt;ConsoleChannel&gt; pCons(new ConsoleChannel);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-20"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">PatternFormatter</span><span class="o">&gt;</span> <span class="n">pPF</span><span class="p">(</span><span class="k">new</span> <span class="n">PatternFormatter</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-21"></a>        <span class="n">pPF</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"pattern"</span><span class="p">,</span> <span class="s">"%Y-%m-%d %H:%M:%S %s: %t"</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-22"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FormattingChannel</span><span class="o">&gt;</span> <span class="n">pFC</span><span class="p">(</span><span class="k">new</span> <span class="n">FormattingChannel</span><span class="p">(</span><span class="n">pPF</span><span class="p">,</span> <span class="n">pChannel</span><span class="p">));</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-23"></a>        <span class="n">Logger</span><span class="o">::</span><span class="n">root</span><span class="p">().</span><span class="n">setChannel</span><span class="p">(</span><span class="n">pFC</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-24"></a>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-25"></a>        <span class="n">Logger</span> <span class="o">&amp;</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="s">"TestChannel"</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-26"></a>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-27"></a>                <span class="n">poco_information</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a info"</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-28"></a>                <span class="n">poco_warning</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a warning"</span><span class="p">);</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-29"></a>        <span class="p">}</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-30"></a>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-31"></a><span class="p">}</span>
+</pre>
+<p>Para compilar el proyecto simplemente hay que ejecutar:</p>
+<pre class="code bash"><a name="rest_code_e7f62c77c5274209ae99b11500832125-1"></a>bii cpp:build
+</pre>
+<p>Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utilizado <a class="reference external" href="http://pocoproject.org/">Poco</a>:</p>
+<pre class="code bash"><a name="rest_code_d7fd572852824633a27b100348519e93-1"></a>bii publish
+</pre>
+<p>Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi <a class="reference external" href="https://eclipse.org">Eclipse</a> con <a class="reference external" href="https://eclipse.org/cdt/">CDT</a> indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos.</p>
+<p>También he leído un artículo sobre lo bien que se integra con <a class="reference external" href="https://www.jetbrains.com/clion/">CLion</a>: <a class="reference external" href="http://blog.jetbrains.com/clion/2015/03/when-clion-met-biicode/">When CLion met biicode</a>.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/software-maintenance/" class="u-url">Mantenimiento de Software</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/software-maintenance/" rel="bookmark"><time class="published dt-published" datetime="2014-10-11T21:00:00+02:00" title="2014-10-11">2014-10-11</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/software-maintenance/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Hace unos días en el trabajo tuve que rellenar un documento en el que debía indicar el tipo de mantenimiento que debía hacer y sólo tenía dos opciones: correctivo y adaptativo. Esto me extrañó, porque el cambio que yo quería hacer no terminaba de encajar en ninguno de los dos tipos.</p>
+<p>Haciendo memoria sobre lo que había dado en mi primera asignatura de Ingeniería del Software, conseguí recordar tres tipos, pero me parecía que me faltaba un tipo.</p>
+<p>Hoy por casualidad he encontrado mis apuntes de Ingeniería del Software y estos son los tipos de mantenimiento ordenados de más a menos porcentaje de tiempo dedicado.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field">
+<th class="field-name">Perfectivo:</th>
+<td class="field-body">Actividades para mejorar o añadir nuevas funcionalidades requeridas por el usuario.</td>
+</tr>
+<tr class="field">
+<th class="field-name">Adaptativo:</th>
+<td class="field-body">Actividades para adaptar el sistema a los cambios en su entorno tecnológico (Hardware o software).</td>
+</tr>
+<tr class="field">
+<th class="field-name">Correctivo:</th>
+<td class="field-body">Corregir defectos en el hardware o software detectados por el usuario durante la explotación del sistema.</td>
+</tr>
+<tr class="field">
+<th class="field-name">Preventivo:</th>
+<td class="field-body">Actividades para facilitar el mantenimiento del futuro sistema.</td>
+</tr>
+</tbody>
+</table>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/gradle-cpp/" class="u-url">Construir un proyecto C++ con Gradle</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/gradle-cpp/" rel="bookmark"><time class="published dt-published" datetime="2014-09-27T12:00:00+02:00" title="2014-09-27">2014-09-27</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/gradle-cpp/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div class="section" id="introduccion">
+<h2><a class="toc-backref" href="posts/gradle-cpp/#id7">Introducción</a></h2>
+<p>La construcción, gestión de dependencias y distribución de mis proyectos es algo que cada vez me preocupa más, me gustaría encontrar una herramienta que unificara este proceso y fuese independiente del lenguaje, lo más parecido con lo que he trabajado ha sido <a class="reference external" href="http://www.scons.org">SCons</a>, <a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction">Autotools</a>, <a class="reference external" href="http://ant.apache.org">Ant</a>, <a class="reference external" href="http://maven.apache.org">Maven</a> y últimamente <a class="reference external" href="http://www.gradle.org">Gradle</a>.</p>
+<p>Llevo un tiempo haciendo algunas cosas con <a class="reference external" href="http://www.gradle.org">Gradle</a>, pero siempre centrado en proyectos <a class="reference external" href="http://www.java.com">Java</a> utilizándolo como reemplazo a <a class="reference external" href="http://maven.apache.org">Maven</a>, porque que es más sencillo de usar y más rápido. También lo he utilizado en projectos <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a> y he sufrido la pareja <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android Studio + Gradle</a> en sus primeros matrimonios (porque yo he querido), actualmente está todo mucho más documentado y funciona muy bien.</p>
+<p>Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-C con <a class="reference external" href="http://www.gradle.org">Gradle</a> se encuentra en fase de <a class="reference external" href="http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating">incubación</a>, aunque ya permite hacer algunas tareas avanzadas como:</p>
+<ul class="simple">
+<li>Generación de múltiples artefactos dentro del mismo proyecto, esto es varias librerías o ejecutables.</li>
+<li>Gestionar las dependencias entre estos artefactos (sin versiones).</li>
+<li>Generar distintos “sabores” de aplicaciones, por ejemplo: podremos generar una aplicación “Community” y otra con más características habilitadas llamada “Enterprise”.</li>
+<li>Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas ( <a class="reference external" href="http://es.wikipedia.org/wiki/Cadena_de_herramientas">Toolchains</a> ) que tengamos instaladas en la máquina de compilación.</li>
+</ul>
+<p>Como decía todavía tiene limitaciones, aunque están trabajando en ello y <a class="reference external" href="http://www.gradleware.com/resources/cpp/">si consiguen lo que tienen planeado</a> dejaré <a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction">Autotools</a> (me arrepentiré de haber dicho esto).</p>
+<div class="contents topic" id="indice">
+<p class="topic-title first">índice</p>
+<ul class="simple">
+<li><a class="reference internal" href="posts/gradle-cpp/#introduccion" id="id7">Introducción</a></li>
+<li>
+<a class="reference internal" href="posts/gradle-cpp/#un-caso-practico" id="id8">Un caso práctico</a><ul>
+<li><a class="reference internal" href="posts/gradle-cpp/#estructura-del-proyecto" id="id9">Estructura del proyecto</a></li>
+<li><a class="reference internal" href="posts/gradle-cpp/#la-aplicacion-c" id="id10">La Aplicación C++</a></li>
+<li>
+<a class="reference internal" href="posts/gradle-cpp/#construyendo-con-gradle" id="id11">Construyendo con Gradle</a><ul>
+<li><a class="reference internal" href="posts/gradle-cpp/#caso-basico" id="id12">Caso básico</a></li>
+<li>
+<a class="reference internal" href="posts/gradle-cpp/#distintos-sabores" id="id13">Distintos “Sabores”</a><ul>
+<li><a class="reference internal" href="posts/gradle-cpp/#community" id="id14">Community</a></li>
+<li><a class="reference internal" href="posts/gradle-cpp/#enterprise" id="id15">Enterprise</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="posts/gradle-cpp/#release-o-debug" id="id16">Release o Debug</a></li>
+<li><a class="reference internal" href="posts/gradle-cpp/#multi-plataforma" id="id17">Multi-plataforma</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="posts/gradle-cpp/#pruebalo-tu-mism" id="id18">Pruébalo tú mism@</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="posts/gradle-cpp/#conclusiones" id="id19">Conclusiones</a></li>
+</ul>
+</div>
+<p class="more"><a href="posts/gradle-cpp/">Leer más…</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/sorting-algorithm-dancing/" class="u-url">Cómo funcionan los algoritmos de ordenación (Bailando)</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/sorting-algorithm-dancing/" rel="bookmark"><time class="published dt-published" datetime="2014-06-16T20:45:00+02:00" title="2014-06-16">2014-06-16</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/sorting-algorithm-dancing/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>He encontrado por ahí un grupo tecnológico-artístico llamados <a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos">AlgoRythmics</a>, que enseñan cómo funcionan los algoritmos de ordenación más conocidos.</p>
+<p>Siempre puedes consultar en la wikipedia <a class="reference external" href="http://es.wikipedia.org/wiki/Algoritmo_de_ordenamiento#Lista_de_algoritmos_de_ordenamiento">Algoritmos de ordenamiento</a>, aunque no creo que sea tan rápido ni tan divertido para aprender como con <a class="reference external" href="https://www.youtube.com/user/AlgoRythmics/videos">AlgoRythmics</a>, os dejo el ejemplo del <a class="reference external" href="http://es.wikipedia.org/wiki/Quicksort">Quicksort</a>.</p>
+<div class="youtube-video">
+<iframe width="425" height="344" src="https://www.youtube.com/embed/ywWBy6J5gz8?rel=0&amp;hd=1&amp;wmode=transparent"></iframe>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/java-embedded-db-performance-comparison/" class="u-url">Bases de Datos Embebidas Java: Comparación de Rendimiento</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/java-embedded-db-performance-comparison/" rel="bookmark"><time class="published dt-published" datetime="2014-06-07T18:09:00+02:00" title="2014-06-07">2014-06-07</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/java-embedded-db-performance-comparison/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div class="section" id="bases-de-datos-embebidas">
+<h2><a class="toc-backref" href="posts/java-embedded-db-performance-comparison/#id1">Bases de datos embebidas</a></h2>
+<p>Se trata de bases de datos que carecen de servidor, están inscrustadas en la propia aplicación y suelen estar almacenadas en ficheros locales. Esto último unido a que suelen tener un modo de funcionamiento en el que mantienen los datos en memoria hace que puedan tener un rendimiento muy alto.</p>
+<p>Eso sí, este gran grado acoplamiento a la aplicación, hace que tengan peor rendimiento cuando se comparten entre varias aplicaciones debido a colisiones de acceso.</p>
+<p>Otra ventaja es que no tenemos que encargarnos de mantener y gestionar un servidor de bases de datos.</p>
+<p>Voy a hacer una comparativa de rendimiento entre 3 bases de datos embebidas <a class="reference external" href="http://es.wikipedia.org/wiki/ACID">ACID</a> (transaccionales), las <a class="reference external" href="http://es.wikipedia.org/wiki/NoSQL">NoSQL</a> no entran en esta comparativa que están en otra liga de rendimiento.</p>
+<div class="contents topic" id="contenidos">
+<p class="topic-title first">Contenidos</p>
+<ul class="simple">
+<li>
+<a class="reference internal" href="posts/java-embedded-db-performance-comparison/#bases-de-datos-embebidas" id="id1">Bases de datos embebidas</a><ul>
+<li><a class="reference internal" href="posts/java-embedded-db-performance-comparison/#sqlite" id="id2">SQLite</a></li>
+<li><a class="reference internal" href="posts/java-embedded-db-performance-comparison/#derby-o-javadb" id="id3">Derby o JavaDB</a></li>
+<li><a class="reference internal" href="posts/java-embedded-db-performance-comparison/#objectdb" id="id4">ObjectDB</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="posts/java-embedded-db-performance-comparison/#los-tests" id="id5">Los Tests</a><ul>
+<li><a class="reference internal" href="posts/java-embedded-db-performance-comparison/#interfaz-db" id="id6">Interfaz DB</a></li>
+<li><a class="reference internal" href="posts/java-embedded-db-performance-comparison/#las-bases-de-datos-jdbc" id="id7">Las Bases de Datos JDBC</a></li>
+<li><a class="reference internal" href="posts/java-embedded-db-performance-comparison/#el-codigo-fuente" id="id8">El código fuente</a></li>
+<li><a class="reference internal" href="posts/java-embedded-db-performance-comparison/#resultados-de-los-tests" id="id9">Resultados de los tests</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p class="more"><a href="posts/java-embedded-db-performance-comparison/">Leer más…</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/serialization-java-serializable-externalizable/" class="u-url">Distintas formas de serialización en Java: Comparación de rendimiento</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/serialization-java-serializable-externalizable/" rel="bookmark"><time class="published dt-published" datetime="2014-05-13T17:00:00+02:00" title="2014-05-13">2014-05-13</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/es/posts/serialization-java-serializable-externalizable/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Hace poco, he tenido que serializar/deserializar unos datos en <a class="reference external" href="http://www.java.com/">Java</a>, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado <a class="reference external" href="http://www.json.org/">JSON</a> o <a class="reference external" href="http://en.wikipedia.org/wiki/XML">XML</a>). Recordaba haber serializado objetos implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>, pero había visto por Internet otra forma implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo.</p>
+<div class="contents topic" id="cuando-utilizar-serializable-o-externalizable">
+<p class="topic-title first">Cuándo utilizar Serializable o Externalizable</p>
+<ul class="simple">
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#serializable" id="id3">Serializable</a></li>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#externalizable" id="id4">Externalizable</a></li>
+<li>
+<a class="reference internal" href="posts/serialization-java-serializable-externalizable/#pruebas-de-rendimiento-serializable-vs-externalizable" id="id5">Pruebas de Rendimiento (Serializable vs Externalizable)</a><ul>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-serializable" id="id6">Utilizando el interfaz Serializable</a></li>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-externalizable-mal" id="id7">Utilizando el interfaz Externalizable (mal)</a></li>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-externalizable-bien" id="id8">Utilizando el interfaz Externalizable (bien)</a></li>
+<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#analizando-los-resultados" id="id9">Analizando los resultados</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p class="more"><a href="posts/serialization-java-serializable-externalizable/">Leer más…</a></p>
+</div>
+    </div>
+    </article>
+</div>
+
+        <nav class="postindexpager"><ul class="pager">
+<li class="next">
+                <a href="index-2.html" rel="next">Publicaciones anteriores</a>
+            </li>
+        </ul></nav>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2017         <a href="mailto:carlosvin@gmail.com">Carlos Martín Sánchez</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+   <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+   <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/all-nocdn.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-es.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("es");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1328360-9', 'carlosvin.github.io');
+  ga('send', 'pageview');
+
+</script><!-- Start of StatCounter Code for Default Guide --><script type="text/javascript">
+var sc_project=9708205;
+var sc_invisible=1;
+var sc_security="4998d447";
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script><noscript><div class="statcounter"><a title="web analytics" href="http://statcounter.com/" target="_blank"><img class="statcounter" src="http://c.statcounter.com/9708205/0/4998d447/1/" alt="web analytics"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+
+
+</body>
+</html>

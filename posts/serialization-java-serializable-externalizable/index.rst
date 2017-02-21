@@ -1,32 +1,32 @@
-.. title: Distintas formas de serialización en Java: Comparación de rendimiento
+.. title: Java serialization ways: Performance Comparison
 .. slug: serialization-java-serializable-externalizable
 .. date: 2014/05/13 17:00:00
-.. tags: Java
-.. link: 
-.. description: Comparación de rendimientos entre distintas formas de serialización en Java 
+.. description:  Java serialization ways, performance comparison
 .. type: text
 
 
-Hace poco, he tenido que serializar/deserializar unos datos en Java_, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado JSON_ o XML_). Recordaba haber serializado objetos implementando el interfaz Serializable_, pero había visto por Internet otra forma implementando el interfaz Externalizable_, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo.
+Recently I've  had to serialize/deserialize some data in Java_ binary format. Lately I use JSON_ or XML_ formats. 
 
-.. contents:: Cuándo utilizar Serializable o Externalizable
+I remember that to serialize Java_ objects they must implement the  Serializable_ interface, but I had also read in Internet other way, implementing the Externalizable_ interface, then, which interface must I implement? It depends on what you want such as everything in the life.
+
+.. contents:: When to use Serializable_ or Externalizable_
 
 .. TEASER_END
 
 Serializable_
 =======================
 
-- Cuando quieras serializar algo programando poco, es la forma fácil. 
-- Pero tiene algunas restricciones: El objeto a serializar debe implementar el constructor por defecto. Debe hacerse responsable de los atributos no accesibles de la clase padre.
-- Cuando no te importe mucho el rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_.
+- To serialize easily. You have to write less code.
+- This way has some restrictions: The object to serialize must implement the default constructor (0 args). It must be responsible to manage the parent class attributes.
+- The performance is not as important, we will see more about that in `Performance tests (Serializable vs. Externalizable)`_.
 
 Externalizable_
 =======================
 
-- Vas a tener que implementar tú mismo los métodos de serialización. 
-- Cuando no puedas utilizar Serializable_.
-- Cuando quieras obtener un mejor rendimiento, como veremos en la sección `Pruebas de Rendimiento (Serializable vs Externalizable)`_
-- Si tienes que encargarte de la serialización de los atributos de la clase padre, te recomiendo utilizar Externalizable_, porque evitamos una sobrescritura extraña de métodos privados.
+- You must implement the serialization/deserialization methods, so you have to write more code. 
+- When you cannot use Serializable_.
+- When you want to improve the performance, as we'll see in `Performance tests (Serializable vs. Externalizable)`_
+- If you have to manage the serialization of parent class attributes, then I recommend you use Externalizable_, because we'll avoid a weird overriding of private methods.
    
 .. code-block:: java
 
@@ -34,32 +34,32 @@ Externalizable_
   private void readObject(ObjectInputStream ois)
 
 
-Pruebas de Rendimiento (Serializable vs Externalizable)
+Performance tests (Serializable vs. Externalizable)
 ========================================================
 
-El interfaz Serializable_ utilizando la introspección de Java_, adivina los tipos de los atributos de las clases que va a serializar/deserializar, pero esta "magia" tiene una penalización en el rendimiento. 
+Serializable_: Java, through introspection, guesses the types of class attributes to know how to serialize/deserialize them, but this "magic" is not free, it has a performance penalty.
 
-Al utilizar el interfaz Externalizable_ somos nosotros los que decidimos como serializar/deserializar los objetos, es decir, tenemos que escribir nosotros el código que hace esto. Hemos perdido comodidad, pero evitamos que Java_ haga algunas tareas y, si sobrescribimos correctamente los métodos del interfaz Externalizable_, conseguiremos una mejora de rendimiento. 
+When we use Externalizable_ interface, we decide how to serialize/deserialize, namely we have to write the code that does it. We've lost ease, but also we avoid that Java_ does some tasks, so if we override the methods properly, we'll get a performance improvement.
 
-Para saber cuánto es la diferencia de rendimiento, he escrito un `pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos`. He contemplado 3 casos:
+To know how much is the performance difference between both interfaces, I've written a `tiny example in which we serialize an object with 2 collections with 100000 elements each one`_, 3 ways:
 
-Utilizando el interfaz Serializable_
+Implementing Serializable_
 -------------------------------------
 
-Como dijimos más arriba, utilizando el interfaz Serializable_ Java_ tiene que adivinar ciertas cosas, en este proceso sacrifica algo de rendimiento (es el que más tarda), a cambio ĺo único que tenemos que hacer es que nuestra clase implemente el interfaz Serializable_.
+As we told above, Java_ has to guessed certain things, in this process it sacrifices some of performance (slower way), in exchange for programming simplicity, the class to serialize just has to implement the Serializable_ interface.
   
 .. code-block:: java
    
    public class Contacts implements Serializable {
 
-- 1133 milisegundos en serializar
-- 506  milisegundos en deserializar
+- serializing:   1133 millisecond 
+- deserializing: 506  millisecond
   
 
-Utilizando el interfaz Externalizable_ (mal)
+Implementing Externalizable_ (wrong way)
 ---------------------------------------------
 
-En este caso somos nosotros los encargados de "decir" a Java_ cómo debe serializar/deserializar, pero debemos ser cuidadosos, de lo contrario podemos quedarnos con lo peor de los dos mundos, por ejemplo: Si simplemente serializamos/deserializamos los atributos de la clase, y estos son atributos complejos (como colecciones), Java_ también tiene que adivinar bastantes cosas y también sacrificamos algo de rendimiento y además hemos tenido que escribir más código. 
+If the class implements Externalizable_, we must tell to Java_ how it has to serialize/deserialize the class attributes. We must be carefully, because if we did it bad, then we'll get the worst of the both worlds: more complex implementation and bad performance, i.e: If we serialize/deserialize complex class attributes (like collections), Java_ will also have to guess many things about the attributes type.
 
 .. code-block:: java
 
@@ -75,14 +75,16 @@ En este caso somos nosotros los encargados de "decir" a Java_ cómo debe seriali
     out.writeObject(phones);
   }
 
-  
-- 737 milisegundos en serializar
-- 367 milisegundos en deserializar
+
+- serializing:   737 millisecond 
+- deserializing: 367  millisecond
+
       
-Utilizando el interfaz Externalizable_ (bien)
+Implementing Externalizable_ (right way)
 ----------------------------------------------
 
-Si serializamos/deserializamos uno por uno los elementos de las colecciones, ahorramos aún más tiempo, porque Java_ está serializando tipos más simples (en este caso java.lang.String).
+If we serialize one by one the collection elements, then we'll save more time, because Java_ serializes simple types, this way avoids guessing things that we actually know.
+
 
 .. code-block:: java
 
@@ -112,49 +114,48 @@ Si serializamos/deserializamos uno por uno los elementos de las colecciones, aho
     }
   }
 
-- 204 milisegundos en serializar
-- 92  milisegundos en deserializar
-      
-Hemos ganado rendimiento a costa de escribir un poco más de código. 
+
+- serializing:   204 millisecond 
+- deserializing: 92  millisecond
+
+We've gained performance at expense of write more code.
 
 
-Analizando los resultados
+Result Analysis
 --------------------------
 
 .. caution::
-   Por el hecho de utilizar un interfaz u otro, no ganamos rendimiento. 
+   We don't gain performance due to use an interface or the other one. 
 
 .. tip::
-   Ganamos rendimiento porque el interfaz Externalizable_ nos "obliga" a implementar parte de la serialización y quitamos esta carga a Java_. 
+   We gain performance because Externalizable_ interface forces us to implement ourselves the guessing code, so Java_ doesn't have to do that. 
 
-Aunque como hemos visto en `Utilizando el interfaz Externalizable (bien)`_, si no tenemos cuidado, conseguiremos una mejora muy pequeña. 
+Although as we have watched in `Implementing Externalizable (right way)`_, if we wouldn't be careful in implementation, we'll get less performance.
 
-A continuación podéis ver un `gráfico`_ con los resultados de los tests.
+Following you can see a graph_ with `Tests results`_.
 
 .. figure:: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&oid=2110613848&zx=t87gu6ve3lan
    :alt: Gráfico con los resultados
    :width: 80%
 
-   Abrir el `gráfico`_ interactivo | `Abrir imagen`_
+   Open interactive graph_ | `Open image`_
 
 
-A continuación os dejo los enlaces a:
-
-- `Resultados de los tests`_.
-- `Código en github`_.
-- Estado de la `Construcción en travis`_
+- `Tests results`_.
+- `Code in Github`_.
+- `Travis CI build status`_
   
   .. image:: https://travis-ci.org/carlosvin/serializations-performance-java.svg?branch=master
 
 
-.. _`Código en github`: https://github.com/carlosvin/serializations-performance-java/
-.. _`Resultados de los tests`: http://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html
-.. _`pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos`: http://carlosvin.github.io/serializations-performance-java/
+.. _`Code in Github`: https://github.com/carlosvin/serializations-performance-java/
+.. _`Tests results`: http://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html
+.. _`tiny example in which we serialize an object with 2 collections with 100000 elements each one`: http://carlosvin.github.io/serializations-performance-java/
 .. _Java: http://www.java.com/
 .. _JSON: http://www.json.org/
 .. _XML: http://en.wikipedia.org/wiki/XML
 .. _Serializable: http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
 .. _Externalizable: http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html
-.. _`gráfico`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/gviz/chartiframe?oid=2110613848
-.. _`Abrir imagen`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&oid=2110613848&zx=t87gu6ve3lan
-.. _`Construcción en travis`:  https://travis-ci.org/carlosvin/serializations-performance-java
+.. _`graph`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/gviz/chartiframe?oid=2110613848
+.. _`Open image`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&oid=2110613848&zx=t87gu6ve3lan
+.. _`Travis CI build status`:  https://travis-ci.org/carlosvin/serializations-performance-java

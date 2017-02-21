@@ -1,35 +1,38 @@
-.. title: Gestión de dependencias C++: Biicode
+.. title: C++ Dependency Management: Biicode
 .. slug: first-biicode-poco
-.. date: 2015/02/25 20:00:00
+.. date: 2015/05/14 20:00:00
 .. tags: C++, Biicode, Poco, Build Automation Software, Dependency Management
 .. link: 
-.. description: Gestión de dependencias en C++ con Biicode. Proyecto de ejemplo que depende de la librería Poco, concretamente de la parte de logging.  
+.. description: C++ Dependency Management with Biicode. A sample project that requires Poco library, in particular logging part.  
 .. type: text
 
-Hace tiempo que estoy interesado la construcción, gestión de dependencias, empaquetado y despliegue de proyectos software. Para Java_, Scala_, Python_, etc. Es bastante sencillo ya que hay herramientas como Maven_, Gradle_, pip_, Sbt_, etc. Pero para C++_, lo más parecido que he encontrado es Maven_ con el plugin Nar_ o Gradle_ con su `plugin cpp`_ (que está en desarrollo).
 
-Hace tiempo que conozco Biicode_, pero no había sacado nunca tiempo para probarlo, hasta hoy. 
+I'm interested in building, dependency management, packagin and deployment in regards to software projects. For Java_, Scala_, Python_, and so on is quite easy since there are tools like Maven_, Gradle_, pip_, Sbt_, etc. But regarding C++_, the best options I've found are Maven_ with Nar_ plugin or Gradle_ with `cpp plugin`_ (incubation).
 
-El funcionamiento general es muy sencillo.
+I knew about Biicode_ almost 2 years ago, but I've never found time to test it, until today.
 
-Necesitamos `instalar biicode en nuestra máquina`_.
+How does Biicode_ work?
 
-Yo he creado un pequeño ejemplo utilizando el sistema de log de la librería Poco_.
+Firstly we have to `install Biicode`_.
 
-He ejecutado este comando para crear mi proyecto, al que he llamado bii_log. Eso sí, lo tengo que crear debajo de mi nombre de usuario en Biicode_, por si posteriormente lo quiero publicar. 
+I've made tiny example project using logging system from Poco_ library.
+
+I've executed this command to create the project, called bii_log. 
 
 .. code-block:: bash
 
 	bii new carlovin/bii_log --hello=cpp
 
-Se ha creado una estructura de directorios y ficheros con nuestro proyecto. Aunque los únicos ficheros que vamos a tocar son:
+I've created the project under my Biicode_ username, just in case I'd like to publish later. 
+
+Previous command generates the structure of files and directories, although we are going to focus only on: 
 
 .. code-block:: bash
 	
 	blocks/carlosvin/bii_log/main.cpp
 	blocks/carlosvin/bii_log/biicode.conf
 
-En el fichero biicode.conf vamos a configurar nuestras dependencias, en nuestro caso la librería Poco_.
+In biicode.conf we are going to configure our dependencies, in this example Poco_ library.
 
 .. code-block:: yaml
 	
@@ -44,19 +47,19 @@ En el fichero biicode.conf vamos a configurar nuestras dependencias, en nuestro 
 	[includes]
 	    Poco/*.h: fenix/poco/Foundation/include
 
-En la sección [includes], estamos redefiniendo la ruta a nuestros ficheros de cabeceras, porque si no lo hiciéramos tendríamos que hacer algo así:
+In [includes] section, we are overriding the path to file headers. If we don't override it we'd had to do something like this:
  
 .. code-block:: cpp
 	
 	#include "fenix/poco/Foundation/include/Logger.h"
 
-Gracias a esta línea, en nuestro código tendremos includes más claros como:
+Thanks to this line, include declarations are going to be clearer, as follows:
 
 .. code-block:: cpp
 	
 	#include "Poco/Logger.h"
 
-Así de fácil, ya podemos utilizar la librería Poco_ en nuestro proyecto, por ejemplo:
+Easy, now we can start using Poco_ in our project, e.g:
 
 .. code-block:: cpp
 	
@@ -92,21 +95,22 @@ Así de fácil, ya podemos utilizar la librería Poco_ en nuestro proyecto, por 
 		return 0;
 	}
 
-Para compilar el proyecto simplemente hay que ejecutar:
+To compile the project we only have to execute following command:
 
 .. code-block:: bash
 	
 	bii cpp:build
 
-Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utilizado Poco_:
+To publish the project and to allow everyone use it as we have used Poco_:
 
 .. code-block:: bash
 	
 	bii publish
 
-Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi Eclipse_ con CDT_ indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos. 
+Besides the ease to use, I like so much the integration with Eclipse_ with CDT_. After "bii cpp:build" execution all files were properly indexed. 
 
-También he leído un artículo sobre lo bien que se integra con CLion_: `When CLion met biicode`_.
+I've read also an article about the good integration with CLion_: `When CLion met biicode`_.
+
 
 .. _Biicode: https://www.biicode.org/
 .. _Poco: http://pocoproject.org/
@@ -120,8 +124,8 @@ También he leído un artículo sobre lo bien que se integra con CLion_: `When C
 .. _Python: http://www.python.org/
 .. _Scala: http://www.scala-lang.org/
 .. _Sbt: http://www.scala-sbt.org/
-.. _`plugin cpp`: https://gradle.org/docs/current/userguide/nativeBinaries.html
-.. _`instalar biicode en nuestra máquina`: http://docs.biicode.com/c++/installation.html
+.. _`cpp plugin`: https://gradle.org/docs/current/userguide/nativeBinaries.html
+.. _`install Biicode`: http://docs.biicode.com/c++/installation.html
 .. _CLion: https://www.jetbrains.com/clion/
 .. _`When CLion met biicode`: http://blog.jetbrains.com/clion/2015/03/when-clion-met-biicode/
 

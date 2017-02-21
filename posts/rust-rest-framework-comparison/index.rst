@@ -1,17 +1,16 @@
-.. title: Comparación frameworks REST para RUST
+.. title: Rust web frameworks comparison
 .. slug: rust-rest-framework-comparison
-.. date: 2016/03/01 20:40:00
+.. date: 2016/04/14 20:40:00
 .. tags: Frameworks, Rustlang, Programming Languages, REST
-.. description: Comparación entre frameworks REST para RUST
+.. description: REST frameworks for Rust Comparisson
 .. type: micro
 
-Estoy empezando a hacer mis primeros pinitos con Rust_, es un lenguage de programación que promete ser tan rápido como `C/C++`_, pero más seguro en cuanto a la gestión de memoria ser refiere. Básicamente, no permite al programador hacer "cosas malas" con la memoria como: olvidarse de liberar la memoria que no se va a utilizar o liberar memoria que no es tuya. En estos casos, Rust_ simplemente no compilará.
+I'm doing some experiments with Rust_ because it is a language that promises to be as fast as `C/C++`_, but safer in regards to memory management. Essentially, it doesn't allow the developer to do "bad things" with the memory like:  forgetting  release the memory that is not going to be used anymore or release memory if the developer is not the owner. In such scenarios, Rust_ won't compile.
 
-Para aprender he pensado en hacer algún pequeño proyecto, tengo algunas ideas, pero todas pasan por ofrecer una API_ REST_, así que me he puesto a buscar frameworks que me faciliten esta tarea y me he llevado una grata sorpresa al encontrar una muy `buena comparativa con el estado de los frameworks REST para Rust`_, a continuación os dejo el enlace:
-
+Just for learning I've started a small project that offers a REST_ API_, so I've started looking for frameworks to ease/speed up the development. I've found a `Rust web frameworks comparison`_:
 https://github.com/flosse/rust-web-framework-comparison
 
-.. _`buena comparativa con el estado de los frameworks REST para Rust`: https://github.com/flosse/rust-web-framework-comparison
+.. _`Rust web frameworks comparison`: https://github.com/flosse/rust-web-framework-comparison
 .. _Rust: https://www.rust-lang.org/
 .. _`C/C++`: https://en.wikipedia.org/wiki/C%2B%2B
 .. _REST: https://en.wikipedia.org/wiki/Representational_state_transfer

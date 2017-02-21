@@ -1,43 +1,42 @@
-.. title: Configuración de proxy para Git
+.. title: Git proxy configuration
 .. slug: git-proxy-config
 .. date: 2012/11/15 12:00:00
-.. update: 2014/06/16 20:36:00
-.. tags: Git, Proxy, Tips and Tricks
+.. update: 2014/06/15 00:00:00
 .. link: 
-.. description: Cómo configurar git para que funcione a través de un proxy
-.. type: text
+.. description: How to configure git to work through a proxy
 
-Es muy tedioso trabajar desde una red con proxy, al menos para mí, pierdo un montón de tiempo configurando software para que se actualice y funcione correctamente.
+Sometimes working through a proxy is pretty tedious.
 
-Esta es una descripción más o menos genérica de como hacer que git utilice un proxy determinado:
+We are going how to configure git to work through a proxy
+	
+A generic description, how to make git uses a specific proxy:
 
 .. code-block:: bash
   
-  #para http
-  git config --global http.proxy <protocolo>://<nombre de usuario>:<password>@<direccion_ip>:<puerto>
+  #http
+  git config --global http.proxy <protocol>://<username>:<password>@<ip_host>:<port>
   
-  #para https
-  git config --global https.proxy <protocolo>://<nombre de usuario>:<password>@<direccion_ip>:<puerto>
+  #https
+  git config --global https.proxy <protocol>://<username>:<password>@<ip_host>:<port>
   
-  #para deshabilitar el uso del proxy
+  #to disable using proxy
   git config --global --unset http.proxy
 
-protocolo
-	Suele ser http o htpps
+protocol
+	Use to be http or https
 
-nombre de usuario
-	nombre de usuario para autenticarse en el servidor de proxy
+username
+	The proxy user name
+
+ip_host
+	Proxy host address
+
+port
+	Proxy listening port
 
 password
-	password para identificarse en el servidor proxy
+	Your proxy password
 
-direccion_ip
-	dirección de servidor de proxy
+More info in `official Git configuration`_. 
 
-puerto
-	en el que está escuchando el servidor proxy
-
-
-Más información en `la configuración oficial de Git`_. 
-
-.. _`la configuración oficial de Git`: http://git-scm.com/book/es/Personalizando-Git-Configuraci%C3%B3n-de-Git
+.. _`official Git configuration`: http://git-scm.com/docs/git-config

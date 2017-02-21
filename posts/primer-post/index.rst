@@ -1,76 +1,75 @@
-.. title: Primer Post utilizando Nikola
+.. title: First post with Nikola
 .. slug: primer-post
 .. date: 2014/03/27 13:30:02
-.. tags: Python, Static Sites
-.. link: 
-.. description: Cómo he llegado hasta Nikola
+.. description: My first post with Nikola
 .. type: text
 
-Supongo que, como la mayoría, vengo del concepto de software de gestión de blogs o gestores de contenidos dinámicos, basados en:
+I guess that most people come from dynamic content management systems based on:
 
-* enviar información desde un navegador a un servidor 
-* procesar y almacenar la información en una base de datos o en ficheros
-* el servidor genera una respuesta dinámicamente que se envía al navegador en forma de HTML
-  
-  * para generar esta respuesta se suele leer de la base de datos o de los ficheros
+* send data from browser to server 
+* process the received data, then it stores the info into a database (or files) 
+* the server generate dynamically an answer that is sent to the browser as HTML
 
-De todo este proceso se encarga un software instalado en el servidor, nuestro gestor de contenidos.
+  * the answer is usually built reading info from a database or files.
 
-Ahora he cambiado al paradigma de "generador de sitios web estáticos", en concreto voy a utilizar Nikola_, aunque esta vez no lo voy a instalar en ningún servidor. 
-En otro post os contaré cómo he montado esto con Github_ [#]_ y Travis_ [#]_.
+This process is managed by a software installed on server, this is our content management system.
 
-Mi camino para llegar hasta los generadores de sitios web estáticos ha pasado por las etapas que os cuento abajo (me he saltado alguna menos importante).
+Now I've changed the paradigm to "static web site generator", specifically I'm going to use Nikola_, 
+although this time, I'm not going to install on a remote server. 
 
-.. contents:: Camino hasta Nikola_
+In a next post I'll tell you how I've automated the publication process using Github_ [#]_ and Travis_ [#]_.
+
+
+.. contents:: Path to Nikola_
 
 .. TEASER_END
 
 PhpNuke_
-===============
-Sí, sigue existiendo. Aquí entramos un gestor de contenido basado PHP+MySQL, multi-idioma, gestión de usuarios, grupos de usuarios, ampliable con temas, plugins, etc. 
+--------
+My first content management system, yes it still exists. It based on PHP+MySQL, multi-lang, user management, user groups, theming, plugins, etc. 
 
+My Own Content Management System
+--------------------------------
+It wasn't a full [CMS]_, because actually it was a blogging system. I can publish posts dynamically, it was made with PHP and MySQL. It was useful to: 
 
-Mi propio gestor de contenidos
-==============================
-Que no era tal, porque se quedó en un blog en el que podía publicar contenidos dinámicamente, también hecho en PHP y MySQL. Me sirvió para: 
-
-* Publicar posts con problemas. 
-* Darme cuenta de que un programador necesita a un diseñador. 
-* PHP_ a nivel sintáctico, es feo (cuestión de gustos). 
-* Empezar a entender la importancia de DRY_ [#]_.
+* Publish posts (with several problems). 
+* I realized that a developer needs a designer. 
+* I don't like the PHP_ syntax. 
+* I began to understand the importance of [DRY]_.
 
 Drupal_
 ========
-Un gestor de contenidos muy completo, que me gustó mucho, hasta que se empezaron a "romper" cosas (comparto culpa con Drupal_) y me cansé. Pero quiero remarcar que tiene todo lo que yo podía esperar de un gestor de contenidos y más. 
+A full [CMS]_,  I liked it until things began to "break" (Maybe I broke some of them). But Drupal_ has everything you expect from a [CMS]_ and more. 
 
 Wordpress_
 ==========
-Ya no voy a entrar en si es mejor o peor que Drupal_, que de eso hay mucho por Internet. Simplemente es mucho más usable y fácil de actualizar. 
+I don't know if it is better or worse than Drupal_, there are many discussions on the Internet, but I can tell Wordpress_ is more usable and easier to update than Drupal_. 
 
 CMSdj_
 =======
-Mi segundo intento de creación de mi propio gestor de contenidos. Tenía una idea en la cabeza, de cómo debería ser un diseño del modelo de un gestor de contenidos, todavía la tengo. Y recientemente había descubierto Django_, un framework que me encantó hecho con un lenguaje que me encanta, Python_, ¿quién se puede resistir ahora a crear su propio CMS [#]_? 
-CMSdj_ está por ahí en Bitbucket_ y funciona, tiene su propio buscador, gestión de templates, sistema de comentarios, sistema de votación, acercamiento a HTML5_ + CSS3_ y algunas cosillas más, pero: 
+It is my second attempt to create my own [CMS]_. I had an idea in my mind about how to make the core design (the data model), I still believe in that design. I had also discovered Django_, I liked this framework developed in Python_, who can resist creating their own [CMS]_? 
+CMSdj_ is in Bitbucket_ and is working, it has its internal search engine, theming, comment system, voting system,HTML5_ + CSS3_ views, but: 
 
-* Ya no sacaba tiempo para desarrollar, un par de horas a la semana, como mucho, y gastaba una hora en recordar por donde iba. 
-* Seguía necesitando un diseñador.
+* I didn't have enough time to develop it, two hours per week at most. 
+* I still needed a designer.
 
-Así que declaré este proyecto muerto por aburrimiento, aunque seguí utilizándolo para publicar mis cosillas, pero cada vez que iba a escribir algo en mi blog y veía todo a medio hacer, me ponía malo, así que decidí cerrar y empezar de nuevo. 
+So, I declared the project CMSdj_ dead out of boredom, although it was supporting my old blog, when I went to write something, I saw my unfinished project, I didn't like it, so I decided to close it and begin a new one.
 
 Nikola_
 =======
-Tengo que decir que quería un generador de sitios estáticos, porque están de moda y toda la gente escribe sobre sus bondades y me convencieron. Probé Jekyll_ para que no me lo contaran, que es el más famoso. Pero prefería uno hecho en Python_ por si quería meter mano alguna vez. Así que después de buscar un poco, me quedé entre Nikola_, Mynt_ y Pelican_. Me quedé con Nikola_  por descarte:
-* Pelican_ me dió algunos problemas en la utilización de varios idiomas y en las categorías, aunque de primeras fue el que más me convenció. De hecho, es posible que esos problemas los crease yo, pero no quería gastar mucho tiempo en investigar. 
-* Mynt_ me encantó por su sencillez, aunque tienes que hacerte tus propios templates y no quiero darme cuenta otra vez de lo que necesito a un diseñador. 
+I wanted a static website generator because they are trendy. 
+I tried Jekyll_ because it's the most famous, but I prefer one written in Python_. So, after a quick search I had three finalists: Nikola_, Mynt_ and Pelican_. I chose Nikola_  because I discarded the others:
+* Pelican_ throws some multi-lang problems with the categories. I didn't want to spend time researching about how to fix them. 
+* I love the simplicity of Mynt_, but you have to create your own themes. 
 
 
+.. [#] Github_ hosts the generated site, the static files (html, css, images, js).
+.. [#] Travis_ is a continuous integration software (like Jenkins_). I use it to automate the site deployment: download the files when they change from Github_, re-generate and re-publish the static files.
 
-.. [#] En Github_ alojo el sitio generado, toda la parte estática (las páginas en HTML, imágenes, etc.)
-.. [#] Travis_ es un software the integración contínua (como Jenkins_), yo lo utilizo para automatizar el despliegue del sitio, esto es, para descargar el sitio cada vez que lo cambie en Github_, volver a generarlo y publicarlo otra vez.
-.. [#] Don't Repeat Yourself (En español, "no te repitas")
-.. [#] Content Management System ("Sistema de gestión de contenidos")
+.. [DRY] Don't Repeat Yourself, ´DRY in wiki´_
+.. [CMS] Content Management System
 
-.. _DRY: http://en.wikipedia.org/wiki/Don't_repeat_yourself
+.. _´DRY in wiki´: http://en.wikipedia.org/wiki/Don't_repeat_yourself
 .. _PhpNuke: https://www.phpnuke.org/
 .. _Drupal: https://drupal.org/
 .. _Wordpress: https://wordpress.org/
