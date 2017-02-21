@@ -6,24 +6,23 @@ import time
 BLOG_AUTHOR = u"Carlos Martín Sánchez"
 BLOG_TITLE = u'Carlos says "bla bla"'
 SITE_URL = "https://carlosvin.github.io/"
-# BASE_URL = "http://getnikola.com/"
 BLOG_EMAIL = "carlosvin@gmail.com"
 BLOG_DESCRIPTION = {
     "es" : u"Qué está pasando por mi cabeza y alrededores",
     "en" : u"What is going on in my mind and its surroundings",
 }
 
-WRITE_TAG_CLOUD = True
+WRITE_TAG_CLOUD = False
 
 # What is the default language?
-DEFAULT_LANG = "es"
+DEFAULT_LANG = "en"
 
 # What other languages do you have?
 # The format is {"translationcode" : "path/to/translation" }
 # the path will be used as a prefix for the generated pages location
 TRANSLATIONS = {
-    DEFAULT_LANG: "",
-    "en": "./en",
+    "es": "./es",
+    "en": "",
 }
 
 # What will translated input files be named like?
@@ -43,10 +42,10 @@ TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
 NAVIGATION_LINKS = {
-    DEFAULT_LANG: (
-        ('/archive.html', u'Archivos'),
-        ('/categories/index.html', u'Categorías'),
-        ('/rss.xml', 'RSS'),
+    'es': (
+        ('/es/archive.html', u'Archivos'),
+        ('/es/categories/index.html', u'Categorías'),
+        ('/es/rss.xml', 'RSS'),
     ),
     'en': (
         ('/en/archive.html', 'Archives'),
@@ -106,7 +105,7 @@ PAGES = (
 # The format is a dictionary of "source" "relative destination".
 # Default is:
 # FILES_FOLDERS = {'files': '' }
-# Which means copy 'files' into 'output'
+# Which means copy 'SITE_URLfiles' into 'output'
 
 # A mapping of languages to file-extensions that represent that language.
 # Feel free to add or delete extensions to any list, but don't add any new
