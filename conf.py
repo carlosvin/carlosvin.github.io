@@ -665,13 +665,17 @@ GLOBAL_CONTEXT = {}
 # a forward slash to avoid having "/RPC2" appended automatically.
 # Consider adding `nikola ping` as the last entry in DEPLOY_COMMANDS.
 PING_XMLRPC_SERVICES = [
-   "http://blogsearch.google.com/ping/RPC2",
-   "http://ping.blogs.yandex.ru/RPC2",
-   "http://ping.baidu.com/ping/RPC2",
-   "http://rpc.pingomatic.com/",
+    "http://blogsearch.google.com/ping/RPC2",
+    "http://ping.blogs.yandex.ru/RPC2",
+    "http://ping.baidu.com/ping/RPC2",
+    "http://rpc.pingomatic.com/",
 ]
 
 PING_GET_SERVICES = [
-   "http://www.bing.com/webmaster/ping.aspx?sitemap={0}".format(SITE_URL+'sitemap.xml'),
-   "http://www.google.com/webmasters/tools/ping?sitemap={0}".format(SITE_URL+'sitemap.xml'),
+    "http://www.bing.com/webmaster/ping.aspx?sitemap={0}".format(SITE_URL+'sitemap.xml'),
+    "http://www.google.com/webmasters/tools/ping?sitemap={0}".format(SITE_URL+'sitemap.xml'),
 ]
+
+# github_deploy plugin configuration
+GITHUB_SOURCE_BRANCH = 'site'
+GITHUB_DEPLOY_BRANCH = 'master'
