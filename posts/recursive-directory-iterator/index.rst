@@ -2,7 +2,7 @@
 .. slug: recursive-directory-iterator
 .. date: 2017/05/28 09:00
 .. tags: C++, C++11, C++17, IO, Filesystem
-.. description: We are going to analyse with examples new filesystem features coming with C++17
+.. description: We are going to analyze with examples new filesystem features coming with C++17
 .. type: text
 
 Introduction
