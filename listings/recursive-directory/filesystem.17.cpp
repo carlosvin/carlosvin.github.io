@@ -23,7 +23,6 @@ vector<string> getDirectoryFiles(const string & dir, const vector<string> & exte
     return files;    
 }
 
-
 int main()
 {
     fs::create_directories("sandbox/a/b");

@@ -115,7 +115,7 @@ Operador separador de directorios
 
 Si quisiéramos construir rutas a directorios en C++11, tendríamos que implementar cierta lógica extra para detectar que no añadimos separadores extra y para utilizar el separador correcto:
 
-.. code-blocik:: cpp
+.. code-block:: cpp
 
     #include <iostream>
 
@@ -166,14 +166,76 @@ Toda esta lógica está ya implementada en `std::filesystem::path <http://en.cpp
 
 `Compilar y ejecutar: ejemplo concatenar rutas C++17 <http://coliru.stacked-crooked.com/a/a24d50875b4daad1>`_. Aquí el código es más limpio y el resultado es simplemente correcto, no hay separadores duplicados. 
 
+Crear y borrar directorios
+**************************
+`std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ introduce algunas facilidades para crear y borrar directorios y ficheros, primero vamos a ver una de las formas de hacerlo en C++11.
 
---------------
+.. code-block:: cpp
 
-New way http://coliru.stacked-crooked.com/a/5acd6552b8feed6f
+    #include <iostream>
+    #include <cstdio>
+    #include <sys/stat.h>
 
-Old way http://coliru.stacked-crooked.com/a/99ee343715efd992
+    using namespace std;
+
+    int main()
+    {
+        auto opts = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
+        mkdir("sandbox", opts);
+        mkdir("sandbox/a", opts);
+        mkdir("sandbox/a/b", opts);
+        mkdir("sandbox/c", opts);
+        mkdir("sandbox/c/d", opts);
+        
+        system("ls -la sandbox/*");
+        
+        remove("sandbox/c/d");
+        remove("sandbox/a/b");
+        remove("sandbox/c");
+        remove("sandbox/a");
+        remove("sandbox");
+
+        system("ls -la");
+        
+        return 0;
+    }
+
+`Compilar y ejecutar: crear y borrar directorios C++11 <http://coliru.stacked-crooked.com/a/26f4763ec5b42adb>`_. Para crear y borrar directorios anidados, debemos hacerlo uno por uno. Podemos escribir este fragmento de código con menos líneas, pero aún así tendremos que tener cuidado del orden en el que creamos/borramos los directorios. 
+
+En C++17 podemos borrar y crear directorios anidados con una sola llamada.
+
+.. code-block:: cpp
+
+    #include <experimental/filesystem>
+    #include <iostream>
+
+    namespace fs = std::experimental::filesystem;
+    using namespace std;
+
+    int main()
+    {
+        fs::create_directories("sandbox/a/b");
+        fs::create_directories("sandbox/c/d");
+        std::system("ls -la sandbox/*");
+        cout << "Directories were removed: " << (fs::remove_all("sandbox") ? "Yes" : "No") << endl;
+
+        return 0;
+    }
+
+`Compilar y ejecutar: crear y borrar directorios C++17 <http://coliru.stacked-crooked.com/a/81bd867c6d51421b>`_.
+
+Ejemplo completo: Iterar Recursivamente por Directorios
+*******************************************************
+Vamos a ver un ejemplo algo más completo, consiste en iterar recursivamente a través de directorios, filtrando los ficheros por extension.
+
+Este es el ejemplo en C++11, sin filtrar por extension, para evitar complicarlo:
 
 .. listing:: recursive-directory/filesystem.11.cpp cpp
 
+`Compilar y ejecutar el ejemplo C++11 <http://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.
+
+El siguiente ejemplo filtra los ficheros por extension.
+
 .. listing:: recursive-directory/filesystem.17.cpp cpp
 
+`Compilar y ejecutar el ejemplo C++17 <http://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.

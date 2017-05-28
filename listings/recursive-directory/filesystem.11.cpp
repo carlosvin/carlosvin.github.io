@@ -27,7 +27,7 @@ string path(initializer_list<string> parts)
     return pathTmp;
 }
 
-vector<string> getDirectoryFiles(const string& dir) 
+vector<string> getDirectoryFiles(const string& dir, const vector<string> & extensions) 
 {
     vector<string> files;
     shared_ptr<DIR> directory_ptr(opendir(dir.c_str()), [](DIR* dir){ dir && closedir(dir); });
@@ -44,24 +44,25 @@ vector<string> getDirectoryFiles(const string& dir)
         {
             if (CURRENT_DIR != fileName && UP_DIR != fileName) 
             {
-                auto subFiles = getDirectoryFiles(path({dir, fileName}));
+                auto subFiles = getDirectoryFiles(path({dir, fileName}), extensions);
                 files.insert(end(files), begin(subFiles), end(subFiles));
             }
         } 
         else if (dirent_ptr->d_type == DT_REG) 
         {
+            // here we should check also if filename has an extension in extensions vector
             files.push_back(path({dir, fileName}));
         }
     }
     return files;
 }
 
-
 int main ()
 {
-    mkdir("sandbox", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    mkdir("sandbox/a", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    mkdir("sandbox/a/b", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    auto opt = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
+    mkdir("sandbox", opt);
+    mkdir("sandbox/a", opt);
+    mkdir("sandbox/a/b", opt);
 
 	vector<string> e_files = {
 	    "./sandbox/a/b/file1.rst", 
@@ -79,7 +80,7 @@ int main ()
 	}
 
     cout << "filtered files: " << endl;
-	for (auto &f: getDirectoryFiles(".")){
+	for (auto &f: getDirectoryFiles(".", {".rst", ".RST", ".md"})){
 	    cout << "\t" << f << endl;
 	}
 
