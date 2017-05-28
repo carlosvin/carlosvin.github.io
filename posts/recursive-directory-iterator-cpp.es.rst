@@ -1,0 +1,179 @@
+.. title: Sistema de Ficheros en C++17
+.. slug: recursive-directory-iterator
+.. date: 2017/05/29 09:00
+.. tags: C++, C++11, C++17, IO, Filesystem
+.. description: Vamos a analizar con un ejemplo la forma de recorrer directorios de manera recursiva a partir de C++17
+.. type: text
+
+Introducción
+------------
+
+A partir de C++17 se añadirán nuevas abstracciones sobre el sistema de ficheros. De momento están disponibles como parte de las 
+`Características Experimentales de C++ 
+<http://en.cppreference.com/w/cpp/experimental>`_. Si queréis profundizar aquí está el `borrador final de la Especificación Técnica del Sistema de Ficheros <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf>`_. 
+
+Comenzar a utilizar característica experimental filesystem C++17 (g++)
+----------------------------------------------------------------------
+
+Simplement debemos "decir" al compilador que estamos escribiendo código C++17 (**-c++1z**) y que añada la librería estándar filesystem (**-lstdc++fs**).
+
+.. code-block:: bash
+    
+    g++ -std=c++1z main.cpp -lstdc++fs && ./a.out
+
+Veamos un ejemplo muy simple utilizando la clase ``std::filesystem::path``. 
+
+.. code-block:: cpp
+
+    #include <experimental/filesystem>
+    #include <iostream>
+
+    namespace fs = std::experimental::filesystem;
+    using namespace std;
+
+    int main()
+    {
+        fs::path aPath {"./path/to/file.txt"};
+
+        cout << "Parent path: " << aPath.parent_path() << endl;
+        cout << "Filename: " << aPath.filename() << endl;
+        cout << "Extension: " << aPath.extension() << endl;
+
+        return 0;
+    }
+
+`Compilar y ejecutar, ejemplo básico C++17 <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_
+
+Como vemos el resultado de la ejecución es: 
+
+.. code-block:: bash
+
+    $ g++ -std=c++1z main.cpp -lstdc++fs && ./a.out
+    $ ./a.out
+
+    Parent path: "./path/to"
+    Filename: "file.txt"
+    Extension: ".txt"
+
+Características de filesystem C++17
+-----------------------------------
+A continuación vamos a analizar algunas características que nos proporciona `std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ con ejemplos, mostrando las diferentes. También mostraremos el equivalente en C++11, en el que no disponemos de ésta librería, para hacernos una idea de lo que puede facilitar el trabajo al desarrollador.
+
+
+std::filesystem::path
+=====================
+
+Más arriba ya hemos visto un pequeño `ejemplo de uso de std::filesystem::path  <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_. Pero esta abstracción nos proporciona una ruta a ficheros y directorios multi-plataforma, utilizando el separador de directorios correspondiente a la plataforma en la que trabajamos ``\`` en sistemas basados en Windows y ``/`` en sistemas basados en Unix. 
+
+Separador de directorios
+************************
+
+Si quisiéramos que nuestro software utilizase el separador de directorios en C++11, tendríamos que añadir el siguiente código:
+
+
+.. code-block:: cpp
+
+    #include <iostream>
+
+    using namespace std;
+
+    #ifdef _WIN32
+    const string SEP = "\\";
+    #else
+    const string SEP = "/";
+    #endif
+
+    int main()
+    {
+        cout << "Separator in my system " << SEP << endl;
+        return 0;
+    }
+
+`Compilar y ejecutar: ejemplo separador C++11 <http://coliru.stacked-crooked.com/a/5023ee989105fc54>`_
+
+En C++17 sería algo más sencillo:
+
+.. code-block:: cpp
+
+    #include <experimental/filesystem>
+    #include <iostream>
+
+    namespace fs = std::experimental::filesystem;
+    using namespace std;
+
+    int main()
+    {
+        cout << "Separator in my system " << fs::path::preferred_separator << endl;
+        return 0;
+    }
+
+`Compilar y ejecutar: ejemplo separador C++17 <http://coliru.stacked-crooked.com/a/1f2f63b3f5597d05>`_
+
+Operador separador de directorios
+*********************************
+`std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_ sobrescribe el operador ``/``, este operador nos permite concatenar fácilmente rutas a ficheros o directorios.
+
+Si quisiéramos construir rutas a directorios en C++11, tendríamos que implementar cierta lógica extra para detectar que no añadimos separadores extra y para utilizar el separador correcto:
+
+.. code-blocik:: cpp
+
+    #include <iostream>
+
+    using namespace std;
+
+    #ifdef _WIN32
+    const string SEP = "\\";
+    #else
+    const string SEP = "/";
+    #endif
+
+    int main()
+    {
+        string root {"/"};
+        string dir {"var/www/"};
+        string index {"index.html"};
+        
+        string pathToIndex{};
+        pathToIndex.append(root).append(SEP).append(dir).append(SEP).append(index);
+        
+        cout << pathToIndex << endl;
+        return 0;
+    }
+
+`Compilar y ejecutar: ejemplo concatenar rutas C++11 <http://coliru.stacked-crooked.com/a/290b278ec1de9573>`_. Como vemos el resultado no es del todo correcto, deberíamos comprobar si las partes de la ruta ya contienen separador, para no añadirlo.
+
+Toda esta lógica está ya implementada en `std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_, así que el código en C++17 sería algo así: 
+
+.. code-block:: cpp
+
+    #include <experimental/filesystem>
+    #include <iostream>
+
+    namespace fs = std::experimental::filesystem;
+    using namespace std;
+
+    int main()
+    {
+        fs::path root {"/"};
+        fs::path dir {"var/www/"};
+        fs::path index {"index.html"};
+        
+        fs::path pathToIndex = root / dir / index;
+        
+        cout << pathToIndex << endl;
+        return 0;
+    }
+
+`Compilar y ejecutar: ejemplo concatenar rutas C++17 <http://coliru.stacked-crooked.com/a/a24d50875b4daad1>`_. Aquí el código es más limpio y el resultado es simplemente correcto, no hay separadores duplicados. 
+
+
+--------------
+
+New way http://coliru.stacked-crooked.com/a/5acd6552b8feed6f
+
+Old way http://coliru.stacked-crooked.com/a/99ee343715efd992
+
+.. listing:: recursive-directory/filesystem.11.cpp cpp
+
+.. listing:: recursive-directory/filesystem.17.cpp cpp
+
