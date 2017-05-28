@@ -5,7 +5,11 @@
 <meta name="description" content="Qué está pasando por mi cabeza y alrededores">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Carlos says "bla bla"</title>
-<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
 <meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml">
@@ -81,16 +85,379 @@
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/reverse-proxy-multidomain-docker/" class="u-url">Contenedores Docker multi-dominio</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/recursive-directory-iterator/" class="u-url">Sistema de Ficheros en C++17</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="posts/recursive-directory-iterator/" rel="bookmark"><time class="published dt-published" datetime="2017-05-28T09:00:00+02:00" title="2017-05-28">2017-05-28</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/./es/posts/recursive-directory-iterator/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<div class="section" id="introduccion">
+<h2><a class="toc-backref" href="posts/recursive-directory-iterator/#id4">Introducción</a></h2>
+<p>A partir de C++17 se añadirán nuevas abstracciones sobre el sistema de ficheros. De momento están disponibles como parte de las
+<a class="reference external" href="http://en.cppreference.com/w/cpp/experimental">Características Experimentales de C++</a>. Si queréis profundizar aquí está el <a class="reference external" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf">borrador final de la Especificación Técnica del Sistema de Ficheros</a>.</p>
+<div class="contents topic" id="contenido">
+<p class="topic-title first">Contenido</p>
+<ul class="simple">
+<li><a class="reference internal" href="posts/recursive-directory-iterator/#introduccion" id="id4">Introducción</a></li>
+<li><a class="reference internal" href="posts/recursive-directory-iterator/#comenzar-a-utilizar-caracteristica-experimental-filesystem-c-17-g" id="id5">Comenzar a utilizar característica experimental filesystem C++17 (g++)</a></li>
+<li>
+<a class="reference internal" href="posts/recursive-directory-iterator/#caracteristicas-de-filesystem-c-17" id="id6">Características de filesystem C++17</a><ul>
+<li><a class="reference internal" href="posts/recursive-directory-iterator/#std-filesystem-path" id="id7">std::filesystem::path</a></li>
+<li><a class="reference internal" href="posts/recursive-directory-iterator/#separador-de-directorios" id="id8">Separador de directorios</a></li>
+<li><a class="reference internal" href="posts/recursive-directory-iterator/#operador-separador-de-directorios" id="id9">Operador separador de directorios</a></li>
+<li><a class="reference internal" href="posts/recursive-directory-iterator/#crear-y-borrar-directorios" id="id10">Crear y borrar directorios</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="posts/recursive-directory-iterator/#ejemplo-completo-iterar-recursivamente-por-directorios" id="id11">Ejemplo completo: Iterar Recursivamente por Directorios</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="comenzar-a-utilizar-caracteristica-experimental-filesystem-c-17-g">
+<h2><a class="toc-backref" href="posts/recursive-directory-iterator/#id5">Comenzar a utilizar característica experimental filesystem C++17 (g++)</a></h2>
+<p>Simplemente debemos "decir" al compilador que estamos escribiendo código C++17 (<strong>-c++1z</strong>) y que añada la librería estándar con la librería filesystem (<strong>-lstdc++fs</strong>).</p>
+<pre class="code bash"><a name="rest_code_b3f957fb25de4c40a1fd8e529338b1a4-1"></a>g++ -std<span class="o">=</span>c++1z main.cpp -lstdc++fs <span class="o">&amp;&amp;</span> ./a.out
+</pre>
+<p>Veamos un ejemplo muy simple utilizando la clase <tt class="docutils literal"><span class="pre">std::filesystem::path</span></tt>.</p>
+<pre class="code cpp"><a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-1"></a><span class="cp">#include</span> <span class="cpf">&lt;experimental/filesystem&gt;</span><span class="cp"></span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-2"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-3"></a>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-4"></a><span class="k">namespace</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">experimental</span><span class="o">::</span><span class="n">filesystem</span><span class="p">;</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-5"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-6"></a>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-7"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-8"></a><span class="p">{</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-9"></a>    <span class="n">fs</span><span class="o">::</span><span class="n">path</span> <span class="n">aPath</span> <span class="p">{</span><span class="s">"./path/to/file.txt"</span><span class="p">};</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-10"></a>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-11"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Parent path: "</span> <span class="o">&lt;&lt;</span> <span class="n">aPath</span><span class="p">.</span><span class="n">parent_path</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-12"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Filename: "</span> <span class="o">&lt;&lt;</span> <span class="n">aPath</span><span class="p">.</span><span class="n">filename</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-13"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Extension: "</span> <span class="o">&lt;&lt;</span> <span class="n">aPath</span><span class="p">.</span><span class="n">extension</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-14"></a>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-15"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_36fb468f3a854614b4914aa27bbbdfb4-16"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7">Compilar y ejecutar: ejemplo básico C++17</a></p>
+<p>Como vemos el resultado de la ejecución es:</p>
+<pre class="code bash"><a name="rest_code_e645108ca8e24812aac0f4cefd3b0c97-1"></a>$ g++ -std<span class="o">=</span>c++1z main.cpp -lstdc++fs <span class="o">&amp;&amp;</span> ./a.out
+<a name="rest_code_e645108ca8e24812aac0f4cefd3b0c97-2"></a>$ ./a.out
+<a name="rest_code_e645108ca8e24812aac0f4cefd3b0c97-3"></a>
+<a name="rest_code_e645108ca8e24812aac0f4cefd3b0c97-4"></a>Parent path: <span class="s2">"./path/to"</span>
+<a name="rest_code_e645108ca8e24812aac0f4cefd3b0c97-5"></a>Filename: <span class="s2">"file.txt"</span>
+<a name="rest_code_e645108ca8e24812aac0f4cefd3b0c97-6"></a>Extension: <span class="s2">".txt"</span>
+</pre>
+</div>
+<div class="section" id="caracteristicas-de-filesystem-c-17">
+<h2><a class="toc-backref" href="posts/recursive-directory-iterator/#id6">Características de filesystem C++17</a></h2>
+<p>A continuación vamos a analizar algunas características que nos proporciona <a class="reference external" href="http://en.cppreference.com/w/cpp/filesystem">std::filesystem</a> con ejemplos en C++11 y C++17, de esta forma podremos hacernos una idea de las utilidades que esta nueva librería nos trae y cómo efectivamente ayuda al desarrollador a escribir código más claro y seguro.</p>
+<div class="section" id="std-filesystem-path">
+<h3><a class="toc-backref" href="posts/recursive-directory-iterator/#id7">std::filesystem::path</a></h3>
+<p>Más arriba ya hemos visto un pequeño <a class="reference external" href="http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7">ejemplo de uso de clase std::filesystem::path</a>. Ésta abstracción nos proporciona una ruta a ficheros y directorios multi-plataforma, utilizando el separador de directorios correspondiente a la plataforma en la que trabajamos <tt class="docutils literal">\</tt> en sistemas basados en Windows y <tt class="docutils literal">/</tt> en sistemas basados en Unix.</p>
+</div>
+<div class="section" id="separador-de-directorios">
+<h3><a class="toc-backref" href="posts/recursive-directory-iterator/#id8">Separador de directorios</a></h3>
+<p>Si quisiéramos que nuestro software utilizase el separador de directorios correcto para una plataforma, en C++11 podríamos utilizar una macro de compilación condicional:</p>
+<pre class="code cpp"><a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-1"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-2"></a>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-3"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-4"></a>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-5"></a><span class="cp">#ifdef _WIN32</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-6"></a><span class="k">const</span> <span class="n">string</span> <span class="n">SEP</span> <span class="o">=</span> <span class="s">"</span><span class="se">\\</span><span class="s">"</span><span class="p">;</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-7"></a><span class="cp">#else</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-8"></a><span class="k">const</span> <span class="n">string</span> <span class="n">SEP</span> <span class="o">=</span> <span class="s">"/"</span><span class="p">;</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-9"></a><span class="cp">#endif</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-10"></a>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-11"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-12"></a><span class="p">{</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-13"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Separator in my system "</span> <span class="o">&lt;&lt;</span> <span class="n">SEP</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-14"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_a4a391d1663c486f81a4aaac5203eb25-15"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/5023ee989105fc54">Compilar y ejecutar: ejemplo separador C++11</a></p>
+<p>En C++17 sería algo más sencillo:</p>
+<pre class="code cpp"><a name="rest_code_89111667449d4ff0a3397ed419f64f39-1"></a><span class="cp">#include</span> <span class="cpf">&lt;experimental/filesystem&gt;</span><span class="cp"></span>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-2"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-3"></a>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-4"></a><span class="k">namespace</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">experimental</span><span class="o">::</span><span class="n">filesystem</span><span class="p">;</span>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-5"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-6"></a>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-7"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-8"></a><span class="p">{</span>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-9"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Separator in my system "</span> <span class="o">&lt;&lt;</span> <span class="n">fs</span><span class="o">::</span><span class="n">path</span><span class="o">::</span><span class="n">preferred_separator</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-10"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_89111667449d4ff0a3397ed419f64f39-11"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/1f2f63b3f5597d05">Compilar y ejecutar: ejemplo separador C++17</a></p>
+</div>
+<div class="section" id="operador-separador-de-directorios">
+<h3><a class="toc-backref" href="posts/recursive-directory-iterator/#id9">Operador separador de directorios</a></h3>
+<p><a class="reference external" href="http://en.cppreference.com/w/cpp/filesystem/path">std::filesystem::path</a> implementa el operador <strong>/</strong>, el cual nos permite concatenar fácilmente rutas a ficheros o directorios.</p>
+<p>Si quisiéramos construir rutas a directorios en C++11, tendríamos que implementar cierta lógica extra para detectar que no añadimos separadores extra y para utilizar el separador correcto:</p>
+<pre class="code cpp"><a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-1"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-2"></a>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-3"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-4"></a>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-5"></a><span class="cp">#ifdef _WIN32</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-6"></a><span class="k">const</span> <span class="n">string</span> <span class="n">SEP</span> <span class="o">=</span> <span class="s">"</span><span class="se">\\</span><span class="s">"</span><span class="p">;</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-7"></a><span class="cp">#else</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-8"></a><span class="k">const</span> <span class="n">string</span> <span class="n">SEP</span> <span class="o">=</span> <span class="s">"/"</span><span class="p">;</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-9"></a><span class="cp">#endif</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-10"></a>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-11"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-12"></a><span class="p">{</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-13"></a>    <span class="n">string</span> <span class="n">root</span> <span class="p">{</span><span class="s">"/"</span><span class="p">};</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-14"></a>    <span class="n">string</span> <span class="n">dir</span> <span class="p">{</span><span class="s">"var/www/"</span><span class="p">};</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-15"></a>    <span class="n">string</span> <span class="n">index</span> <span class="p">{</span><span class="s">"index.html"</span><span class="p">};</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-16"></a>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-17"></a>    <span class="n">string</span> <span class="n">pathToIndex</span><span class="p">{};</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-18"></a>    <span class="n">pathToIndex</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">root</span><span class="p">).</span><span class="n">append</span><span class="p">(</span><span class="n">SEP</span><span class="p">).</span><span class="n">append</span><span class="p">(</span><span class="n">dir</span><span class="p">).</span><span class="n">append</span><span class="p">(</span><span class="n">SEP</span><span class="p">).</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-19"></a>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-20"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">pathToIndex</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-21"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_7f065a8dbc1b4c10b850a357124617a3-22"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/290b278ec1de9573">Compilar y ejecutar: ejemplo concatenar rutas C++11</a>. Como vemos el resultado no es del todo correcto, deberíamos comprobar si las partes de la ruta ya contienen separador, para no añadirlo.</p>
+<p>Toda esta lógica está ya implementada en <a class="reference external" href="http://en.cppreference.com/w/cpp/filesystem/path">std::filesystem::path</a>, así que el código en C++17 sería algo así:</p>
+<pre class="code cpp"><a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-1"></a><span class="cp">#include</span> <span class="cpf">&lt;experimental/filesystem&gt;</span><span class="cp"></span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-2"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-3"></a>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-4"></a><span class="k">namespace</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">experimental</span><span class="o">::</span><span class="n">filesystem</span><span class="p">;</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-5"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-6"></a>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-7"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-8"></a><span class="p">{</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-9"></a>    <span class="n">fs</span><span class="o">::</span><span class="n">path</span> <span class="n">root</span> <span class="p">{</span><span class="s">"/"</span><span class="p">};</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-10"></a>    <span class="n">fs</span><span class="o">::</span><span class="n">path</span> <span class="n">dir</span> <span class="p">{</span><span class="s">"var/www/"</span><span class="p">};</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-11"></a>    <span class="n">fs</span><span class="o">::</span><span class="n">path</span> <span class="n">index</span> <span class="p">{</span><span class="s">"index.html"</span><span class="p">};</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-12"></a>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-13"></a>    <span class="n">fs</span><span class="o">::</span><span class="n">path</span> <span class="n">pathToIndex</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="n">dir</span> <span class="o">/</span> <span class="n">index</span><span class="p">;</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-14"></a>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-15"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">pathToIndex</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-16"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_b0835dc98f2a4f658b761ec3fcad72f2-17"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/a24d50875b4daad1">Compilar y ejecutar: ejemplo concatenar rutas C++17</a>. Aquí el código es más limpio y el resultado es simplemente correcto, no hay separadores duplicados.</p>
+</div>
+<div class="section" id="crear-y-borrar-directorios">
+<h3><a class="toc-backref" href="posts/recursive-directory-iterator/#id10">Crear y borrar directorios</a></h3>
+<p><a class="reference external" href="http://en.cppreference.com/w/cpp/filesystem">std::filesystem</a> introduce algunas facilidades para crear y borrar directorios y ficheros, primero vamos a ver una de las formas de hacerlo en C++11.</p>
+<pre class="code cpp"><a name="rest_code_f8db4fdd00c4413db737c505ddda3966-1"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-2"></a><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-3"></a><span class="cp">#include</span> <span class="cpf">&lt;sys/stat.h&gt;</span><span class="cp"></span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-4"></a>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-5"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-6"></a>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-7"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-8"></a><span class="p">{</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-9"></a>    <span class="k">auto</span> <span class="n">opts</span> <span class="o">=</span> <span class="n">S_IRWXU</span> <span class="o">|</span> <span class="n">S_IRWXG</span> <span class="o">|</span> <span class="n">S_IROTH</span> <span class="o">|</span> <span class="n">S_IXOTH</span><span class="p">;</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-10"></a>    <span class="n">mkdir</span><span class="p">(</span><span class="s">"sandbox"</span><span class="p">,</span> <span class="n">opts</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-11"></a>    <span class="n">mkdir</span><span class="p">(</span><span class="s">"sandbox/a"</span><span class="p">,</span> <span class="n">opts</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-12"></a>    <span class="n">mkdir</span><span class="p">(</span><span class="s">"sandbox/a/b"</span><span class="p">,</span> <span class="n">opts</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-13"></a>    <span class="n">mkdir</span><span class="p">(</span><span class="s">"sandbox/c"</span><span class="p">,</span> <span class="n">opts</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-14"></a>    <span class="n">mkdir</span><span class="p">(</span><span class="s">"sandbox/c/d"</span><span class="p">,</span> <span class="n">opts</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-15"></a>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-16"></a>    <span class="n">system</span><span class="p">(</span><span class="s">"ls -la sandbox/*"</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-17"></a>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-18"></a>    <span class="n">remove</span><span class="p">(</span><span class="s">"sandbox/c/d"</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-19"></a>    <span class="n">remove</span><span class="p">(</span><span class="s">"sandbox/a/b"</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-20"></a>    <span class="n">remove</span><span class="p">(</span><span class="s">"sandbox/c"</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-21"></a>    <span class="n">remove</span><span class="p">(</span><span class="s">"sandbox/a"</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-22"></a>    <span class="n">remove</span><span class="p">(</span><span class="s">"sandbox"</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-23"></a>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-24"></a>    <span class="n">system</span><span class="p">(</span><span class="s">"ls -la"</span><span class="p">);</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-25"></a>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-26"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_f8db4fdd00c4413db737c505ddda3966-27"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/26f4763ec5b42adb">Compilar y ejecutar: crear y borrar directorios C++11</a>. Para crear y borrar directorios anidados, debemos hacerlo uno por uno. Podemos escribir este fragmento de código con menos líneas, pero aún así tendremos que tener cuidado del orden en el que creamos/borramos los directorios.</p>
+<p>En C++17 podemos borrar y crear directorios anidados con una sola llamada.</p>
+<pre class="code cpp"><a name="rest_code_58946698e7f944568642e3b3cfdb08bd-1"></a><span class="cp">#include</span> <span class="cpf">&lt;experimental/filesystem&gt;</span><span class="cp"></span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-2"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-3"></a>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-4"></a><span class="k">namespace</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">experimental</span><span class="o">::</span><span class="n">filesystem</span><span class="p">;</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-5"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-6"></a>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-7"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-8"></a><span class="p">{</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-9"></a>    <span class="n">fs</span><span class="o">::</span><span class="n">create_directories</span><span class="p">(</span><span class="s">"sandbox/a/b"</span><span class="p">);</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-10"></a>    <span class="n">fs</span><span class="o">::</span><span class="n">create_directories</span><span class="p">(</span><span class="s">"sandbox/c/d"</span><span class="p">);</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-11"></a>    <span class="n">system</span><span class="p">(</span><span class="s">"ls -la sandbox/*"</span><span class="p">);</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-12"></a>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-13"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Were directories removed? "</span> <span class="o">&lt;&lt;</span> <span class="n">fs</span><span class="o">::</span><span class="n">remove_all</span><span class="p">(</span><span class="s">"sandbox"</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-14"></a>    <span class="n">system</span><span class="p">(</span><span class="s">"ls -la"</span><span class="p">);</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-15"></a>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-16"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_58946698e7f944568642e3b3cfdb08bd-17"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/62c2d22fa0e7144c">Compilar y ejecutar: crear y borrar directorios C++17</a>.</p>
+</div>
+</div>
+<div class="section" id="ejemplo-completo-iterar-recursivamente-por-directorios">
+<h2><a class="toc-backref" href="posts/recursive-directory-iterator/#id11">Ejemplo completo: Iterar Recursivamente por Directorios</a></h2>
+<p>Vamos a ver un ejemplo algo más completo, consiste en iterar recursivamente a través de directorios, filtrando los ficheros por extension.</p>
+<p>Este es el ejemplo en C++11, sin filtrar por extension, para evitar complicarlo:</p>
+<p><a class="reference external" href="../listings/recursive-directory/filesystem.11.cpp.html">recursive-directory/filesystem.11.cpp</a>  <a class="reference external" href="../listings/recursive-directory/filesystem.11.cpp">(Código fuente)</a></p>
+<pre class="code cpp"><a name="rest_code_1fed3f132a3d41bc81e341a279b76766-1"></a><span class="cp">#include</span> <span class="cpf">&lt;dirent.h&gt;</span><span class="cp"></span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-2"></a><span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-3"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-4"></a><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt; // std::ofstream</span><span class="cp"></span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-5"></a><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-6"></a><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-7"></a><span class="cp">#include</span> <span class="cpf">&lt;system_error&gt;</span><span class="cp"></span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-8"></a><span class="cp">#include</span> <span class="cpf">&lt;sys/stat.h&gt;</span><span class="cp"></span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-9"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-10"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-11"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-12"></a><span class="k">const</span> <span class="n">string</span> <span class="n">UP_DIR</span> <span class="o">=</span> <span class="s">".."</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-13"></a><span class="k">const</span> <span class="n">string</span> <span class="n">CURRENT_DIR</span> <span class="o">=</span> <span class="s">"."</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-14"></a><span class="k">const</span> <span class="n">string</span> <span class="n">SEP</span> <span class="o">=</span> <span class="s">"/"</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-15"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-16"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-17"></a><span class="n">string</span> <span class="nf">path</span><span class="p">(</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">parts</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-18"></a><span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-19"></a>    <span class="n">string</span> <span class="n">pathTmp</span> <span class="p">{};</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-20"></a>    <span class="n">string</span> <span class="n">separator</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-21"></a>    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span> <span class="nl">part</span><span class="p">:</span> <span class="n">parts</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-22"></a>    <span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-23"></a>        <span class="n">pathTmp</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">separator</span><span class="p">).</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="p">);</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-24"></a>        <span class="n">separator</span> <span class="o">=</span> <span class="n">SEP</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-25"></a>    <span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-26"></a>    <span class="k">return</span> <span class="n">pathTmp</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-27"></a><span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-28"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-29"></a><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">getDirectoryFiles</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">dir</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">extensions</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-30"></a><span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-31"></a>    <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">files</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-32"></a>    <span class="n">shared_ptr</span><span class="o">&lt;</span><span class="kt">DIR</span><span class="o">&gt;</span> <span class="n">directory_ptr</span><span class="p">(</span><span class="n">opendir</span><span class="p">(</span><span class="n">dir</span><span class="p">.</span><span class="n">c_str</span><span class="p">()),</span> <span class="p">[](</span><span class="kt">DIR</span><span class="o">*</span> <span class="n">dir</span><span class="p">){</span> <span class="n">dir</span> <span class="o">&amp;&amp;</span> <span class="n">closedir</span><span class="p">(</span><span class="n">dir</span><span class="p">);</span> <span class="p">});</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-33"></a>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">directory_ptr</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-34"></a>    <span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-35"></a>        <span class="k">throw</span> <span class="n">system_error</span><span class="p">(</span><span class="n">error_code</span><span class="p">(</span><span class="n">errno</span><span class="p">,</span> <span class="n">system_category</span><span class="p">()),</span> <span class="s">"Error opening : "</span> <span class="o">+</span> <span class="n">dir</span><span class="p">);</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-36"></a>    <span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-37"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-38"></a>    <span class="k">struct</span> <span class="n">dirent</span> <span class="o">*</span><span class="n">dirent_ptr</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-39"></a>    <span class="k">while</span> <span class="p">((</span><span class="n">dirent_ptr</span> <span class="o">=</span> <span class="n">readdir</span><span class="p">(</span><span class="n">directory_ptr</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-40"></a>    <span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-41"></a>        <span class="k">const</span> <span class="n">string</span> <span class="n">fileName</span> <span class="p">{</span><span class="n">dirent_ptr</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">};</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-42"></a>        <span class="k">if</span> <span class="p">(</span><span class="n">dirent_ptr</span><span class="o">-&gt;</span><span class="n">d_type</span> <span class="o">==</span> <span class="n">DT_DIR</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-43"></a>        <span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-44"></a>            <span class="k">if</span> <span class="p">(</span><span class="n">CURRENT_DIR</span> <span class="o">!=</span> <span class="n">fileName</span> <span class="o">&amp;&amp;</span> <span class="n">UP_DIR</span> <span class="o">!=</span> <span class="n">fileName</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-45"></a>            <span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-46"></a>                <span class="k">auto</span> <span class="n">subFiles</span> <span class="o">=</span> <span class="n">getDirectoryFiles</span><span class="p">(</span><span class="n">path</span><span class="p">({</span><span class="n">dir</span><span class="p">,</span> <span class="n">fileName</span><span class="p">}),</span> <span class="n">extensions</span><span class="p">);</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-47"></a>                <span class="n">files</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">end</span><span class="p">(</span><span class="n">files</span><span class="p">),</span> <span class="n">begin</span><span class="p">(</span><span class="n">subFiles</span><span class="p">),</span> <span class="n">end</span><span class="p">(</span><span class="n">subFiles</span><span class="p">));</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-48"></a>            <span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-49"></a>        <span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-50"></a>        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">dirent_ptr</span><span class="o">-&gt;</span><span class="n">d_type</span> <span class="o">==</span> <span class="n">DT_REG</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-51"></a>        <span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-52"></a>            <span class="c1">// here we should check also if filename has an extension in extensions vector</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-53"></a>            <span class="n">files</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">path</span><span class="p">({</span><span class="n">dir</span><span class="p">,</span> <span class="n">fileName</span><span class="p">}));</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-54"></a>        <span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-55"></a>    <span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-56"></a>    <span class="k">return</span> <span class="n">files</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-57"></a><span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-58"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-59"></a><span class="kt">int</span> <span class="n">main</span> <span class="p">()</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-60"></a><span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-61"></a>    <span class="k">auto</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">S_IRWXU</span> <span class="o">|</span> <span class="n">S_IRWXG</span> <span class="o">|</span> <span class="n">S_IROTH</span> <span class="o">|</span> <span class="n">S_IXOTH</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-62"></a>    <span class="n">mkdir</span><span class="p">(</span><span class="s">"sandbox"</span><span class="p">,</span> <span class="n">opt</span><span class="p">);</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-63"></a>    <span class="n">mkdir</span><span class="p">(</span><span class="s">"sandbox/a"</span><span class="p">,</span> <span class="n">opt</span><span class="p">);</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-64"></a>    <span class="n">mkdir</span><span class="p">(</span><span class="s">"sandbox/a/b"</span><span class="p">,</span> <span class="n">opt</span><span class="p">);</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-65"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-66"></a>        <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">e_files</span> <span class="o">=</span> <span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-67"></a>            <span class="s">"./sandbox/a/b/file1.rst"</span><span class="p">,</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-68"></a>            <span class="s">"./sandbox/a/b/file1.txt"</span><span class="p">,</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-69"></a>            <span class="s">"./sandbox/a/file2.RST"</span><span class="p">,</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-70"></a>            <span class="s">"./sandbox/file3.md"</span><span class="p">,</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-71"></a>            <span class="s">"./sandbox/will_be.ignored"</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-72"></a>        <span class="p">};</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-73"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-74"></a>        <span class="c1">// create files</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-75"></a>        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">f</span><span class="p">:</span> <span class="n">e_files</span><span class="p">)</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-76"></a>        <span class="p">{</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-77"></a>                <span class="n">ofstream</span> <span class="n">of</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ofstream</span><span class="o">::</span><span class="n">out</span><span class="p">);</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-78"></a>                <span class="n">of</span> <span class="o">&lt;&lt;</span> <span class="s">"test"</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-79"></a>        <span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-80"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-81"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"filtered files: "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-82"></a>        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">f</span><span class="p">:</span> <span class="n">getDirectoryFiles</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="p">{</span><span class="s">".rst"</span><span class="p">,</span> <span class="s">".RST"</span><span class="p">,</span> <span class="s">".md"</span><span class="p">})){</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-83"></a>            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-84"></a>        <span class="p">}</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-85"></a>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-86"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_1fed3f132a3d41bc81e341a279b76766-87"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/af4228e039a281b3">Compilar y ejecutar el ejemplo C++11</a>.</p>
+<p>El siguiente ejemplo filtra los ficheros por extension.</p>
+<p><a class="reference external" href="../listings/recursive-directory/filesystem.17.cpp.html">recursive-directory/filesystem.17.cpp</a>  <a class="reference external" href="../listings/recursive-directory/filesystem.17.cpp">(Código fuente)</a></p>
+<pre class="code cpp"><a name="rest_code_144f774f51744c44a59fbae2e9a3b960-1"></a><span class="cp">#include</span> <span class="cpf">&lt;experimental/filesystem&gt;</span><span class="cp"></span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-2"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-3"></a><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-4"></a><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-5"></a><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;    // std::find</span><span class="cp"></span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-6"></a>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-7"></a><span class="k">namespace</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">experimental</span><span class="o">::</span><span class="n">filesystem</span><span class="p">;</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-8"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-9"></a>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-10"></a><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">getDirectoryFiles</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span> <span class="n">dir</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">extensions</span><span class="p">)</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-11"></a><span class="p">{</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-12"></a>        <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">files</span><span class="p">;</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-13"></a>    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span> <span class="nl">p</span><span class="p">:</span> <span class="n">fs</span><span class="o">::</span><span class="n">recursive_directory_iterator</span><span class="p">(</span><span class="n">dir</span><span class="p">))</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-14"></a>    <span class="p">{</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-15"></a>        <span class="k">if</span> <span class="p">(</span><span class="n">fs</span><span class="o">::</span><span class="n">is_regular_file</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-16"></a>        <span class="p">{</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-17"></a>                <span class="k">if</span> <span class="p">(</span><span class="n">extensions</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">find</span><span class="p">(</span><span class="n">extensions</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">extensions</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">p</span><span class="p">.</span><span class="n">path</span><span class="p">().</span><span class="n">extension</span><span class="p">().</span><span class="n">string</span><span class="p">())</span> <span class="o">!=</span> <span class="n">extensions</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-18"></a>            <span class="p">{</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-19"></a>                <span class="n">files</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">path</span><span class="p">().</span><span class="n">string</span><span class="p">());</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-20"></a>            <span class="p">}</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-21"></a>        <span class="p">}</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-22"></a>    <span class="p">}</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-23"></a>    <span class="k">return</span> <span class="n">files</span><span class="p">;</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-24"></a><span class="p">}</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-25"></a>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-26"></a><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-27"></a><span class="p">{</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-28"></a>    <span class="n">fs</span><span class="o">::</span><span class="n">create_directories</span><span class="p">(</span><span class="s">"sandbox/a/b"</span><span class="p">);</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-29"></a>        <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">e_files</span> <span class="o">=</span> <span class="p">{</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-30"></a>            <span class="s">"./sandbox/a/b/file1.rst"</span><span class="p">,</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-31"></a>            <span class="s">"./sandbox/a/b/file1.txt"</span><span class="p">,</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-32"></a>            <span class="s">"./sandbox/a/file2.RST"</span><span class="p">,</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-33"></a>            <span class="s">"./sandbox/file3.md"</span><span class="p">,</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-34"></a>            <span class="s">"./sandbox/will_be.ignored"</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-35"></a>        <span class="p">};</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-36"></a>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-37"></a>        <span class="c1">// create files</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-38"></a>        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">f</span><span class="p">:</span> <span class="n">e_files</span><span class="p">)</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-39"></a>        <span class="p">{</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-40"></a>                <span class="n">ofstream</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">"test"</span><span class="p">;</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-41"></a>        <span class="p">}</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-42"></a>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-43"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"filtered files: "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-44"></a>        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">f</span><span class="p">:</span> <span class="n">getDirectoryFiles</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="p">{</span><span class="s">".rst"</span><span class="p">,</span> <span class="s">".RST"</span><span class="p">,</span> <span class="s">".md"</span><span class="p">})){</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-45"></a>            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-46"></a>        <span class="p">}</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-47"></a>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-48"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_144f774f51744c44a59fbae2e9a3b960-49"></a><span class="p">}</span>
+</pre>
+<p><a class="reference external" href="http://coliru.stacked-crooked.com/a/af4228e039a281b3">Compilar y ejecutar el ejemplo C++17</a>.</p>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/reverse-proxy-multidomain-docker/" class="u-url">Contenedores Docker multi-dominio</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/reverse-proxy-multidomain-docker/" rel="bookmark"><time class="published dt-published" datetime="2016-11-24T21:00:00+01:00" title="2016-11-24">2016-11-24</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/reverse-proxy-multidomain-docker/"></div>
+<div class="g-commentcount" data-href="/./es/posts/reverse-proxy-multidomain-docker/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
@@ -170,50 +537,50 @@
 <p>La parte más importante es la configuración de las relaciones entre los contenedores.</p>
 <p><a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/docker-compose.yaml.html">docker-reverse-proxy-multi-domain/docker-compose.yaml</a>  <a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/docker-compose.yaml">(Código fuente)</a></p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-1"> 1</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-2"> 2</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-3"> 3</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-4"> 4</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-5"> 5</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-6"> 6</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-7"> 7</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-8"> 8</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-9"> 9</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-10">10</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-11">11</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-12">12</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-13">13</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-14">14</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-15">15</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-16">16</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-17">17</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-18">18</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-19">19</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-20">20</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-21">21</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-22">22</a></pre></div></td>
-<td class="code"><pre class="code yaml"><a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-1"></a><span class="l l-Scalar l-Scalar-Plain">a</span><span class="p p-Indicator">:</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-2"></a>  <span class="l l-Scalar l-Scalar-Plain">build</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-3"></a>  <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-4"></a>    <span class="l l-Scalar l-Scalar-Plain">VIRTUAL_HOST</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a.domain.com</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-5"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-6"></a>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-7"></a><span class="l l-Scalar l-Scalar-Plain">b</span><span class="p p-Indicator">:</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-8"></a>  <span class="l l-Scalar l-Scalar-Plain">build</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">b</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-9"></a>  <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-10"></a>    <span class="l l-Scalar l-Scalar-Plain">VIRTUAL_HOST</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">b.domain.com</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-11"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-12"></a>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-13"></a><span class="l l-Scalar l-Scalar-Plain">nginx-proxy</span><span class="p p-Indicator">:</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-14"></a>  <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">jwilder/nginx-proxy</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-15"></a>  <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-16"></a>    <span class="p p-Indicator">-</span> <span class="s">"80:80"</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-17"></a>    <span class="p p-Indicator">-</span> <span class="s">"443:443"</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-18"></a>  <span class="l l-Scalar l-Scalar-Plain">volumes</span><span class="p p-Indicator">:</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-19"></a>    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/tmp/docker.sock:ro</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-20"></a>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-21"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
-<a name="rest_code_d1c5cb1adfbc47e7903b73e641ab8d80-22"></a>  <span class="l l-Scalar l-Scalar-Plain">privileged</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-1"> 1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-2"> 2</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-3"> 3</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-4"> 4</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-5"> 5</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-6"> 6</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-7"> 7</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-8"> 8</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-9"> 9</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-10">10</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-11">11</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-12">12</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-13">13</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-14">14</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-15">15</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-16">16</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-17">17</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-18">18</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-19">19</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-20">20</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-21">21</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_73c734a488bf452bbf28800787158c80-22">22</a></pre></div></td>
+<td class="code"><pre class="code yaml"><a name="rest_code_73c734a488bf452bbf28800787158c80-1"></a><span class="l l-Scalar l-Scalar-Plain">a</span><span class="p p-Indicator">:</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-2"></a>  <span class="l l-Scalar l-Scalar-Plain">build</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-3"></a>  <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-4"></a>    <span class="l l-Scalar l-Scalar-Plain">VIRTUAL_HOST</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a.domain.com</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-5"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-6"></a>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-7"></a><span class="l l-Scalar l-Scalar-Plain">b</span><span class="p p-Indicator">:</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-8"></a>  <span class="l l-Scalar l-Scalar-Plain">build</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">b</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-9"></a>  <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-10"></a>    <span class="l l-Scalar l-Scalar-Plain">VIRTUAL_HOST</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">b.domain.com</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-11"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-12"></a>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-13"></a><span class="l l-Scalar l-Scalar-Plain">nginx-proxy</span><span class="p p-Indicator">:</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-14"></a>  <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">jwilder/nginx-proxy</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-15"></a>  <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-16"></a>    <span class="p p-Indicator">-</span> <span class="s">"80:80"</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-17"></a>    <span class="p p-Indicator">-</span> <span class="s">"443:443"</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-18"></a>  <span class="l l-Scalar l-Scalar-Plain">volumes</span><span class="p p-Indicator">:</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-19"></a>    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/tmp/docker.sock:ro</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-20"></a>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-21"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_73c734a488bf452bbf28800787158c80-22"></a>  <span class="l l-Scalar l-Scalar-Plain">privileged</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></td>
 </tr></table>
 <ul class="simple">
@@ -227,10 +594,10 @@
 <p>A continuación vamos a comentar la configuración de la imágen del contenedor para la aplicación A.</p>
 <p><a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/a/Dockerfile.html">docker-reverse-proxy-multi-domain/a/Dockerfile</a>  <a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/a/Dockerfile">(Código fuente)</a></p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_63a9728999ec44979658322c858971c4-1">1</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_63a9728999ec44979658322c858971c4-2">2</a></pre></div></td>
-<td class="code"><pre class="code docker"><a name="rest_code_63a9728999ec44979658322c858971c4-1"></a><span class="k">FROM</span><span class="s"> httpd:2.4</span>
-<a name="rest_code_63a9728999ec44979658322c858971c4-2"></a><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/local/apache2/htdocs/index.html
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_cfadde7db4994711acbfa28f3f53e9b4-1">1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_cfadde7db4994711acbfa28f3f53e9b4-2">2</a></pre></div></td>
+<td class="code"><pre class="code docker"><a name="rest_code_cfadde7db4994711acbfa28f3f53e9b4-1"></a><span class="k">FROM</span><span class="s"> httpd:2.4</span>
+<a name="rest_code_cfadde7db4994711acbfa28f3f53e9b4-2"></a><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/local/apache2/htdocs/index.html
 </pre></td>
 </tr></table>
 <p>Línea 1: Importamos una imágen con un servidor apache.</p>
@@ -238,10 +605,10 @@
 <p>La configuración para la aplicación B, es prácticamente la misma:</p>
 <p><a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/b/Dockerfile.html">docker-reverse-proxy-multi-domain/b/Dockerfile</a>  <a class="reference external" href="../listings/docker-reverse-proxy-multi-domain/b/Dockerfile">(Código fuente)</a></p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_78fba776211b47a4a1ae1d8be40c4192-1">1</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_78fba776211b47a4a1ae1d8be40c4192-2">2</a></pre></div></td>
-<td class="code"><pre class="code docker"><a name="rest_code_78fba776211b47a4a1ae1d8be40c4192-1"></a><span class="k">FROM</span><span class="s"> httpd:2.4</span>
-<a name="rest_code_78fba776211b47a4a1ae1d8be40c4192-2"></a><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/local/apache2/htdocs/index.html
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_46824213a3b047c68ff20b014ded9cc8-1">1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_46824213a3b047c68ff20b014ded9cc8-2">2</a></pre></div></td>
+<td class="code"><pre class="code docker"><a name="rest_code_46824213a3b047c68ff20b014ded9cc8-1"></a><span class="k">FROM</span><span class="s"> httpd:2.4</span>
+<a name="rest_code_46824213a3b047c68ff20b014ded9cc8-2"></a><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/local/apache2/htdocs/index.html
 </pre></td>
 </tr></table>
 </div>
@@ -249,16 +616,16 @@
 <h3><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id6">Añadiendo los nombres de dominio a tu configuración</a></h3>
 <p>En Linux simplemente tenemos mapear la dirección local a los nombres de dominio que hayas elegido, en nuestro ejemplo es a.domain.com y b.domain.com.</p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-1">1</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-2">2</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-3">3</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-4">4</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_067768312e59486ab6a3db2c6f4faa04-5">5</a></pre></div></td>
-<td class="code"><pre class="code bash"><a name="rest_code_067768312e59486ab6a3db2c6f4faa04-1"></a><span class="c1">#/etc/hosts</span>
-<a name="rest_code_067768312e59486ab6a3db2c6f4faa04-2"></a><span class="m">127</span>.0.0.1             localhost.localdomain localhost
-<a name="rest_code_067768312e59486ab6a3db2c6f4faa04-3"></a>::1                 localhost6.localdomain6 localhost6
-<a name="rest_code_067768312e59486ab6a3db2c6f4faa04-4"></a><span class="m">127</span>.0.0.1   a.domain.com
-<a name="rest_code_067768312e59486ab6a3db2c6f4faa04-5"></a><span class="m">127</span>.0.0.1   b.domain.com
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-1">1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-2">2</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-3">3</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-4">4</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-5">5</a></pre></div></td>
+<td class="code"><pre class="code bash"><a name="rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-1"></a><span class="c1">#/etc/hosts</span>
+<a name="rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-2"></a><span class="m">127</span>.0.0.1             localhost.localdomain localhost
+<a name="rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-3"></a>::1                 localhost6.localdomain6 localhost6
+<a name="rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-4"></a><span class="m">127</span>.0.0.1   a.domain.com
+<a name="rest_code_ed3376c7ee5a4a0c8b0aefefba836d74-5"></a><span class="m">127</span>.0.0.1   b.domain.com
 </pre></td>
 </tr></table>
 <p>Simplemente he añadido las líneas 4 y 5.</p>
@@ -267,10 +634,10 @@
 <h3><a class="toc-backref" href="posts/reverse-proxy-multidomain-docker/#id7">¡Todo listo!</a></h3>
 <p>Ya solo nos queda probar el ejemplo.</p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_654020bc94f04fe79f5b086bcb397829-1">1</a>
-<a href="posts/reverse-proxy-multidomain-docker/#rest_code_654020bc94f04fe79f5b086bcb397829-2">2</a></pre></div></td>
-<td class="code"><pre class="code bash"><a name="rest_code_654020bc94f04fe79f5b086bcb397829-1"></a>docker-compose build
-<a name="rest_code_654020bc94f04fe79f5b086bcb397829-2"></a>docker-compose up
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/reverse-proxy-multidomain-docker/#rest_code_411f4ccedfc1403ab364074dba7d9066-1">1</a>
+<a href="posts/reverse-proxy-multidomain-docker/#rest_code_411f4ccedfc1403ab364074dba7d9066-2">2</a></pre></div></td>
+<td class="code"><pre class="code bash"><a name="rest_code_411f4ccedfc1403ab364074dba7d9066-1"></a>docker-compose build
+<a name="rest_code_411f4ccedfc1403ab364074dba7d9066-2"></a>docker-compose up
 </pre></td>
 </tr></table>
 <p>Ya están las tres contenedores arrancados.</p>
@@ -293,14 +660,14 @@
     </div>
     </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/rust-rest-framework-comparison/" class="u-url">Comparación frameworks REST para RUST</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/rust-rest-framework-comparison/" rel="bookmark"><time class="published dt-published" datetime="2016-04-14T20:40:00+02:00" title="2016-04-14">2016-04-14</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/rust-rest-framework-comparison/"></div>
+<div class="g-commentcount" data-href="/./es/posts/rust-rest-framework-comparison/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
@@ -312,35 +679,35 @@
     </div>
     </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/recursive-dos-unix/" class="u-url">Convertir archivos en formato Windows a formato Unix</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/recursive-dos-unix/" rel="bookmark"><time class="published dt-published" datetime="2016-02-12T10:34:00+01:00" title="2016-02-12">2016-02-12</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/recursive-dos-unix/"></div>
+<div class="g-commentcount" data-href="/./es/posts/recursive-dos-unix/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
     <div>
 <p>Si alguna vez has programado desde un entorno Windows para entornos Unix, seguramente habrás tenido este problema: Los archivos que instalas en tu entorno Unix tienen formato Windows.</p>
 <p>Hay un forma bastante sencilla de convertir todos los archivos que tienes en un directorio de formato Windows a Unix.</p>
-<pre class="code bash"><a name="rest_code_9a0decc09f804cf0aaf401dfe3accefa-1"></a>find . -type f -print0 <span class="p">|</span> xargs -0 dos2unix
+<pre class="code bash"><a name="rest_code_db95d4745e7d44e09d8a593615812ead-1"></a>find . -type f -print0 <span class="p">|</span> xargs -0 dos2unix
 </pre>
 <p>Lo he sacado, como no, de <a class="reference external" href="http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory">http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory</a></p>
 </div>
     </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/rest-urls/" class="u-url">Creando REST URLs</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/rest-urls/" rel="bookmark"><time class="published dt-published" datetime="2015-08-16T14:00:00+02:00" title="2015-08-16">2015-08-16</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/rest-urls/"></div>
+<div class="g-commentcount" data-href="/./es/posts/rest-urls/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
@@ -644,14 +1011,14 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
     </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/first-biicode-poco/" class="u-url">Gestión de dependencias C++: Biicode</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/first-biicode-poco/" rel="bookmark"><time class="published dt-published" datetime="2015-05-14T20:00:00+02:00" title="2015-05-14">2015-05-14</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/first-biicode-poco/"></div>
+<div class="g-commentcount" data-href="/./es/posts/first-biicode-poco/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
@@ -662,68 +1029,68 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
 <p>Necesitamos <a class="reference external" href="http://docs.biicode.com/c++/installation.html">instalar biicode en nuestra máquina</a>.</p>
 <p>Yo he creado un pequeño ejemplo utilizando el sistema de log de la librería <a class="reference external" href="http://pocoproject.org/">Poco</a>.</p>
 <p>He ejecutado este comando para crear mi proyecto, al que he llamado bii_log. Eso sí, lo tengo que crear debajo de mi nombre de usuario en <a class="reference external" href="https://www.biicode.org/">Biicode</a>, por si posteriormente lo quiero publicar.</p>
-<pre class="code bash"><a name="rest_code_ec2e58a4b3ac402fbc4e49b782ba7b04-1"></a>bii new carlovin/bii_log --hello<span class="o">=</span>cpp
+<pre class="code bash"><a name="rest_code_f3b50cb6144b448a82a31a299af80d4d-1"></a>bii new carlovin/bii_log --hello<span class="o">=</span>cpp
 </pre>
 <p>Se ha creado una estructura de directorios y ficheros con nuestro proyecto. Aunque los únicos ficheros que vamos a tocar son:</p>
-<pre class="code bash"><a name="rest_code_4a6a482d074a4725a05e0c3086817279-1"></a>blocks/carlosvin/bii_log/main.cpp
-<a name="rest_code_4a6a482d074a4725a05e0c3086817279-2"></a>blocks/carlosvin/bii_log/biicode.conf
+<pre class="code bash"><a name="rest_code_0ea0b0f863234a89957359ee2f1c7bf4-1"></a>blocks/carlosvin/bii_log/main.cpp
+<a name="rest_code_0ea0b0f863234a89957359ee2f1c7bf4-2"></a>blocks/carlosvin/bii_log/biicode.conf
 </pre>
 <p>En el fichero biicode.conf vamos a configurar nuestras dependencias, en nuestro caso la librería <a class="reference external" href="http://pocoproject.org/">Poco</a>.</p>
-<pre class="code yaml"><a name="rest_code_f929639d1ec84e969d3c0bf99339e524-1"></a><span class="c1"># Biicode configuration file</span>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-2"></a>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-3"></a><span class="p p-Indicator">[</span><span class="nv">requirements</span><span class="p p-Indicator">]</span>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-4"></a>    <span class="l l-Scalar l-Scalar-Plain">fenix/poco(develop)</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-5"></a>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-6"></a><span class="p p-Indicator">[</span><span class="nv">parent</span><span class="p p-Indicator">]</span>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-7"></a>        <span class="l l-Scalar l-Scalar-Plain">carlosvin/bii_log</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-8"></a>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-9"></a><span class="p p-Indicator">[</span><span class="nv">includes</span><span class="p p-Indicator">]</span>
-<a name="rest_code_f929639d1ec84e969d3c0bf99339e524-10"></a>    <span class="l l-Scalar l-Scalar-Plain">Poco/*.h</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fenix/poco/Foundation/include</span>
+<pre class="code yaml"><a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-1"></a><span class="c1"># Biicode configuration file</span>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-2"></a>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-3"></a><span class="p p-Indicator">[</span><span class="nv">requirements</span><span class="p p-Indicator">]</span>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-4"></a>    <span class="l l-Scalar l-Scalar-Plain">fenix/poco(develop)</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-5"></a>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-6"></a><span class="p p-Indicator">[</span><span class="nv">parent</span><span class="p p-Indicator">]</span>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-7"></a>        <span class="l l-Scalar l-Scalar-Plain">carlosvin/bii_log</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-8"></a>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-9"></a><span class="p p-Indicator">[</span><span class="nv">includes</span><span class="p p-Indicator">]</span>
+<a name="rest_code_d8b0545b051c431bbd1afe7d8a8726d9-10"></a>    <span class="l l-Scalar l-Scalar-Plain">Poco/*.h</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fenix/poco/Foundation/include</span>
 </pre>
 <p>En la sección [includes], estamos redefiniendo la ruta a nuestros ficheros de cabeceras, porque si no lo hiciéramos tendríamos que hacer algo así:</p>
-<pre class="code cpp"><a name="rest_code_8b8dbd3e015b4b5db6f6e473200d21a6-1"></a><span class="cp">#include</span> <span class="cpf">"fenix/poco/Foundation/include/Logger.h"</span><span class="cp"></span>
+<pre class="code cpp"><a name="rest_code_ea246f5211bc40daa2bd4b5555fcf3af-1"></a><span class="cp">#include</span> <span class="cpf">"fenix/poco/Foundation/include/Logger.h"</span><span class="cp"></span>
 </pre>
 <p>Gracias a esta línea, en nuestro código tendremos includes más claros como:</p>
-<pre class="code cpp"><a name="rest_code_a4a9a76a09804dd38e235aac799bf42d-1"></a><span class="cp">#include</span> <span class="cpf">"Poco/Logger.h"</span><span class="cp"></span>
+<pre class="code cpp"><a name="rest_code_94465ffa031c429a88b4a17b11cc81a9-1"></a><span class="cp">#include</span> <span class="cpf">"Poco/Logger.h"</span><span class="cp"></span>
 </pre>
 <p>Así de fácil, ya podemos utilizar la librería <a class="reference external" href="http://pocoproject.org/">Poco</a> en nuestro proyecto, por ejemplo:</p>
-<pre class="code cpp"><a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-1"></a><span class="cp">#include</span> <span class="cpf">"Poco/FileChannel.h"</span><span class="cp"></span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-2"></a><span class="cp">#include</span> <span class="cpf">"Poco/FormattingChannel.h"</span><span class="cp"></span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-3"></a><span class="cp">#include</span> <span class="cpf">"Poco/PatternFormatter.h"</span><span class="cp"></span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-4"></a><span class="cp">#include</span> <span class="cpf">"Poco/Logger.h"</span><span class="cp"></span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-5"></a><span class="cp">#include</span> <span class="cpf">"Poco/AutoPtr.h"</span><span class="cp"></span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-6"></a>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-7"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FileChannel</span><span class="p">;</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-8"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FormattingChannel</span><span class="p">;</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-9"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">PatternFormatter</span><span class="p">;</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-10"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">Logger</span><span class="p">;</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-11"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">AutoPtr</span><span class="p">;</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-12"></a>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-13"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-14"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FileChannel</span><span class="o">&gt;</span> <span class="n">pChannel</span><span class="p">(</span><span class="k">new</span> <span class="n">FileChannel</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-15"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"path"</span><span class="p">,</span> <span class="s">"log/sample.log"</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-16"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"rotation"</span><span class="p">,</span> <span class="s">"100 K"</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-17"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"archive"</span><span class="p">,</span> <span class="s">"timestamp"</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-18"></a>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-19"></a>        <span class="c1">//AutoPtr&lt;ConsoleChannel&gt; pCons(new ConsoleChannel);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-20"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">PatternFormatter</span><span class="o">&gt;</span> <span class="n">pPF</span><span class="p">(</span><span class="k">new</span> <span class="n">PatternFormatter</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-21"></a>        <span class="n">pPF</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"pattern"</span><span class="p">,</span> <span class="s">"%Y-%m-%d %H:%M:%S %s: %t"</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-22"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FormattingChannel</span><span class="o">&gt;</span> <span class="n">pFC</span><span class="p">(</span><span class="k">new</span> <span class="n">FormattingChannel</span><span class="p">(</span><span class="n">pPF</span><span class="p">,</span> <span class="n">pChannel</span><span class="p">));</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-23"></a>        <span class="n">Logger</span><span class="o">::</span><span class="n">root</span><span class="p">().</span><span class="n">setChannel</span><span class="p">(</span><span class="n">pFC</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-24"></a>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-25"></a>        <span class="n">Logger</span> <span class="o">&amp;</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="s">"TestChannel"</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-26"></a>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-27"></a>                <span class="n">poco_information</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a info"</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-28"></a>                <span class="n">poco_warning</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a warning"</span><span class="p">);</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-29"></a>        <span class="p">}</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-30"></a>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<a name="rest_code_b6ef0c0f3d424fe8b5ef5900255da4e0-31"></a><span class="p">}</span>
+<pre class="code cpp"><a name="rest_code_1385da83b1304bc993b370b26caf5610-1"></a><span class="cp">#include</span> <span class="cpf">"Poco/FileChannel.h"</span><span class="cp"></span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-2"></a><span class="cp">#include</span> <span class="cpf">"Poco/FormattingChannel.h"</span><span class="cp"></span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-3"></a><span class="cp">#include</span> <span class="cpf">"Poco/PatternFormatter.h"</span><span class="cp"></span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-4"></a><span class="cp">#include</span> <span class="cpf">"Poco/Logger.h"</span><span class="cp"></span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-5"></a><span class="cp">#include</span> <span class="cpf">"Poco/AutoPtr.h"</span><span class="cp"></span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-6"></a>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-7"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FileChannel</span><span class="p">;</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-8"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">FormattingChannel</span><span class="p">;</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-9"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">PatternFormatter</span><span class="p">;</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-10"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">Logger</span><span class="p">;</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-11"></a><span class="k">using</span> <span class="n">Poco</span><span class="o">::</span><span class="n">AutoPtr</span><span class="p">;</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-12"></a>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-13"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-14"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FileChannel</span><span class="o">&gt;</span> <span class="n">pChannel</span><span class="p">(</span><span class="k">new</span> <span class="n">FileChannel</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-15"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"path"</span><span class="p">,</span> <span class="s">"log/sample.log"</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-16"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"rotation"</span><span class="p">,</span> <span class="s">"100 K"</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-17"></a>        <span class="n">pChannel</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"archive"</span><span class="p">,</span> <span class="s">"timestamp"</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-18"></a>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-19"></a>        <span class="c1">//AutoPtr&lt;ConsoleChannel&gt; pCons(new ConsoleChannel);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-20"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">PatternFormatter</span><span class="o">&gt;</span> <span class="n">pPF</span><span class="p">(</span><span class="k">new</span> <span class="n">PatternFormatter</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-21"></a>        <span class="n">pPF</span><span class="o">-&gt;</span><span class="n">setProperty</span><span class="p">(</span><span class="s">"pattern"</span><span class="p">,</span> <span class="s">"%Y-%m-%d %H:%M:%S %s: %t"</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-22"></a>        <span class="n">AutoPtr</span><span class="o">&lt;</span><span class="n">FormattingChannel</span><span class="o">&gt;</span> <span class="n">pFC</span><span class="p">(</span><span class="k">new</span> <span class="n">FormattingChannel</span><span class="p">(</span><span class="n">pPF</span><span class="p">,</span> <span class="n">pChannel</span><span class="p">));</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-23"></a>        <span class="n">Logger</span><span class="o">::</span><span class="n">root</span><span class="p">().</span><span class="n">setChannel</span><span class="p">(</span><span class="n">pFC</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-24"></a>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-25"></a>        <span class="n">Logger</span> <span class="o">&amp;</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="s">"TestChannel"</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-26"></a>        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-27"></a>                <span class="n">poco_information</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a info"</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-28"></a>                <span class="n">poco_warning</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s">"This is a warning"</span><span class="p">);</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-29"></a>        <span class="p">}</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-30"></a>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_1385da83b1304bc993b370b26caf5610-31"></a><span class="p">}</span>
 </pre>
 <p>Para compilar el proyecto simplemente hay que ejecutar:</p>
-<pre class="code bash"><a name="rest_code_e7f62c77c5274209ae99b11500832125-1"></a>bii cpp:build
+<pre class="code bash"><a name="rest_code_e6b0ef8148074797925a82bf10aef6ee-1"></a>bii cpp:build
 </pre>
 <p>Y para publicarlo y que cualquiera pueda utilizarlo, como nosotros hemos utilizado <a class="reference external" href="http://pocoproject.org/">Poco</a>:</p>
-<pre class="code bash"><a name="rest_code_d7fd572852824633a27b100348519e93-1"></a>bii publish
+<pre class="code bash"><a name="rest_code_651c315a6f5e4fa2a1ad1a713fcce1f0-1"></a>bii publish
 </pre>
 <p>Además de lo sencillo que ha resultado todo, me ha gustado mucho que después de ejecutar "bii cpp:build", mi <a class="reference external" href="https://eclipse.org">Eclipse</a> con <a class="reference external" href="https://eclipse.org/cdt/">CDT</a> indexaba perfectamente el código, así como el autocompletado y la navegación entre clases y métodos.</p>
 <p>También he leído un artículo sobre lo bien que se integra con <a class="reference external" href="https://www.jetbrains.com/clion/">CLion</a>: <a class="reference external" href="http://blog.jetbrains.com/clion/2015/03/when-clion-met-biicode/">When CLion met biicode</a>.</p>
@@ -731,14 +1098,14 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
     </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/software-maintenance/" class="u-url">Mantenimiento de Software</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/software-maintenance/" rel="bookmark"><time class="published dt-published" datetime="2014-10-11T21:00:00+02:00" title="2014-10-11">2014-10-11</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/software-maintenance/"></div>
+<div class="g-commentcount" data-href="/./es/posts/software-maintenance/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
@@ -772,14 +1139,14 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
     </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/gradle-cpp/" class="u-url">Construir un proyecto C++ con Gradle</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/gradle-cpp/" rel="bookmark"><time class="published dt-published" datetime="2014-09-27T12:00:00+02:00" title="2014-09-27">2014-09-27</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/gradle-cpp/"></div>
+<div class="g-commentcount" data-href="/./es/posts/gradle-cpp/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
@@ -827,14 +1194,14 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
     </div>
     </article><article class="h-entry post-micro"><header><h1 class="p-name entry-title"><a href="posts/sorting-algorithm-dancing/" class="u-url">Cómo funcionan los algoritmos de ordenación (Bailando)</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/sorting-algorithm-dancing/" rel="bookmark"><time class="published dt-published" datetime="2014-06-16T20:45:00+02:00" title="2014-06-16">2014-06-16</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/sorting-algorithm-dancing/"></div>
+<div class="g-commentcount" data-href="/./es/posts/sorting-algorithm-dancing/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
@@ -848,14 +1215,14 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
     </div>
     </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/java-embedded-db-performance-comparison/" class="u-url">Bases de Datos Embebidas Java: Comparación de Rendimiento</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
             </span></p>
             <p class="dateline"><a href="posts/java-embedded-db-performance-comparison/" rel="bookmark"><time class="published dt-published" datetime="2014-06-07T18:09:00+02:00" title="2014-06-07">2014-06-07</time></a></p>
                 <p class="commentline">
         
 </p>
-<div class="g-commentcount" data-href="/es/posts/java-embedded-db-performance-comparison/"></div>
+<div class="g-commentcount" data-href="/./es/posts/java-embedded-db-performance-comparison/"></div>
 <script src="https://apis.google.com/js/plusone.js"></script>
 </div>
     </header><div class="p-summary entry-summary">
@@ -888,39 +1255,6 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
 <p class="more"><a href="posts/java-embedded-db-performance-comparison/">Leer más…</a></p>
 </div>
     </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/serialization-java-serializable-externalizable/" class="u-url">Distintas formas de serialización en Java: Comparación de rendimiento</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                Carlos Martín Sánchez
-            </span></p>
-            <p class="dateline"><a href="posts/serialization-java-serializable-externalizable/" rel="bookmark"><time class="published dt-published" datetime="2014-05-13T17:00:00+02:00" title="2014-05-13">2014-05-13</time></a></p>
-                <p class="commentline">
-        
-</p>
-<div class="g-commentcount" data-href="/es/posts/serialization-java-serializable-externalizable/"></div>
-<script src="https://apis.google.com/js/plusone.js"></script>
-</div>
-    </header><div class="p-summary entry-summary">
-    <div>
-<p>Hace poco, he tenido que serializar/deserializar unos datos en <a class="reference external" href="http://www.java.com/">Java</a>, hacía mucho que no lo hacía en formato binario directamente (ultimamente he utilizado <a class="reference external" href="http://www.json.org/">JSON</a> o <a class="reference external" href="http://en.wikipedia.org/wiki/XML">XML</a>). Recordaba haber serializado objetos implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>, pero había visto por Internet otra forma implementando el interfaz <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, ¿cuál interfaz utilizo? Pues depende lo que quieras y necesites, como todo.</p>
-<div class="contents topic" id="cuando-utilizar-serializable-o-externalizable">
-<p class="topic-title first">Cuándo utilizar Serializable o Externalizable</p>
-<ul class="simple">
-<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#serializable" id="id3">Serializable</a></li>
-<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#externalizable" id="id4">Externalizable</a></li>
-<li>
-<a class="reference internal" href="posts/serialization-java-serializable-externalizable/#pruebas-de-rendimiento-serializable-vs-externalizable" id="id5">Pruebas de Rendimiento (Serializable vs Externalizable)</a><ul>
-<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-serializable" id="id6">Utilizando el interfaz Serializable</a></li>
-<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-externalizable-mal" id="id7">Utilizando el interfaz Externalizable (mal)</a></li>
-<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#utilizando-el-interfaz-externalizable-bien" id="id8">Utilizando el interfaz Externalizable (bien)</a></li>
-<li><a class="reference internal" href="posts/serialization-java-serializable-externalizable/#analizando-los-resultados" id="id9">Analizando los resultados</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p class="more"><a href="posts/serialization-java-serializable-externalizable/">Leer más…</a></p>
-</div>
-    </div>
     </article>
 </div>
 
@@ -942,7 +1276,7 @@ DELETE  http://example.com/api/coches/seat-ibiza/ruedas/3
 </div>
 
 
-            <script src="../assets/js/all-nocdn.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-es.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-es.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
     moment.locale("es");
     fancydates(0, "YYYY-MM-DD HH:mm");
     </script><!-- end fancy dates --><script>
