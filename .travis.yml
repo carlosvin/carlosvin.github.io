@@ -1,7 +1,7 @@
 language: python
 
 python:
-  - "3.4"
+  - "3.6"
 
 env:
   global:
@@ -20,16 +20,13 @@ addons:
         - language-pack-es-base
 
 before_install:
-  - "pip install --upgrade pip wheel"
-
-install:
-    - pip install nikola
-    - pip install webassets
+    - pip install --upgrade "Nikola[extras]"
     - git config --global user.email carlosvin@gmail.com
     - git config --global user.name carlosvin
 
 script:
     - git checkout site > /dev/null
+    - nikola github_deploy
     - git clone --branch=master https://$GH_TOKEN@github.com/carlosvin/carlosvin.github.io.git output
     - nikola build
     - cd output

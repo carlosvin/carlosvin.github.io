@@ -15,7 +15,7 @@ A partir de C++17 se añadirán nuevas abstracciones sobre el sistema de fichero
 Comenzar a utilizar característica experimental filesystem C++17 (g++)
 ----------------------------------------------------------------------
 
-Simplement debemos "decir" al compilador que estamos escribiendo código C++17 (**-c++1z**) y que añada la librería estándar filesystem (**-lstdc++fs**).
+Simplemente debemos "decir" al compilador que estamos escribiendo código C++17 (**-c++1z**) y que añada la librería estándar filesystem (**-lstdc++fs**).
 
 .. code-block:: bash
     
@@ -57,7 +57,7 @@ Como vemos el resultado de la ejecución es:
 
 Características de filesystem C++17
 -----------------------------------
-A continuación vamos a analizar algunas características que nos proporciona `std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ con ejemplos, mostrando las diferentes. También mostraremos el equivalente en C++11, en el que no disponemos de ésta librería, para hacernos una idea de lo que puede facilitar el trabajo al desarrollador.
+A continuación vamos a analizar algunas características que nos proporciona `std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ con ejemplos, mostrando las diferencias. También mostraremos el equivalente en C++11, en el que no disponemos de ésta librería, para hacernos una idea de lo que puede facilitar el trabajo al desarrollador.
 
 
 std::filesystem::path
@@ -66,7 +66,7 @@ std::filesystem::path
 Más arriba ya hemos visto un pequeño `ejemplo de uso de std::filesystem::path  <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_. Pero esta abstracción nos proporciona una ruta a ficheros y directorios multi-plataforma, utilizando el separador de directorios correspondiente a la plataforma en la que trabajamos ``\`` en sistemas basados en Windows y ``/`` en sistemas basados en Unix. 
 
 Separador de directorios
-************************
+========================
 
 Si quisiéramos que nuestro software utilizase el separador de directorios en C++11, tendríamos que añadir el siguiente código:
 
@@ -110,8 +110,8 @@ En C++17 sería algo más sencillo:
 `Compilar y ejecutar: ejemplo separador C++17 <http://coliru.stacked-crooked.com/a/1f2f63b3f5597d05>`_
 
 Operador separador de directorios
-*********************************
-`std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_ sobrescribe el operador ``/``, este operador nos permite concatenar fácilmente rutas a ficheros o directorios.
+=================================
+`std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_ implementa el operador ``/``, el cual nos permite concatenar fácilmente rutas a ficheros o directorios.
 
 Si quisiéramos construir rutas a directorios en C++11, tendríamos que implementar cierta lógica extra para detectar que no añadimos separadores extra y para utilizar el separador correcto:
 
