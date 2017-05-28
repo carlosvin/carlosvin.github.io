@@ -1,6 +1,6 @@
 .. title: Sistema de Ficheros en C++17
 .. slug: recursive-directory-iterator
-.. date: 2017/05/29 09:00
+.. date: 2017/05/28 09:00
 .. tags: C++, C++11, C++17, IO, Filesystem
 .. description: Vamos a analizar con un ejemplo la forma de recorrer directorios de manera recursiva a partir de C++17
 .. type: text
@@ -12,10 +12,12 @@ A partir de C++17 se añadirán nuevas abstracciones sobre el sistema de fichero
 `Características Experimentales de C++ 
 <http://en.cppreference.com/w/cpp/experimental>`_. Si queréis profundizar aquí está el `borrador final de la Especificación Técnica del Sistema de Ficheros <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf>`_. 
 
+.. contents::
+
 Comenzar a utilizar característica experimental filesystem C++17 (g++)
 ----------------------------------------------------------------------
 
-Simplemente debemos "decir" al compilador que estamos escribiendo código C++17 (**-c++1z**) y que añada la librería estándar filesystem (**-lstdc++fs**).
+Simplemente debemos "decir" al compilador que estamos escribiendo código C++17 (**-c++1z**) y que añada la librería estándar con la librería filesystem (**-lstdc++fs**).
 
 .. code-block:: bash
     
@@ -42,7 +44,7 @@ Veamos un ejemplo muy simple utilizando la clase ``std::filesystem::path``.
         return 0;
     }
 
-`Compilar y ejecutar, ejemplo básico C++17 <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_
+`Compilar y ejecutar: ejemplo básico C++17 <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_
 
 Como vemos el resultado de la ejecución es: 
 
@@ -57,19 +59,15 @@ Como vemos el resultado de la ejecución es:
 
 Características de filesystem C++17
 -----------------------------------
-A continuación vamos a analizar algunas características que nos proporciona `std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ con ejemplos, mostrando las diferencias. También mostraremos el equivalente en C++11, en el que no disponemos de ésta librería, para hacernos una idea de lo que puede facilitar el trabajo al desarrollador.
-
+A continuación vamos a analizar algunas características que nos proporciona `std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ con ejemplos en C++11 y C++17, de esta forma podremos hacernos una idea de las utilidades que esta nueva librería nos trae y cómo efectivamente ayuda al desarrollador a escribir código más claro y seguro. 
 
 std::filesystem::path
 =====================
-
-Más arriba ya hemos visto un pequeño `ejemplo de uso de std::filesystem::path  <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_. Pero esta abstracción nos proporciona una ruta a ficheros y directorios multi-plataforma, utilizando el separador de directorios correspondiente a la plataforma en la que trabajamos ``\`` en sistemas basados en Windows y ``/`` en sistemas basados en Unix. 
+Más arriba ya hemos visto un pequeño `ejemplo de uso de clase std::filesystem::path  <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_. Ésta abstracción nos proporciona una ruta a ficheros y directorios multi-plataforma, utilizando el separador de directorios correspondiente a la plataforma en la que trabajamos ``\`` en sistemas basados en Windows y ``/`` en sistemas basados en Unix. 
 
 Separador de directorios
 ========================
-
-Si quisiéramos que nuestro software utilizase el separador de directorios en C++11, tendríamos que añadir el siguiente código:
-
+Si quisiéramos que nuestro software utilizase el separador de directorios correcto para una plataforma, en C++11 podríamos utilizar una macro de compilación condicional:
 
 .. code-block:: cpp
 
@@ -111,7 +109,7 @@ En C++17 sería algo más sencillo:
 
 Operador separador de directorios
 =================================
-`std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_ implementa el operador ``/``, el cual nos permite concatenar fácilmente rutas a ficheros o directorios.
+`std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_ implementa el operador **/**, el cual nos permite concatenar fácilmente rutas a ficheros o directorios.
 
 Si quisiéramos construir rutas a directorios en C++11, tendríamos que implementar cierta lógica extra para detectar que no añadimos separadores extra y para utilizar el separador correcto:
 
@@ -167,11 +165,11 @@ Toda esta lógica está ya implementada en `std::filesystem::path <http://en.cpp
 `Compilar y ejecutar: ejemplo concatenar rutas C++17 <http://coliru.stacked-crooked.com/a/a24d50875b4daad1>`_. Aquí el código es más limpio y el resultado es simplemente correcto, no hay separadores duplicados. 
 
 Crear y borrar directorios
-**************************
+==========================
 `std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ introduce algunas facilidades para crear y borrar directorios y ficheros, primero vamos a ver una de las formas de hacerlo en C++11.
 
 .. code-block:: cpp
-
+    
     #include <iostream>
     #include <cstdio>
     #include <sys/stat.h>
@@ -216,16 +214,18 @@ En C++17 podemos borrar y crear directorios anidados con una sola llamada.
     {
         fs::create_directories("sandbox/a/b");
         fs::create_directories("sandbox/c/d");
-        std::system("ls -la sandbox/*");
-        cout << "Directories were removed: " << (fs::remove_all("sandbox") ? "Yes" : "No") << endl;
+        system("ls -la sandbox/*");
+        
+        cout << "Were directories removed? " << fs::remove_all("sandbox") << endl;
+        system("ls -la");
 
         return 0;
     }
 
-`Compilar y ejecutar: crear y borrar directorios C++17 <http://coliru.stacked-crooked.com/a/81bd867c6d51421b>`_.
+`Compilar y ejecutar: crear y borrar directorios C++17 <http://coliru.stacked-crooked.com/a/62c2d22fa0e7144c>`_.
 
 Ejemplo completo: Iterar Recursivamente por Directorios
-*******************************************************
+-------------------------------------------------------
 Vamos a ver un ejemplo algo más completo, consiste en iterar recursivamente a través de directorios, filtrando los ficheros por extension.
 
 Este es el ejemplo en C++11, sin filtrar por extension, para evitar complicarlo:
