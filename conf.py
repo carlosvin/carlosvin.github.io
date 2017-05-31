@@ -55,9 +55,9 @@ NAVIGATION_LINKS = {
         ('/es/rss.xml', 'RSS'),
     ),
     'en': (
-        ('/en/archive.html', 'Archives'),
-        ('/en/categories/index.html', 'Tags'),
-        ('/en/rss.xml', 'RSS'),
+        ('/archive.html', 'Archives'),
+        ('/categories/index.html', 'Tags'),
+        ('/rss.xml', 'RSS'),
     ),
 }
 
