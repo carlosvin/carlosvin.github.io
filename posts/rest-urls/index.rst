@@ -185,7 +185,7 @@ Continuing with cars example, a car can use a set of engine oils. So the API_ mu
 
 
 Add an element to collection
-***************************
+****************************
 
 When we add a car to cars collection, what we do is create a new car, so it is the case of `Create Resources`_.
 
