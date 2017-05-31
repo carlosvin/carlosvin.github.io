@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import time
 
 BLOG_AUTHOR = u"Carlos Martín Sánchez"
+NICKNAME = u'carlosvin'
 BLOG_TITLE = u'Carlos says "bla bla"'
 SITE_URL = "https://carlosvin.github.io/"
 BLOG_EMAIL = "carlosvin@gmail.com"
@@ -13,6 +14,12 @@ BLOG_DESCRIPTION = {
 }
 
 WRITE_TAG_CLOUD = False
+
+
+# Generate pages for each section. The site must have at least two sections
+# for this option to take effect. It wouldn't build for just one section.
+POSTS_SECTIONS = True
+
 
 # What is the default language?
 DEFAULT_LANG = "en"
@@ -93,12 +100,12 @@ NAVIGATION_LINKS = {
 #
 
 POSTS = (
-("posts/*.rst", "posts", "post.tmpl"),
-("posts/*.txt", "posts", "post.tmpl"),
+    ("posts/*.rst", "posts", "post.tmpl"),
+    ("posts/*.txt", "posts", "post.tmpl"),
 )
 PAGES = (
-("stories/*.rst", "stories", "story.tmpl"),
-("stories/*.txt", "stories", "story.tmpl"),
+    ("stories/*.rst", "stories", "story.tmpl"),
+    ("stories/*.txt", "stories", "story.tmpl"),
 )
 
 # One or more folders containing files to be copied as-is into the output.
@@ -115,22 +122,22 @@ PAGES = (
 # 'markdown' is MarkDown
 # 'html' assumes the file is html and just copies it
 COMPILERS = {
-"rest": ('.rst', '.txt'),
-"markdown": ('.md', '.mdown', '.markdown'),
-"textile": ('.textile',),
-"txt2tags": ('.t2t',),
-"bbcode": ('.bb',),
-"wiki": ('.wiki',),
-"ipynb": ('.ipynb',),
-"html": ('.html', '.htm'),
-# PHP files are rendered the usual way (i.e. with the full templates).
-# The resulting files have .php extensions, making it possible to run
-# them without reconfiguring your server to recognize them.
-"php": ('.php',),
-# Pandoc detects the input from the source filename
-# but is disabled by default as it would conflict
-# with many of the others.
-# "pandoc": ('.rst', '.md', '.txt'),
+    "rest": ('.rst', '.txt'),
+    "markdown": ('.md', '.mdown', '.markdown'),
+    "textile": ('.textile',),
+    "txt2tags": ('.t2t',),
+    "bbcode": ('.bb',),
+    "wiki": ('.wiki',),
+    "ipynb": ('.ipynb',),
+    "html": ('.html', '.htm'),
+    # PHP files are rendered the usual way (i.e. with the full templates).
+    # The resulting files have .php extensions, making it possible to run
+    # them without reconfiguring your server to recognize them.
+    "php": ('.php',),
+    # Pandoc detects the input from the source filename
+    # but is disabled by default as it would conflict
+    # with many of the others.
+    # "pandoc": ('.rst', '.md', '.txt'),
 }
 
 # Create by default posts in one file format?
@@ -349,11 +356,21 @@ LICENSE = """
    src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
 
 # A small copyright notice for the page footer (in HTML).
-CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         {license}'
+CONTENT_FOOTER = '''
+    <div style="display=flex-inline; vertical-align=middle">
+        <a href="https://www.linkedin.com/in/{nickname}" style="margin-right: 3%;">{author}</a>
+        <a href="https://twitter.com/{nickname}" class="twitter-follow-button" style="float: right;" data-show-count="false">Follow @{nickname}</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+    <br/>
+    Contents &copy; {date} - 
+    {license} - 
+    Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>'''
+
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,
                                        date=time.gmtime().tm_year,
-                                       license=LICENSE)
+                                       license=LICENSE,
+                                       nickname=NICKNAME)
 
 # To use comments, you can choose between different third party comment
 # systems, one of "disqus", "livefyre", "intensedebate", "moot",
