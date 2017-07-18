@@ -530,7 +530,9 @@ SEARCH_FORM = """
 """ % SITE_URL
 
 
-# EXTRA_HEAD_DATA = """"""
+EXTRA_HEAD_DATA = """
+    <meta name="google-site-verification" content="XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc" />
+"""
 
 BODY_END = """<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
