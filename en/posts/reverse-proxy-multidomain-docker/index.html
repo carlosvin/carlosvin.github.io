@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="How to create different Docker containers with different domain names in the same host">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multi-Domain Docker Containers | Carlos says "bla bla"</title>
+<link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../../../es/rss.xml">
+<link rel="canonical" href="https://carlosvin.github.io/en/posts/reverse-proxy-multidomain-docker/">
+<!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]--><meta name="google-site-verification" content="XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc">
+<meta name="author" content="Carlos Martín Sánchez">
+<link rel="prev" href="../rust-rest-framework-comparison/" title="Rust web frameworks comparison" type="text/html">
+<link rel="next" href="../recursive-directory-iterator/" title="Filesystem in C++17" type="text/html">
+<meta property="og:site_name" content='Carlos says "bla bla"'>
+<meta property="og:title" content="Multi-Domain Docker Containers">
+<meta property="og:url" content="https://carlosvin.github.io/en/posts/reverse-proxy-multidomain-docker/">
+<meta property="og:description" content="How to create different Docker containers with different domain names in the same host">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2016-11-24T21:00:00+01:00">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Microservices">
+<link rel="alternate" hreflang="es" href="../../../es/posts/reverse-proxy-multidomain-docker/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://carlosvin.github.io/en/">
+
+                <span id="blog-title">Carlos says "bla bla"</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../../rss.xml">RSS</a>
+
+                
+            </li>
+</ul>
+<form method="get" action="http://www.google.com/search" class="navbar-form navbar-right" role="search">
+<div class="form-group">
+<input type="text" name="q" class="form-control" placeholder="Search">
+</div>
+<button type="submit" class="btn btn-primary">
+	<span class="glyphicon glyphicon-search"></span>
+</button>
+<input type="hidden" name="sitesearch" value="https://carlosvin.github.io/">
+</form>
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+            </li>
+<li><a href="https://carlosvin.github.io/es/" rel="alternate" hreflang="es">Español</a></li>
+
+                
+                    
+    <li>
+    <a href="index.rst" id="sourcelink">Source</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Multi-Domain Docker Containers</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2016-11-24T21:00:00+01:00" itemprop="datePublished" title="2016-11-24">2016-11-24</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/en/posts/reverse-proxy-multidomain-docker/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script><p class="sourceline"><a href="index.rst" class="sourcelink">Source</a></p>
+
+        </div>
+        
+        <div class="metadata posttranslations translations">
+            <h3 class="posttranslations-intro">Also available in:</h3>
+                <p><a href="../../../es/posts/reverse-proxy-multidomain-docker/" rel="alternate" hreflang="es">Español</a></p>
+        </div>
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#use-case" id="id1">Use case</a></li>
+<li>
+<a class="reference internal" href="#how-to-configure-multi-domain-reverse-proxy" id="id2">How to Configure Multi-Domain Reverse Proxy</a><ul>
+<li><a class="reference internal" href="#example-project-structure" id="id3">Example Project Structure</a></li>
+<li><a class="reference internal" href="#architecture-configuration-docker-compose" id="id4">Architecture Configuration (docker-compose)</a></li>
+<li><a class="reference internal" href="#application-image-configuration" id="id5">Application Image Configuration</a></li>
+<li><a class="reference internal" href="#adding-domain-names-to-your-development-environment-configuration" id="id6">Adding domain names to your development environment configuration</a></li>
+<li><a class="reference internal" href="#everything-ready" id="id7">Everything ready!</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="use-case">
+<h2><a class="toc-backref" href="#id1">Use case</a></h2>
+<p>We have several server applications in the same development environment, each application is bundled in a Docker container, e.g: "Container A" and "Container B".</p>
+<p>With Docker those applications have the same IP address. One way to differentiate and access to an specific application is exposing different ports.</p>
+<div class="figure">
+<a class="reference external image-reference" href="../../../galleries/docker-multidomain/ip.png"><img alt="/galleries/docker-multidomain/ip.thumbnail.png" src="../../../galleries/docker-multidomain/ip.thumbnail.png"></a>
+<p class="caption">Containers exposing the same IP address and different ports</p>
+</div>
+<ul class="simple">
+<li>If we want to call to "Application A" we will do: GET <a class="reference external" href="http://10.20.30.40:8080/colors/red">http://10.20.30.40:8080/colors/red</a>
+</li>
+<li>If we want to call to "Application B" we will do: GET <a class="reference external" href="http://10.20.30.40:8081/fruits/tomato">http://10.20.30.40:8081/fruits/tomato</a>
+</li>
+</ul>
+<p>But that solution is a little bit confusing, does 8080 mean we are accessing to "application A"?</p>
+<p>It would be simpler and easier to remind something like:</p>
+<ul class="simple">
+<li>Calling "Application A": GET <a class="reference external" href="http://a.domain.com/colors/red">http://a.domain.com/colors/red</a>
+</li>
+<li>Calling "Application B": GET <a class="reference external" href="http://b.domain.com/fruits/tomato">http://b.domain.com/fruits/tomato</a>
+</li>
+</ul>
+<div class="figure">
+<a class="reference external image-reference" href="../../../galleries/docker-multidomain/domain.png"><img alt="/galleries/docker-multidomain/domain.thumbnail.png" src="../../../galleries/docker-multidomain/domain.thumbnail.png"></a>
+<p class="caption">Accessing applications by domain name</p>
+</div>
+<p>Get that extra semantic value is much simpler than I thought at the beginning and you will see below.</p>
+</div>
+<div class="section" id="how-to-configure-multi-domain-reverse-proxy">
+<h2><a class="toc-backref" href="#id2">How to Configure Multi-Domain Reverse Proxy</a></h2>
+<p>I said it is easy, because we almost have to do nothing, another container will do it for us, especifically we are going to use <a class="reference external" href="https://github.com/jwilder/nginx-proxy">nginx-proxy</a>, it will automatically generate the required <a class="reference external" href="https://www.nginx.com">NGINX</a> configurations.</p>
+<p>So, we will have 2 applications + 1 proxy, that is 3 containers.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can download the full example at  <a class="reference external" href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain">https://github.com/carlosvin/docker-reverse-proxy-multi-domain</a></p>
+</div>
+<div class="figure">
+<a class="reference external image-reference" href="../../../galleries/docker-multidomain/proxy.png"><img alt="/galleries/docker-multidomain/proxy.thumbnail.png" src="../../../galleries/docker-multidomain/proxy.thumbnail.png"></a>
+<p class="caption">3 containers, 2 applications + 1 proxy</p>
+</div>
+<div class="section" id="example-project-structure">
+<h3><a class="toc-backref" href="#id3">Example Project Structure</a></h3>
+<ul class="simple">
+<li>docker-compose.yaml (Main configuration file describing architecture in previous picture)</li>
+<li>a (Application A directory)<ul>
+<li>Dockerfile (Container A configuration file)</li>
+</ul>
+</li>
+<li>b (Application B directory)<ul>
+<li>Dockerfile (Container B configuration file)</li>
+</ul>
+</li>
+</ul>
+<p><a class="reference external" href="../../../listings/docker-reverse-proxy-multi-domain">Ver proyecto</a>.</p>
+</div>
+<div class="section" id="architecture-configuration-docker-compose">
+<h3><a class="toc-backref" href="#id4">Architecture Configuration (docker-compose)</a></h3>
+<p>The relationships between containers is the most interesting part in this example.</p>
+<p><a class="reference external" href="../../../listings/docker-reverse-proxy-multi-domain/docker-compose.yaml.html">docker-reverse-proxy-multi-domain/docker-compose.yaml</a>  <a class="reference external" href="../../../listings/docker-reverse-proxy-multi-domain/docker-compose.yaml">(Source)</a></p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-1"> 1</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-2"> 2</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-3"> 3</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-4"> 4</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-5"> 5</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-6"> 6</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-7"> 7</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-8"> 8</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-9"> 9</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-10">10</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-11">11</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-12">12</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-13">13</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-14">14</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-15">15</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-16">16</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-17">17</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-18">18</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-19">19</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-20">20</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-21">21</a>
+<a href="#rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-22">22</a></pre></div></td>
+<td class="code"><pre class="code yaml"><a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-1"></a><span class="l l-Scalar l-Scalar-Plain">a</span><span class="p p-Indicator">:</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-2"></a>  <span class="l l-Scalar l-Scalar-Plain">build</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-3"></a>  <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-4"></a>    <span class="l l-Scalar l-Scalar-Plain">VIRTUAL_HOST</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a.domain.com</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-5"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-6"></a>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-7"></a><span class="l l-Scalar l-Scalar-Plain">b</span><span class="p p-Indicator">:</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-8"></a>  <span class="l l-Scalar l-Scalar-Plain">build</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">b</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-9"></a>  <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-10"></a>    <span class="l l-Scalar l-Scalar-Plain">VIRTUAL_HOST</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">b.domain.com</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-11"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-12"></a>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-13"></a><span class="l l-Scalar l-Scalar-Plain">nginx-proxy</span><span class="p p-Indicator">:</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-14"></a>  <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">jwilder/nginx-proxy</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-15"></a>  <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-16"></a>    <span class="p p-Indicator">-</span> <span class="s">"80:80"</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-17"></a>    <span class="p p-Indicator">-</span> <span class="s">"443:443"</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-18"></a>  <span class="l l-Scalar l-Scalar-Plain">volumes</span><span class="p p-Indicator">:</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-19"></a>    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/tmp/docker.sock:ro</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-20"></a>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-21"></a>  <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+<a name="rest_code_5c67aa33e23a4b37a1ad4fdb30cb8736-22"></a>  <span class="l l-Scalar l-Scalar-Plain">privileged</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></td>
+</tr></table>
+<ul class="simple">
+<li>Lines 4 and 10: we configure the domain name for each application.</li>
+<li>From line 13 there is proxy configuration (copy/paste part).</li>
+<li>In lines 2 and 8 we tell docker-compose has to build Docker images within specified directory. For example, in line 2, we are saying that docker-compose has to build a Docker image using ./a/Dockerfile file.</li>
+</ul>
+</div>
+<div class="section" id="application-image-configuration">
+<h3><a class="toc-backref" href="#id5">Application Image Configuration</a></h3>
+<p><a class="reference external" href="../../../listings/docker-reverse-proxy-multi-domain/a/Dockerfile.html">docker-reverse-proxy-multi-domain/a/Dockerfile</a>  <a class="reference external" href="../../../listings/docker-reverse-proxy-multi-domain/a/Dockerfile">(Source)</a></p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_bee34596ef70415baf82ca20d87d3268-1">1</a>
+<a href="#rest_code_bee34596ef70415baf82ca20d87d3268-2">2</a></pre></div></td>
+<td class="code"><pre class="code docker"><a name="rest_code_bee34596ef70415baf82ca20d87d3268-1"></a><span class="k">FROM</span><span class="s"> httpd:2.4</span>
+<a name="rest_code_bee34596ef70415baf82ca20d87d3268-2"></a><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/local/apache2/htdocs/index.html
+</pre></td>
+</tr></table>
+<p>Line 1: We import an image with an apache server.</p>
+<p>Line 2: It serves a file that prints "Host A" as default page.</p>
+<p>The configuration for application B is pretty much the same:</p>
+<p><a class="reference external" href="../../../listings/docker-reverse-proxy-multi-domain/b/Dockerfile.html">docker-reverse-proxy-multi-domain/b/Dockerfile</a>  <a class="reference external" href="../../../listings/docker-reverse-proxy-multi-domain/b/Dockerfile">(Source)</a></p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_a9cb0e59b1e745568fe36025baf688a4-1">1</a>
+<a href="#rest_code_a9cb0e59b1e745568fe36025baf688a4-2">2</a></pre></div></td>
+<td class="code"><pre class="code docker"><a name="rest_code_a9cb0e59b1e745568fe36025baf688a4-1"></a><span class="k">FROM</span><span class="s"> httpd:2.4</span>
+<a name="rest_code_a9cb0e59b1e745568fe36025baf688a4-2"></a><span class="k">RUN</span> <span class="nb">echo</span> <span class="s2">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/local/apache2/htdocs/index.html
+</pre></td>
+</tr></table>
+</div>
+<div class="section" id="adding-domain-names-to-your-development-environment-configuration">
+<h3><a class="toc-backref" href="#id6">Adding domain names to your development environment configuration</a></h3>
+<p>In Linux we just have to map the local address to domain names you have chosen, in the example  a.domain.com and b.domain.com.</p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-1">1</a>
+<a href="#rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-2">2</a>
+<a href="#rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-3">3</a>
+<a href="#rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-4">4</a>
+<a href="#rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-5">5</a></pre></div></td>
+<td class="code"><pre class="code bash"><a name="rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-1"></a><span class="c1">#/etc/hosts</span>
+<a name="rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-2"></a><span class="m">127</span>.0.0.1             localhost.localdomain localhost
+<a name="rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-3"></a>::1                 localhost6.localdomain6 localhost6
+<a name="rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-4"></a><span class="m">127</span>.0.0.1   a.domain.com
+<a name="rest_code_273b7ae7d8aa4b4fbf36ec94e62cdd90-5"></a><span class="m">127</span>.0.0.1   b.domain.com
+</pre></td>
+</tr></table>
+<p>I just added 4 and 5 lines.</p>
+</div>
+<div class="section" id="everything-ready">
+<h3><a class="toc-backref" href="#id7">Everything ready!</a></h3>
+<p>Now we just have to test the example:</p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_a9699f64a594482ea98f53cb8b070764-1">1</a>
+<a href="#rest_code_a9699f64a594482ea98f53cb8b070764-2">2</a></pre></div></td>
+<td class="code"><pre class="code bash"><a name="rest_code_a9699f64a594482ea98f53cb8b070764-1"></a>docker-compose build
+<a name="rest_code_a9699f64a594482ea98f53cb8b070764-2"></a>docker-compose up
+</pre></td>
+</tr></table>
+<p>The 3 containers are running now.</p>
+<p>So we can open our favourite web browser and go to a.domain.com. It will show <em>App A works!</em>. If we go to b.domain.com then we will see <em>App B works!</em>.</p>
+<div class="figure">
+<a class="reference external image-reference" href="../../../galleries/docker-multidomain/a.screenshot.png"><img alt="/galleries/docker-multidomain/a.screenshot.thumbnail.png" src="../../../galleries/docker-multidomain/a.screenshot.thumbnail.png"></a>
+<p class="caption">a.domain.com</p>
+</div>
+<div class="figure">
+<a class="reference external image-reference" href="../../../galleries/docker-multidomain/b.screenshot.png"><img alt="/galleries/docker-multidomain/b.screenshot.thumbnail.png" src="../../../galleries/docker-multidomain/b.screenshot.thumbnail.png"></a>
+<p class="caption">b.domain.com</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In most of Linux distros you will need privileges to run Docker commands (sudo).</p>
+</div>
+</div>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/docker/" rel="tag">Docker</a></li>
+            <li><a class="tag p-category" href="../../categories/microservices/" rel="tag">Microservices</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../rust-rest-framework-comparison/" rel="prev" title="Rust web frameworks comparison">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../recursive-directory-iterator/" rel="next" title="Filesystem in C++17">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+<script src="https://apis.google.com/js/plusone.js"></script><div class="g-comments" data-href="https://carlosvin.github.io/en/posts/reverse-proxy-multidomain-docker/" data-first_party_property="BLOGGER" data-view_type="FILTERED_POSTMOD">
+</div>
+
+
+        </section></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer"><div style="display=flex-inline; vertical-align=middle">
+        <a href="https://www.linkedin.com/in/carlosvin" style="margin-right: 3%;">Carlos Martín Sánchez</a>
+        <a href="https://twitter.com/carlosvin" class="twitter-follow-button" style="float: right;" data-show-count="false">Follow @carlosvin</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+    <br>
+    Contents © 2017 - 
+    
+   <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+   <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a> - 
+    Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../../../assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1328360-9', 'carlosvin.github.io');
+  ga('send', 'pageview');
+
+</script><!-- Start of StatCounter Code for Default Guide --><script type="text/javascript">
+var sc_project=9708205;
+var sc_invisible=1;
+var sc_security="4998d447";
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script><noscript><div class="statcounter"><a title="web analytics" href="http://statcounter.com/" target="_blank"><img class="statcounter" src="http://c.statcounter.com/9708205/0/4998d447/1/" alt="web analytics"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+
+
+</body>
+</html>

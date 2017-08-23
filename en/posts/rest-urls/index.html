@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Design REST API: URLs">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REST URLs | Carlos says "bla bla"</title>
+<link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../../../es/rss.xml">
+<link rel="canonical" href="https://carlosvin.github.io/en/posts/rest-urls/">
+<!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]--><meta name="google-site-verification" content="XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc">
+<meta name="author" content="Carlos Martín Sánchez">
+<link rel="prev" href="../first-biicode-poco/" title="C++ Dependency Management: Biicode" type="text/html">
+<link rel="next" href="../recursive-dos-unix/" title="Convert files formats: Windows to Unix" type="text/html">
+<meta property="og:site_name" content='Carlos says "bla bla"'>
+<meta property="og:title" content="REST URLs">
+<meta property="og:url" content="https://carlosvin.github.io/en/posts/rest-urls/">
+<meta property="og:description" content="Design REST API: URLs">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2015-08-16T14:00:00+02:00">
+<meta property="article:tag" content="API">
+<meta property="article:tag" content="REST">
+<meta property="article:tag" content="Web Services">
+<link rel="alternate" hreflang="es" href="../../../es/posts/rest-urls/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://carlosvin.github.io/en/">
+
+                <span id="blog-title">Carlos says "bla bla"</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../../archive.html">Archives</a>
+                </li>
+<li>
+<a href="../../categories/index.html">Tags</a>
+                </li>
+<li>
+<a href="../../rss.xml">RSS</a>
+
+                
+            </li>
+</ul>
+<form method="get" action="http://www.google.com/search" class="navbar-form navbar-right" role="search">
+<div class="form-group">
+<input type="text" name="q" class="form-control" placeholder="Search">
+</div>
+<button type="submit" class="btn btn-primary">
+	<span class="glyphicon glyphicon-search"></span>
+</button>
+<input type="hidden" name="sitesearch" value="https://carlosvin.github.io/">
+</form>
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+            </li>
+<li><a href="https://carlosvin.github.io/es/" rel="alternate" hreflang="es">Español</a></li>
+
+                
+                    
+    <li>
+    <a href="index.rst" id="sourcelink">Source</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">REST URLs</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2015-08-16T14:00:00+02:00" itemprop="datePublished" title="2015-08-16">2015-08-16</time></a></p>
+                <p class="commentline">
+        
+</p>
+<div class="g-commentcount" data-href="/en/posts/rest-urls/"></div>
+<script src="https://apis.google.com/js/plusone.js"></script><p class="sourceline"><a href="index.rst" class="sourcelink">Source</a></p>
+
+        </div>
+        
+        <div class="metadata posttranslations translations">
+            <h3 class="posttranslations-intro">Also available in:</h3>
+                <p><a href="../../../es/posts/rest-urls/" rel="alternate" hreflang="es">Español</a></p>
+        </div>
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>First time I designed a <a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about <a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URL</a> with examples.</p>
+<div class="contents topic" id="index">
+<p class="topic-title first">Index</p>
+<ul class="simple">
+<li>
+<a class="reference internal" href="#rest-basics" id="id3">REST Basics</a><ul>
+<li><a class="reference internal" href="#rest-verbs" id="id4">REST Verbs</a></li>
+<li><a class="reference internal" href="#accessing-to-resources" id="id5">Accessing to Resources</a></li>
+<li><a class="reference internal" href="#update-resources" id="id6">Update resources</a></li>
+<li><a class="reference internal" href="#delete-resources" id="id7">Delete Resources</a></li>
+<li><a class="reference internal" href="#create-resources" id="id8">Create Resources</a></li>
+<li>
+<a class="reference internal" href="#collections" id="id9">Collections</a><ul>
+<li><a class="reference internal" href="#add-an-element-to-collection" id="id10">Add an element to collection</a></li>
+<li><a class="reference internal" href="#update-a-collection-item" id="id11">Update a collection item</a></li>
+<li><a class="reference internal" href="#delete-a-collection-item" id="id12">Delete a collection item</a></li>
+<li><a class="reference internal" href="#read-a-collection-item" id="id13">Read a collection item</a></li>
+<li><a class="reference internal" href="#list-collection-items" id="id14">List collection items</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#common-mistake" id="id15">Common mistake</a></li>
+<li><a class="reference internal" href="#video-tutorials" id="id16">Video Tutorials</a></li>
+</ul>
+</div>
+<div class="section" id="rest-basics">
+<h2>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> Basics</h2>
+<ul class="simple">
+<li>Using <a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URLs</a> for get resources.</li>
+<li>Using <em>verbs</em> for modify resources.</li>
+<li>The <em>verbs</em> are provided by the <a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> protocol.</li>
+<li>The <em>verbs</em> have a direct equivalency with <a class="reference external" href="https://en.wikipedia.org/wiki/CRUD">CRUD</a> <a class="footnote-reference" href="#id2" id="id1">[1]</a>.</li>
+<li>To access to an existent resource we need an identifier.</li>
+</ul>
+<div class="section" id="rest-verbs">
+<h3>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> Verbs</h3>
+<dl class="docutils">
+<dt>POST</dt>
+<dd>
+<strong>Create</strong> new resources.</dd>
+<dt>GET</dt>
+<dd>
+<strong>Read</strong> already existing resources.</dd>
+<dt>PUT</dt>
+<dd>
+<strong>Update</strong> already existing resources.</dd>
+<dt>DELETE</dt>
+<dd>
+<strong>Delete</strong> already existing resources.</dd>
+</dl>
+<p>It is clearer in the following table</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%">
+<col width="29%">
+<col width="45%">
+</colgroup>
+<tbody valign="top">
+<tr>
+<td>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> Verb</td>
+<td>
+<a class="reference external" href="https://en.wikipedia.org/wiki/CRUD">CRUD</a> Action</td>
+<td>Resource must exist</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>Create</td>
+<td>No</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>Read</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>Update</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>Delete</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="accessing-to-resources">
+<h3><a class="toc-backref" href="#id5">Accessing to Resources</a></h3>
+<p>A resource is <em>what we want to get</em>. For example, a car.</p>
+<p>To be able to get a car, that information is not enough, you can't go to your car dealer and ask for whatever car, you have to specify which one you want:</p>
+<p><em>Good morning. I'd like to have a Fiat Bravo 1.9 Emotion 120CV</em>.</p>
+<p>In this manner the sheller knows which one is.</p>
+<p>"Fiat Bravo 1.9 Emotion 120CV" is the <strong>identifier</strong>.</p>
+<p>Transferring the example to <a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">APIs</a>:</p>
+<pre class="literal-block">
+GET   http://cardealer.com/api/cars/fiat-bravo-19-emotion-120cv
+</pre>
+<p>Now our <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> can supply the car info.</p>
+<p>This is a very simple example, but actually when we access to a specific resource, we have to use something to identify it, a common and recommendable practice is use <a class="reference external" href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>.</p>
+<pre class="literal-block">
+GET  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>But our <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a>, like a shop, it hasn't to be so strict. We can ask for cars with several features:</p>
+<p><em>Good morning, I want a Fiat Bravo</em>.</p>
+<p>Then, the dealer kindly will show you all Fiat Bravo he has available. Let's see how <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> says that.</p>
+<pre class="literal-block">
+GET  http://cardealer.com/api/cars/?brand=fiat&amp;model=bravo
+</pre>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> will return all cars with Fiat brand and Bravo model.</p>
+<p>Brand and model are so called <strong>query parameters</strong>.</p>
+<p>As you might already notice, to get resource information, we have always used <strong>GET</strong> <em>verb</em></p>
+</div>
+<div class="section" id="update-resources">
+<h3><a class="toc-backref" href="#id6">Update resources</a></h3>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> should also support updating resources. Like reading resources, to update a resource we have to specify which resource we want to update, so we again need an <em>identifier</em>.</p>
+<p>Before, we wanted to get information (read) and we used <strong>GET</strong> <em>verb</em>. Now the only difference is the verb.</p>
+<p>We want to <strong>update</strong> so we use the equivalency <a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> verb: <strong>PUT</strong>.</p>
+<pre class="literal-block">
+PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>Actually something else is missing, we have to say what thing of the car we want to change, for example, let's imagine we want to change the engine power and set it to 100CV.</p>
+<p>We have to send the new engine power to following <a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URL</a>  <a class="reference external" href="http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f">http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f</a> through <a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> using <strong>PUT</strong> verb.</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> protocol allows sending data within PUT message, we have to choose a sending format.</p>
+<p>We can use <a class="reference external" href="https://en.wikipedia.org/wiki/JSON">JSON</a> or <a class="reference external" href="https://en.wikipedia.org/wiki/XML">XML</a> or whatever, we only have to ensure that sent format is expected in server side.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Designing a <a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> requires select a sending data format.</p>
+</div>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/JSON">JSON</a> example:</p>
+<pre class="literal-block">
+{ enginePower: 100 }
+</pre>
+</div>
+<div class="section" id="delete-resources">
+<h3><a class="toc-backref" href="#id7">Delete Resources</a></h3>
+<p>Let's imagine that now we are the car dealer and we don't want to shell the Fiat Bravo Emotion 1.9CV anymore (the cce05bee-386b-11e5-a151-feff819cdc9f).
+We'll keep the <a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URL</a> that identifies the resource, but we change the verb: we don't want to read (GET), we don't want to update (PUT), we want to <strong>to delete (DELETE)</strong>.</p>
+<pre class="literal-block">
+DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+</pre>
+<p>We don't have to supply any additional info, only de verb (DELETE) and the resource identifier.</p>
+</div>
+<div class="section" id="create-resources">
+<h3><a class="toc-backref" href="#id8">Create Resources</a></h3>
+<p>And the last verb is <strong>to create (POST)</strong>. In this case we don't have to identify the resource, because it still doesn't exist.</p>
+<pre class="literal-block">
+POST   http://cardealer.com/api/cars/
+</pre>
+<p>But we have to send the data to create the resource.</p>
+<p>Following with the example, let's create a new car, so we include the necessary data within POST <a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> message, it is something similar what we did at section <a class="reference internal" href="#update-resources">Update resources</a>, but we are going to send <strong>all required data</strong>, not only the engine power.</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/JSON">JSON</a> example:</p>
+<pre class="literal-block">
+{
+"brand": "Fiat",
+"model": "Bravo"
+"year": 2010
+"doors": 5,
+"enginePower": 120,
+"version": "Emotion",
+"clima": true,
+"ac": false,
+"fuel": "Diesel"
+}
+</pre>
+<p>We can delegate on the system to assign a new <strong>identifier</strong>, or simply send it within the message:</p>
+<pre class="literal-block">
+{
+"identifier": "cce05bee-386b-11e5-a151-feff819cdc9f"
+"brand": "Fiat",
+"model": "Bravo"
+"year": 2010
+"doors": 5,
+"enginePower": 120,
+"version": "Emotion",
+"clima": true,
+"ac": false,
+"fuel": "Diesel"
+}
+</pre>
+</div>
+<div class="section" id="collections">
+<h3><a class="toc-backref" href="#id9">Collections</a></h3>
+<p>All actions we have already explained were actually applied over a cars collection.</p>
+<p>But, what happen if a resource has a nested collection?</p>
+<p>Continuing with cars example, a car can use a set of engine oils. So the <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> must allow update, delete or create elements in the set.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For the example we will assume that <em>the oil identifier</em> is the attribute <em>type</em>.</p>
+</div>
+<div class="section" id="add-an-element-to-collection">
+<h4><a class="toc-backref" href="#id10">Add an element to collection</a></h4>
+<p>When we add a car to cars collection, what we do is create a new car, so it is the case of <a class="reference internal" href="#create-resources">Create Resources</a>.</p>
+<p>To add a new engine oil to the car cce05bee-386b-11e5-a151-feff819cdc9f, that already exists:</p>
+<pre class="literal-block">
+POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+
+{
+"type": "5W30",
+"otherInfo": "This is the best oil for this car"
+}
+</pre>
+<p>If we want to add another one:</p>
+<pre class="literal-block">
+POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+
+{
+"type": "10W30",
+"otherInfo": "This is very good for cold weather"
+}
+</pre>
+</div>
+<div class="section" id="update-a-collection-item">
+<h4><a class="toc-backref" href="#id11">Update a collection item</a></h4>
+<p>If we want to update the info of oil <em>5W30</em> of car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/5W30/
+
+{
+"type": "5W30",
+"otherInfo": "This is no longer the best oil for this car"
+}
+</pre>
+</div>
+<div class="section" id="delete-a-collection-item">
+<h4><a class="toc-backref" href="#id12">Delete a collection item</a></h4>
+<p>To delete an oil <em>10W30</em> from car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
+</pre>
+</div>
+<div class="section" id="read-a-collection-item">
+<h4><a class="toc-backref" href="#id13">Read a collection item</a></h4>
+<p>To get the oil info <em>10W30</em> of the car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
+</pre>
+</div>
+<div class="section" id="list-collection-items">
+<h4><a class="toc-backref" href="#id14">List collection items</a></h4>
+<p>As we have seen at <a class="reference internal" href="#read-a-collection-item">Read a collection item</a>, we can get the info of every collection element, but we also can get multiple collection elements, sorted, paged and apply typical collection actions.</p>
+<p>We can get all supported oils for a car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>, it is as simple as:</p>
+<pre class="literal-block">
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+</pre>
+<p>We can also get sorted items:</p>
+<pre class="literal-block">
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?sort_by=type&amp;order=asc
+</pre>
+<p>We can ask <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> to return the first 10 oils for car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<pre class="literal-block">
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?number_of_elements=10
+</pre>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> can support also pagination:</p>
+<pre class="literal-block">
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=3&amp;number_of_elements=2
+</pre>
+<p>Above request is telling <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> that returns the page 3 of all oils of car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em> and it has to shown 2 oils per page. If we want to go to next page:</p>
+<pre class="literal-block">
+GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=4&amp;number_of_elements=2
+</pre>
+<p>All those features are supported by <strong>query parameters</strong>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="common-mistake">
+<h2><a class="toc-backref" href="#id15">Common mistake</a></h2>
+<p>First time I tried to design a <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> <a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> I designed an <a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a>, but <a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a>.</p>
+<p>My main mistake was the <a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URLs</a> design, I added my own <em>verbs</em> skipping <a class="reference external" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> <em>verbs</em>.</p>
+<p>For example:</p>
+<pre class="literal-block">
+POST    http://example.com/api/cars/ford-focus/delete-oil/5W30
+</pre>
+<p>The right:</p>
+<pre class="literal-block">
+DELETE  http://example.com/api/cars/ford-focus/oils/5W30
+</pre>
+</div>
+<div class="section" id="video-tutorials">
+<h2><a class="toc-backref" href="#id16">Video Tutorials</a></h2>
+<p>These 2 videos help me to understand <a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URLs</a>, I encourage you to watch them full:</p>
+<div class="youtube-video">
+<iframe width="425" height="344" src="https://www.youtube.com/embed/NjpKwiRORI4?rel=0&amp;hd=1&amp;wmode=transparent"></iframe>
+</div>
+<div class="youtube-video">
+<iframe width="425" height="344" src="https://www.youtube.com/embed/gYKJqUZXuBw?rel=0&amp;hd=1&amp;wmode=transparent"></iframe>
+</div>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="#id1">[1]</a></td>
+<td>Create, Read, Update, Delete</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/api/" rel="tag">API</a></li>
+            <li><a class="tag p-category" href="../../categories/rest/" rel="tag">REST</a></li>
+            <li><a class="tag p-category" href="../../categories/web-services/" rel="tag">Web Services</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../first-biicode-poco/" rel="prev" title="C++ Dependency Management: Biicode">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../recursive-dos-unix/" rel="next" title="Convert files formats: Windows to Unix">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+<script src="https://apis.google.com/js/plusone.js"></script><div class="g-comments" data-href="https://carlosvin.github.io/en/posts/rest-urls/" data-first_party_property="BLOGGER" data-view_type="FILTERED_POSTMOD">
+</div>
+
+
+        </section></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer"><div style="display=flex-inline; vertical-align=middle">
+        <a href="https://www.linkedin.com/in/carlosvin" style="margin-right: 3%;">Carlos Martín Sánchez</a>
+        <a href="https://twitter.com/carlosvin" class="twitter-follow-button" style="float: right;" data-show-count="false">Follow @carlosvin</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+    <br>
+    Contents © 2017 - 
+    
+   <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+   <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a> - 
+    Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../../../assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1328360-9', 'carlosvin.github.io');
+  ga('send', 'pageview');
+
+</script><!-- Start of StatCounter Code for Default Guide --><script type="text/javascript">
+var sc_project=9708205;
+var sc_invisible=1;
+var sc_security="4998d447";
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script><noscript><div class="statcounter"><a title="web analytics" href="http://statcounter.com/" target="_blank"><img class="statcounter" src="http://c.statcounter.com/9708205/0/4998d447/1/" alt="web analytics"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+
+
+</body>
+</html>
