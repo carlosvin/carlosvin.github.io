@@ -1,7 +1,7 @@
 .. title: Choosing C++ stack
 .. slug: choosing-modern-cpp-stack
 .. date: 2017/09/03 10:50:00
-.. tags: C++, Unit Testing, Build System, draft
+.. tags: C++, Unit Testing, Build System
 .. description: Un capa que facilita el uso de los mutex de pthread en C++98 y una mejor solución en C++11_
 .. type: text
 
@@ -58,16 +58,23 @@ I've found two interesting comparisons about available C++ build systems, they m
 
 Unit Testing Framework
 ======================
-http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/
+I have used some xUnit based libraries like `UnitTest++ <https://github.com/unittest-cpp/unittest-cpp>`_, `CppUTest <http://cpputest.github.io/>`_ or `Google Test`_ which match perfectly with `Google Mock <https://github.com/google/googletest/tree/master/googlemock>`_. If you want a safe bet that fulfills almost of your testing needs I highly recommend `Google Test`_.  
 
+But time ago I found a testing framework with some interesting features altogether, Catch_: 
+
+- It is just a header file with no external dependencies, so very easy to start.
+- You can use normal unit test style or BDD-style
+
+If you want to know more about Catch_, I'd suggest just to give it a try, it is a matter of 2 minutes to have `simple example running <https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests>`_. You can also read some interesting articles like `Why do we need yet another C++ test framework? <https://github.com/philsquared/Catch/blob/master/docs/why-catch.md>`_ or `Testing C++ With A New Catch <http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/>`_.
 
 Example
 =======
 
-
+.. _`Google Test`: https://github.com/google/googletest
 .. _CMake: https://cmake.org/
 .. _Meson: http://mesonbuild.com/
 .. _Gnome: https://www.gnome.org/
 .. _Scons: http://scons.org/
 .. _Ninja: https://ninja-build.org/
 .. _Python: https://python.org/
+.. _Catch: https://github.com/philsquared/Catch
