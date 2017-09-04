@@ -2,7 +2,7 @@
 .. slug: choosing-modern-cpp-stack
 .. date: 2017/09/03 10:50:00
 .. tags: C++, Unit Testing, Build System
-.. description: Un capa que facilita el uso de los mutex de pthread en C++98 y una mejor solución en C++11_
+.. description: My technologies stack for C++ project. It contains one running example defining main project skeleton. 
 .. type: text
 
 I'm starting a new project in C++, but I've run into a pair of questions before start:
@@ -69,6 +69,10 @@ If you want to know more about Catch_, I'd suggest just to give it a try, it is 
 
 Example
 =======
+
+I've created an example to ilustrate this article: https://github.com/carlosvin/uuid-cpp.
+
+
 
 .. _`Google Test`: https://github.com/google/googletest
 .. _CMake: https://cmake.org/
