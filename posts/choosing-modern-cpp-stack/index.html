@@ -2,7 +2,7 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="My technologies stack for C++ project. It contains one running example defining main project skeleton.">
+<meta name="description" content="My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Choosing C++ stack | Carlos says "bla bla"</title>
 <link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
@@ -17,7 +17,7 @@
 <meta property="og:site_name" content='Carlos says "bla bla"'>
 <meta property="og:title" content="Choosing C++ stack">
 <meta property="og:url" content="https://carlosvin.github.io/posts/choosing-modern-cpp-stack/">
-<meta property="og:description" content="My technologies stack for C++ project. It contains one running example defining main project skeleton.">
+<meta property="og:description" content="My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton.">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2017-09-03T10:50:00+02:00">
 <meta property="article:tag" content="Build System">
@@ -116,39 +116,49 @@
 <li>Which build system should I use?</li>
 <li>Which unit testing framework?</li>
 </ol>
-<div class="section" id="choosing-build-system">
-<h2>Choosing Build System</h2>
-<p>I have used before pure Make, Maven, Scons, Gradle and Autotools.</p>
-<p>But I have some reasons to try to use something else.</p>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#choosing-build-system-meson" id="id1">Choosing Build System (Meson)</a></li>
+<li><a class="reference internal" href="#unit-testing-framework-catch" id="id2">Unit Testing Framework (Catch)</a></li>
+<li><a class="reference internal" href="#example" id="id3">Example</a></li>
+</ul>
+</div>
+<div class="section" id="choosing-build-system-meson">
+<h2>Choosing Build System (<a class="reference external" href="http://mesonbuild.com/">Meson</a>)</h2>
+<p>I have used before Make, Maven, Scons, Gradle and Autotools.</p>
+<p>But I have some reasons to try find something else.</p>
 <dl class="docutils">
 <dt>Autotools</dt>
-<dd>It is not easy to configure. There are several configuration files and several configuration steps.</dd>
+<dd>It is not easy to configure and maintain. There are several configuration files and several configuration steps.</dd>
 <dt>Gradle</dt>
-<dd>C++ feature is still incubating.</dd>
+<dd>C++ feature is still incubating. Not very fast.</dd>
 <dt>Make</dt>
 <dd>I don't love the syntax.
-I've seen messy files when project gets big.</dd>
+Files tends to get messy as project grows.</dd>
 <dt>Scons</dt>
 <dd>It is just slow.</dd>
 <dt>Maven</dt>
-<dd>It is slow and you might end up <em>Javatizing</em> your C++ project structure.</dd>
+<dd>It is slow and you might end up "<em>Javatizing</em>" your C++ project structure.</dd>
 </dl>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">I've listed just things I don't like, those projects have other great features.</p>
 </div>
 <p>Now I'm considering <a class="reference external" href="http://mesonbuild.com/">Meson</a> or <a class="reference external" href="https://cmake.org/">CMake</a>.</p>
-<p><a class="reference external" href="https://cmake.org/">CMake</a> has a big advantage over <a class="reference external" href="http://mesonbuild.com/">Meson</a>, it is widely used in many projects, which means many examples, it will most likely fulfill your C++ project building needs.</p>
+<p><a class="reference external" href="https://cmake.org/">CMake</a> has a big advantage over <a class="reference external" href="http://mesonbuild.com/">Meson</a>, it is mature and widely used in many projects, which means there are many examples and it will fulfill your C++ project building needs.</p>
 <p><a class="reference external" href="http://mesonbuild.com/">Meson</a> is a young project compared with <a class="reference external" href="https://cmake.org/">CMake</a>, but it is growing quite fast and it has been adopted in other big projects like <a class="reference external" href="https://www.gnome.org/">Gnome</a>, they have an initiative to <a class="reference external" href="https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting">port from Autotools to Meson</a>.</p>
-<p>But I've chosen <a class="reference external" href="http://mesonbuild.com/">Meson</a> because:</p>
+<p>I've chosen <a class="reference external" href="http://mesonbuild.com/">Meson</a> because:</p>
 <ul class="simple">
 <li>Syntax is really clear to me, when I read <cite>meson.build</cite> file I can quickly understand what is happening during build process.</li>
-<li>It is fast. Altought it is written in <a class="reference external" href="https://python.org/">Python</a>, it generates a <a class="reference external" href="https://ninja-build.org/">Ninja</a> build project, so first time you configure the project you run <a class="reference external" href="http://mesonbuild.com/">Meson</a>, but when you are actually building or testing you are running <a class="reference external" href="https://ninja-build.org/">Ninja</a>.</li>
+<li>It is fast. Altought it is written in <a class="reference external" href="https://python.org/">Python</a>, it generates a <a class="reference external" href="https://ninja-build.org/">Ninja</a> build project. First time you configure the project you has to run <a class="reference external" href="http://mesonbuild.com/">Meson</a>, but for building or testing you are actually running <a class="reference external" href="https://ninja-build.org/">Ninja</a>.</li>
 </ul>
-<pre class="code bash"><a name="rest_code_fb7729589e804e3c937d36e4ae0dc2c8-1"></a>$ meson build . <span class="c1"># first time you configure the project</span>
-<a name="rest_code_fb7729589e804e3c937d36e4ae0dc2c8-2"></a>$ ninja build   <span class="c1"># each time you build it</span>
+<pre class="code bash"><a name="rest_code_040ecc3824354c5492e80853c438b5da-1"></a>$ meson build . <span class="c1"># first time you configure the project</span>
+<a name="rest_code_040ecc3824354c5492e80853c438b5da-2"></a>$ <span class="nb">cd</span> build
+<a name="rest_code_040ecc3824354c5492e80853c438b5da-3"></a>$ ninja build   <span class="c1"># each time you build it</span>
+<a name="rest_code_040ecc3824354c5492e80853c438b5da-4"></a>$ ninja <span class="nb">test</span>    <span class="c1"># each time you run tests</span>
 </pre>
-<p>I've found two interesting comparisons about available C++ build systems, they might be a little be biased because comaprisons come from <a class="reference external" href="http://mesonbuild.com/">Meson</a> and <a class="reference external" href="http://scons.org/">Scons</a>.</p>
+<p>I've found two interesting comparisons about available C++ build systems, they might be a little be biased because those comparisons come from <a class="reference external" href="http://mesonbuild.com/">Meson</a> and <a class="reference external" href="http://scons.org/">Scons</a>.</p>
 <ul class="simple">
 <li>
 <a class="reference external" href="https://bitbucket.org/scons/scons/wiki/SconsVsOtherBuildTools">C++ build systems comparison from Scons</a>.</li>
@@ -156,19 +166,20 @@ I've seen messy files when project gets big.</dd>
 <a class="reference external" href="http://mesonbuild.com/Simple-comparison.html">C++ build systems comparison from Meson</a>.</li>
 </ul>
 </div>
-<div class="section" id="unit-testing-framework">
-<h2>Unit Testing Framework</h2>
-<p>I have used some xUnit based libraries like <a class="reference external" href="https://github.com/unittest-cpp/unittest-cpp">UnitTest++</a>, <a class="reference external" href="http://cpputest.github.io/">CppUTest</a> or <a class="reference external" href="https://github.com/google/googletest">Google Test</a> which match perfectly with <a class="reference external" href="https://github.com/google/googletest/tree/master/googlemock">Google Mock</a>. If you want a safe bet that fulfills almost of your testing needs I highly recommend <a class="reference external" href="https://github.com/google/googletest">Google Test</a>.</p>
-<p>But time ago I found a testing framework with some interesting features altogether, <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a>:</p>
+<div class="section" id="unit-testing-framework-catch">
+<h2>Unit Testing Framework (<a class="reference external" href="https://github.com/philsquared/Catch">Catch</a>)</h2>
+<p>I have used some <a class="reference external" href="https://en.wikipedia.org/wiki/XUnit">xUnit</a> based libraries like <a class="reference external" href="https://github.com/unittest-cpp/unittest-cpp">UnitTest++</a>, <a class="reference external" href="http://cpputest.github.io/">CppUTest</a> or <a class="reference external" href="https://github.com/google/googletest">Google Test</a> which match perfectly with <a class="reference external" href="https://github.com/google/googletest/tree/master/googlemock">Google Mock</a>.
+If you want a safe bet that fulfills almost of your testing needs I highly recommend <a class="reference external" href="https://github.com/google/googletest">Google Test</a>.</p>
+<p>But time ago I found a testing framework with some interesting features, <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a>:</p>
 <ul class="simple">
-<li>It is just a header file with no external dependencies, so very easy to start.</li>
-<li>You can use normal unit test style or BDD-style</li>
+<li>It is just a header file with no external dependencies, so very easy to start (wget + include downloaded file).</li>
+<li>You can use normal unit test style or <a class="reference external" href="https://en.wikipedia.org/wiki/Behavior-driven_development">BDD</a>-style</li>
 </ul>
-<p>If you want to know more about <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a>, I'd suggest just to give it a try, it is a matter of 2 minutes to have <a class="reference external" href="https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests">simple example running</a>. You can also read some interesting articles like <a class="reference external" href="https://github.com/philsquared/Catch/blob/master/docs/why-catch.md">Why do we need yet another C++ test framework?</a> or <a class="reference external" href="http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/">Testing C++ With A New Catch</a>.</p>
+<p>If you want to know more about <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a>, I recommend you to give it a try, it is a matter of 2 minutes to have a <a class="reference external" href="https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests">simple example up and running</a>. You can also read some interesting articles like <a class="reference external" href="https://github.com/philsquared/Catch/blob/master/docs/why-catch.md">Why do we need yet another C++ test framework?</a> or <a class="reference external" href="http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/">Testing C++ With A New Catch</a>.</p>
 </div>
 <div class="section" id="example">
-<h2>Example</h2>
-<p>I've created an example to ilustrate this article: <a class="reference external" href="https://github.com/carlosvin/uuid-cpp">https://github.com/carlosvin/uuid-cpp</a>.</p>
+<h2><a class="toc-backref" href="#id3">Example</a></h2>
+<p>I've created an example to illustrate this article: <a class="reference external" href="https://github.com/carlosvin/uuid-cpp">https://github.com/carlosvin/uuid-cpp</a>.</p>
 </div>
 </div>
     </div>
