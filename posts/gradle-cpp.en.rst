@@ -1,7 +1,7 @@
 .. title: Build C++ project with Gradle
 .. slug: gradle-cpp
 .. date: 2014/09/27 12:00:00
-.. tags: Gradle, C++, Build Automation Software, Dependency Management
+.. tags: Gradle, C++, Build Software, Build System, Dependency Management
 .. description: How to build a C++ project using Gradle
 .. type: text
 
@@ -418,7 +418,7 @@ I recommend you to `Try it yourself`_.
 .. [n] 'n' Positive integer
 
 .. [1]
-   Actually Gradle_ is not required if we use the "wrapper", but we aren't going to treat it here, `here you can get more info about Gradle Wrapper <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
+   Actually Gradle_ is not required if we use the "wrapper", but we aren't going to treat it here, `here you can get more info about Gradle Wrapper <https://docs.gradle.org/current/userguide/gradle_wrapper.html>`__.
 
 .. [2]
    .bat in Windows. Without extension in Linux

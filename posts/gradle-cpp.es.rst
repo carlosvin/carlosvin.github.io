@@ -1,7 +1,7 @@
 .. title: Construir un proyecto C++ con Gradle
 .. slug: gradle-cpp
 .. date: 2014/09/25 19:00:00
-.. tags: Gradle, C++, Build Automation Software, Dependency Management
+.. tags: Gradle, C++, Build Software, Build System, Dependency Management
 .. description: Cómo construir un proyecto típico C++ utilizando Gradle.
 .. type: text
 
@@ -407,7 +407,7 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
 .. [n] 'n' es un número entero positivo
 
 .. [1]
-   Realmente no es necesario tener instalado Gradle, si utilizamos el wrapper, pero esto no lo vamos a tratar hoy, `si queréis más información <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__.
+   Realmente no es necesario tener instalado Gradle, si utilizamos el wrapper, pero esto no lo vamos a tratar hoy, `si queréis más información <https://docs.gradle.org/current/userguide/gradle_wrapper.html>`__.
 
 .. [2]
    .bat en Windows y sin extensión en Linux
