@@ -77,6 +77,25 @@ Example
 
 I've created an example to illustrate this article: https://github.com/carlosvin/uuid-cpp.
 
+It is a basic implementation of UUID pseudo-random generator based on mt19937_ which is not cryptographically secure.
+
+Project output artifacts
+------------------------
+
+- Shared library: `libuuid`.
+- Header library for developers who want to use the shared library: `include/Uuid.h`.
+- Executable `uuidgen`(UUID_ generator).
+- Test executable (not installed). It tests shared library. 
+
+For example, if you execute `ninja install` on Linux, you will get something like:
+
+- /usr/local/lib/libuuid.so
+- /usr/local/include/Uuid.h
+- /usr/local/bin/uuidgen
+
+Project source skeleton
+-----------------------
+
 
 
 .. _`Google Test`: https://github.com/google/googletest
@@ -89,3 +108,5 @@ I've created an example to illustrate this article: https://github.com/carlosvin
 .. _Catch: https://github.com/philsquared/Catch
 .. _xUnit: https://en.wikipedia.org/wiki/XUnit
 .. _BDD: https://en.wikipedia.org/wiki/Behavior-driven_development
+.. _UUID: https://en.wikipedia.org/wiki/Universally_unique_identifier
+.. _mt19937: http://www.cplusplus.com/reference/random/mt19937/
