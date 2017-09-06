@@ -1,7 +1,7 @@
 .. title: Choosing C++ stack
 .. slug: choosing-modern-cpp-stack
 .. date: 2017/09/03 10:50:00
-.. tags: C++, Unit Testing, Build System
+.. tags: C++, Unit Testing, Build System, Build Software, Meson, Catch
 .. description: My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton. 
 .. type: text
 
@@ -23,7 +23,7 @@ Autotools
     It is not easy to configure and maintain. There are several configuration files and several configuration steps. 
     
 Gradle 
-    C++ feature is still incubating. Not very fast.
+    C++ feature is still incubating. Not very fast. You can check a similar example project at `Build C++ project with Gradle </posts/gradle-cpp/>`_.
 
 Make
     I don't love the syntax. 
@@ -72,11 +72,196 @@ But time ago I found a testing framework with some interesting features, Catch_:
 
 If you want to know more about Catch_, I recommend you to give it a try, it is a matter of 2 minutes to have a `simple example up and running <https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests>`_. You can also read some interesting articles like `Why do we need yet another C++ test framework? <https://github.com/philsquared/Catch/blob/master/docs/why-catch.md>`_ or `Testing C++ With A New Catch <http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/>`_.
 
+doctest_: A Catch_ alternative
+------------------------------
+
+There is another testing framework named doctest_, with same benefits as Catch_, but it promises to be faster (`benchmark results <https://github.com/onqtam/doctest/blob/master/doc/markdown/benchmarks.md>`_) than Catch_. 
+
+doctest_ is modeled after Catch_ and some parts of the code have been taken directly, but there are `differences <https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch>`_.
+
+.. important:: I have to give a try to doctest_, if I find clear benefits over Catch_ then I will update this article.
+
 Example
 =======
 
 I've created an example to illustrate this article: https://github.com/carlosvin/uuid-cpp.
 
+It is a basic implementation of UUID pseudo-random generator based on mt19937_ which is not cryptographically secure.
+
+Project output artifacts
+------------------------
+
+- Shared library: :code:`libuuid`.
+- Header library for developers who want to use the shared library: :code:`include/Uuid.h`.
+- Executable :code:`uuidgen` (UUID_ generator).
+- Test executable (not installed). It tests shared library. 
+
+For example, if you execute :code:`ninja install` on Linux, you will get something like:
+
+.. code:: bash
+    
+    /usr/local/lib/libuuid.so
+    /usr/local/include/Uuid.h
+    /usr/local/bin/uuidgen
+
+Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
+---------------------------------------------------------------------------
+
+* `meson.build <https://github.com/carlosvin/uuid-cpp/blob/master/meson.build>`_
+    Root project file configuration. It defines project properties and subdirectories.
+    
+    .. code:: python
+    
+        project(
+            'cpp-meson-example', # project name
+            'cpp', # C++ project, e.g: for C project 
+            version : '1.0.0',
+            license : 'MIT',
+            default_options : ['cpp_std=c++11']) # compile for C++
+
+        # it will be referred from subdir projects
+        inc = include_directories('include') 
+
+        # meson will try to find a meson.build file inside following directories
+        subdir('include')
+        subdir('src')
+        subdir('test')
+
+* `include <https://github.com/carlosvin/uuid-cpp/blob/master/include/>`_
+    - meson.build
+        Subdirectory build configuration file.
+
+        .. code:: python
+
+            # Select header files to be installed 
+            install_headers('Uuid.h')
+
+    - `Uuid.h <https://github.com/carlosvin/uuid-cpp/blob/master/include/Uuid.h>`_
+        Header file, it is the library interface definition which will be included from projects using that library
+
+        .. code:: cpp
+
+            namespace ids {
+
+            class Uuid {
+                private:
+                // ...
+
+
+* `src <https://github.com/carlosvin/uuid-cpp/blob/master/src>`_
+    - `meson.build (src) <https://github.com/carlosvin/uuid-cpp/blob/master/src/meson.build>`_
+        It declares 2 output artifacts :code:`libuuid` and :code:`uuidgen`.
+        
+        .. code:: python
+
+            libuuid = shared_library(
+                'uuid', # library name
+                'Uuid.cpp', # source files to be compile
+                include_directories : inc, # previously declared include directories in root :code:`meson.build`
+                install : true) # :code:`libuuid` will be part of project installation
+
+            uuidgen = executable(
+                'uuidgen', # executable name
+                'main.cpp', # source files to compile
+                include_directories : inc, # previously declared include directories in root :code:`meson.build`
+                link_with : libuuid, # linking executable with shared previously declared shared library :code:`libuuid`
+                install : true) # :code:`uuidgen` executable be part of project installation
+
+    - `main.cpp <https://github.com/carlosvin/uuid-cpp/blob/master/src/main.cpp>`_
+        Entry point for main executable :code:`uuidgen`
+
+        .. code:: cpp
+
+            #include "Uuid.h"
+            #include <iostream>
+
+            int main() 
+            {
+                ids::Uuid uuid;
+                std::cout << uuid.to_str() << std::endl;
+                return 0;
+            }
+
+    - `Uuid.cpp <https://github.com/carlosvin/uuid-cpp/blob/master/src/Uuid.cpp>`_
+
+        Implementation of declared class in header file.
+
+        .. code:: cpp
+
+            #include "Uuid.h"
+
+            Uuid::Uuid()
+            { // ...
+
+* `test <https://github.com/carlosvin/uuid-cpp/blob/master/test/>`_
+    - `meson.build (test) <https://github.com/carlosvin/uuid-cpp/blob/master/test/meson.build>`_
+        File to configure tests build process. 
+
+        .. code:: python
+
+            testexe = executable(
+                'testexe', # test executable name 
+                'uuid_test.cpp', # tests source files to be compiled
+                include_directories : inc,  # declared include directories in root :code:`meson.build`
+                link_with : libuuid) # link test executable with previously declared shared library :code:`libuuid`
+
+            # test execution 
+            test('Uuid test', testexe)
+
+            # we can specify other test execution passing arguments or environment variables
+            test('Uuid test with args and env', testexe, args : ['arg1', 'arg2'], env : ['FOO=bar'])
+
+
+    - catch.hpp
+        Catch_ library in a single header file. You can try to automate library installation as part of your build process, but I haven't figure out yet a way to do it with Meson_. For now I've installed it manually: 
+        
+        .. code:: bash
+
+            cd test
+            wget https://github.com/philsquared/Catch/releases/download/v1.10.0/catch.hpp
+
+    - `uuid_test.cpp <https://github.com/carlosvin/uuid-cpp/blob/master/test/uuid_test.cpp>`_
+        Tests implementation.
+
+        .. code:: cpp
+
+            #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+
+            #include "Uuid.h"
+            #include "catch.hpp"
+            #include <string>
+
+            constexpr int MAX_ITERS = 100;
+
+            TEST_CASE( "Uuid", "[uuid]" ) {
+                for (int i=0; i<MAX_ITERS; i++) {
+                    ids::Uuid uuid;
+                    std::string uuid_str {uuid.to_str()};
+
+                    INFO(uuid_str);
+                    REQUIRE(uuid.most > 0);
+                    REQUIRE(uuid.least > 0);
+                    REQUIRE(uuid_str.size() == 36);
+                }
+            }
+
+            // BDD style
+
+            SCENARIO( "UUID creation", "[Uuid]" ) {
+                ids::Uuid uuid;
+                std::string uuid_str {uuid.to_str()};
+
+                GIVEN( "A random UUID " + uuid_str) {
+                    REQUIRE(uuid_str.size() == 36);
+
+                    WHEN( "get the most and least" ) {
+                        THEN( "should be more than 0" ) {
+                            REQUIRE( uuid.most > 0);
+                            REQUIRE( uuid.least > 0);
+                        }
+                    }
+                }  
+            }
 
 
 .. _`Google Test`: https://github.com/google/googletest
@@ -89,3 +274,6 @@ I've created an example to illustrate this article: https://github.com/carlosvin
 .. _Catch: https://github.com/philsquared/Catch
 .. _xUnit: https://en.wikipedia.org/wiki/XUnit
 .. _BDD: https://en.wikipedia.org/wiki/Behavior-driven_development
+.. _UUID: https://en.wikipedia.org/wiki/Universally_unique_identifier
+.. _mt19937: http://www.cplusplus.com/reference/random/mt19937/
+.. _doctest: https://github.com/onqtam/doctest

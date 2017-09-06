@@ -20,8 +20,11 @@
 <meta property="og:description" content="My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton.">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2017-09-03T10:50:00+02:00">
+<meta property="article:tag" content="Build Software">
 <meta property="article:tag" content="Build System">
 <meta property="article:tag" content="C++">
+<meta property="article:tag" content="Catch">
+<meta property="article:tag" content="Meson">
 <meta property="article:tag" content="Unit Testing">
 <link rel="alternate" hreflang="en" href="../../../posts/choosing-modern-cpp-stack/">
 </head>
@@ -120,8 +123,17 @@
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><a class="reference internal" href="#choosing-build-system-meson" id="id1">Choosing Build System (Meson)</a></li>
-<li><a class="reference internal" href="#unit-testing-framework-catch" id="id2">Unit Testing Framework (Catch)</a></li>
-<li><a class="reference internal" href="#example" id="id3">Example</a></li>
+<li>
+<a class="reference internal" href="#unit-testing-framework-catch" id="id2">Unit Testing Framework (Catch)</a><ul>
+<li><a class="reference internal" href="#doctest-a-catch-alternative" id="id3">doctest: A Catch alternative</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="#example" id="id4">Example</a><ul>
+<li><a class="reference internal" href="#project-output-artifacts" id="id5">Project output artifacts</a></li>
+<li><a class="reference internal" href="#project-structure-fork-project" id="id6">Project structure (Fork project)</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="section" id="choosing-build-system-meson">
@@ -132,7 +144,7 @@
 <dt>Autotools</dt>
 <dd>It is not easy to configure and maintain. There are several configuration files and several configuration steps.</dd>
 <dt>Gradle</dt>
-<dd>C++ feature is still incubating. Not very fast.</dd>
+<dd>C++ feature is still incubating. Not very fast. You can check a similar example project at <a class="reference external" href="../../../posts/gradle-cpp/">Build C++ project with Gradle</a>.</dd>
 <dt>Make</dt>
 <dd>I don't love the syntax.
 Files tends to get messy as project grows.</dd>
@@ -153,10 +165,10 @@ Files tends to get messy as project grows.</dd>
 <li>Syntax is really clear to me, when I read <cite>meson.build</cite> file I can quickly understand what is happening during build process.</li>
 <li>It is fast. Altought it is written in <a class="reference external" href="https://python.org/">Python</a>, it generates a <a class="reference external" href="https://ninja-build.org/">Ninja</a> build project. First time you configure the project you has to run <a class="reference external" href="http://mesonbuild.com/">Meson</a>, but for building or testing you are actually running <a class="reference external" href="https://ninja-build.org/">Ninja</a>.</li>
 </ul>
-<pre class="code bash"><a name="rest_code_040ecc3824354c5492e80853c438b5da-1"></a>$ meson build . <span class="c1"># first time you configure the project</span>
-<a name="rest_code_040ecc3824354c5492e80853c438b5da-2"></a>$ <span class="nb">cd</span> build
-<a name="rest_code_040ecc3824354c5492e80853c438b5da-3"></a>$ ninja build   <span class="c1"># each time you build it</span>
-<a name="rest_code_040ecc3824354c5492e80853c438b5da-4"></a>$ ninja <span class="nb">test</span>    <span class="c1"># each time you run tests</span>
+<pre class="code bash"><a name="rest_code_8aaa5031e5a24d66bf73857ff7ad9984-1"></a>$ meson build . <span class="c1"># first time you configure the project</span>
+<a name="rest_code_8aaa5031e5a24d66bf73857ff7ad9984-2"></a>$ <span class="nb">cd</span> build
+<a name="rest_code_8aaa5031e5a24d66bf73857ff7ad9984-3"></a>$ ninja build   <span class="c1"># each time you build it</span>
+<a name="rest_code_8aaa5031e5a24d66bf73857ff7ad9984-4"></a>$ ninja <span class="nb">test</span>    <span class="c1"># each time you run tests</span>
 </pre>
 <p>I've found two interesting comparisons about available C++ build systems, they might be a little be biased because those comparisons come from <a class="reference external" href="http://mesonbuild.com/">Meson</a> and <a class="reference external" href="http://scons.org/">Scons</a>.</p>
 <ul class="simple">
@@ -176,16 +188,223 @@ If you want a safe bet that fulfills almost of your testing needs I highly recom
 <li>You can use normal unit test style or <a class="reference external" href="https://en.wikipedia.org/wiki/Behavior-driven_development">BDD</a>-style</li>
 </ul>
 <p>If you want to know more about <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a>, I recommend you to give it a try, it is a matter of 2 minutes to have a <a class="reference external" href="https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests">simple example up and running</a>. You can also read some interesting articles like <a class="reference external" href="https://github.com/philsquared/Catch/blob/master/docs/why-catch.md">Why do we need yet another C++ test framework?</a> or <a class="reference external" href="http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/">Testing C++ With A New Catch</a>.</p>
+<div class="section" id="doctest-a-catch-alternative">
+<h3>
+<a class="reference external" href="https://github.com/onqtam/doctest">doctest</a>: A <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a> alternative</h3>
+<p>There is another testing framework named <a class="reference external" href="https://github.com/onqtam/doctest">doctest</a>, with same benefits as <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a>, but it promises to be faster (<a class="reference external" href="https://github.com/onqtam/doctest/blob/master/doc/markdown/benchmarks.md">benchmark results</a>) than <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a>.</p>
+<p><a class="reference external" href="https://github.com/onqtam/doctest">doctest</a> is modeled after <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a> and some parts of the code have been taken directly, but there are <a class="reference external" href="https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch">differences</a>.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">I have to give a try to <a class="reference external" href="https://github.com/onqtam/doctest">doctest</a>, if I find clear benefits over <a class="reference external" href="https://github.com/philsquared/Catch">Catch</a> then I will update this article.</p>
+</div>
+</div>
 </div>
 <div class="section" id="example">
-<h2><a class="toc-backref" href="#id3">Example</a></h2>
+<h2><a class="toc-backref" href="#id4">Example</a></h2>
 <p>I've created an example to illustrate this article: <a class="reference external" href="https://github.com/carlosvin/uuid-cpp">https://github.com/carlosvin/uuid-cpp</a>.</p>
+<p>It is a basic implementation of UUID pseudo-random generator based on <a class="reference external" href="http://www.cplusplus.com/reference/random/mt19937/">mt19937</a> which is not cryptographically secure.</p>
+<div class="section" id="project-output-artifacts">
+<h3><a class="toc-backref" href="#id5">Project output artifacts</a></h3>
+<ul class="simple">
+<li>Shared library: <code>libuuid</code>.</li>
+<li>Header library for developers who want to use the shared library: <code>include/Uuid.h</code>.</li>
+<li>Executable <code>uuidgen</code> (<a class="reference external" href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a> generator).</li>
+<li>Test executable (not installed). It tests shared library.</li>
+</ul>
+<p>For example, if you execute <code>ninja install</code> on Linux, you will get something like:</p>
+<pre class="code bash"><a name="rest_code_e1a5c836dec947a796f6950e73aa8d35-1"></a>/usr/local/lib/libuuid.so
+<a name="rest_code_e1a5c836dec947a796f6950e73aa8d35-2"></a>/usr/local/include/Uuid.h
+<a name="rest_code_e1a5c836dec947a796f6950e73aa8d35-3"></a>/usr/local/bin/uuidgen
+</pre>
+</div>
+<div class="section" id="project-structure-fork-project">
+<h3>Project structure (<a class="reference external" href="https://github.com/carlosvin/uuid-cpp">Fork project</a>)</h3>
+<ul>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/meson.build">meson.build</a></dt>
+<dd>
+<p class="first">Root project file configuration. It defines project properties and subdirectories.</p>
+<div class="last"><pre class="code python"><a name="rest_code_2803846121f84fb9a5f56ea830d377d0-1"></a><span class="n">project</span><span class="p">(</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-2"></a>    <span class="s1">'cpp-meson-example'</span><span class="p">,</span> <span class="c1"># project name</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-3"></a>    <span class="s1">'cpp'</span><span class="p">,</span> <span class="c1"># C++ project, e.g: for C project</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-4"></a>    <span class="n">version</span> <span class="p">:</span> <span class="s1">'1.0.0'</span><span class="p">,</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-5"></a>    <span class="n">license</span> <span class="p">:</span> <span class="s1">'MIT'</span><span class="p">,</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-6"></a>    <span class="n">default_options</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'cpp_std=c++11'</span><span class="p">])</span> <span class="c1"># compile for C++</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-7"></a>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-8"></a><span class="c1"># it will be referred from subdir projects</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-9"></a><span class="n">inc</span> <span class="o">=</span> <span class="n">include_directories</span><span class="p">(</span><span class="s1">'include'</span><span class="p">)</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-10"></a>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-11"></a><span class="c1"># meson will try to find a meson.build file inside following directories</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-12"></a><span class="n">subdir</span><span class="p">(</span><span class="s1">'include'</span><span class="p">)</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-13"></a><span class="n">subdir</span><span class="p">(</span><span class="s1">'src'</span><span class="p">)</span>
+<a name="rest_code_2803846121f84fb9a5f56ea830d377d0-14"></a><span class="n">subdir</span><span class="p">(</span><span class="s1">'test'</span><span class="p">)</span>
+</pre></div>
+</dd>
+</dl></li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/include/">include</a></dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>meson.build</dt>
+<dd>
+<p class="first">Subdirectory build configuration file.</p>
+<div class="last"><pre class="code python"><a name="rest_code_948f902cd35543058b1d1cb7685e5c63-1"></a><span class="c1"># Select header files to be installed</span>
+<a name="rest_code_948f902cd35543058b1d1cb7685e5c63-2"></a><span class="n">install_headers</span><span class="p">(</span><span class="s1">'Uuid.h'</span><span class="p">)</span>
+</pre></div>
+</dd>
+</dl></li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/include/Uuid.h">Uuid.h</a></dt>
+<dd>
+<p class="first">Header file, it is the library interface definition which will be included from projects using that library</p>
+<div class="last"><pre class="code cpp"><a name="rest_code_b1219c46090647cc9cde777e6f2a0f9c-1"></a><span class="k">namespace</span> <span class="n">ids</span> <span class="p">{</span>
+<a name="rest_code_b1219c46090647cc9cde777e6f2a0f9c-2"></a>
+<a name="rest_code_b1219c46090647cc9cde777e6f2a0f9c-3"></a><span class="k">class</span> <span class="nc">Uuid</span> <span class="p">{</span>
+<a name="rest_code_b1219c46090647cc9cde777e6f2a0f9c-4"></a>    <span class="k">private</span><span class="o">:</span>
+<a name="rest_code_b1219c46090647cc9cde777e6f2a0f9c-5"></a>    <span class="c1">// ...</span>
+</pre></div>
+</dd>
+</dl></li>
+</ul></dd>
+</dl></li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/src">src</a></dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/src/meson.build">meson.build (src)</a></dt>
+<dd>
+<p class="first">It declares 2 output artifacts <code>libuuid</code> and <code>uuidgen</code>.</p>
+<div class="last"><pre class="code python"><a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-1"></a><span class="n">libuuid</span> <span class="o">=</span> <span class="n">shared_library</span><span class="p">(</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-2"></a>    <span class="s1">'uuid'</span><span class="p">,</span> <span class="c1"># library name</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-3"></a>    <span class="s1">'Uuid.cpp'</span><span class="p">,</span> <span class="c1"># source files to be compile</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-4"></a>    <span class="n">include_directories</span> <span class="p">:</span> <span class="n">inc</span><span class="p">,</span> <span class="c1"># previously declared include directories in root :code:`meson.build`</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-5"></a>    <span class="n">install</span> <span class="p">:</span> <span class="n">true</span><span class="p">)</span> <span class="c1"># :code:`libuuid` will be part of project installation</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-6"></a>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-7"></a><span class="n">uuidgen</span> <span class="o">=</span> <span class="n">executable</span><span class="p">(</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-8"></a>    <span class="s1">'uuidgen'</span><span class="p">,</span> <span class="c1"># executable name</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-9"></a>    <span class="s1">'main.cpp'</span><span class="p">,</span> <span class="c1"># source files to compile</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-10"></a>    <span class="n">include_directories</span> <span class="p">:</span> <span class="n">inc</span><span class="p">,</span> <span class="c1"># previously declared include directories in root :code:`meson.build`</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-11"></a>    <span class="n">link_with</span> <span class="p">:</span> <span class="n">libuuid</span><span class="p">,</span> <span class="c1"># linking executable with shared previously declared shared library :code:`libuuid`</span>
+<a name="rest_code_1dcd68df24cd47f2a3206d4b29a43348-12"></a>    <span class="n">install</span> <span class="p">:</span> <span class="n">true</span><span class="p">)</span> <span class="c1"># :code:`uuidgen` executable be part of project installation</span>
+</pre></div>
+</dd>
+</dl></li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/src/main.cpp">main.cpp</a></dt>
+<dd>
+<p class="first">Entry point for main executable <code>uuidgen</code></p>
+<div class="last"><pre class="code cpp"><a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-1"></a><span class="cp">#include</span> <span class="cpf">"Uuid.h"</span><span class="cp"></span>
+<a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-2"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-3"></a>
+<a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-4"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-5"></a><span class="p">{</span>
+<a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-6"></a>    <span class="n">ids</span><span class="o">::</span><span class="n">Uuid</span> <span class="n">uuid</span><span class="p">;</span>
+<a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-7"></a>    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">uuid</span><span class="p">.</span><span class="n">to_str</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-8"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_2366d4e99c3549d498c3b061b930b2aa-9"></a><span class="p">}</span>
+</pre></div>
+</dd>
+</dl></li>
+<li>
+<p class="first"><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/src/Uuid.cpp">Uuid.cpp</a></p>
+<blockquote>
+<p>Implementation of declared class in header file.</p>
+<pre class="code cpp"><a name="rest_code_0c7f09baa09b4a038bc57afe31193eb4-1"></a><span class="cp">#include</span> <span class="cpf">"Uuid.h"</span><span class="cp"></span>
+<a name="rest_code_0c7f09baa09b4a038bc57afe31193eb4-2"></a>
+<a name="rest_code_0c7f09baa09b4a038bc57afe31193eb4-3"></a><span class="n">Uuid</span><span class="o">::</span><span class="n">Uuid</span><span class="p">()</span>
+<a name="rest_code_0c7f09baa09b4a038bc57afe31193eb4-4"></a><span class="p">{</span> <span class="c1">// ...</span>
+</pre>
+</blockquote>
+</li>
+</ul></dd>
+</dl></li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/test/">test</a></dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/test/meson.build">meson.build (test)</a></dt>
+<dd>
+<p class="first">File to configure tests build process.</p>
+<div class="last"><pre class="code python"><a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-1"></a><span class="n">testexe</span> <span class="o">=</span> <span class="n">executable</span><span class="p">(</span>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-2"></a>    <span class="s1">'testexe'</span><span class="p">,</span> <span class="c1"># test executable name</span>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-3"></a>    <span class="s1">'uuid_test.cpp'</span><span class="p">,</span> <span class="c1"># tests source files to be compiled</span>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-4"></a>    <span class="n">include_directories</span> <span class="p">:</span> <span class="n">inc</span><span class="p">,</span>  <span class="c1"># declared include directories in root :code:`meson.build`</span>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-5"></a>    <span class="n">link_with</span> <span class="p">:</span> <span class="n">libuuid</span><span class="p">)</span> <span class="c1"># link test executable with previously declared shared library :code:`libuuid`</span>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-6"></a>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-7"></a><span class="c1"># test execution</span>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-8"></a><span class="n">test</span><span class="p">(</span><span class="s1">'Uuid test'</span><span class="p">,</span> <span class="n">testexe</span><span class="p">)</span>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-9"></a>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-10"></a><span class="c1"># we can specify other test execution passing arguments or environment variables</span>
+<a name="rest_code_926e42ab7c644890bdafc6587ffd1bdb-11"></a><span class="n">test</span><span class="p">(</span><span class="s1">'Uuid test with args and env'</span><span class="p">,</span> <span class="n">testexe</span><span class="p">,</span> <span class="n">args</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'arg1'</span><span class="p">,</span> <span class="s1">'arg2'</span><span class="p">],</span> <span class="n">env</span> <span class="p">:</span> <span class="p">[</span><span class="s1">'FOO=bar'</span><span class="p">])</span>
+</pre></div>
+</dd>
+</dl></li>
+<li><dl class="first docutils">
+<dt>catch.hpp</dt>
+<dd>
+<p class="first"><a class="reference external" href="https://github.com/philsquared/Catch">Catch</a> library in a single header file. You can try to automate library installation as part of your build process, but I haven't figure out yet a way to do it with <a class="reference external" href="http://mesonbuild.com/">Meson</a>. For now I've installed it manually:</p>
+<div class="last"><pre class="code bash"><a name="rest_code_761ad820395742809949ecd7555d601d-1"></a><span class="nb">cd</span> <span class="nb">test</span>
+<a name="rest_code_761ad820395742809949ecd7555d601d-2"></a>wget https://github.com/philsquared/Catch/releases/download/v1.10.0/catch.hpp
+</pre></div>
+</dd>
+</dl></li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/carlosvin/uuid-cpp/blob/master/test/uuid_test.cpp">uuid_test.cpp</a></dt>
+<dd>
+<p class="first">Tests implementation.</p>
+<div class="last"><pre class="code cpp"><a name="rest_code_efac06d531714caa864c543f82828b21-1"></a><span class="cp">#define CATCH_CONFIG_MAIN  </span><span class="c1">// This tells Catch to provide a main() - only do this in one cpp file</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-2"></a>
+<a name="rest_code_efac06d531714caa864c543f82828b21-3"></a><span class="cp">#include</span> <span class="cpf">"Uuid.h"</span><span class="cp"></span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-4"></a><span class="cp">#include</span> <span class="cpf">"catch.hpp"</span><span class="cp"></span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-5"></a><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-6"></a>
+<a name="rest_code_efac06d531714caa864c543f82828b21-7"></a><span class="k">constexpr</span> <span class="kt">int</span> <span class="n">MAX_ITERS</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-8"></a>
+<a name="rest_code_efac06d531714caa864c543f82828b21-9"></a><span class="n">TEST_CASE</span><span class="p">(</span> <span class="s">"Uuid"</span><span class="p">,</span> <span class="s">"[uuid]"</span> <span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-10"></a>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">MAX_ITERS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-11"></a>        <span class="n">ids</span><span class="o">::</span><span class="n">Uuid</span> <span class="n">uuid</span><span class="p">;</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-12"></a>        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">uuid_str</span> <span class="p">{</span><span class="n">uuid</span><span class="p">.</span><span class="n">to_str</span><span class="p">()};</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-13"></a>
+<a name="rest_code_efac06d531714caa864c543f82828b21-14"></a>        <span class="n">INFO</span><span class="p">(</span><span class="n">uuid_str</span><span class="p">);</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-15"></a>        <span class="n">REQUIRE</span><span class="p">(</span><span class="n">uuid</span><span class="p">.</span><span class="n">most</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-16"></a>        <span class="n">REQUIRE</span><span class="p">(</span><span class="n">uuid</span><span class="p">.</span><span class="n">least</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-17"></a>        <span class="n">REQUIRE</span><span class="p">(</span><span class="n">uuid_str</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">36</span><span class="p">);</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-18"></a>    <span class="p">}</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-19"></a><span class="p">}</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-20"></a>
+<a name="rest_code_efac06d531714caa864c543f82828b21-21"></a><span class="c1">// BDD style</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-22"></a>
+<a name="rest_code_efac06d531714caa864c543f82828b21-23"></a><span class="n">SCENARIO</span><span class="p">(</span> <span class="s">"UUID creation"</span><span class="p">,</span> <span class="s">"[Uuid]"</span> <span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-24"></a>    <span class="n">ids</span><span class="o">::</span><span class="n">Uuid</span> <span class="n">uuid</span><span class="p">;</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-25"></a>    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">uuid_str</span> <span class="p">{</span><span class="n">uuid</span><span class="p">.</span><span class="n">to_str</span><span class="p">()};</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-26"></a>
+<a name="rest_code_efac06d531714caa864c543f82828b21-27"></a>    <span class="n">GIVEN</span><span class="p">(</span> <span class="s">"A random UUID "</span> <span class="o">+</span> <span class="n">uuid_str</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-28"></a>        <span class="n">REQUIRE</span><span class="p">(</span><span class="n">uuid_str</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">36</span><span class="p">);</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-29"></a>
+<a name="rest_code_efac06d531714caa864c543f82828b21-30"></a>        <span class="n">WHEN</span><span class="p">(</span> <span class="s">"get the most and least"</span> <span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-31"></a>            <span class="n">THEN</span><span class="p">(</span> <span class="s">"should be more than 0"</span> <span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-32"></a>                <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">uuid</span><span class="p">.</span><span class="n">most</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-33"></a>                <span class="n">REQUIRE</span><span class="p">(</span> <span class="n">uuid</span><span class="p">.</span><span class="n">least</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-34"></a>            <span class="p">}</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-35"></a>        <span class="p">}</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-36"></a>    <span class="p">}</span>
+<a name="rest_code_efac06d531714caa864c543f82828b21-37"></a><span class="p">}</span>
+</pre></div>
+</dd>
+</dl></li>
+</ul></dd>
+</dl></li>
+</ul>
+</div>
 </div>
 </div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
-<li><a class="tag p-category" href="../../categories/build-system/" rel="tag">Build System</a></li>
+<li><a class="tag p-category" href="../../categories/build-software/" rel="tag">Build Software</a></li>
+            <li><a class="tag p-category" href="../../categories/build-system/" rel="tag">Build System</a></li>
             <li><a class="tag p-category" href="../../categories/c%2B%2B/" rel="tag">C++</a></li>
+            <li><a class="tag p-category" href="../../categories/catch/" rel="tag">Catch</a></li>
+            <li><a class="tag p-category" href="../../categories/meson/" rel="tag">Meson</a></li>
             <li><a class="tag p-category" href="../../categories/unit-testing/" rel="tag">Unit Testing</a></li>
         </ul>
 <ul class="pager hidden-print">
