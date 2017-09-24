@@ -1,94 +1,93 @@
-.. title: Choosing a Modern C++ stack
+.. title: Elegir tecnologías para mi nuevo proyeco C++
 .. slug: choosing-modern-cpp-stack
-.. date: 2017/09/15 20:50:00
+.. date: 2017/09/24 20:00:00
 .. tags: C++, Unit Testing, Build System, Build Software, Meson, Catch
-.. description: My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton. 
+.. description: Las tecnologías que he elegido para mi proyecto C++.My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton. 
 .. type: text
 
-I'm starting a new project in C++, but I've run into a pair of questions before start:
+Estoy empezando un pequeño proyecto en C++ y antes de nada me han surgido un par de preguntas:
 
-1. Which build system should I use?
-2. Which unit testing framework?
+1. ¿Cómo voy a construirlo?
+2. ¿Qué framework para pruebas unitarias utilizar?
 
 .. contents::
 
-Choosing Build System (Meson_)
-==============================
+Elegir un Sistema de Construcción (Meson_)
+==========================================
 
-I have used before Make, Maven, Scons, Gradle and Autotools. 
+Ya he utilizado antes Make_, Maven_, Scons_, Gradle_ y Autotools_, pero tengo algunas razones para probar algo diferente, algunas cosas que no me gustan:
 
-But I have some reasons to try find something else.
-
-Autotools
-    It is not easy to configure and maintain. There are several configuration files and several configuration steps. 
+Autotools_
+    No es fácil de configurar y mantener: hay distintos ficheros de configuración y distintos pasos de configuración. 
     
-Gradle 
-    C++ feature is still incubating. Not very fast. You can check a similar example project at `Build C++ project with Gradle </posts/gradle-cpp/>`_.
+Gradle_
+    La construcción de proyectos C++ está todavía en desarrollo, los modelos y APIs están cambiando. No es muy rápido. Puedes ver un ejemplo en este artículo  `Construir un proyecto C++ con Gradle </posts/gradle-cpp/>`_.
 
-Make
-    I don't love the syntax. 
-    Files tends to get messy as project grows.
+Make_
+    A medida que el proyecto crece los archivos de configuración se van complicando y volviendo poco manejables.
+    La sintáxis no me parece clara (esto es una custión de gustos).
     
-Scons
-    It is just slow.
+Scons_
+    Es más lento y un poco más difícil de comprender que Meson_. 
 
-Maven
-    It is slow and you might end up "*Javatizing*" your C++ project structure.
+Maven_
+    Es lento y puedes terminar "*Javatizando*" la estructura del proyecto.
 
-.. note:: I've listed just things I don't like, those projects have other great features. 
+.. note:: He nombrado solo las cosas que no gustan, pero estos sistemas de construcción tienen otras grandes virtudes, personalmente me encantan Gradle_, Autotools_ y Scons_.
 
-Now I'm considering Meson_ or CMake_. 
+Después de descartar los anteriores, estoy considerando Meson_ y CMake_.
 
-CMake_ has a big advantage over Meson_, it is mature and widely used in many projects, which means there are many examples and it will fulfill your C++ project building needs. 
+CMake_ tiene una gran ventaja sobre Meson_, es mucho más maduro y es mucho más usado, lo que significa que podrás encontrar muy fácilmente ejemplos, documentación y ayuda en Internet. No importa el tipo de proyecto que estés empezando, lo más seguro es que CMake_ sea una buena elección.
 
-Meson_ is a young project compared with CMake_, but it is growing quite fast and it has been adopted in other big projects like Gnome_, they have an initiative to `port from Autotools to Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_. 
+Meson_ es un proyecto jóven comparado con CMake_, pero está creciendo rápido y ya ha sido adoptado por algunos proyectos importantes como Gnome_, donde han comenzado una iniciativa para `migrar desde Autotools a Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_. 
 
-I've chosen Meson_ because:
+El final he elegido Meson_ porque:
 
-- Syntax is really clear to me, when I read `meson.build` file I can quickly understand what is happening during build process. 
-- It is fast. Altought it is written in Python_, it generates a Ninja_ build project. First time you configure the project you has to run Meson_, but for building or testing you are actually running Ninja_.
+- La sintáxis es muy clara para mí, cuando leo un archivo `meson.build` entiendo rápidamente lo ue está pasando durante el proceso de construcción.
+- Es rápido, aunque está escrito en Python_ utiliza Ninja_ para construir el proyecto. La primera vez tienes que utilizar Meson_ para configurar el proyecto, pero para construir y probar el proyecto relmente estamos ejecutando Ninja_.
 
 .. code:: bash
 
-    $ meson build . # first time you configure the project
+    $ meson build . # Primera vez, configuración del proyecto
     $ cd build
-    $ ninja build   # each time you build it
-    $ ninja test    # each time you run tests
+    $ ninja build   # cada vez que construyes el projecto
+    $ ninja test    # cada vez que ejecutas tests
 
-I've found two interesting comparisons about available C++ build systems, they might be a little be biased because those comparisons come from Meson_ and Scons_.
+He encontrado un para de comparaciones interesantes entre algunos de los sistemas de construcción en C++, aunque puede que no sean del todo imparciales porque han sido realizadas por Meson_ y Scons_.
 
 - `C++ build systems comparison from Scons <https://bitbucket.org/scons/scons/wiki/SconsVsOtherBuildTools>`_.
 - `C++ build systems comparison from Meson <http://mesonbuild.com/Simple-comparison.html>`_.
 
-Unit Testing Framework
-======================
-I have used some xUnit_ based libraries like `UnitTest++ <https://github.com/unittest-cpp/unittest-cpp>`_, `CppUTest <http://cpputest.github.io/>`_ or `Google Test`_ which match perfectly with `Google Mock <https://github.com/google/googletest/tree/master/googlemock>`_. 
-If you want a safe bet that fulfills almost of your testing needs I highly recommend `Google Test`_.  
+Framework the Pruebas Unitarias
+===============================
 
-But time ago I found a testing framework with some interesting features, Catch_: 
+He utiliza algunas librerías del tipo xUnit_ como `UnitTest++ <https://github.com/unittest-cpp/unittest-cpp>`_, `CppUTest <http://cpputest.github.io/>`_ o `Google Test`_ que encaja perfectamente con `Google Mock <https://github.com/google/googletest/tree/master/googlemock>`_. 
 
-- It is just a header file with no external dependencies, so very easy to start (wget + include downloaded file).
-- You can use normal unit test style or BDD_-style
+Si quires una apuesta segura que cumpla tus expectativas, te recomiendo `Google Test`_.  
 
-If you want to know more about Catch_, I recommend you to give it a try, it is a matter of 2 minutes to have a `simple example up and running <https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests>`_. You can also read some interesting articles like `Why do we need yet another C++ test framework? <https://github.com/philsquared/Catch/blob/master/docs/why-catch.md>`_ or `Testing C++ With A New Catch <http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/>`_.
+Pero hace algún tiempo encontré un framework de pruebas con algunas características bastante novedosas, este es Catch_: 
 
-doctest_: A Catch_ alternative
-------------------------------
+- Es simplemente un fichero de cabeceras C++ con ninguna dependencia adicional, por lo que resulta realmente rápido comenzar (wget y utilizar el fichero descargado desde tus pruebas).
+- Puedes utilizar el estilo normal de pruebas unitarias o el estilo BDD_.
 
-There is another testing framework named doctest_, with same benefits as Catch_, but it promises to be faster and lighter (`benchmark results`_) than Catch_. 
+Si quieres saber más sobre Catch_, te recomiendo que directamente lo pruebes, el siguiente ejemple es cuestión de dos minutos `simple example up and running <https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests>`_. Puedes también leer algunos artículos como `Why do we need yet another C++ test framework? <https://github.com/philsquared/Catch/blob/master/docs/why-catch.md>`_ o `Testing C++ With A New Catch <http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/>`_.
 
-doctest_ is modeled after Catch_ and some parts of the code have been taken directly, but there are `differences <https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch>`_.
+doctest_: Una alternativa a Catch_
+----------------------------------
 
-It hasn't been easy to decide, both are really similar, you can `check here differences <https://github.com/carlosvin/uuid-cpp/pull/1/files#diff-d22d1e18ecbe7ba34523db56b011bcfe>`_ between project using doctest_ and project using Catch_. 
+Hay otro framework de pruebas llamado doctest_, con los mismos principios que Catch_, pero promete ser más rápido y ligero (`resultados de las comparaciones de rendimiento`_) que Catch_. 
 
-I've finally chosen doctest_ because it promises to be faster: `benchmark results`_.
+doctest_ fue diseñado basándose en los puntos fuertes de Catch_, pero hay algunas `diferencias <https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch>`_.
 
-.. note:: I've created project using both frameworks you can find them in corresponding branches: `doctest branch <https://github.com/carlosvin/uuid-cpp/tree/doctest>`_ or `catch branch <https://github.com/carlosvin/uuid-cpp/tree/catch>`_. 
+No es fácil decidirse por uno, los dos son muy parecidos, puedes `comprobar las diferencias entre un test escrito con uno y otro framework <https://github.com/carlosvin/uuid-cpp/pull/1/files#diff-d22d1e18ecbe7ba34523db56b011bcfe>`_. 
 
-.. hint:: You can see diferencies between projects at: https://github.com/carlosvin/uuid-cpp/pull/1
+Finalmente he elegido doctest_ simplemente porque es más rápido: `resultados de las comparaciones de rendimiento`_.
 
+.. note:: He creado el proyecto de ejemplo utilizando ambos frameworks, puedes encontrarlos en diferentes ramas del repositorio: `rama doctest  <https://github.com/carlosvin/uuid-cpp/tree/doctest>`_ or `rama catch <https://github.com/carlosvin/uuid-cpp/tree/catch>`_. 
 
-Example
+.. hint:: Puedes ver las mínimas diferencias entre un proyecto usando Catch_ o doctest_ en: https://github.com/carlosvin/uuid-cpp/pull/1
+
+Ejemplo
 =======
 
 I've created an example to illustrate this article: https://github.com/carlosvin/uuid-cpp.
@@ -272,6 +271,10 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
 
 .. _`Google Test`: https://github.com/google/googletest
 .. _CMake: https://cmake.org/
+.. _Make: https://www.gnu.org/software/make/manual/make.html
+.. _Gradle: https://gradle.org/
+.. _Maven: https://maven.apache.org/
+.. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
 .. _Meson: http://mesonbuild.com/
 .. _Gnome: https://www.gnome.org/
 .. _Scons: http://scons.org/
@@ -283,4 +286,4 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
 .. _UUID: https://en.wikipedia.org/wiki/Universally_unique_identifier
 .. _mt19937: http://www.cplusplus.com/reference/random/mt19937/
 .. _doctest: https://github.com/onqtam/doctest
-.. _`benchmark results`: https://github.com/onqtam/doctest/blob/master/doc/markdown/benchmarks.md
+.. _`resultados de las comparaciones de rendimiento`: https://github.com/onqtam/doctest/blob/master/doc/markdown/benchmarks.md
