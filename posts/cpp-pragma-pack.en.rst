@@ -1,4 +1,4 @@
-.. title: C++ Struct in memory alignment
+.. title: C++ Struct memory alignment
 .. slug: cpp-pragma-pack
 .. date: 2012/11/26 12:00:00
 .. update: 2017/09/20 17:00:00
