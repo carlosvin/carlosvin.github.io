@@ -1,12 +1,11 @@
-.. title: Mapeo de un struct C++ en Memoria
+.. title: Alineación de una Estructura C++ en Memoria
 .. slug: cpp-pragma-pack
 .. date: 2012/11/26 12:00:00
-.. update: 2014/03/28 17:00:00
+.. update: 2017/09/20 17:00:00
 .. tags: C++
-.. link: 
 .. type: text
 
-Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia.
+Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia. Podemos considerarlo como una clase con visibilidad publica por defecto para sus atributos y funciones.
 
 Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.
 
@@ -79,7 +78,7 @@ Vamos a ver un fragmento de código que imprime el tamaño de la estructura y el
 	    return 0;
 	}
 
-`Ejecutando el código de sin la directiva pragma`_, tenemos que nuestra estructura ocupa 8 bytes en lugar de 5 bytes.
+`Ejecutando el código sin la directiva pragma`_, tenemos que nuestra estructura ocupa 8 bytes en lugar de 5 bytes.
 
 .. code-block:: bash
 	
@@ -167,7 +166,7 @@ Se trata de una directiva del preprocesador que indica al compilador cómo debe 
 	    return 0;
 	}
 
-`Ejecutando el código de con las directivas pragma`_, tenemos distintos resultados dependiendo del valor de pragma.
+`Ejecutando el código con las directivas pragma`_, tenemos distintos resultados dependiendo del valor de pragma.
 
 .. code-block:: bash
 	
@@ -330,7 +329,7 @@ A continuación pego el código de la prueba de rendimiento.
 	    return 0;
 	}
 
-.. _`Ejecutando el código de sin la directiva pragma`: http://coliru.stacked-crooked.com/a/c7deb3df49bebd40
-.. _`Ejecutando el código de con las directivas pragma`: http://coliru.stacked-crooked.com/a/7c18ee6585e57366
+.. _`Ejecutando el código sin la directiva pragma`: http://coliru.stacked-crooked.com/a/c7deb3df49bebd40
+.. _`Ejecutando el código con las directivas pragma`: http://coliru.stacked-crooked.com/a/7c18ee6585e57366
 .. _`ejecutar la prueba de rendimiento en este enlace`: http://coliru.stacked-crooked.com/a/954ad542659c7591
 
