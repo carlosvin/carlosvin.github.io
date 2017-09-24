@@ -1,22 +1,22 @@
-.. title: Alineación de una Estructura C++ en Memoria
+.. title: C++ Struct in memory alignment
 .. slug: cpp-pragma-pack
 .. date: 2012/11/26 12:00:00
 .. update: 2017/09/20 17:00:00
-.. tags: C++
+.. tags: C++, Performance, Compilers
 .. type: text
 
-Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia. Podemos considerarlo como una clase con visibilidad publica por defecto para sus atributos y funciones.
+A C++ struct is an element that allows grouping attributes with different type so we can manipulate all elements together using same reference. It is like a class with public visibility by default for functions and attributes. 
 
-Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.
+If we want to work in a lower level, closer to machine, it might be useful understand how that data structure is stored in memory and how to control that mapping.
 
-.. contents:: Tabla de Contenidos
+.. contents:: 
 
 .. TEASER_END
 
-Estructura de ejemplo
-=====================
+Example Struct
+==============
 
-Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un booleano (un byte). En C++ queda de la siguiente forma:
+It has two attributes: an integer (4 bytes) and a boolean (1 byte). 
 
 .. code-block:: c++
 	
@@ -26,26 +26,25 @@ Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un boole
 	    unsigned int timeout;
 	};
 
-Si hacemos un :code:`sizeof` de la una instancia de la estructura deberíamos obtener un tamaño de 5 bytes. Y la memoria quedaría de la siguiente forma:
+If we get the instance size using :code:`sizeof` we should get 5 bytes size and memory would be like:
 
 .. figure:: /galleries/c-mem-struct/5b.png
 	:width: 30%
 	:figwidth: 50%
 
-	Estructura de 5 bytes que realmente ocupa 5 bytes en memoria. 
+	5 bytes struct which uses 5 bytes in memory 
 
+**But** is not that simple, following we will see that we can't forget about memory alignment which depends on compiler and system. We will learn how to control compiler alignment policy, so we can avoid getting unexpected allocation memory sizes.
 
-Pero no es tan sencillo, a continuación veremos que no nos podemos olvidar de la alineación de la memoria que hace el compilador en ese sistema y veremos cómo controlarlo para no encontrarnos con tamaños inesperados, ya que esto depende del compilador del sistema.
-
-Por ejemplo, si en mi máquina hago un :code:`sizeof` de la estructura, obtengo un tamaño de 8 bytes. Lo que está sucediendo es que el compilador reserva más memoria al final de la estructura para que cuadre en bloques de 2n bytes. La memoria queda de la siguiente forma:
+For example, in my local host with :code:`sizeof` of structure, I get a 8 bytes size. What is happening is that compiler allocates more memory at the end of structure so it fits in 2n bytes blocks. Memory looks like:
 
 .. figure:: /galleries/c-mem-struct/8b.png
 	:width: 30%
 	:figwidth: 50%
 	
-	Estructura de 5 bytes que realmente ocupa 8 bytes en memoria. Para ser más precisos, debería haber dibujado la memoria no usada a continuación del atributo flag.
+	5 bytes structure that actually spends 8 bytes in memory
 
-Vamos a ver un fragmento de código que imprime el tamaño de la estructura y el de cada uno de sus atributos y verificar, en este caso 4 + 1 no es 5.
+Let's see a code snippet that prints structure and attributes size, in this case **4 + 1 is not 5**.
 
 .. code-block:: c++
 
@@ -78,7 +77,7 @@ Vamos a ver un fragmento de código que imprime el tamaño de la estructura y el
 	    return 0;
 	}
 
-`Ejecutando el código sin la directiva pragma`_, tenemos que nuestra estructura ocupa 8 bytes en lugar de 5 bytes.
+`Executing code with pragma pack directive`_,  8 bytes en lugar de 5 bytes.
 
 .. code-block:: bash
 	
@@ -91,12 +90,13 @@ Vamos a ver un fragmento de código que imprime el tamaño de la estructura y el
 	sizeof struct:  8 Bytes
 	--
 
-.. tip:: Si queremos conocer el tamaño exacto de las estructuras que vamos a utilizar, tenemos que especificar al compilador la forma de alinear la estructura en memoria, para ello utilizaremos la directiva :code:`#pragma pack(n)`.
+.. tip:: If we want to know the exact structure size we have to specify compiler the way how to align memory, to do so we have :code:`#pragma pack(n)` directive.
 
-La directiva #pragma pack en struct C++
-=======================================
 
-Se trata de una directiva del preprocesador que indica al compilador cómo debe realizar la alineación de la memoria. Vamos a ver como se comporta con un ejemplo:
+#pragma pack directive in C++ struct
+====================================
+
+It is a preprocessor directive to indicate to compiler how to align data in memory. 
 
 .. code-block:: c++
 	
@@ -166,7 +166,7 @@ Se trata de una directiva del preprocesador que indica al compilador cómo debe 
 	    return 0;
 	}
 
-`Ejecutando el código con las directivas pragma`_, tenemos distintos resultados dependiendo del valor de pragma.
+`Executing code with pragma pack directive`_, we have different results depending of pragma value.
 
 .. code-block:: bash
 	
@@ -204,31 +204,28 @@ Se trata de una directiva del preprocesador que indica al compilador cómo debe 
 	 sizeof struct:  8 Bytes
 	 --
 
-Veamos caso por caso:
+Let's analyze those results:
 
 SampleStructPack1 :code:`#pragma pack (1)`
-	Reserva bloques de memoria de un byte, nuestra estructura se ha ajustado perfectamente; en este caso sí que :code:`4 + 1 = 5`.
+	It allocates 1 byte memory block, so our sample struct fits perfectly, in this case it is true that :code:`4 + 1 = 5`.
 
 SampleStructPack2 :code:`#pragma pack (2)`
-	Ahora el mínimo tamaño del bloque de memoria es de 2 bytes. Para el entero, hay un ajuste exacto porque necesita 2 bloques que 2 bytes para alojar sus 4 bytes. 
-	Para el caso del booleano, necesita un bloque de 1 byte, pero como mínimo tiene que asignar un bloque de 2 bytes, por eso en total reserva 6 bytes, :code:`4 + 2 = 6`.
+	Minimum block size is 2 bytes. Integer attribute fits because it just needs 2 blocks of 2 Bytes. Boolean attribute needs just 1 Byte, but minimum block size is 2 Bytes, that's why total allocated memory is 6 bytes, :code:`4 + 2 = 6`.
 
 SampleStructPack4 :code:`#pragma pack (4)`
-	Es el mismo caso que el anterior, aunque  en el caso del booleano, hay un mayor "desperdicio" de memoria. Necesita 1 byte, pero reserva 4 bytes que es tamaño mínimo de bloque de memoria que puede asignar el compilador. 
-
+	It is like previous one, but in this case we are wasting more memory for boolean attribute, it needs 1 Byte, but we are allocating 4 Bytes. 
+ 
 SampleStruct (alineación por defecto del compilador)
-	Como vemos se comporta exactamente igual que :code:`#pragma pack (4)`, podemos deducir que la alineación por defecto del compilador que estamos utilizando es de 4 bytes.
+	As you can see it behaves exactly like :code:`#pragma pack (4)`, so we can deduct it is the default compiler alignment.
 
-.. important:: ¿Por qué no utilizamos siempre la alineación de memoria más ajustada (:code:`#pragma pack (1)`) para aprovechar mejor la memoria? 
+.. important:: Why don't we always use smallest memory alignment (:code:`#pragma pack (1)`) so we can save more memory? 
 	
-	.. warning:: Porque perderemos rendimiento.
+	.. warning:: Because of performance loss.
 
-Rendimiento
-===========
+Performance test
+================
 
-Vamos a hacer una prueba simple de rendimiento, en la que se va a reservar el mismo número de elementos en arrays para cada tipo de estructura. 
-
-Este es el resultado:
+Test consists of allocate same number of elements in arrays for each structure type (1, 2, 4).
 
 .. code-block:: bash
 
@@ -236,9 +233,9 @@ Este es el resultado:
 	SampleStructPack2: 600000000000000000 bytes allocated in 1777 nanoseconds
 	SampleStructPack4: 800000000000000000 bytes allocated in 1519 nanoseconds
 
-Como vemos cuanto más ajustada es la alineación de memoria, más tiempo se tarda en reservar y liberar. Puedes `ejecutar la prueba de rendimiento en este enlace`_. 
+As you can see, the smallest memory alignment spends more time allocating and releasing memory. Puedes `execute performance test`_. 
 
-A continuación pego el código de la prueba de rendimiento.
+Performance test source code:
 
 .. code-block:: c++
 	
@@ -329,7 +326,7 @@ A continuación pego el código de la prueba de rendimiento.
 	    return 0;
 	}
 
-.. _`Ejecutando el código sin la directiva pragma`: http://coliru.stacked-crooked.com/a/c7deb3df49bebd40
-.. _`Ejecutando el código con las directivas pragma`: http://coliru.stacked-crooked.com/a/7c18ee6585e57366
-.. _`ejecutar la prueba de rendimiento en este enlace`: http://coliru.stacked-crooked.com/a/954ad542659c7591
+.. _`Executing code without pragma pack directive`: http://coliru.stacked-crooked.com/a/c7deb3df49bebd40
+.. _`Executing code with pragma pack directive`: http://coliru.stacked-crooked.com/a/7c18ee6585e57366
+.. _`execute performance test`: http://coliru.stacked-crooked.com/a/954ad542659c7591
 
