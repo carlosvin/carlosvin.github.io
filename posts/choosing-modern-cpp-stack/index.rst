@@ -1,7 +1,7 @@
 .. title: Choosing a Modern C++ stack
 .. slug: choosing-modern-cpp-stack
 .. date: 2017/09/15 20:50:00
-.. tags: C++, Unit Testing, Build System, Build Software, Meson, Catch
+.. tags: C++, Unit Testing, Build System, Build Software, Meson, Catch, doctest
 .. description: My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton. 
 .. type: text
 
@@ -15,35 +15,38 @@ I'm starting a new project in C++, but I've run into a pair of questions before 
 Choosing Build System (Meson_)
 ==============================
 
-I have used before Make, Maven, Scons, Gradle and Autotools. 
+I have used before Make_, Maven_, Scons_, Gradle_ and Autotools_, but I have some reasons to try find something else:
 
-But I have some reasons to try find something else.
-
-Autotools
+Autotools_
     It is not easy to configure and maintain. There are several configuration files and several configuration steps. 
     
-Gradle 
+Gradle_ 
     C++ feature is still incubating. Not very fast. You can check a similar example project at `Build C++ project with Gradle </posts/gradle-cpp/>`_.
 
-Make
+Make_
     I don't love the syntax. 
     Files tends to get messy as project grows.
     
-Scons
-    It is just slow.
+Scons_
+    It is just slower and not as easy to understand than Meson_.
 
-Maven
+Maven_
     It is slow and you might end up "*Javatizing*" your C++ project structure.
 
 .. note:: I've listed just things I don't like, those projects have other great features. 
 
-Now I'm considering Meson_ or CMake_. 
+After discarding previous ones, I'm considering Meson_ or CMake_. 
 
-CMake_ has a big advantage over Meson_, it is mature and widely used in many projects, which means there are many examples and it will fulfill your C++ project building needs. 
+CMake_ vs Meson_
+-----------------
 
-Meson_ is a young project compared with CMake_, but it is growing quite fast and it has been adopted in other big projects like Gnome_, they have an initiative to `port from Autotools to Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_. 
+CMake_ 
+    It has a big advantage over Meson_, it is mature and widely used in many projects, which means there are many examples and it will fulfill your C++ project building needs. 
 
-I've chosen Meson_ because:
+Meson_ 
+    It is a young project compared with CMake_, but it is growing quite fast and it has been adopted in other big projects like Gnome_, they have an initiative to `port from Autotools to Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_. 
+
+**Finally I've chosen** Meson_ because:
 
 - Syntax is really clear to me, when I read `meson.build` file I can quickly understand what is happening during build process. 
 - It is fast. Altought it is written in Python_, it generates a Ninja_ build project. First time you configure the project you has to run Meson_, but for building or testing you are actually running Ninja_.
@@ -98,6 +101,8 @@ It is a basic implementation of UUID pseudo-random generator based on mt19937_ w
 Project output artifacts
 ------------------------
 
+When we install the project using Meson_ (Ninja_), we will get some artifacts generated and copied in our system.
+
 - Shared library: :code:`libuuid`.
 - Header library for developers who want to use the shared library: :code:`include/Uuid.h`.
 - Executable :code:`uuidgen` (UUID_ generator).
@@ -136,7 +141,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
 
 * `include <https://github.com/carlosvin/uuid-cpp/blob/master/include/>`_
     - meson.build
-        Subdirectory build configuration file.
+        Build configuration file for include directory.
 
         .. code:: python
 
@@ -157,7 +162,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
 
 * `src <https://github.com/carlosvin/uuid-cpp/blob/master/src>`_
     - `meson.build (src) <https://github.com/carlosvin/uuid-cpp/blob/master/src/meson.build>`_
-        It declares 2 output artifacts :code:`libuuid` and :code:`uuidgen`.
+        It declares 2 output artifacts, library :code:`libuuid` and executable :code:`uuidgen`. Executable depends on the libary, it will use the libary to generate UUID_.
         
         .. code:: python
 
@@ -270,8 +275,16 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
                 }  
             }
 
+
+.. hint:: You can find how to build and test the example project at: https://github.com/carlosvin/uuid-cpp#how-to-build-the-example
+
 .. _`Google Test`: https://github.com/google/googletest
 .. _CMake: https://cmake.org/
+.. _Make: https://www.gnu.org/software/make/manual/make.html
+.. _Gradle: https://gradle.org/
+.. _Maven: https://maven.apache.org/
+.. _Scons: http://scons.org/
+.. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
 .. _Meson: http://mesonbuild.com/
 .. _Gnome: https://www.gnome.org/
 .. _Scons: http://scons.org/

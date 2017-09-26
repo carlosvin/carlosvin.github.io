@@ -4,6 +4,7 @@
 .. update: 2017/09/20 17:00:00
 .. tags: C++, Performance, Compilers
 .. type: text
+.. description: Understanding pragma pack preprocessor directive and how it affects to memory alignment
 
 A C++ struct is an element that allows grouping attributes with different type so we can manipulate all elements together using same reference. It is like a class with public visibility by default for functions and attributes. 
 
