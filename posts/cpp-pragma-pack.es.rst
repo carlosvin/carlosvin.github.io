@@ -4,6 +4,7 @@
 .. update: 2017/09/20 17:00:00
 .. tags: C++
 .. type: text
+.. description: Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria
 
 Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia. Podemos considerarlo como una clase con visibilidad publica por defecto para sus atributos y funciones.
 

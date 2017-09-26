@@ -1,7 +1,7 @@
 .. title: Elegir tecnologías para mi nuevo proyeco C++
 .. slug: choosing-modern-cpp-stack
 .. date: 2017/09/24 20:00:00
-.. tags: C++, Unit Testing, Build System, Build Software, Meson, Catch
+.. tags: C++, Unit Testing, Build System, Build Software, Meson, Catch, doctest
 .. description: Las tecnologías que he elegido para mi proyecto C++.My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton. 
 .. type: text
 
@@ -15,7 +15,7 @@ Estoy empezando un pequeño proyecto en C++ y antes de nada me han surgido un pa
 Elegir un Sistema de Construcción (Meson_)
 ==========================================
 
-Ya he utilizado antes Make_, Maven_, Scons_, Gradle_ y Autotools_, pero tengo algunas razones para probar algo diferente, algunas cosas que no me gustan:
+Ya he utilizado antes Make_, Maven_, Scons_, Gradle_ y Autotools_, pero tengo algunas razones para probar algo diferente, hay algunas cosas que no me gustan:
 
 Autotools_
     No es fácil de configurar y mantener: hay distintos ficheros de configuración y distintos pasos de configuración. 
@@ -35,13 +35,18 @@ Maven_
 
 .. note:: He nombrado solo las cosas que no gustan, pero estos sistemas de construcción tienen otras grandes virtudes, personalmente me encantan Gradle_, Autotools_ y Scons_.
 
+CMake_ vs Meson_
+-----------------
+
 Después de descartar los anteriores, estoy considerando Meson_ y CMake_.
 
-CMake_ tiene una gran ventaja sobre Meson_, es mucho más maduro y es mucho más usado, lo que significa que podrás encontrar muy fácilmente ejemplos, documentación y ayuda en Internet. No importa el tipo de proyecto que estés empezando, lo más seguro es que CMake_ sea una buena elección.
+CMake_ 
+    Tiene una gran ventaja sobre Meson_, es mucho más maduro y es mucho más usado, lo que significa que podrás encontrar muy fácilmente ejemplos, documentación y ayuda en Internet. No importa el tipo de proyecto que estés empezando, lo más seguro es que CMake_ sea una buena elección.
 
-Meson_ es un proyecto jóven comparado con CMake_, pero está creciendo rápido y ya ha sido adoptado por algunos proyectos importantes como Gnome_, donde han comenzado una iniciativa para `migrar desde Autotools a Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_. 
+Meson_ 
+    Es un proyecto jóven comparado con CMake_, pero está creciendo rápido y ya ha sido adoptado por algunos proyectos importantes como Gnome_, donde han comenzado una iniciativa para `migrar desde Autotools a Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_. 
 
-El final he elegido Meson_ porque:
+**Finalmente he elegido** Meson_ porque:
 
 - La sintáxis es muy clara para mí, cuando leo un archivo `meson.build` entiendo rápidamente lo ue está pasando durante el proceso de construcción.
 - Es rápido, aunque está escrito en Python_ utiliza Ninja_ para construir el proyecto. La primera vez tienes que utilizar Meson_ para configurar el proyecto, pero para construir y probar el proyecto relmente estamos ejecutando Ninja_.
@@ -61,16 +66,16 @@ He encontrado un para de comparaciones interesantes entre algunos de los sistema
 Framework the Pruebas Unitarias
 ===============================
 
-He utiliza algunas librerías del tipo xUnit_ como `UnitTest++ <https://github.com/unittest-cpp/unittest-cpp>`_, `CppUTest <http://cpputest.github.io/>`_ o `Google Test`_ que encaja perfectamente con `Google Mock <https://github.com/google/googletest/tree/master/googlemock>`_. 
+Anteriorment he utilizado algunas librerías del tipo xUnit_ como `UnitTest++ <https://github.com/unittest-cpp/unittest-cpp>`_, `CppUTest <http://cpputest.github.io/>`_ o `Google Test`_ que encaja perfectamente con `Google Mock <https://github.com/google/googletest/tree/master/googlemock>`_. 
 
 Si quires una apuesta segura que cumpla tus expectativas, te recomiendo `Google Test`_.  
 
-Pero hace algún tiempo encontré un framework de pruebas con algunas características bastante novedosas, este es Catch_: 
+Pero hace algún tiempo encontré un framework de pruebas con algunas características no tan comunes en librerías de pruebas C++ y que resultaba realmente fácil de utilizar, estoy hablando de Catch_: 
 
-- Es simplemente un fichero de cabeceras C++ con ninguna dependencia adicional, por lo que resulta realmente rápido comenzar (wget y utilizar el fichero descargado desde tus pruebas).
+- Es simplemente un fichero de cabeceras C++ sin dependencias adicionales, por lo que resulta realmente rápido comenzar (wget y utilizar el fichero descargado desde tus pruebas).
 - Puedes utilizar el estilo normal de pruebas unitarias o el estilo BDD_.
 
-Si quieres saber más sobre Catch_, te recomiendo que directamente lo pruebes, el siguiente ejemple es cuestión de dos minutos `simple example up and running <https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests>`_. Puedes también leer algunos artículos como `Why do we need yet another C++ test framework? <https://github.com/philsquared/Catch/blob/master/docs/why-catch.md>`_ o `Testing C++ With A New Catch <http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/>`_.
+Si quieres saber más sobre Catch_, te recomiendo que directamente lo pruebes, el siguiente ejemplo, es cuestión de dos minutos `simple example up and running <https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests>`_. Puedes también leer algunos artículos como `Why do we need yet another C++ test framework? <https://github.com/philsquared/Catch/blob/master/docs/why-catch.md>`_ o `Testing C++ With A New Catch <http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/>`_.
 
 doctest_: Una alternativa a Catch_
 ----------------------------------
@@ -79,7 +84,7 @@ Hay otro framework de pruebas llamado doctest_, con los mismos principios que Ca
 
 doctest_ fue diseñado basándose en los puntos fuertes de Catch_, pero hay algunas `diferencias <https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch>`_.
 
-No es fácil decidirse por uno, los dos son muy parecidos, puedes `comprobar las diferencias entre un test escrito con uno y otro framework <https://github.com/carlosvin/uuid-cpp/pull/1/files#diff-d22d1e18ecbe7ba34523db56b011bcfe>`_. 
+No es fácil decidirse por uno, los dos son muy parecidos, puedes `comprobar las diferencias entre un test escrito con Catch y otro con doctest  <https://github.com/carlosvin/uuid-cpp/pull/1/files#diff-d22d1e18ecbe7ba34523db56b011bcfe>`_. 
 
 Finalmente he elegido doctest_ simplemente porque es más rápido: `resultados de las comparaciones de rendimiento`_.
 
@@ -90,19 +95,21 @@ Finalmente he elegido doctest_ simplemente porque es más rápido: `resultados d
 Ejemplo
 =======
 
-I've created an example to illustrate this article: https://github.com/carlosvin/uuid-cpp.
+He creado un ejemplo para ilustrar este artículo: https://github.com/carlosvin/uuid-cpp.
 
-It is a basic implementation of UUID pseudo-random generator based on mt19937_ which is not cryptographically secure.
+Consiste en una implementación básica de un generador pseudo-aleatorio de UUID_, está basado en mt19937_ que no es criptográficamente seguro.
 
-Project output artifacts
-------------------------
+Artefactos del Proyecto
+-----------------------
 
-- Shared library: :code:`libuuid`.
-- Header library for developers who want to use the shared library: :code:`include/Uuid.h`.
-- Executable :code:`uuidgen` (UUID_ generator).
-- Test executable (not installed). It tests shared library. 
+Cuando instalemos el proyecto, Meson_ (Ninja_ realmente) generará una serie de artefactos en nuestro sistema.
 
-For example, if you execute :code:`ninja install` on Linux, you will get something like:
+- Librería compartida: :code:`libuuid`.
+- Fichero de cabeceras para que los desarrolladores puedan usar la librería: :code:`include/Uuid.h`.
+- Fichero ejecutable :code:`uuidgen` (Generador de UUID_).
+- Ejecutable de las pruebas unitarias (no será instalado). 
+
+Si ejecutamos :code:`ninja install` en Linux obtendremos los siguientes ficheros:
 
 .. code:: bash
     
@@ -110,11 +117,11 @@ For example, if you execute :code:`ninja install` on Linux, you will get somethi
     /usr/local/include/Uuid.h
     /usr/local/bin/uuidgen
 
-Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
----------------------------------------------------------------------------
+Estructura del Proyecto (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
+-----------------------------------------------------------------------------------
 
 * `meson.build <https://github.com/carlosvin/uuid-cpp/blob/master/meson.build>`_
-    Root project file configuration. It defines project properties and subdirectories.
+    Fichero principal de configuración para construir el proyecto. Lo utilizamos para especificar las propiedades y subdirectorios del proyecto.
     
     .. code:: python
     
@@ -135,7 +142,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
 
 * `include <https://github.com/carlosvin/uuid-cpp/blob/master/include/>`_
     - meson.build
-        Subdirectory build configuration file.
+        Archivo de configuración para construir este directorio, no hay mucho que hacer aquí, simplemente indicamos qué ficheros de cabeceras han de ser instalados
 
         .. code:: python
 
@@ -143,7 +150,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
             install_headers('Uuid.h')
 
     - `Uuid.h <https://github.com/carlosvin/uuid-cpp/blob/master/include/Uuid.h>`_
-        Header file, it is the library interface definition which will be included from projects using that library
+        Archivos de cabeceras, es el interfaz que expone la librería y que será incluido por los usuarios de la misma.
 
         .. code:: cpp
 
@@ -156,7 +163,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
 
 * `src <https://github.com/carlosvin/uuid-cpp/blob/master/src>`_
     - `meson.build (src) <https://github.com/carlosvin/uuid-cpp/blob/master/src/meson.build>`_
-        It declares 2 output artifacts :code:`libuuid` and :code:`uuidgen`.
+        Declara 2 artefactos de salida: La librería :code:`libuuid` y el ejecutable :code:`uuidgen`.
         
         .. code:: python
 
@@ -174,7 +181,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
                 install : true) # :code:`uuidgen` executable be part of project installation
 
     - `main.cpp <https://github.com/carlosvin/uuid-cpp/blob/master/src/main.cpp>`_
-        Entry point for main executable :code:`uuidgen`
+        Código fuente del ejecutable de la aplicación: :code:`uuidgen`
 
         .. code:: cpp
 
@@ -189,7 +196,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
             }
 
     - `Uuid.cpp <https://github.com/carlosvin/uuid-cpp/blob/master/src/Uuid.cpp>`_
-        Implementation of declared class in header file.
+        Implementación de la clase declarada en el fichero de cabeceras :code:`Uuid.h`.
 
         .. code:: cpp
 
@@ -200,7 +207,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
 
 * `test <https://github.com/carlosvin/uuid-cpp/blob/master/test/>`_
     - `meson.build (test) <https://github.com/carlosvin/uuid-cpp/blob/master/test/meson.build>`_
-        File to configure tests build process. 
+        Archivo de configuración para construir y ejecutar las pruebas unitarias. 
 
         .. code:: python
 
@@ -217,7 +224,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
             test('Uuid test with args and env', testexe, args : ['arg1', 'arg2'], env : ['FOO=bar'])
 
     - doctest.h
-        doctest_ library in a single header file. You can try to automate library installation as part of your build process, but I haven't figure out yet a way to do it with Meson_. For now I've installed it manually: 
+        Librería doctest_ en un único fichero de cabeceras. Puedes tratar de automatizar el proceso de instalación de la librería, yo por el momento la he instalado manualmente, ya que es un proceso muy sencillo: 
         
         .. code:: bash
 
@@ -225,7 +232,7 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
             wget https://raw.githubusercontent.com/onqtam/doctest/master/doctest/doctest.h 
 
     - `uuid_test.cpp <https://github.com/carlosvin/uuid-cpp/blob/master/test/uuid_test.cpp>`_
-        Tests implementation.
+        Implementación de las pruebas unitarias.
 
         .. code:: cpp
 
@@ -269,15 +276,18 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
                 }  
             }
 
+.. hint:: Puedes encontrar las instrucciones para construir y ejecutar el proyecto de ejemplo en: https://github.com/carlosvin/uuid-cpp#how-to-build-the-example
+
+
 .. _`Google Test`: https://github.com/google/googletest
 .. _CMake: https://cmake.org/
 .. _Make: https://www.gnu.org/software/make/manual/make.html
 .. _Gradle: https://gradle.org/
 .. _Maven: https://maven.apache.org/
+.. _Scons: http://scons.org/
 .. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
 .. _Meson: http://mesonbuild.com/
 .. _Gnome: https://www.gnome.org/
-.. _Scons: http://scons.org/
 .. _Ninja: https://ninja-build.org/
 .. _Python: https://python.org/
 .. _Catch: https://github.com/philsquared/Catch
