@@ -532,6 +532,7 @@ SEARCH_FORM = """
 
 EXTRA_HEAD_DATA = """
     <meta name="google-site-verification" content="XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc" />
+    <meta name="msvalidate.01" content="F072D88C59F679193037D42408AD5CE9" />
 """
 
 BODY_END = """<script>
