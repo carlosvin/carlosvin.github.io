@@ -13,6 +13,8 @@ Since C++17 new filesystem abstractions will be added to C++ environment. So far
 
 .. contents::
 
+.. TEASER_END
+
 Gettting started with Experimental Filesystem Features C++17 (g++)
 ------------------------------------------------------------------
 

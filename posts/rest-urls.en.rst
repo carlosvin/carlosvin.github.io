@@ -8,7 +8,9 @@
 
 First time I designed a REST_ API_ I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about REST_ URL_ with examples.
 
-.. contents:: Index
+.. contents::
+
+.. TEASER_END
 
 REST_ Basics
 ============

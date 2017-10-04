@@ -8,7 +8,9 @@
 
 Las primeras veces que me puse a diseñar una API_ REST_ cometí unos cuantos errores, por supuesto. A continuación os voy a contar algunos de los errores que cometí y lo que he entendido hasta hoy sobre la construcción de URLs_ REST_ con ejemplos.
 
-.. contents:: Índice
+.. contents::
+
+.. TEASER_END
 
 Fundamentos REST_
 =================

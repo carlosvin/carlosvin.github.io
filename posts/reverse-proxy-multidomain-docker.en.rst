@@ -34,6 +34,8 @@ It would be simpler and easier to remind something like:
 
 Get that extra semantic value is much simpler than I thought at the beginning and you will see below.
 
+.. TEASER_END
+
 How to Configure Multi-Domain Reverse Proxy
 -------------------------------------------
 
