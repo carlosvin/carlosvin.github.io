@@ -14,6 +14,8 @@ A partir de C++17 se añadirán nuevas abstracciones sobre el sistema de fichero
 
 .. contents::
 
+.. TEASER_END
+
 Comenzar a utilizar característica experimental filesystem C++17 (g++)
 ----------------------------------------------------------------------
 

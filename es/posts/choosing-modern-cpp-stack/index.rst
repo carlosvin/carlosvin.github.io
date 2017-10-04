@@ -12,6 +12,8 @@ Estoy empezando un pequeño proyecto en C++ y antes de nada me han surgido un pa
 
 .. contents::
 
+.. TEASER_END
+
 Elegir un Sistema de Construcción (Meson_)
 ==========================================
 

@@ -34,6 +34,8 @@ Sería mucho más sencillo de recordar algo así:
 
 Obtener este valor semántico extra es más sencillo de lo que parece.
 
+.. TEASER_END
+
 Cómo configurar un Proxy Inverso Multi-Dominio
 ----------------------------------------------
 

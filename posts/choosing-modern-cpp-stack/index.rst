@@ -12,6 +12,8 @@ I'm starting a new project in C++, but I've run into a pair of questions before 
 
 .. contents::
 
+.. TEASER_END
+
 Choosing Build System (Meson_)
 ==============================
 
