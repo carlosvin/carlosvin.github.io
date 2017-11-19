@@ -84,13 +84,39 @@ There is another testing framework named doctest_, with same benefits as Catch_,
 
 doctest_ is modeled after Catch_ and some parts of the code have been taken directly, but there are `differences <https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch>`_.
 
-It hasn't been easy to decide, both are really similar, you can `check here differences <https://github.com/carlosvin/uuid-cpp/pull/1/files#diff-d22d1e18ecbe7ba34523db56b011bcfe>`_ between project using doctest_ and project using Catch_. 
+It hasn't been easy to decide, both are really similar, following you can see differences:
+
+.. code:: diff
+
+    @@ -1,12 +1,12 @@
+    -#define CATCH_CONFIG_MAIN // It tells Catch to provide a main() - only do this in one cpp file
+    +#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
+    -#include "catch.hpp"
+    +#include "doctest.h"
+    #include "Uuid.h"
+    #include <string>
+
+    constexpr int MAX_ITERS = 100;
+
+    -TEST_CASE("Uuid", "[uuid]")
+    +TEST_CASE("Uuid")
+    {
+    for (int i = 0; i < MAX_ITERS; i++)
+    {
+    @@ -26,7 +26,7 @@ TEST_CASE("Uuid", "[uuid]")
+
+    // BDD style
+
+    -SCENARIO("UUID creation", "[Uuid]")
+    +SCENARIO("UUID creation")
+    {
+
+    GIVEN("A random UUID ")
 
 I've finally chosen doctest_ because it promises to be faster: `benchmark results`_.
 
 .. note:: I've created project using both frameworks you can find them in corresponding branches: `doctest branch <https://github.com/carlosvin/uuid-cpp/tree/doctest>`_ or `catch branch <https://github.com/carlosvin/uuid-cpp/tree/catch>`_. 
-
-.. hint:: You can see diferencies between projects at: https://github.com/carlosvin/uuid-cpp/pull/1
 
 
 Example
