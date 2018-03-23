@@ -69,10 +69,10 @@ Project structure
     File to with Maven project description `(Project Object Model) <https://maven.apache.org/guides/introduction/introduction-to-the-pom.html>`_
 
 
-Dependency Injection (`Maven JSR-330 <https://maven.apache.org/maven-jsr330.html>`_)
--------------------------------------------------------------------------------------
+Dependency Injection
+--------------------
 
-Maven has finally chosen `JSR-330 <http://javax-inject.github.io/javax-inject/>`_ as dependency injection standard (previously it was Plexus Annotations API).
+Maven has finally chosen `JSR-330 <https://maven.apache.org/maven-jsr330.html>`_ as `dependency injection standard <http://javax-inject.github.io/javax-inject/>`_ (previously it was Plexus Annotations API).
 
 To use dependency injection with Maven we have to: 
 
@@ -126,13 +126,19 @@ Write a custom Mojo_
 
 It is straight forward to implement a Mojo_ class, we have to:
 
-1. Make your Mojo_ class to implement ``org.apache.maven.plugin.Mojo``, altouth it is more convenient to extend ``org.apache.maven.plugin.AbstractMojo`` which takes care of logging. That interface and class are described at `Mojo API`_.
+1. Implement Mojo interface
+###########################
+
+Make your Mojo_ class to implement ``org.apache.maven.plugin.Mojo``, altouth it is more convenient to extend ``org.apache.maven.plugin.AbstractMojo`` an abstract class to provide most of the infrastructure required to implement a Mojo except for the execute method. That interface and class are described at `Mojo API`_.
 
 .. code:: java
 
     public class BuildMojo extends AbstractMojo {
 
-2. Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Those annotations belog to other set of annotations to configure Mojos, `Plugin Tools Java5 Annotations <https://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html>`_.
+2. Configure Mojo with Java 5 annotations
+#########################################
+
+Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Those annotations belog to other set of annotations to configure Mojos, `Plugin Tools Java5 Annotations <https://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html>`_.
 
 .. code:: java
     :name: BuildMojo.java
@@ -179,11 +185,73 @@ It is straight forward to implement a Mojo_ class, we have to:
 
         mvn site:build -DsiteOutputDirectory=/var/www/html
 
-        
+.. hint:: More info in `Maven Plugin development guide in Parameter section <https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters>`_.
 
-    More info in `Maven Plugin development guide in Parameter section <https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters>`_.
+3. Implement execute method
+############################
+
+As I have explained before at `1. Implement Mojo interface`_, our Mojo_ class extends ``org.apache.maven.plugin.AbstractMojo`` which has one unimplemented method from ``org.apache.maven.plugin.Mojo`` interface. In that method we are going to implement the Maven goal logic.
+
+Mojo_ class instance is called from Maven_ execution lifecycle by invoking ``execute()`` method. Before calling ``execute()`` Maven has performed some other tasks related with the Mojo: 
+
+1. Maven instantiates Mojo and injects dependencies (`Dependency Injection`_).
+ 
+.. code:: java
+
+    Mojo mojo = new BuildMojo(fileSetManager, mdToHtml);
+
+2. Maven configures the Mojo by assigning values to parameters. 
+
+3. Maven calls execute method: ``mojo.execute();``.
+
+I will simplify ``execute`` method implementation, the `example project in github <https://github.com/carlosvin/blog-maven-plugin>`_ is more complicated and not good for learning.
+
+.. code:: java
+
+    // If there is any error during execution it should throw MojoExecutionException
+    public void execute() throws MojoExecutionException {
+        if (inputFiles == null) {
+            setDefaultInput();
+        }
+        inputDirPath = Paths.get(inputFiles.getDirectory());
+
+        // A way to get all selected files from FileSet
+        // https://maven.apache.org/shared/file-management/fileset.html
+        String[] includedFiles = fileSetManager.getIncludedFiles(inputFiles);
+
+        outputDirPath = outputDirectory.toPath();
+        if (includedFiles == null || includedFiles.length == 0) {
+            // AbstractMojo supplies logger functionality
+            getLog().warn("SKIP: There are no input files. " + getInputFilesToString());
+        } else {
+            // If output directory doesn't exist, it will be created
+            if (!outputDirectory.exists()) {
+                outputDirectory.mkdirs();
+            }
+            try {
+                for (String f : includedFiles) {
+                    // it converts each file Markdown to HTML 
+                    convertToHtml(Paths.get(f), outputDirectory);
+                }
+            } catch (InterruptedException e) {
+                // Convert thrown exception to MojoExecutionException
+                throw new MojoExecutionException(e.getLocalizedMessage(), e);
+            }
+        }
+    }
+
+
+Tests
+=====
+
+Unit tests
+----------
+
+Interation tests
+----------------
 
 Work in progress...
 
+.. _Maven: http://maven.apache.org
 .. _Mojo: http://maven.apache.org/plugin-developers/index.html
 .. _`Mojo API`: https://maven.apache.org/developers/mojo-api-specification.html
