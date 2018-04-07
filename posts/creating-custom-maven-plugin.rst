@@ -22,7 +22,7 @@ Mojo_
     An executable goal in Maven, e.g: ``mvn your-plugin:your-mojo`` will execute a maven goal ``your-mojo`` declared as part of ``your-plugin``. 
 
 Goal
-    It matches with `Mojo <http://maven.apache.org/plugin-developers/index.html>`_ execution
+    It is equivalent to `Mojo <http://maven.apache.org/plugin-developers/index.html>`_ execution
 
 Lifecycle
     It is a well defined sequence of phases. Each phase consists of a sequence of goals.
@@ -63,7 +63,7 @@ Project structure
     Unit tests folder
     
 ``src/it``
-    Folder with all integration tests. Those integration tests are running actual projects and checking that ouputs are as expected.
+    Folder with all integration tests. Those integration tests are running actual projects and checking that outputs are as expected.
     
 ``pom.xml``
     File to with Maven project description `(Project Object Model) <https://maven.apache.org/guides/introduction/introduction-to-the-pom.html>`_
@@ -124,12 +124,12 @@ To use dependency injection with Maven we have to:
 Write a custom Mojo_
 --------------------
 
-It is straight forward to implement a Mojo_ class, we have to:
+It is straightforward to implement a Mojo_ class, we have to:
 
 1. Implement Mojo interface
 ###########################
 
-Make your Mojo_ class to implement ``org.apache.maven.plugin.Mojo``, altouth it is more convenient to extend ``org.apache.maven.plugin.AbstractMojo`` an abstract class to provide most of the infrastructure required to implement a Mojo except for the execute method. That interface and class are described at `Mojo API`_.
+Your Mojo_ class has to implement ``org.apache.maven.plugin.Mojo``, altouth it is more convenient to extend ``org.apache.maven.plugin.AbstractMojo``, an abstract class to provide most of the infrastructure required to implement a Mojo except for the execute method. That interface and class are described at `Mojo API`_.
 
 .. code:: java
 
@@ -138,7 +138,7 @@ Make your Mojo_ class to implement ``org.apache.maven.plugin.Mojo``, altouth it 
 2. Configure Mojo with Java 5 annotations
 #########################################
 
-Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Those annotations belog to other set of annotations to configure Mojos, `Plugin Tools Java5 Annotations <https://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html>`_.
+Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Those annotations belong to other set of annotations to configure Mojos, `Plugin Tools Java5 Annotations <https://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html>`_.
 
 .. code:: java
     :name: BuildMojo.java
@@ -241,17 +241,153 @@ I will simplify ``execute`` method implementation, the `example project in githu
     }
 
 
-Tests
-=====
-
 Unit tests
-----------
+==========
+
+In the example we use `JUnit 4`_, but you can use any other testing framework. 
+
+Firtsly you have to add the unit test library dependency to ``pom.xml``.
+
+.. code:: xml
+
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+    </dependency>
+
+Then you just have to write your unit tests under ``src/test/java`` folder, for example: `src/test/java/com/maven/plugins/blog/PathsTest.java <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/test/java/com/maven/plugins/blog/PathsTest.java>`_.
+
+To run unit tests you just need to execute ``mvn test``.
 
 Interation tests
-----------------
+================
 
-Work in progress...
+The 2 most popular ways to perform integration tests on custom maven plugins are using maven-failsafe-plugin_ or maven-invoker-plugin_.
+
+I've chosen maven-invoker-plugin_ because for me it is more straightforward. There is `an answer at stackoverflow where they explain thorogly the differences between them <https://stackoverflow.com/questions/40010745/maven-invoker-plugin-vs-maven-failsafe-plugin-which-to-use-for-integration-test>`_
+
+How does Invoker Pluing work?
+-----------------------------
+
+We create projects to use our custom plugin under ``src/it`` folder, so our plugin will be applied to test projects. After that a validation script will be executed so we can check if our plugin outputs are as expected. For example, if our plugin is suppose to generate a file named ``foo.file``, verification plugin will check if that file exists, if it doesn't, integration test will fail. 
+
+Configure Invoker Plugin
+------------------------
+
+.. code:: xml
+
+    <plugin>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+            <postBuildHookScript>verify</postBuildHookScript>
+            <showVersion>true</showVersion>
+            <streamLogs>true</streamLogs>
+            <noLog>false</noLog>
+            <showErrors>true</showErrors>
+        </configuration>
+        <executions>
+            <execution>
+                <id>integration-test</id>
+                <goals>
+                    <goal>install</goal>
+                    <goal>run</goal>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
+
+In **executions** section we execute following goals:
+ 
+1. ``invoker:install`` will be executed during the phase pre-integration-test and will install main project artifact into target/local-repo.
+2. ``invoker:run`` will be executed during the integration-test phase and it will execute all defined integration tests under ``src/it`` folder.
+
+In **configuration** section:
+
+``<postBuildHookScript>verify</postBuildHookScript>``
+Execute validation script after integration test execution. This script may be written with either BeanShell or Groovy.
+
+We have used other properties to show errors, show maven log and save it to a file.
+
+You can check all ``invoker:run`` configuration properties at https://maven.apache.org/plugins/maven-invoker-plugin/run-mojo.html. 
+
+Create an Integration Test Project
+----------------------------------
+
+There are 3 important files, those match with AAA_ pashes ("Arrange-Act-Assert"):
+
+- `src/it/md-html/pom.xml [Arrange] <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/pom.xml>`_ which has the project using our custom plugin.
+- `src/it/md-html/invoker.properties [Act] <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/invoker.properties>`_ will define how test project will be executed, for which goals.
+- `src/it/md-html/verify.groovy [Assert] <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/verify.groovy>`_ is the script to check that plugin execution generated expected results. 
+
+pom.xml (Arrange)
+#################
+
+.. code:: xml
+    
+    <?xml version="1.0" encoding="UTF-8"?>
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+
+        <groupId>com.maven.plugins.it</groupId>
+        <artifactId>simple-it</artifactId>
+        <version>1.0-SNAPSHOT</version>
+
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>@project.groupId@</groupId>
+                    <artifactId>@project.artifactId@</artifactId>
+                    <version>@project.version@</version>
+                </plugin>
+            </plugins>
+        </build>
+    </project>
+
+It is a very simple pom file where we use placeholders to reference to our plugin under test. When invoker plugin executes following pom file, firstly will replace those placeholders to reference to latest version of our custom plugin which was recently installed in local repository:
+
+.. code:: xml
+
+    <plugin>
+        <groupId>com.maven.plugins</groupId>
+	    <artifactId>blog</artifactId>
+	    <version>0.0.1-SNAPSHOT</version>
+    </plugin>
+
+In that way invoker plugin ensures it is testing latest version of current project.
+
+invoker.properties (Act)
+########################
+
+.. code:: properties
+
+    invoker.goals = blog:build
+    invoker.name = Test build MD
+
+
+It will execute ``mvn blog:build``, a goal defined in our custom plugin under example or what is the same, it will execute BuildMojo_ described at section `Write a custom Mojo`_.
+
+verify.groovy (Assert)
+######################
+
+.. code:: groovy
+
+    File generated = new File( basedir, "target/site/README.html" );
+
+    assert generated.isFile()
+
+It is checking if ``target/site/README.html`` file was generated by plugin.
+
+We can consider this verification script as **assert** phase in testing AAA_.
 
 .. _Maven: http://maven.apache.org
 .. _Mojo: http://maven.apache.org/plugin-developers/index.html
 .. _`Mojo API`: https://maven.apache.org/developers/mojo-api-specification.html
+.. _`JUnit 4`: https://junit.org/junit4/
+.. _maven-failsafe-plugin: https://maven.apache.org/surefire/maven-failsafe-plugin
+.. _maven-invoker-plugin: https://maven.apache.org/plugins/maven-invoker-plugin
+.. _BuildMojo: https://github.com/carlosvin/blog-maven-plugin/blob/master/src/main/java/com/maven/plugins/blog/BuildMojo.java
+.. _AAA: http://wiki.c2.com/?ArrangeActAssert
