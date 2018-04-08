@@ -5,9 +5,9 @@
 .. description: Example to understand Maven plugins concepts and how to create a custom Maven plugin from scratch
 .. type: text
 
-Maven has lot of plugins to assist you in you project construction and deployment. For example if you want to compile C++ code instead of Java, you can use `native-maven-plugin <http://www.mojohaus.org/maven-native/native-maven-plugin/>`_ . But what if you need something more specific? Then you can create a custom Maven plugin. 
+Maven has lots of plugins to assist you in project construction, testing, packaging and deployment. For example if you want to compile C++ code instead of Java, you can use `native-maven-plugin <http://www.mojohaus.org/maven-native/native-maven-plugin/>`_ . But what if you need something more specific? Then you can create a custom Maven plugin. 
 
-I will explain how to create a simple custom maven plugin to generate static blog site from Markdown files. I know we can already do that with `maven-site-pugin <https://maven.apache.org/plugins/maven-site-plugin/examples/creating-content.html>`_ since version 3.3, I will just use it for learning purposes.  
+I will explain how to create a simple custom maven plugin to generate static blog site from Markdown files. I know we can already do that with `maven-site-plugin <https://maven.apache.org/plugins/maven-site-plugin/examples/creating-content.html>`_ since version 3.3, I will just use it for learning purposes.  
 
 You can find whole source code example at https://github.com/carlosvin/blog-maven-plugin.
 
@@ -25,7 +25,7 @@ Goal
     It is equivalent to `Mojo <http://maven.apache.org/plugin-developers/index.html>`_ execution
 
 Lifecycle
-    It is a well defined sequence of phases. Each phase consists of a sequence of goals.
+    It is a well-defined sequence of phases. Each phase consists of a sequence of goals.
     Let's see an example of lifecycle, e.g: ``FooLifecycle`` has ``clean``, ``prepare`` and ``assemble`` phases. Each of those phases has one of more goals. **FooLifecycle**:
     
     - clean
@@ -37,7 +37,7 @@ Lifecycle
         - **build**: a goal to compile source files
 
     To define a custom lifecycle as previous we will use ``src/main/resources/META-INF/plexus/components.xml``, we will speak about that file in following sections.
-    Normally is enough to override `predefined lifecycles <https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html>`_, in this example we will override site lifecycle.
+    Normally is enough to override `predefined lifecycles <https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html>`_, in this example, we will override site lifecycle.
 
 .. hint:: You can find an introduction to Maven lifecycles at https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 
@@ -45,9 +45,9 @@ Lifecycle
 Create your custom plugin
 =========================
 
-In this example we will create a plugin to `override site lifecycle <https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle>`_, which has only 2 default phases, so when we run `mvn site` using our new custom plugin it will execute the goals we are about to create. 
+The plugin we are about to explain will `override site lifecycle <https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle>`_, which has only 2 default phases, so when we run `mvn site` using our new custom plugin it will execute the goals we are about to create. 
 
-Our plugin will work with `md` file bindings: It will build the project and deploy it using `default maven deployment plugin <http://maven.apache.org/plugins/maven-deploy-plugin/>`_.
+Our plugin will work with `md` file bindings: It will build the project and deploy it using `maven deployment plugin <http://maven.apache.org/plugins/maven-deploy-plugin/>`_.
 
 
 Project structure
@@ -57,7 +57,7 @@ Project structure
     Where Java source code is
 
 ``src/main/resources/META-INF/plexus/components.xml``
-    file to create/override maven lifecycles and artifact types. Here we can especify which goals will be executed when for an artifact type, for example, we can say that for an artifact of type ``whatever`` when we run ``mvn foo`` it will verify the files, run tests, run linter, compile and zip al generated files.
+    file to create/override maven lifecycles and artifact types. Here we can specify which goals will be executed when for an artifact type, for example, we can say that for an artifact of type ``whatever`` when we run ``mvn foo`` it will verify the files, run tests, run linter, compile and zip al generated files.
 
 ``src/test/java``
     Unit tests folder
@@ -86,7 +86,7 @@ To use dependency injection with Maven we have to:
         <version>1</version>
     </dependency>
 
-2. Setup the sisu-maven-plugin to index the JSR-330 components you want made available to Maven.
+2. Set up the sisu-maven-plugin to index the JSR-330 components you want made available to Maven.
 
 .. code:: xml
 
@@ -104,7 +104,7 @@ To use dependency injection with Maven we have to:
         </executions>
     </plugin>
 
-3. Use annotations in your Mojo, e.g:
+3. Add annotations to your Mojo, e.g:
 
 .. code:: java
 
@@ -129,7 +129,7 @@ It is straightforward to implement a Mojo_ class, we have to:
 1. Implement Mojo interface
 ###########################
 
-Your Mojo_ class has to implement ``org.apache.maven.plugin.Mojo``, altouth it is more convenient to extend ``org.apache.maven.plugin.AbstractMojo``, an abstract class to provide most of the infrastructure required to implement a Mojo except for the execute method. That interface and class are described at `Mojo API`_.
+Your Mojo_ class has to implement ``org.apache.maven.plugin.Mojo``, although it is more convenient to extend ``org.apache.maven.plugin.AbstractMojo``, an abstract class to provide most of the infrastructure required to implement a Mojo except for execute method. That interface and class are described at `Mojo API`_.
 
 .. code:: java
 
@@ -138,7 +138,7 @@ Your Mojo_ class has to implement ``org.apache.maven.plugin.Mojo``, altouth it i
 2. Configure Mojo with Java 5 annotations
 #########################################
 
-Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Those annotations belong to other set of annotations to configure Mojos, `Plugin Tools Java5 Annotations <https://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html>`_.
+Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Those annotations belong to another set of annotations to configure Mojos, `Plugin Tools Java5 Annotations <https://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html>`_.
 
 .. code:: java
     :name: BuildMojo.java
@@ -150,7 +150,7 @@ Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Th
     public class BuildMojo extends AbstractMojo {
 
         /**
-        * Output direcotry path where HTML files are generated
+        * Output directory path where HTML files are generated
         */
         @Parameter(defaultValue = "${project.reporting.outputDirectory}", property = "siteOutputDirectory", required = true)
         private File outputDirectory;
@@ -163,12 +163,12 @@ Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Th
         private FileSet inputFiles;
 
 ``@Mojo``
-    Configures Mojo name and default lifecycle phase. To execute the Mojo in example we will use ``mvn site:build``: ``site`` is plugin name and ``build`` is ``name`` parameter.
+    Configures Mojo name and default lifecycle phase. To execute the Mojo in example we will use ``mvn site:build``: *site* is the plugin name and *build* is ``name`` parameter.
 
 ``@Parameter``
     We use it to pass configuration parameters to Mojo. ``@Parameter`` annotation accepts extra arguments
 
-    - defaultValue: You can use properties placeholder or any String. If parameter type declared is not a String, then Maven will try to converted it, e.g: 
+    - defaultValue: You can use properties placeholder or any String. If the parameter type is not a String, then Maven will try to cast it, e.g: 
     
     .. code:: java 
 
@@ -177,7 +177,7 @@ Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Th
         Integer intParameter;
     
     
-    - property: It allows configuration of the mojo parameter from the command line by referencing a system property that the user sets via the -D option. 
+    - property: It allows configuration of the Mojo parameter from the command line by referencing a system property that the user sets via the -D option. 
 
     .. code:: bash 
         
@@ -185,14 +185,14 @@ Annotate Mojo_ class with ``@Mojo`` and input parameters with ``@Parameter``. Th
 
         mvn site:build -DsiteOutputDirectory=/var/www/html
 
-.. hint:: More info in `Maven Plugin development guide in Parameter section <https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters>`_.
+.. hint:: More info in `Maven Plugin development guide in Parametera section <https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters>`_.
 
-3. Implement execute method
-############################
+3. Implement *execute* method
+###############################
 
 As I have explained before at `1. Implement Mojo interface`_, our Mojo_ class extends ``org.apache.maven.plugin.AbstractMojo`` which has one unimplemented method from ``org.apache.maven.plugin.Mojo`` interface. In that method we are going to implement the Maven goal logic.
 
-Mojo_ class instance is called from Maven_ execution lifecycle by invoking ``execute()`` method. Before calling ``execute()`` Maven has performed some other tasks related with the Mojo: 
+Mojo_ class instance is called from Maven_ execution lifecycle by invoking ``execute()`` method. Before calling ``execute()``, Maven has performed some other tasks related with the Mojo: 
 
 1. Maven instantiates Mojo and injects dependencies (`Dependency Injection`_).
  
@@ -200,15 +200,15 @@ Mojo_ class instance is called from Maven_ execution lifecycle by invoking ``exe
 
     Mojo mojo = new BuildMojo(fileSetManager, mdToHtml);
 
-2. Maven configures the Mojo by assigning values to parameters. 
+2. Maven configures the Mojo by assigning values to parameters.
 
 3. Maven calls execute method: ``mojo.execute();``.
 
-I will simplify ``execute`` method implementation, the `example project in github <https://github.com/carlosvin/blog-maven-plugin>`_ is more complicated and not good for learning.
+I will simplify ``execute`` method implementation, the `sample project in github <https://github.com/carlosvin/blog-maven-plugin>`_ is more complicated and not good for learning.
 
 .. code:: java
 
-    // If there is any error during execution it should throw MojoExecutionException
+    // If there is any error during execution, it should throw MojoExecutionException
     public void execute() throws MojoExecutionException {
         if (inputFiles == null) {
             setDefaultInput();
@@ -246,7 +246,7 @@ Unit tests
 
 In the example we use `JUnit 4`_, but you can use any other testing framework. 
 
-Firtsly you have to add the unit test library dependency to ``pom.xml``.
+Firtsly, you have to add the unit test library dependency to ``pom.xml``.
 
 .. code:: xml
 
@@ -259,19 +259,19 @@ Firtsly you have to add the unit test library dependency to ``pom.xml``.
 
 Then you just have to write your unit tests under ``src/test/java`` folder, for example: `src/test/java/com/maven/plugins/blog/PathsTest.java <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/test/java/com/maven/plugins/blog/PathsTest.java>`_.
 
-To run unit tests you just need to execute ``mvn test``.
+To run the unit tests you just need to execute ``mvn test``.
 
-Interation tests
-================
+Integration tests
+=================
 
 The 2 most popular ways to perform integration tests on custom maven plugins are using maven-failsafe-plugin_ or maven-invoker-plugin_.
 
-I've chosen maven-invoker-plugin_ because for me it is more straightforward. There is `an answer at stackoverflow where they explain thorogly the differences between them <https://stackoverflow.com/questions/40010745/maven-invoker-plugin-vs-maven-failsafe-plugin-which-to-use-for-integration-test>`_
+I've chosen maven-invoker-plugin_ because for me it is more straightforward. There is `an answer at stackoverflow where they explain thoroughly the differences between them <https://stackoverflow.com/questions/40010745/maven-invoker-plugin-vs-maven-failsafe-plugin-which-to-use-for-integration-test>`_
 
-How does Invoker Pluing work?
+How does Invoker Plugin work?
 -----------------------------
 
-We create projects to use our custom plugin under ``src/it`` folder, so our plugin will be applied to test projects. After that a validation script will be executed so we can check if our plugin outputs are as expected. For example, if our plugin is suppose to generate a file named ``foo.file``, verification plugin will check if that file exists, if it doesn't, integration test will fail. 
+We create projects to use our custom plugin under ``src/it`` folder, so our plugin will be applied to test projects. After that, a validation script will be executed so we can check if our plugin outputs are as expected. For example, if our plugin is supposed to generate a file named ``foo.file``, verification plugin will check if that file exists, if it doesn't, integration test will fail.
 
 Configure Invoker Plugin
 ------------------------
@@ -301,13 +301,12 @@ Configure Invoker Plugin
 
 In **executions** section we execute following goals:
  
-1. ``invoker:install`` will be executed during the phase pre-integration-test and will install main project artifact into target/local-repo.
+1. ``invoker:install`` will be executed during the phase pre-integration-test and will install the main project artifact into target/local-repo.
 2. ``invoker:run`` will be executed during the integration-test phase and it will execute all defined integration tests under ``src/it`` folder.
 
 In **configuration** section:
 
-``<postBuildHookScript>verify</postBuildHookScript>``
-Execute validation script after integration test execution. This script may be written with either BeanShell or Groovy.
+``<postBuildHookScript>verify</postBuildHookScript>`` configures invoker plugin to execute validation script after integration test project execution. This script may be written with either BeanShell or Groovy (verify.groovy or verify.bsh).
 
 We have used other properties to show errors, show maven log and save it to a file.
 
@@ -316,10 +315,12 @@ You can check all ``invoker:run`` configuration properties at https://maven.apac
 Create an Integration Test Project
 ----------------------------------
 
-There are 3 important files, those match with AAA_ pashes ("Arrange-Act-Assert"):
+It is a project we use to execute custom plugin goals, so we can validate if it produces the expected output.
+
+There are 3 important files that matche with AAA_ phases ("Arrange-Act-Assert"):
 
 - `src/it/md-html/pom.xml [Arrange] <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/pom.xml>`_ which has the project using our custom plugin.
-- `src/it/md-html/invoker.properties [Act] <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/invoker.properties>`_ will define how test project will be executed, for which goals.
+- `src/it/md-html/invoker.properties [Act] <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/invoker.properties>`_ will define how test project will be executed.
 - `src/it/md-html/verify.groovy [Assert] <https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/verify.groovy>`_ is the script to check that plugin execution generated expected results. 
 
 pom.xml (Arrange)
@@ -347,7 +348,7 @@ pom.xml (Arrange)
         </build>
     </project>
 
-It is a very simple pom file where we use placeholders to reference to our plugin under test. When invoker plugin executes following pom file, firstly will replace those placeholders to reference to latest version of our custom plugin which was recently installed in local repository:
+It is a very simple pom file where we use placeholders to reference to our plugin under test. When invoker plugin executes following pom file, firstly will replace those placeholders to reference to the latest version sof our custom plugin which was recently installed in the local repository:
 
 .. code:: xml
 
@@ -357,7 +358,7 @@ It is a very simple pom file where we use placeholders to reference to our plugi
 	    <version>0.0.1-SNAPSHOT</version>
     </plugin>
 
-In that way invoker plugin ensures it is testing latest version of current project.
+In that way invoker plugin ensures it is testing the latest version of current project.
 
 invoker.properties (Act)
 ########################
@@ -368,7 +369,7 @@ invoker.properties (Act)
     invoker.name = Test build MD
 
 
-It will execute ``mvn blog:build``, a goal defined in our custom plugin under example or what is the same, it will execute BuildMojo_ described at section `Write a custom Mojo`_.
+It will execute ``mvn blog:build``, a goal defined in our custom plugin under example or what is the same, it will execute BuildMojo_ described in section "`Write a custom Mojo`_".
 
 verify.groovy (Assert)
 ######################
@@ -379,9 +380,8 @@ verify.groovy (Assert)
 
     assert generated.isFile()
 
-It is checking if ``target/site/README.html`` file was generated by plugin.
-
-We can consider this verification script as **assert** phase in testing AAA_.
+It is checking if ``target/site/README.html`` file was generated by the plugin.
+fExecute validation script 
 
 .. _Maven: http://maven.apache.org
 .. _Mojo: http://maven.apache.org/plugin-developers/index.html
