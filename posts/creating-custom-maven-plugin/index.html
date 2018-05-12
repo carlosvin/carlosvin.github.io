@@ -16,6 +16,7 @@
 <meta name="yandex-verification" content="c969e485a9e92311">
 <meta name="author" content="Carlos Martín Sánchez">
 <link rel="prev" href="../choosing-modern-cpp-stack/" title="Choosing a Modern C++ stack" type="text/html">
+<link rel="next" href="../creating-custom-maven-plugin-default/" title="Example how to create custom Maven Plugin" type="text/html">
 <meta property="og:site_name" content='Carlos says "bla bla"'>
 <meta property="og:title" content="Example how to create custom Maven Plugin">
 <meta property="og:url" content="https://carlosvin.github.io/posts/creating-custom-maven-plugin/">
@@ -25,6 +26,7 @@
 <meta property="article:tag" content="Build Systems">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Maven">
+<meta property="article:tag" content="Maven Plugins">
 <meta property="article:tag" content="maven-site-plugin">
 <link rel="alternate" hreflang="es" href="../../es/posts/creating-custom-maven-plugin/">
 </head>
@@ -48,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../../archive.html">Archives</a>
@@ -125,7 +127,7 @@
 <ul class="simple">
 <li><a class="reference internal" href="#maven-plugin-concepts" id="id2">Maven plugin concepts</a></li>
 <li>
-<a class="reference internal" href="#create-your-custom-plugin" id="id3">Create your custom plugin</a><ul>
+<a class="reference internal" href="#create-your-custom-plugin-site-lifecycle" id="id3">Create your custom plugin (Site Lifecycle)</a><ul>
 <li><a class="reference internal" href="#project-structure" id="id4">Project structure</a></li>
 <li><a class="reference internal" href="#dependency-injection" id="id5">Dependency Injection</a></li>
 <li>
@@ -199,10 +201,10 @@ Normally is enough to override <a class="reference external" href="https://maven
 <p class="last">You can find an introduction to Maven lifecycles at <a class="reference external" href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html</a></p>
 </div>
 </div>
-<div class="section" id="create-your-custom-plugin">
-<h2><a class="toc-backref" href="#id3">Create your custom plugin</a></h2>
-<p>The plugin we are about to explain will <a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle">override site lifecycle</a>, which has only 2 default phases, so when we run <cite>mvn site</cite> using our new custom plugin it will execute the goals we are about to create.</p>
-<p>Our plugin will work with <cite>md</cite> file bindings: It will build the project and deploy it using <a class="reference external" href="http://maven.apache.org/plugins/maven-deploy-plugin/">maven deployment plugin</a>.</p>
+<div class="section" id="create-your-custom-plugin-site-lifecycle">
+<h2><a class="toc-backref" href="#id3">Create your custom plugin (Site Lifecycle)</a></h2>
+<p>The plugin we are about to explain will <a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle">override site lifecycle</a>, which has only 2 default phases, so when we run <tt class="docutils literal">mvn site</tt> using our new custom plugin it will execute the goals we are about to create.</p>
+<p>Our plugin will work with <tt class="docutils literal">md</tt> file bindings: It will build the project and deploy it using <a class="reference external" href="http://maven.apache.org/plugins/maven-deploy-plugin/">maven deployment plugin</a>.</p>
 <div class="section" id="project-structure">
 <h3><a class="toc-backref" href="#id4">Project structure</a></h3>
 <dl class="docutils">
@@ -226,44 +228,44 @@ Normally is enough to override <a class="reference external" href="https://maven
 <ol class="arabic simple">
 <li>Add <tt class="docutils literal">javax.inject</tt> dependency to <tt class="docutils literal">pom.xml</tt> so we can use <tt class="docutils literal">@Inject</tt>, <tt class="docutils literal">@Named</tt>, and <tt class="docutils literal">@Singleton</tt> annotations in plugin implementation Java code.</li>
 </ol>
-<pre class="code xml"><a name="rest_code_b6a940989171469089fa286d0d601644-1"></a><span class="nt">&lt;dependency&gt;</span>
-<a name="rest_code_b6a940989171469089fa286d0d601644-2"></a>    <span class="nt">&lt;groupId&gt;</span>javax.inject<span class="nt">&lt;/groupId&gt;</span>
-<a name="rest_code_b6a940989171469089fa286d0d601644-3"></a>    <span class="nt">&lt;artifactId&gt;</span>javax.inject<span class="nt">&lt;/artifactId&gt;</span>
-<a name="rest_code_b6a940989171469089fa286d0d601644-4"></a>    <span class="nt">&lt;version&gt;</span>1<span class="nt">&lt;/version&gt;</span>
-<a name="rest_code_b6a940989171469089fa286d0d601644-5"></a><span class="nt">&lt;/dependency&gt;</span>
+<pre class="code xml"><a name="rest_code_2bcddbc9dc644666b19c58f3959d668f-1"></a><span class="nt">&lt;dependency&gt;</span>
+<a name="rest_code_2bcddbc9dc644666b19c58f3959d668f-2"></a>    <span class="nt">&lt;groupId&gt;</span>javax.inject<span class="nt">&lt;/groupId&gt;</span>
+<a name="rest_code_2bcddbc9dc644666b19c58f3959d668f-3"></a>    <span class="nt">&lt;artifactId&gt;</span>javax.inject<span class="nt">&lt;/artifactId&gt;</span>
+<a name="rest_code_2bcddbc9dc644666b19c58f3959d668f-4"></a>    <span class="nt">&lt;version&gt;</span>1<span class="nt">&lt;/version&gt;</span>
+<a name="rest_code_2bcddbc9dc644666b19c58f3959d668f-5"></a><span class="nt">&lt;/dependency&gt;</span>
 </pre>
 <ol class="arabic simple" start="2">
 <li>Set up the sisu-maven-plugin to index the JSR-330 components you want made available to Maven.</li>
 </ol>
-<pre class="code xml"><a name="rest_code_6b6588de69044a97be98247a27fc59cd-1"></a><span class="nt">&lt;plugin&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-2"></a>    <span class="nt">&lt;groupId&gt;</span>org.eclipse.sisu<span class="nt">&lt;/groupId&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-3"></a>    <span class="nt">&lt;artifactId&gt;</span>sisu-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-4"></a>    <span class="nt">&lt;version&gt;</span>0.3.3<span class="nt">&lt;/version&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-5"></a>    <span class="nt">&lt;executions&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-6"></a>        <span class="nt">&lt;execution&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-7"></a>            <span class="nt">&lt;id&gt;</span>generate-index<span class="nt">&lt;/id&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-8"></a>            <span class="nt">&lt;goals&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-9"></a>                <span class="nt">&lt;goal&gt;</span>main-index<span class="nt">&lt;/goal&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-10"></a>            <span class="nt">&lt;/goals&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-11"></a>        <span class="nt">&lt;/execution&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-12"></a>    <span class="nt">&lt;/executions&gt;</span>
-<a name="rest_code_6b6588de69044a97be98247a27fc59cd-13"></a><span class="nt">&lt;/plugin&gt;</span>
+<pre class="code xml"><a name="rest_code_1fc0ae06d74a4910998093136637c1e7-1"></a><span class="nt">&lt;plugin&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-2"></a>    <span class="nt">&lt;groupId&gt;</span>org.eclipse.sisu<span class="nt">&lt;/groupId&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-3"></a>    <span class="nt">&lt;artifactId&gt;</span>sisu-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-4"></a>    <span class="nt">&lt;version&gt;</span>0.3.3<span class="nt">&lt;/version&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-5"></a>    <span class="nt">&lt;executions&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-6"></a>        <span class="nt">&lt;execution&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-7"></a>            <span class="nt">&lt;id&gt;</span>generate-index<span class="nt">&lt;/id&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-8"></a>            <span class="nt">&lt;goals&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-9"></a>                <span class="nt">&lt;goal&gt;</span>main-index<span class="nt">&lt;/goal&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-10"></a>            <span class="nt">&lt;/goals&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-11"></a>        <span class="nt">&lt;/execution&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-12"></a>    <span class="nt">&lt;/executions&gt;</span>
+<a name="rest_code_1fc0ae06d74a4910998093136637c1e7-13"></a><span class="nt">&lt;/plugin&gt;</span>
 </pre>
 <ol class="arabic simple" start="3">
 <li>Add annotations to your Mojo, e.g:</li>
 </ol>
-<pre class="code java"><a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-1"></a><span class="c1">// This annotation is not a dependency injection one, we will explain later what it is for</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-2"></a><span class="nd">@Mojo</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"build"</span><span class="o">,</span> <span class="n">defaultPhase</span> <span class="o">=</span> <span class="n">LifecyclePhase</span><span class="o">.</span><span class="na">COMPILE</span><span class="o">)</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-3"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BuildMojo</span> <span class="kd">extends</span> <span class="n">AbstractMojo</span> <span class="o">{</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-4"></a>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-5"></a>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">FileSetManager</span> <span class="n">fileSetManager</span><span class="o">;</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-6"></a>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">MdToHtml</span> <span class="n">mdToHtml</span><span class="o">;</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-7"></a>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-8"></a>    <span class="c1">// It will inject an instance of FileSetManager and MdToHtml</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-9"></a>    <span class="nd">@Inject</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-10"></a>    <span class="kd">public</span> <span class="nf">BuildMojo</span><span class="o">(</span><span class="n">FileSetManager</span> <span class="n">fileSetManager</span><span class="o">,</span> <span class="n">MdToHtml</span> <span class="n">mdToHtml</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-11"></a>        <span class="k">this</span><span class="o">.</span><span class="na">fileSetManager</span> <span class="o">=</span> <span class="n">fileSetManager</span><span class="o">;</span>
-<a name="rest_code_14598475f5ed410e9ef8ca58cb9a5e38-12"></a>        <span class="k">this</span><span class="o">.</span><span class="na">mdToHtml</span> <span class="o">=</span> <span class="n">mdToHtml</span><span class="o">;</span>
+<pre class="code java"><a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-1"></a><span class="c1">// This annotation is not a dependency injection one, we will explain later what it is for</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-2"></a><span class="nd">@Mojo</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"build"</span><span class="o">,</span> <span class="n">defaultPhase</span> <span class="o">=</span> <span class="n">LifecyclePhase</span><span class="o">.</span><span class="na">COMPILE</span><span class="o">)</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-3"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BuildMojo</span> <span class="kd">extends</span> <span class="n">AbstractMojo</span> <span class="o">{</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-4"></a>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-5"></a>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">FileSetManager</span> <span class="n">fileSetManager</span><span class="o">;</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-6"></a>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">MdToHtml</span> <span class="n">mdToHtml</span><span class="o">;</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-7"></a>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-8"></a>    <span class="c1">// It will inject an instance of FileSetManager and MdToHtml</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-9"></a>    <span class="nd">@Inject</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-10"></a>    <span class="kd">public</span> <span class="nf">BuildMojo</span><span class="o">(</span><span class="n">FileSetManager</span> <span class="n">fileSetManager</span><span class="o">,</span> <span class="n">MdToHtml</span> <span class="n">mdToHtml</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-11"></a>        <span class="k">this</span><span class="o">.</span><span class="na">fileSetManager</span> <span class="o">=</span> <span class="n">fileSetManager</span><span class="o">;</span>
+<a name="rest_code_912f5c2979be4c808f90d2446d9ad94c-12"></a>        <span class="k">this</span><span class="o">.</span><span class="na">mdToHtml</span> <span class="o">=</span> <span class="n">mdToHtml</span><span class="o">;</span>
 </pre>
 </div>
 <div class="section" id="write-a-custom-mojo">
@@ -273,30 +275,30 @@ Normally is enough to override <a class="reference external" href="https://maven
 <div class="section" id="implement-mojo-interface">
 <h4><a class="toc-backref" href="#id7">1. Implement Mojo interface</a></h4>
 <p>Your <a class="reference external" href="http://maven.apache.org/plugin-developers/index.html">Mojo</a> class has to implement <tt class="docutils literal">org.apache.maven.plugin.Mojo</tt>, although it is more convenient to extend <tt class="docutils literal">org.apache.maven.plugin.AbstractMojo</tt>, an abstract class to provide most of the infrastructure required to implement a Mojo except for execute method. That interface and class are described at <a class="reference external" href="https://maven.apache.org/developers/mojo-api-specification.html">Mojo API</a>.</p>
-<pre class="code java"><a name="rest_code_a1658347ae6f477a90d35ea09e4c85b7-1"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BuildMojo</span> <span class="kd">extends</span> <span class="n">AbstractMojo</span> <span class="o">{</span>
+<pre class="code java"><a name="rest_code_baf7b9d74fde4a1c8c908643eb2a064c-1"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BuildMojo</span> <span class="kd">extends</span> <span class="n">AbstractMojo</span> <span class="o">{</span>
 </pre>
 </div>
 <div class="section" id="configure-mojo-with-java-5-annotations">
 <h4><a class="toc-backref" href="#id8">2. Configure Mojo with Java 5 annotations</a></h4>
 <p>Annotate <a class="reference external" href="http://maven.apache.org/plugin-developers/index.html">Mojo</a> class with <tt class="docutils literal">@Mojo</tt> and input parameters with <tt class="docutils literal">@Parameter</tt>. Those annotations belong to another set of annotations to configure Mojos, <a class="reference external" href="https://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html">Plugin Tools Java5 Annotations</a>.</p>
-<pre class="code java"><a name="rest_code_f1352e0456d649848fd009a736b1b242-1"></a><span class="cm">/**</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-2"></a><span class="cm">* Generate HTML files from Markdown files</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-3"></a><span class="cm">*/</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-4"></a><span class="nd">@Mojo</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"build"</span><span class="o">,</span> <span class="n">defaultPhase</span> <span class="o">=</span> <span class="n">LifecyclePhase</span><span class="o">.</span><span class="na">COMPILE</span><span class="o">)</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-5"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BuildMojo</span> <span class="kd">extends</span> <span class="n">AbstractMojo</span> <span class="o">{</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-6"></a>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-7"></a>    <span class="cm">/**</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-8"></a><span class="cm">    * Output directory path where HTML files are generated</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-9"></a><span class="cm">    */</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-10"></a>    <span class="nd">@Parameter</span><span class="o">(</span><span class="n">defaultValue</span> <span class="o">=</span> <span class="s">"${project.reporting.outputDirectory}"</span><span class="o">,</span> <span class="n">property</span> <span class="o">=</span> <span class="s">"siteOutputDirectory"</span><span class="o">,</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-11"></a>    <span class="kd">private</span> <span class="n">File</span> <span class="n">outputDirectory</span><span class="o">;</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-12"></a>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-13"></a>    <span class="cm">/**</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-14"></a><span class="cm">    * A specific &lt;code&gt;fileSet&lt;/code&gt; rule to select files and directories.</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-15"></a><span class="cm">    * Fileset spec: https://maven.apache.org/shared/file-management/fileset.html</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-16"></a><span class="cm">    */</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-17"></a>    <span class="nd">@Parameter</span>
-<a name="rest_code_f1352e0456d649848fd009a736b1b242-18"></a>    <span class="kd">private</span> <span class="n">FileSet</span> <span class="n">inputFiles</span><span class="o">;</span>
+<pre class="code java"><a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-1"></a><span class="cm">/**</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-2"></a><span class="cm">* Generate HTML files from Markdown files</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-3"></a><span class="cm">*/</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-4"></a><span class="nd">@Mojo</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"build"</span><span class="o">,</span> <span class="n">defaultPhase</span> <span class="o">=</span> <span class="n">LifecyclePhase</span><span class="o">.</span><span class="na">COMPILE</span><span class="o">)</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-5"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BuildMojo</span> <span class="kd">extends</span> <span class="n">AbstractMojo</span> <span class="o">{</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-6"></a>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-7"></a>    <span class="cm">/**</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-8"></a><span class="cm">    * Output directory path where HTML files are generated</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-9"></a><span class="cm">    */</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-10"></a>    <span class="nd">@Parameter</span><span class="o">(</span><span class="n">defaultValue</span> <span class="o">=</span> <span class="s">"${project.reporting.outputDirectory}"</span><span class="o">,</span> <span class="n">property</span> <span class="o">=</span> <span class="s">"siteOutputDirectory"</span><span class="o">,</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-11"></a>    <span class="kd">private</span> <span class="n">File</span> <span class="n">outputDirectory</span><span class="o">;</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-12"></a>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-13"></a>    <span class="cm">/**</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-14"></a><span class="cm">    * A specific &lt;code&gt;fileSet&lt;/code&gt; rule to select files and directories.</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-15"></a><span class="cm">    * Fileset spec: https://maven.apache.org/shared/file-management/fileset.html</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-16"></a><span class="cm">    */</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-17"></a>    <span class="nd">@Parameter</span>
+<a name="rest_code_cf6c4b8b836949e98cbe8a7ccdb8ed0a-18"></a>    <span class="kd">private</span> <span class="n">FileSet</span> <span class="n">inputFiles</span><span class="o">;</span>
 </pre>
 <dl class="docutils">
 <dt><tt class="docutils literal">@Mojo</tt></dt>
@@ -307,16 +309,16 @@ Normally is enough to override <a class="reference external" href="https://maven
 <ul class="simple">
 <li>defaultValue: You can use properties placeholder or any String. If the parameter type is not a String, then Maven will try to cast it, e.g:</li>
 </ul>
-<pre class="code java"><a name="rest_code_89f7d84f15504910b99e2abcf1157091-1"></a><span class="c1">// If intParameter is not set in pom file, then "2" will be converted to 2 and assigned to intParameter.</span>
-<a name="rest_code_89f7d84f15504910b99e2abcf1157091-2"></a><span class="nd">@Parameter</span><span class="o">(</span><span class="n">defaultValue</span><span class="o">=</span><span class="s">"2"</span><span class="o">)</span>
-<a name="rest_code_89f7d84f15504910b99e2abcf1157091-3"></a><span class="n">Integer</span> <span class="n">intParameter</span><span class="o">;</span>
+<pre class="code java"><a name="rest_code_cd929d2ebccc4c9491880557a4648d5a-1"></a><span class="c1">// If intParameter is not set in pom file, then "2" will be converted to 2 and assigned to intParameter.</span>
+<a name="rest_code_cd929d2ebccc4c9491880557a4648d5a-2"></a><span class="nd">@Parameter</span><span class="o">(</span><span class="n">defaultValue</span><span class="o">=</span><span class="s">"2"</span><span class="o">)</span>
+<a name="rest_code_cd929d2ebccc4c9491880557a4648d5a-3"></a><span class="n">Integer</span> <span class="n">intParameter</span><span class="o">;</span>
 </pre>
 <ul class="simple">
 <li>property: It allows configuration of the Mojo parameter from the command line by referencing a system property that the user sets via the -D option.</li>
 </ul>
-<div class="last"><pre class="code bash"><a name="rest_code_4a606e0c1f4245ee91932a4f6a97bbb8-1"></a><span class="c1"># To assign "/var/www/html" value to  outputDirectory:</span>
-<a name="rest_code_4a606e0c1f4245ee91932a4f6a97bbb8-2"></a>
-<a name="rest_code_4a606e0c1f4245ee91932a4f6a97bbb8-3"></a>mvn site:build -DsiteOutputDirectory<span class="o">=</span>/var/www/html
+<div class="last"><pre class="code bash"><a name="rest_code_8d6831eb610748d487daf0d3af34b3ad-1"></a><span class="c1"># To assign "/var/www/html" value to  outputDirectory:</span>
+<a name="rest_code_8d6831eb610748d487daf0d3af34b3ad-2"></a>
+<a name="rest_code_8d6831eb610748d487daf0d3af34b3ad-3"></a>mvn site:build -DsiteOutputDirectory<span class="o">=</span>/var/www/html
 </pre></div>
 </dd>
 </dl>
@@ -332,44 +334,44 @@ Normally is enough to override <a class="reference external" href="https://maven
 <ol class="arabic simple">
 <li>Maven instantiates Mojo and injects dependencies (<a class="reference internal" href="#dependency-injection">Dependency Injection</a>).</li>
 </ol>
-<pre class="code java"><a name="rest_code_bde98a780e1c4339938fde993fdcf3db-1"></a><span class="n">Mojo</span> <span class="n">mojo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BuildMojo</span><span class="o">(</span><span class="n">fileSetManager</span><span class="o">,</span> <span class="n">mdToHtml</span><span class="o">);</span>
+<pre class="code java"><a name="rest_code_295d337b64c54231a4c0d19d8d24df51-1"></a><span class="n">Mojo</span> <span class="n">mojo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BuildMojo</span><span class="o">(</span><span class="n">fileSetManager</span><span class="o">,</span> <span class="n">mdToHtml</span><span class="o">);</span>
 </pre>
 <ol class="arabic simple" start="2">
 <li>Maven configures the Mojo by assigning values to parameters.</li>
 <li>Maven calls execute method: <tt class="docutils literal"><span class="pre">mojo.execute();</span></tt>.</li>
 </ol>
 <p>I will simplify <tt class="docutils literal">execute</tt> method implementation, the <a class="reference external" href="https://github.com/carlosvin/blog-maven-plugin">sample project in github</a> is more complicated and not good for learning.</p>
-<pre class="code java"><a name="rest_code_a866a8bd63af428487492e3c7759d76b-1"></a><span class="c1">// If there is any error during execution, it should throw MojoExecutionException</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-2"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">MojoExecutionException</span> <span class="o">{</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-3"></a>    <span class="k">if</span> <span class="o">(</span><span class="n">inputFiles</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-4"></a>        <span class="n">setDefaultInput</span><span class="o">();</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-5"></a>    <span class="o">}</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-6"></a>    <span class="n">inputDirPath</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">inputFiles</span><span class="o">.</span><span class="na">getDirectory</span><span class="o">());</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-7"></a>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-8"></a>    <span class="c1">// A way to get all selected files from FileSet</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-9"></a>    <span class="c1">// https://maven.apache.org/shared/file-management/fileset.html</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-10"></a>    <span class="n">String</span><span class="o">[]</span> <span class="n">includedFiles</span> <span class="o">=</span> <span class="n">fileSetManager</span><span class="o">.</span><span class="na">getIncludedFiles</span><span class="o">(</span><span class="n">inputFiles</span><span class="o">);</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-11"></a>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-12"></a>    <span class="n">outputDirPath</span> <span class="o">=</span> <span class="n">outputDirectory</span><span class="o">.</span><span class="na">toPath</span><span class="o">();</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-13"></a>    <span class="k">if</span> <span class="o">(</span><span class="n">includedFiles</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">includedFiles</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-14"></a>        <span class="c1">// AbstractMojo supplies logger functionality</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-15"></a>        <span class="n">getLog</span><span class="o">().</span><span class="na">warn</span><span class="o">(</span><span class="s">"SKIP: There are no input files. "</span> <span class="o">+</span> <span class="n">getInputFilesToString</span><span class="o">());</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-16"></a>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-17"></a>        <span class="c1">// If output directory doesn't exist, it will be created</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-18"></a>        <span class="k">if</span> <span class="o">(!</span><span class="n">outputDirectory</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-19"></a>            <span class="n">outputDirectory</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">();</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-20"></a>        <span class="o">}</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-21"></a>        <span class="k">try</span> <span class="o">{</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-22"></a>            <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">f</span> <span class="o">:</span> <span class="n">includedFiles</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-23"></a>                <span class="c1">// it converts each file Markdown to HTML</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-24"></a>                <span class="n">convertToHtml</span><span class="o">(</span><span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">f</span><span class="o">),</span> <span class="n">outputDirectory</span><span class="o">);</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-25"></a>            <span class="o">}</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-26"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-27"></a>            <span class="c1">// Convert thrown exception to MojoExecutionException</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-28"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">MojoExecutionException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getLocalizedMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-29"></a>        <span class="o">}</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-30"></a>    <span class="o">}</span>
-<a name="rest_code_a866a8bd63af428487492e3c7759d76b-31"></a><span class="o">}</span>
+<pre class="code java"><a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-1"></a><span class="c1">// If there is any error during execution, it should throw MojoExecutionException</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-2"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">MojoExecutionException</span> <span class="o">{</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-3"></a>    <span class="k">if</span> <span class="o">(</span><span class="n">inputFiles</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-4"></a>        <span class="n">setDefaultInput</span><span class="o">();</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-5"></a>    <span class="o">}</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-6"></a>    <span class="n">inputDirPath</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">inputFiles</span><span class="o">.</span><span class="na">getDirectory</span><span class="o">());</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-7"></a>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-8"></a>    <span class="c1">// A way to get all selected files from FileSet</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-9"></a>    <span class="c1">// https://maven.apache.org/shared/file-management/fileset.html</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-10"></a>    <span class="n">String</span><span class="o">[]</span> <span class="n">includedFiles</span> <span class="o">=</span> <span class="n">fileSetManager</span><span class="o">.</span><span class="na">getIncludedFiles</span><span class="o">(</span><span class="n">inputFiles</span><span class="o">);</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-11"></a>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-12"></a>    <span class="n">outputDirPath</span> <span class="o">=</span> <span class="n">outputDirectory</span><span class="o">.</span><span class="na">toPath</span><span class="o">();</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-13"></a>    <span class="k">if</span> <span class="o">(</span><span class="n">includedFiles</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">includedFiles</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-14"></a>        <span class="c1">// AbstractMojo supplies logger functionality</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-15"></a>        <span class="n">getLog</span><span class="o">().</span><span class="na">warn</span><span class="o">(</span><span class="s">"SKIP: There are no input files. "</span> <span class="o">+</span> <span class="n">getInputFilesToString</span><span class="o">());</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-16"></a>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-17"></a>        <span class="c1">// If output directory doesn't exist, it will be created</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-18"></a>        <span class="k">if</span> <span class="o">(!</span><span class="n">outputDirectory</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-19"></a>            <span class="n">outputDirectory</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">();</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-20"></a>        <span class="o">}</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-21"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-22"></a>            <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">f</span> <span class="o">:</span> <span class="n">includedFiles</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-23"></a>                <span class="c1">// it converts each file Markdown to HTML</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-24"></a>                <span class="n">convertToHtml</span><span class="o">(</span><span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">f</span><span class="o">),</span> <span class="n">outputDirectory</span><span class="o">);</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-25"></a>            <span class="o">}</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-26"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-27"></a>            <span class="c1">// Convert thrown exception to MojoExecutionException</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-28"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">MojoExecutionException</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getLocalizedMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-29"></a>        <span class="o">}</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-30"></a>    <span class="o">}</span>
+<a name="rest_code_3556c89ef5b443a6baa07ed2507e62f5-31"></a><span class="o">}</span>
 </pre>
 </div>
 </div>
@@ -378,12 +380,12 @@ Normally is enough to override <a class="reference external" href="https://maven
 <h2><a class="toc-backref" href="#id10">Unit tests</a></h2>
 <p>In the example we use <a class="reference external" href="https://junit.org/junit4/">JUnit 4</a>, but you can use any other testing framework.</p>
 <p>Firtsly, you have to add the unit test library dependency to <tt class="docutils literal">pom.xml</tt>.</p>
-<pre class="code xml"><a name="rest_code_fc7f52e9f53048f286664dad87cd1c10-1"></a><span class="nt">&lt;dependency&gt;</span>
-<a name="rest_code_fc7f52e9f53048f286664dad87cd1c10-2"></a>    <span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
-<a name="rest_code_fc7f52e9f53048f286664dad87cd1c10-3"></a>    <span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
-<a name="rest_code_fc7f52e9f53048f286664dad87cd1c10-4"></a>    <span class="nt">&lt;version&gt;</span>4.11<span class="nt">&lt;/version&gt;</span>
-<a name="rest_code_fc7f52e9f53048f286664dad87cd1c10-5"></a>    <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
-<a name="rest_code_fc7f52e9f53048f286664dad87cd1c10-6"></a><span class="nt">&lt;/dependency&gt;</span>
+<pre class="code xml"><a name="rest_code_37873ac2cbcc47c7b05f3ee244c6ff5e-1"></a><span class="nt">&lt;dependency&gt;</span>
+<a name="rest_code_37873ac2cbcc47c7b05f3ee244c6ff5e-2"></a>    <span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
+<a name="rest_code_37873ac2cbcc47c7b05f3ee244c6ff5e-3"></a>    <span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
+<a name="rest_code_37873ac2cbcc47c7b05f3ee244c6ff5e-4"></a>    <span class="nt">&lt;version&gt;</span>4.11<span class="nt">&lt;/version&gt;</span>
+<a name="rest_code_37873ac2cbcc47c7b05f3ee244c6ff5e-5"></a>    <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<a name="rest_code_37873ac2cbcc47c7b05f3ee244c6ff5e-6"></a><span class="nt">&lt;/dependency&gt;</span>
 </pre>
 <p>Then you just have to write your unit tests under <tt class="docutils literal">src/test/java</tt> folder, for example: <a class="reference external" href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/test/java/com/maven/plugins/blog/PathsTest.java">src/test/java/com/maven/plugins/blog/PathsTest.java</a>.</p>
 <p>To run the unit tests you just need to execute <tt class="docutils literal">mvn test</tt>.</p>
@@ -398,26 +400,26 @@ Normally is enough to override <a class="reference external" href="https://maven
 </div>
 <div class="section" id="configure-invoker-plugin">
 <h3><a class="toc-backref" href="#id13">Configure Invoker Plugin</a></h3>
-<pre class="code xml"><a name="rest_code_41c2e36143cc413dbf02078232e43805-1"></a><span class="nt">&lt;plugin&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-2"></a>    <span class="nt">&lt;artifactId&gt;</span>maven-invoker-plugin<span class="nt">&lt;/artifactId&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-3"></a>    <span class="nt">&lt;version&gt;</span>3.0.1<span class="nt">&lt;/version&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-4"></a>    <span class="nt">&lt;configuration&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-5"></a>        <span class="nt">&lt;postBuildHookScript&gt;</span>verify<span class="nt">&lt;/postBuildHookScript&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-6"></a>        <span class="nt">&lt;showVersion&gt;</span>true<span class="nt">&lt;/showVersion&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-7"></a>        <span class="nt">&lt;streamLogs&gt;</span>true<span class="nt">&lt;/streamLogs&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-8"></a>        <span class="nt">&lt;noLog&gt;</span>false<span class="nt">&lt;/noLog&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-9"></a>        <span class="nt">&lt;showErrors&gt;</span>true<span class="nt">&lt;/showErrors&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-10"></a>    <span class="nt">&lt;/configuration&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-11"></a>    <span class="nt">&lt;executions&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-12"></a>        <span class="nt">&lt;execution&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-13"></a>            <span class="nt">&lt;id&gt;</span>integration-test<span class="nt">&lt;/id&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-14"></a>            <span class="nt">&lt;goals&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-15"></a>                <span class="nt">&lt;goal&gt;</span>install<span class="nt">&lt;/goal&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-16"></a>                <span class="nt">&lt;goal&gt;</span>run<span class="nt">&lt;/goal&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-17"></a>            <span class="nt">&lt;/goals&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-18"></a>        <span class="nt">&lt;/execution&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-19"></a>    <span class="nt">&lt;/executions&gt;</span>
-<a name="rest_code_41c2e36143cc413dbf02078232e43805-20"></a><span class="nt">&lt;/plugin&gt;</span>
+<pre class="code xml"><a name="rest_code_5d11e91161904929ad574442eea06e4a-1"></a><span class="nt">&lt;plugin&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-2"></a>    <span class="nt">&lt;artifactId&gt;</span>maven-invoker-plugin<span class="nt">&lt;/artifactId&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-3"></a>    <span class="nt">&lt;version&gt;</span>3.0.1<span class="nt">&lt;/version&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-4"></a>    <span class="nt">&lt;configuration&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-5"></a>        <span class="nt">&lt;postBuildHookScript&gt;</span>verify<span class="nt">&lt;/postBuildHookScript&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-6"></a>        <span class="nt">&lt;showVersion&gt;</span>true<span class="nt">&lt;/showVersion&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-7"></a>        <span class="nt">&lt;streamLogs&gt;</span>true<span class="nt">&lt;/streamLogs&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-8"></a>        <span class="nt">&lt;noLog&gt;</span>false<span class="nt">&lt;/noLog&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-9"></a>        <span class="nt">&lt;showErrors&gt;</span>true<span class="nt">&lt;/showErrors&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-10"></a>    <span class="nt">&lt;/configuration&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-11"></a>    <span class="nt">&lt;executions&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-12"></a>        <span class="nt">&lt;execution&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-13"></a>            <span class="nt">&lt;id&gt;</span>integration-test<span class="nt">&lt;/id&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-14"></a>            <span class="nt">&lt;goals&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-15"></a>                <span class="nt">&lt;goal&gt;</span>install<span class="nt">&lt;/goal&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-16"></a>                <span class="nt">&lt;goal&gt;</span>run<span class="nt">&lt;/goal&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-17"></a>            <span class="nt">&lt;/goals&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-18"></a>        <span class="nt">&lt;/execution&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-19"></a>    <span class="nt">&lt;/executions&gt;</span>
+<a name="rest_code_5d11e91161904929ad574442eea06e4a-20"></a><span class="nt">&lt;/plugin&gt;</span>
 </pre>
 <p>In <strong>executions</strong> section we execute following goals:</p>
 <ol class="arabic simple">
@@ -445,50 +447,49 @@ Normally is enough to override <a class="reference external" href="https://maven
 </ul>
 <div class="section" id="pom-xml-arrange">
 <h4><a class="toc-backref" href="#id15">pom.xml (Arrange)</a></h4>
-<pre class="code xml"><a name="rest_code_97f280af573a448d9bc0041de49304b9-1"></a><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-2"></a><span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-3"></a><span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span class="nt">&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-4"></a>    <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-5"></a>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-6"></a>    <span class="nt">&lt;groupId&gt;</span>com.maven.plugins.it<span class="nt">&lt;/groupId&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-7"></a>    <span class="nt">&lt;artifactId&gt;</span>simple-it<span class="nt">&lt;/artifactId&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-8"></a>    <span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-9"></a>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-10"></a>    <span class="nt">&lt;build&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-11"></a>        <span class="nt">&lt;plugins&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-12"></a>            <span class="nt">&lt;plugin&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-13"></a>                <span class="nt">&lt;groupId&gt;</span>@project.groupId@<span class="nt">&lt;/groupId&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-14"></a>                <span class="nt">&lt;artifactId&gt;</span>@project.artifactId@<span class="nt">&lt;/artifactId&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-15"></a>                <span class="nt">&lt;version&gt;</span>@project.version@<span class="nt">&lt;/version&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-16"></a>            <span class="nt">&lt;/plugin&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-17"></a>        <span class="nt">&lt;/plugins&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-18"></a>    <span class="nt">&lt;/build&gt;</span>
-<a name="rest_code_97f280af573a448d9bc0041de49304b9-19"></a><span class="nt">&lt;/project&gt;</span>
+<pre class="code xml"><a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-1"></a><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-2"></a><span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-3"></a><span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span class="nt">&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-4"></a>    <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-5"></a>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-6"></a>    <span class="nt">&lt;groupId&gt;</span>com.maven.plugins.it<span class="nt">&lt;/groupId&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-7"></a>    <span class="nt">&lt;artifactId&gt;</span>simple-it<span class="nt">&lt;/artifactId&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-8"></a>    <span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-9"></a>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-10"></a>    <span class="nt">&lt;build&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-11"></a>        <span class="nt">&lt;plugins&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-12"></a>            <span class="nt">&lt;plugin&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-13"></a>                <span class="nt">&lt;groupId&gt;</span>@project.groupId@<span class="nt">&lt;/groupId&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-14"></a>                <span class="nt">&lt;artifactId&gt;</span>@project.artifactId@<span class="nt">&lt;/artifactId&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-15"></a>                <span class="nt">&lt;version&gt;</span>@project.version@<span class="nt">&lt;/version&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-16"></a>            <span class="nt">&lt;/plugin&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-17"></a>        <span class="nt">&lt;/plugins&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-18"></a>    <span class="nt">&lt;/build&gt;</span>
+<a name="rest_code_b3e7e40e595f4b8a9d3cf3b283b3b123-19"></a><span class="nt">&lt;/project&gt;</span>
 </pre>
 <p>It is a very simple pom file where we use placeholders to reference to our plugin under test. When invoker plugin executes following pom file, firstly will replace those placeholders to reference to the latest version sof our custom plugin which was recently installed in the local repository:</p>
-<pre class="code xml"><a name="rest_code_98e79b7dfe7e468c80056d727d3fe991-1"></a><span class="nt">&lt;plugin&gt;</span>
-<a name="rest_code_98e79b7dfe7e468c80056d727d3fe991-2"></a>    <span class="nt">&lt;groupId&gt;</span>com.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
-<a name="rest_code_98e79b7dfe7e468c80056d727d3fe991-3"></a>        <span class="nt">&lt;artifactId&gt;</span>blog<span class="nt">&lt;/artifactId&gt;</span>
-<a name="rest_code_98e79b7dfe7e468c80056d727d3fe991-4"></a>        <span class="nt">&lt;version&gt;</span>0.0.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
-<a name="rest_code_98e79b7dfe7e468c80056d727d3fe991-5"></a><span class="nt">&lt;/plugin&gt;</span>
+<pre class="code xml"><a name="rest_code_a7dea967a0024d01858a13f8906a2a75-1"></a><span class="nt">&lt;plugin&gt;</span>
+<a name="rest_code_a7dea967a0024d01858a13f8906a2a75-2"></a>    <span class="nt">&lt;groupId&gt;</span>com.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+<a name="rest_code_a7dea967a0024d01858a13f8906a2a75-3"></a>        <span class="nt">&lt;artifactId&gt;</span>blog<span class="nt">&lt;/artifactId&gt;</span>
+<a name="rest_code_a7dea967a0024d01858a13f8906a2a75-4"></a>        <span class="nt">&lt;version&gt;</span>0.0.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+<a name="rest_code_a7dea967a0024d01858a13f8906a2a75-5"></a><span class="nt">&lt;/plugin&gt;</span>
 </pre>
 <p>In that way invoker plugin ensures it is testing the latest version of current project.</p>
 </div>
 <div class="section" id="invoker-properties-act">
 <h4><a class="toc-backref" href="#id16">invoker.properties (Act)</a></h4>
-<pre class="code properties"><a name="rest_code_210483fc98024ab0872a0b38d3950adb-1"></a><span class="na">invoker.goals</span> <span class="o">=</span> <span class="s">blog:build</span>
-<a name="rest_code_210483fc98024ab0872a0b38d3950adb-2"></a><span class="na">invoker.name</span> <span class="o">=</span> <span class="s">Test build MD</span>
+<pre class="code properties"><a name="rest_code_1303e9a853bc4d30b92b566599a52d41-1"></a><span class="na">invoker.goals</span> <span class="o">=</span> <span class="s">blog:build</span>
+<a name="rest_code_1303e9a853bc4d30b92b566599a52d41-2"></a><span class="na">invoker.name</span> <span class="o">=</span> <span class="s">Test build MD</span>
 </pre>
 <p>It will execute <tt class="docutils literal">mvn blog:build</tt>, a goal defined in our custom plugin under example or what is the same, it will execute <a class="reference external" href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/main/java/com/maven/plugins/blog/BuildMojo.java">BuildMojo</a> described in section "<a class="reference internal" href="#write-a-custom-mojo">Write a custom Mojo</a>".</p>
 </div>
 <div class="section" id="verify-groovy-assert">
 <h4><a class="toc-backref" href="#id17">verify.groovy (Assert)</a></h4>
-<pre class="code groovy"><a name="rest_code_a867711667a34dde90793363c23d9092-1"></a><span class="n">File</span> <span class="n">generated</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span> <span class="n">basedir</span><span class="o">,</span> <span class="s2">"target/site/README.html"</span> <span class="o">);</span>
-<a name="rest_code_a867711667a34dde90793363c23d9092-2"></a>
-<a name="rest_code_a867711667a34dde90793363c23d9092-3"></a><span class="k">assert</span> <span class="n">generated</span><span class="o">.</span><span class="na">isFile</span><span class="o">()</span>
+<p>Verification script, it is checking if <tt class="docutils literal">target/site/README.html</tt> file was generated by the plugin.</p>
+<pre class="code groovy"><a name="rest_code_b0e3ed41d98d45b0b993205b0a079fa5-1"></a><span class="n">File</span> <span class="n">generated</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span> <span class="n">basedir</span><span class="o">,</span> <span class="s2">"target/site/README.html"</span> <span class="o">);</span>
+<a name="rest_code_b0e3ed41d98d45b0b993205b0a079fa5-2"></a>
+<a name="rest_code_b0e3ed41d98d45b0b993205b0a079fa5-3"></a><span class="k">assert</span> <span class="n">generated</span><span class="o">.</span><span class="na">isFile</span><span class="o">()</span>
 </pre>
-<p>It is checking if <tt class="docutils literal">target/site/README.html</tt> file was generated by the plugin.
-fExecute validation script</p>
 </div>
 </div>
 </div>
@@ -498,11 +499,15 @@ fExecute validation script</p>
 <li><a class="tag p-category" href="../../categories/build-systems/" rel="tag">Build Systems</a></li>
             <li><a class="tag p-category" href="../../categories/java/" rel="tag">Java</a></li>
             <li><a class="tag p-category" href="../../categories/maven/" rel="tag">Maven</a></li>
+            <li><a class="tag p-category" href="../../categories/maven-plugins/" rel="tag">Maven Plugins</a></li>
             <li><a class="tag p-category" href="../../categories/maven-site-plugin/" rel="tag">maven-site-plugin</a></li>
         </ul>
 <ul class="pager hidden-print">
 <li class="previous">
                 <a href="../choosing-modern-cpp-stack/" rel="prev" title="Choosing a Modern C++ stack">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../creating-custom-maven-plugin-default/" rel="next" title="Example how to create custom Maven Plugin">Next post</a>
             </li>
         </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
         
