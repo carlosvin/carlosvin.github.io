@@ -16,11 +16,6 @@ BLOG_DESCRIPTION = {
 WRITE_TAG_CLOUD = False
 
 
-# Generate pages for each section. The site must have at least two sections
-# for this option to take effect. It wouldn't build for just one section.
-POSTS_SECTIONS = True
-
-
 # What is the default language?
 DEFAULT_LANG = "en"
 
@@ -54,7 +49,7 @@ NAVIGATION_LINKS = {
         ('/es/categories/index.html', u'Categorías'),
         ('/es/rss.xml', 'RSS'),
     ),
-    'en': (
+    DEFAULT_LANG: (
         ('/archive.html', 'Archives'),
         ('/categories/index.html', 'Tags'),
         ('/rss.xml', 'RSS'),
@@ -301,7 +296,7 @@ COMPILERS = {
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-THEME = "def"
+THEME = "bootstrap4"
 
 
 # Color scheme to be used for code blocks. If your theme provides
@@ -409,13 +404,6 @@ COMMENT_SYSTEM_ID = "carlosvin"
 # Default = False
 # STRIP_INDEXES = False
 
-# Should the sitemap list directories which only include other directories
-# and no files.
-# Default to True
-# If this is False
-# e.g. /2012 includes only /01, /02, /03, /04, ...: don't add it to the sitemap
-# if /2012 includes any files (including index.html)... add it to the sitemap
-# SITEMAP_INCLUDE_FILELESS_DIRS = True
 
 # Instead of putting files in <slug>.html, put them in
 # <slug>/index.html. Also enables STRIP_INDEXES
@@ -522,9 +510,6 @@ SEARCH_FORM = """
 <div class="form-group">
 <input type="text" name="q" class="form-control" placeholder="Search"/>
 </div>
-<button type="submit" class="btn btn-primary">
-	<span class="glyphicon glyphicon-search"></span>
-</button>
 <input type="hidden" name="sitesearch" value="%s"/>
 </form>
 """ % SITE_URL
@@ -678,7 +663,7 @@ LOGGING_HANDLERS = {
 
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
-GLOBAL_CONTEXT = {}
+# GLOBAL_CONTEXT = {}
 
 # List XML-RPC services (recommended) in PING_XMLRPC_SERVICES and HTTP
 # GET services (web pages) in PING_GET_SERVICES.
