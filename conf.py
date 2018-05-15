@@ -352,14 +352,17 @@ LICENSE = """
 
 # A small copyright notice for the page footer (in HTML).
 CONTENT_FOOTER = '''
-    <div style="display=flex-inline; vertical-align=middle">
-        <a href="https://www.linkedin.com/in/{nickname}" style="margin-right: 3%;">{author}</a>
-        <a href="https://twitter.com/{nickname}" class="twitter-follow-button" style="float: right;" data-show-count="false">Follow @{nickname}</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <div class="page-footer">
+        <div class="page-footer-wrapper">
+            <a href="https://www.linkedin.com/in/{nickname}" style="margin-right: 3%;">{author}</a>
+            <a href="https://twitter.com/intent/user?screen_name={nickname}" class="twitter-follow-button">
+                @{nickname}
+            </a>
+            <div class="copyright">&copy; {date} {license}</div>
+            <div class="poweredby">Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a></div>
+        </div>
     </div>
-    <br/>
-    Contents &copy; {date} - 
-    {license} - 
-    Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>'''
+    '''
 
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,
