@@ -358,7 +358,7 @@ CONTENT_FOOTER = '''
             <a href="https://twitter.com/intent/user?screen_name={nickname}" class="twitter-follow-button">
                 @{nickname}
             </a>
-            <div class="copyright">&copy; {date} {license}</div>
+            <div class="copyright">{license}</div>
             <div class="poweredby">Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a></div>
         </div>
     </div>
@@ -366,7 +366,6 @@ CONTENT_FOOTER = '''
 
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,
-                                       date=time.gmtime().tm_year,
                                        license=LICENSE,
                                        nickname=NICKNAME)
 
