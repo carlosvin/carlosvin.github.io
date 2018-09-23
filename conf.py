@@ -317,7 +317,7 @@ THEME = "bootstrap4"
 # date format used to display post dates.
 # (str used by datetime.datetime.strftime)
 # DATE_FORMAT = '%Y-%m-%d %H:%M'
-DATE_FORMAT = '%Y-%m-%d'
+DATE_FORMAT = 'short'
 
 # FAVICONS contains (name, file, size) tuples.
 # Used for create favicon link like this:
