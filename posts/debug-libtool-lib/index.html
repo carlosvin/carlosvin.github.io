@@ -15,7 +15,6 @@
 <!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="google-site-verification" content="XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc">
 <meta name="msvalidate.01" content="F072D88C59F679193037D42408AD5CE9">
 <meta name="yandex-verification" content="c969e485a9e92311">
-<meta name="description" itemprop="description" content="Cómo depurar un librería generada con libtool">
 <meta name="author" content="Carlos Martín Sánchez">
 <link rel="prev" href="../cpp-pragma-pack/" title="C++ Struct memory alignment" type="text/html">
 <link rel="next" href="../android-studio-portable-download/" title="Android Studio Portable Download" type="text/html">
@@ -32,7 +31,9 @@
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark static-top mb-4"><div class="container">
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
 <!-- This keeps the margins nice -->
         <a class="navbar-brand" href="https://carlosvin.github.io/">
 
@@ -94,7 +95,10 @@
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Carlos Martín Sánchez
             </span></p>
-            <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2013-02-01T15:30:00+01:00" itemprop="datePublished" title="2013-02-01">2013-02-01</time></a></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2013-02-01T15:30:00+01:00" itemprop="datePublished" title="2/1/13, 3:30 PM">2/1/13, 3:30 PM</time></a>
+            </p>
                 <p class="commentline">
         
     <a href="#disqus_thread" data-disqus-identifier="cache/posts/debug-libtool-lib.es.html">Comments</a>
@@ -110,15 +114,15 @@
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <p>Trabajando con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a> <a class="footnote-reference" href="#id3" id="id1">[1]</a>, cuando vamos a depurar un ejecutable que utiliza una librería generada con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>, es posible que nos encontremos con el siguiente error:</p>
-<pre class="code bash"><a name="rest_code_1dd91e3a31ce4c99bc8ef8157810e794-1"></a>$ gdb ./tests-mylib
-<a name="rest_code_1dd91e3a31ce4c99bc8ef8157810e794-2"></a><span class="s2">"tests-mylib"</span>: not in executable format: File format not recognized
+<pre class="code bash"><a name="rest_code_70d1d86398b04562973e2df05d5278ca-1"></a>$ gdb ./tests-mylib
+<a name="rest_code_70d1d86398b04562973e2df05d5278ca-2"></a><span class="s2">"tests-mylib"</span>: not in executable format: File format not recognized
 </pre>
 <p><code>libmylib.so</code> es una librería dinámica generada con <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>
 <code>tests-mylib</code> es un ejecutable que utiliza la librería mylib</p>
 <p>Para los que estéis pensando que se me ha olvidado poner la opción de compilación <code>-g</code>, lo siento, pero este error ocurre aunque utilicemos <code>-g</code>.</p>
 <p>El error es debido a que estamos intentando ejecutar un script generado por <a class="reference external" href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>, es una envoltura sobre el programa real, para facilitar la ejecución de éste <a class="citation-reference" href="#libtooldoc" id="id2">[libtooldoc]</a>.</p>
 <p>Para poder depurar nuestro programa de prueba <code>tests-mylib</code></p>
-<pre class="code bash"><a name="rest_code_ae50a9dc69ee4e6eafd9ec357635465b-1"></a>libtool --mode<span class="o">=</span>execute gdb tests-mylib
+<pre class="code bash"><a name="rest_code_ddad42177fcc41c197bcbff6f439c7da-1"></a>libtool --mode<span class="o">=</span>execute gdb tests-mylib
 </pre>
 <table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup>
