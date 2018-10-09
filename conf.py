@@ -517,13 +517,26 @@ SEARCH_FORM = """
 """ % SITE_URL
 
 
-EXTRA_HEAD_DATA = """
-    <meta name="google-site-verification" content="XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc" />
-    <meta name="msvalidate.01" content="F072D88C59F679193037D42408AD5CE9" />
-    <meta name="yandex-verification" content="c969e485a9e92311" />
+#EXTRA_HEAD_DATA = """
+#    <meta name="google-site-verification" content="XzkYCjSblA4sHLJDa1Higd_O6P8hudmo6YJRDp5dDDc" />
+#    <meta name="msvalidate.01" content="F072D88C59F679193037D42408AD5CE9" />
+#    <meta name="yandex-verification" content="c969e485a9e92311" />
+#"""
+
+EXTRA_HEAD_DATA="""
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-1328360-10"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-1328360-10');
+</script>
 """
 
-BODY_END = """<script>
+"""
+<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -533,6 +546,9 @@ BODY_END = """<script>
   ga('send', 'pageview');
 
 </script>
+"""
+
+BODY_END = """
 
 <!-- Start of StatCounter Code for Default Guide -->
 <script type="text/javascript">
