@@ -153,42 +153,42 @@ navbar-dark bg-dark
 <p>Se puede utilizar desde C y C++, pero también <a class="reference external" href="http://es.wikipedia.org/wiki/Sqlite#Lenguajes_de_programaci.C3.B3n">desde otros lenguajes de programación</a>  (PHP, Python, Java, .NET ...).</p>
 <p>En el caso de <a class="reference external" href="http://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)">Java</a> podemos gestionar esta base de datos a través de <a class="reference external" href="http://es.wikipedia.org/wiki/Java_Database_Connectivity">JDBC</a>. Podemos obtener la librería de <a class="reference external" href="https://bitbucket.org/xerial/sqlite-jdbc">https://bitbucket.org/xerial/sqlite-jdbc</a>.</p>
 <p>Veamos un ejemplo de la inserción de una serie de objetos de la clase <a class="reference external" href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java">Price</a>.</p>
-<pre class="code java"><a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-1"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JdbcDb</span> <span class="kd">implements</span> <span class="n">DB</span> <span class="o">{</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-2"></a>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-3"></a>        <span class="kd">enum</span> <span class="n">Column</span> <span class="o">{</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-4"></a>                <span class="n">INSTRUMENT</span><span class="o">,</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-5"></a>                <span class="n">MARKET</span><span class="o">,</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-6"></a>                <span class="n">PRICE</span><span class="o">,</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-7"></a>                <span class="n">DATE</span><span class="o">;</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-8"></a>        <span class="o">}</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-9"></a>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-10"></a>        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TABLE_NAME</span> <span class="o">=</span> <span class="s">"PRICES"</span><span class="o">;</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-11"></a>        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">SQL_INSERT</span> <span class="o">=</span> <span class="s">"INSERT INTO "</span> <span class="o">+</span> <span class="n">TABLE_NAME</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-12"></a>                        <span class="o">+</span> <span class="s">" (INSTRUMENT, MARKET, PRICE, DATE) VALUES (?,?,?,?)"</span><span class="o">;</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-13"></a>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-14"></a>        <span class="c1">// ...</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-15"></a>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-16"></a>        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">Price</span> <span class="n">p</span><span class="o">,</span> <span class="n">PreparedStatement</span> <span class="n">preparedStatement</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-17"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">getInstrument</span><span class="o">());</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-18"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">getMarket</span><span class="o">());</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-19"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">setDouble</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">getPrice</span><span class="o">());</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-20"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">setTimestamp</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="k">new</span> <span class="n">Timestamp</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">getDate</span><span class="o">().</span><span class="na">getTime</span><span class="o">()));</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-21"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">addBatch</span><span class="o">();</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-22"></a>        <span class="o">}</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-23"></a>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-24"></a>        <span class="nd">@Override</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-25"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">Price</span><span class="o">...</span> <span class="n">prices</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-26"></a>                <span class="n">PreparedStatement</span> <span class="n">preparedStatement</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">prepareStatement</span><span class="o">(</span><span class="n">SQL_INSERT</span><span class="o">);</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-27"></a>                <span class="k">for</span> <span class="o">(</span><span class="n">Price</span> <span class="n">p</span> <span class="o">:</span> <span class="n">prices</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-28"></a>                        <span class="n">insert</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">preparedStatement</span><span class="o">);</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-29"></a>                <span class="o">}</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-30"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">executeBatch</span><span class="o">();</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-31"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-32"></a>                <span class="n">conn</span><span class="o">.</span><span class="na">commit</span><span class="o">();</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-33"></a>        <span class="o">}</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-34"></a>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-35"></a>        <span class="c1">// ...</span>
-<a name="rest_code_7c1a023a58124945b715e0ee6e8cf360-36"></a><span class="o">}</span>
+<pre class="code java"><a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-1"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JdbcDb</span> <span class="kd">implements</span> <span class="n">DB</span> <span class="o">{</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-2"></a>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-3"></a>        <span class="kd">enum</span> <span class="n">Column</span> <span class="o">{</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-4"></a>                <span class="n">INSTRUMENT</span><span class="o">,</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-5"></a>                <span class="n">MARKET</span><span class="o">,</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-6"></a>                <span class="n">PRICE</span><span class="o">,</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-7"></a>                <span class="n">DATE</span><span class="o">;</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-8"></a>        <span class="o">}</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-9"></a>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-10"></a>        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TABLE_NAME</span> <span class="o">=</span> <span class="s">"PRICES"</span><span class="o">;</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-11"></a>        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">SQL_INSERT</span> <span class="o">=</span> <span class="s">"INSERT INTO "</span> <span class="o">+</span> <span class="n">TABLE_NAME</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-12"></a>                        <span class="o">+</span> <span class="s">" (INSTRUMENT, MARKET, PRICE, DATE) VALUES (?,?,?,?)"</span><span class="o">;</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-13"></a>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-14"></a>        <span class="c1">// ...</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-15"></a>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-16"></a>        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">Price</span> <span class="n">p</span><span class="o">,</span> <span class="n">PreparedStatement</span> <span class="n">preparedStatement</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-17"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">getInstrument</span><span class="o">());</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-18"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">getMarket</span><span class="o">());</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-19"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">setDouble</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">getPrice</span><span class="o">());</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-20"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">setTimestamp</span><span class="o">(</span><span class="mi">4</span><span class="o">,</span> <span class="k">new</span> <span class="n">Timestamp</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">getDate</span><span class="o">().</span><span class="na">getTime</span><span class="o">()));</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-21"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">addBatch</span><span class="o">();</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-22"></a>        <span class="o">}</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-23"></a>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-24"></a>        <span class="nd">@Override</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-25"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">Price</span><span class="o">...</span> <span class="n">prices</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-26"></a>                <span class="n">PreparedStatement</span> <span class="n">preparedStatement</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">prepareStatement</span><span class="o">(</span><span class="n">SQL_INSERT</span><span class="o">);</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-27"></a>                <span class="k">for</span> <span class="o">(</span><span class="n">Price</span> <span class="n">p</span> <span class="o">:</span> <span class="n">prices</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-28"></a>                        <span class="n">insert</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">preparedStatement</span><span class="o">);</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-29"></a>                <span class="o">}</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-30"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">executeBatch</span><span class="o">();</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-31"></a>                <span class="n">preparedStatement</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-32"></a>                <span class="n">conn</span><span class="o">.</span><span class="na">commit</span><span class="o">();</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-33"></a>        <span class="o">}</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-34"></a>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-35"></a>        <span class="c1">// ...</span>
+<a name="rest_code_ae886d8851f940e89dafcd1abdf487b1-36"></a><span class="o">}</span>
 </pre>
 </div>
 <div class="section" id="derby-o-javadb">
@@ -205,13 +205,13 @@ navbar-dark bg-dark
 <h3><a class="reference internal" href="#objectdb">ObjectDB</a></h3>
 <p>Es una <a class="reference external" href="http://es.wikipedia.org/wiki/Base_de_datos_orientada_a_objetos">base de datos orientada a objetos</a> que nos permite acceso <a class="reference external" href="http://es.wikipedia.org/wiki/Java_Persistence_API">JPA</a>, un estándar de Java que persigue no perder las ventajas de la orientación a objetos; esto se suele perder cuando nos acercamos a la capa de persistencia.</p>
 <p>Resulta realmente sencillo realizar acciones típicas de una base de datos, abstrayéndonos del SQL, por ejemplo veamos cómo quedaría una inserción de un array de objetos de la clase Price con <a class="reference internal" href="#objectdb">ObjectDB</a>.</p>
-<pre class="code java"><a name="rest_code_dda389497fe6487ca831c0b404326428-1"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">Price</span><span class="o">...</span> <span class="n">prices</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
-<a name="rest_code_dda389497fe6487ca831c0b404326428-2"></a>        <span class="n">em</span><span class="o">.</span><span class="na">getTransaction</span><span class="o">().</span><span class="na">begin</span><span class="o">();</span>
-<a name="rest_code_dda389497fe6487ca831c0b404326428-3"></a>        <span class="k">for</span> <span class="o">(</span><span class="n">Price</span> <span class="n">p</span> <span class="o">:</span> <span class="n">prices</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_dda389497fe6487ca831c0b404326428-4"></a>                <span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
-<a name="rest_code_dda389497fe6487ca831c0b404326428-5"></a>        <span class="o">}</span>
-<a name="rest_code_dda389497fe6487ca831c0b404326428-6"></a>        <span class="n">em</span><span class="o">.</span><span class="na">getTransaction</span><span class="o">().</span><span class="na">commit</span><span class="o">();</span>
-<a name="rest_code_dda389497fe6487ca831c0b404326428-7"></a><span class="o">}</span>
+<pre class="code java"><a name="rest_code_98ce3e72121440c9903c3201c473886a-1"></a><span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">Price</span><span class="o">...</span> <span class="n">prices</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
+<a name="rest_code_98ce3e72121440c9903c3201c473886a-2"></a>        <span class="n">em</span><span class="o">.</span><span class="na">getTransaction</span><span class="o">().</span><span class="na">begin</span><span class="o">();</span>
+<a name="rest_code_98ce3e72121440c9903c3201c473886a-3"></a>        <span class="k">for</span> <span class="o">(</span><span class="n">Price</span> <span class="n">p</span> <span class="o">:</span> <span class="n">prices</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_98ce3e72121440c9903c3201c473886a-4"></a>                <span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
+<a name="rest_code_98ce3e72121440c9903c3201c473886a-5"></a>        <span class="o">}</span>
+<a name="rest_code_98ce3e72121440c9903c3201c473886a-6"></a>        <span class="n">em</span><span class="o">.</span><span class="na">getTransaction</span><span class="o">().</span><span class="na">commit</span><span class="o">();</span>
+<a name="rest_code_98ce3e72121440c9903c3201c473886a-7"></a><span class="o">}</span>
 </pre>
 <p>Si a esta facilidad de uso, le unimos que los <a class="reference internal" href="#resultados-de-los-tests">Resultados de los tests</a> de rendimiento han sido muy buenos (cerca de <a class="reference internal" href="#sqlite">SQLite</a>), puedo decir que he descubierto una base de datos embebida a tener muy en cuenta en futuros proyectos <a class="reference external" href="http://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)">Java</a>, eso sí, al igual que con <a class="reference external" href="http://www.oracle.com/technetwork/es/java/javadb/overview/index.html">JavaDB</a>, solo nos sirve si vamos a programar en <a class="reference external" href="http://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)">Java</a>.</p>
 </div>
@@ -224,19 +224,19 @@ navbar-dark bg-dark
 <div class="section" id="interfaz-db">
 <h3><a class="toc-backref" href="#id6">Interfaz DB</a></h3>
 <blockquote>
-<pre class="code java"><a name="rest_code_59cba60945e649bda063d854bda8128e-1"></a><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">DB</span> <span class="o">{</span>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-2"></a>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-3"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">Price</span><span class="o">...</span> <span class="n">prices</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span><span class="o">;</span>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-4"></a>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-5"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createTable</span><span class="o">();</span>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-6"></a>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-7"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteAll</span><span class="o">();</span>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-8"></a>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-9"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">Price</span><span class="o">...</span> <span class="n">prices</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span><span class="o">;</span>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-10"></a>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-11"></a>        <span class="kd">public</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Price</span><span class="o">&gt;</span> <span class="nf">selectAll</span><span class="o">();</span>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-12"></a>
-<a name="rest_code_59cba60945e649bda063d854bda8128e-13"></a><span class="o">}</span>
+<pre class="code java"><a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-1"></a><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">DB</span> <span class="o">{</span>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-2"></a>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-3"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">Price</span><span class="o">...</span> <span class="n">prices</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span><span class="o">;</span>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-4"></a>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-5"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createTable</span><span class="o">();</span>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-6"></a>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-7"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteAll</span><span class="o">();</span>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-8"></a>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-9"></a>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">Price</span><span class="o">...</span> <span class="n">prices</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span><span class="o">;</span>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-10"></a>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-11"></a>        <span class="kd">public</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Price</span><span class="o">&gt;</span> <span class="nf">selectAll</span><span class="o">();</span>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-12"></a>
+<a name="rest_code_3c2a22c7a0914c7daf05f9d7e2a8ee22-13"></a><span class="o">}</span>
 </pre>
 </blockquote>
 </div>
@@ -249,7 +249,7 @@ navbar-dark bg-dark
 <p>Podéis descargar el código fuente de <a class="reference external" href="https://github.com/carlosvin/java_embedded_databases">https://github.com/carlosvin/java_embedded_databases</a>.</p>
 <p>Se trata de un proyecto <a class="reference external" href="http://www.gradle.org">Gradle</a> por lo que para ejecutar los tests solo tenéis que escribir (y tener instalado <a class="reference external" href="http://www.gradle.org">Gradle</a> claro):</p>
 <blockquote>
-<pre class="code bash"><a name="rest_code_74eb6d3313cb414f827616a6765a5800-1"></a>grade <span class="nb">test</span>
+<pre class="code bash"><a name="rest_code_df859d330d4049a6ab2867a9999300fb-1"></a>grade <span class="nb">test</span>
 </pre>
 </blockquote>
 <p><a class="reference external" href="http://www.gradle.org">Gradle</a> se descargará automáticamente las librerías necesarias, compilará y ejecutará los tests.</p>
