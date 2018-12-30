@@ -139,7 +139,7 @@ When we install the project using Meson_ (Ninja_), we will get some artifacts ge
 For example, if you execute :code:`ninja install` on Linux, you will get something like:
 
 .. code:: bash
-    
+
     /usr/local/lib/libuuid.so
     /usr/local/include/Uuid.h
     /usr/local/bin/uuidgen
