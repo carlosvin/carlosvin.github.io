@@ -136,6 +136,11 @@ I've added the commands:
     }
 ```
 
+Then to it is really easy to:
+ 
+ - run development server: `yarn start`
+ - generate a production bundle: `yarn build`
+
 ## Add scripts to run Parcel
 
 There is another approach described in [Parcel documentation](https://en.parceljs.org/getting_started.html) that consists of installing Parcel globally. 
