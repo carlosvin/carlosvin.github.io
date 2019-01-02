@@ -13,7 +13,7 @@ link: https://github.com/carlosvin/react-typescript-parcel-template
 
 I was about to start yet another personal project, it consists of a SPA (Single Page Application) for a travel journal.
 
-Some time ago a tried [Parcel](https://parceljs.org), I really loved how simple was to create a simple project from scratch using [Typescript](https://www.typescriptlang.org/) + [React](https://reactjs.org) stack. I've decided to create this template project, so next time I want to create a new SPA with my favorite frontend stack, I will only have to `git clone https://github.com/carlosvin/react-typescript-parcel-template.git`.
+Some time ago I tried [Parcel](https://parceljs.org), I really loved how simple it was to create a simple project, from scratch, using [Typescript](https://www.typescriptlang.org/) + [React](https://reactjs.org) stack. I've decided to create this template or base project, so next time I want to create a new SPA with my favorite frontend stack, I will only have to `git clone https://github.com/carlosvin/react-typescript-parcel-template.git`.
 
 # Quick start
 
