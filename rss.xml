@@ -1,5 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Carlos says "bla bla"</title><link>https://carlosvin.github.io/</link><description>What is going on in my mind and its surroundings</description><atom:link href="https://carlosvin.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 30 Dec 2018 15:03:44 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Custom Maven Plugin: Override default build lifecycle</title><link>https://carlosvin.github.io/posts/creating-custom-maven-plugin-default/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I explained in previous article &lt;a class="reference external" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/"&gt;Example how to create custom Maven Plugin&lt;/a&gt; which &lt;a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle"&gt;overrides site lifecycle&lt;/a&gt;.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Carlos says "bla bla"</title><link>https://carlosvin.github.io/</link><description>What is going on in my mind and its surroundings</description><atom:link href="https://carlosvin.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 02 Jan 2019 17:52:31 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Create SPA: React + Typescript + Parcel</title><link>https://carlosvin.github.io/posts/react-typescript-parcel/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;h2&gt;Create SPA: React + Typescript + Parcel&lt;/h2&gt;
+&lt;p&gt;I was about to start yet another personal project, it consists of a SPA (Single Page Application) for a travel journal.&lt;/p&gt;
+&lt;p&gt;Some time ago a tried &lt;a href="https://parceljs.org"&gt;Parcel&lt;/a&gt;, I really loved how simple was to create a simple project from scratch using &lt;a href="https://www.typescriptlang.org/"&gt;Typescript&lt;/a&gt; + &lt;a href="https://reactjs.org"&gt;React&lt;/a&gt; stack. I've decided to create this template project, so next time I want to create a new SPA with my favorite frontend stack, I will only have to &lt;code&gt;git clone https://github.com/carlosvin/react-typescript-parcel-template.git&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Quick start&lt;/h2&gt;
+&lt;h3&gt;Development server&lt;/h3&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;git clone https://github.com/carlosvin/react-typescript-parcel-template.git
+&lt;span class="nb"&gt;cd&lt;/span&gt; react-typescript-parcel-template
+yarn install
+yarn start
+&lt;/pre&gt;
+
+
+&lt;p&gt;Last &lt;code&gt;yarn start&lt;/code&gt; command will:
+- start a development server at http://localhost:1234 with &lt;a href="https://en.parceljs.org/hmr.html"&gt;hot module replacement&lt;/a&gt;
+- build automatically development javascript files with source maps&lt;/p&gt;
+&lt;p&gt;Basically each time you save a file, you will see automatically the result at http://localhost:1234 without refreshing the page.&lt;/p&gt;
+&lt;h3&gt;Build production bundle&lt;/h3&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;yarn build
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;a href="https://en.parceljs.org/production.html#optimisations"&gt;Parcel's default optimizations&lt;/a&gt; will be applied to generated files.&lt;/p&gt;
+&lt;p&gt;Files are saved at &lt;code&gt;dist&lt;/code&gt; folder.
+Inside &lt;code&gt;dist&lt;/code&gt; folder there is also a file with information about bundle content sizes: &lt;code&gt;dist/report.html&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Step by step project creation&lt;/h2&gt;
+&lt;p&gt;In this section I will describe how I created this project.&lt;/p&gt;
+&lt;p&gt;Firstly, create &lt;code&gt;package.json&lt;/code&gt; with &lt;a href="https://yarnpkg.com/lang/en/docs/cli/init/"&gt;yarn init&lt;/a&gt; command.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;yarn init
+&lt;/pre&gt;
+
+
+&lt;h3&gt;Add required dependencies&lt;/h3&gt;
+&lt;p&gt;Add react dependencies.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;yarn add @types/react @types/react-dom react react-dom
+&lt;/pre&gt;
+
+
+&lt;p&gt;Previous command modifies &lt;code&gt;package.json&lt;/code&gt; file adding &lt;code&gt;dependencies&lt;/code&gt; section and will also install React packages in &lt;code&gt;node_modules&lt;/code&gt; folder.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nt"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"project_name"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"version"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"1.0.0"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"main"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"index.js"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"license"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"MIT"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"dependencies"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;"@types/react"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"^16.7.18"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;"@types/react-dom"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"^16.0.11"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;"react"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"^16.7.0"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;"react-dom"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"^16.7.0"&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Add &lt;a href="https://www.typescriptlang.org/"&gt;Typescript&lt;/a&gt; compiler as development dependency.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;yarn add --dev typescript
+&lt;/pre&gt;
+
+
+&lt;p&gt;We also need &lt;a href="https://parceljs.org/"&gt;Parcel bundler&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;yarn add --dev parcel-bundler
+&lt;/pre&gt;
+
+
+&lt;p&gt;I've added a non-required dependency, it is a plugin to generate a report of generated bundle contents (the parcel version of webpack-bundle-analyzer).&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;yarn add --dev parcel-plugin-bundle-visualiser
+&lt;/pre&gt;
+
+
+&lt;h3&gt;Create application source code&lt;/h3&gt;
+&lt;p&gt;First we create the React application in &lt;code&gt;index.tsx&lt;/code&gt; file.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;React&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="s2"&gt;"react"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;ReactDOM&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="s2"&gt;"react-dom"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;App&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;React&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;PureComponent&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;h1&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;Hello&lt;/span&gt; &lt;span class="n"&gt;world&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;h1&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;ReactDOM&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;App&lt;/span&gt; &lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;document&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getElementById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"app"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Parcel can take index.html file as entry file and it figures out how to build the application.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"app"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"./index.tsx"&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;h3&gt;Configure Typescript (optional)&lt;/h3&gt;
+&lt;p&gt;Create a &lt;code&gt;tsconfig.json&lt;/code&gt; file.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;"compilerOptions"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nt"&gt;"outDir"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"./dist/"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nt"&gt;"sourceMap"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nt"&gt;"noImplicitAny"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nt"&gt;"module"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"commonjs"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nt"&gt;"target"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"es5"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nt"&gt;"jsx"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"react"&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;With this configuration, Typescript compiler will:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate files in &lt;code&gt;dist&lt;/code&gt; folder.&lt;/li&gt;
+&lt;li&gt;Generate &lt;a href="https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Use_a_source_map"&gt;source maps&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Will not allow to declare &lt;code&gt;any&lt;/code&gt; type, for example following declaration is not allowed: &lt;code&gt;const elements: any;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Generated module code will be &lt;a href="https://requirejs.org/docs/commonjs.html"&gt;CommonJs&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Generated code will be &lt;a href="https://es.wikipedia.org/wiki/ECMAScript"&gt;ECMAScript&lt;/a&gt; 5 compliant.&lt;/li&gt;
+&lt;li&gt;Support &lt;a href="https://www.typescriptlang.org/docs/handbook/jsx.html"&gt;JSX&lt;/a&gt; in .tsx files, in this case React type.&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><category>Parcel</category><category>React</category><category>SPA</category><category>Typescript</category><guid>https://carlosvin.github.io/posts/react-typescript-parcel/</guid><pubDate>Tue, 01 Jan 2019 12:30:02 GMT</pubDate></item><item><title>Custom Maven Plugin: Override default build lifecycle</title><link>https://carlosvin.github.io/posts/creating-custom-maven-plugin-default/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I explained in previous article &lt;a class="reference external" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/"&gt;Example how to create custom Maven Plugin&lt;/a&gt; which &lt;a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle"&gt;overrides site lifecycle&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;I have created another example to demonstrate how to override &lt;a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#default_Lifecycle"&gt;default Maven build lifecycle&lt;/a&gt;. Default build lifecycle is used to construct your software project, for example, it is executed when you run &lt;tt class="docutils literal"&gt;mvn install&lt;/tt&gt; in &lt;tt class="docutils literal"&gt;jar&lt;/tt&gt; type project.&lt;/p&gt;
 &lt;p&gt;You can find source code example at &lt;a class="reference external" href="https://github.com/carlosvin/lifecycle-maven-plugin"&gt;https://github.com/carlosvin/lifecycle-maven-plugin&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="admonition hint"&gt;
@@ -7,7 +126,7 @@
 &lt;p class="last"&gt;I've also created an &lt;a class="reference external" href="https://maven.apache.org/guides/introduction/introduction-to-archetypes.html"&gt;archetype&lt;/a&gt; so you can easily create and play with the example.&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;Create example project just by running following command:&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_6e081981e1c14094ac720b4f4a6c97df-1"&gt;&lt;/a&gt;mvn archetype:generate -DarchetypeGroupId&lt;span class="o"&gt;=&lt;/span&gt;com.github.carlosvin.archetype -DartifactId&lt;span class="o"&gt;=&lt;/span&gt;lifecycle-maven-plugin-archetype -DarchetypeVersion&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.6
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_6f29d225028b4e63b4a57301afe0b844-1"&gt;&lt;/a&gt;mvn archetype:generate -DarchetypeGroupId&lt;span class="o"&gt;=&lt;/span&gt;com.github.carlosvin.archetype -DartifactId&lt;span class="o"&gt;=&lt;/span&gt;lifecycle-maven-plugin-archetype -DarchetypeVersion&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.6
 &lt;/pre&gt;&lt;/div&gt;</description><category>Build Systems</category><category>Java</category><category>Maven</category><category>Maven Plugins</category><guid>https://carlosvin.github.io/posts/creating-custom-maven-plugin-default/</guid><pubDate>Sat, 12 May 2018 13:00:00 GMT</pubDate></item><item><title>Example how to create custom Maven Plugin</title><link>https://carlosvin.github.io/posts/creating-custom-maven-plugin/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Maven has lots of plugins to assist you in project construction, testing, packaging and deployment. For example if you want to compile C++ code instead of Java, you can use &lt;a class="reference external" href="http://www.mojohaus.org/maven-native/native-maven-plugin/"&gt;native-maven-plugin&lt;/a&gt; . But what if you need something more specific? Then you can create a custom Maven plugin.&lt;/p&gt;
 &lt;p&gt;I will explain how to create a simple custom maven plugin to generate static blog site from Markdown files. I know we can already do that with &lt;a class="reference external" href="https://maven.apache.org/plugins/maven-site-plugin/examples/creating-content.html"&gt;maven-site-plugin&lt;/a&gt; since version 3.3, I will just use it for learning purposes.&lt;/p&gt;
 &lt;p&gt;You can find whole source code example at &lt;a class="reference external" href="https://github.com/carlosvin/blog-maven-plugin"&gt;https://github.com/carlosvin/blog-maven-plugin&lt;/a&gt;.&lt;/p&gt;
@@ -124,7 +243,7 @@
 &lt;a class="reference external" href="https://github.com/flosse/rust-web-framework-comparison"&gt;https://github.com/flosse/rust-web-framework-comparison&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Frameworks</category><category>Programming Languages</category><category>REST</category><category>Rustlang</category><guid>https://carlosvin.github.io/posts/rust-rest-framework-comparison/</guid><pubDate>Thu, 14 Apr 2016 18:40:00 GMT</pubDate></item><item><title>Convert files formats: Windows to Unix</title><link>https://carlosvin.github.io/posts/recursive-dos-unix/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;If you are developing from a Windows environment to a Unix target environment, most likely you have had this issue:
 You install source files in Windows format in your Unix environment.&lt;/p&gt;
 &lt;p&gt;There is a way quite simple to convert all your files from Windows to Unix format:&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_dc6ca09241ad4998bbb19a60c0754676-1"&gt;&lt;/a&gt;find . -type f -print0 &lt;span class="p"&gt;|&lt;/span&gt; xargs -0 dos2unix
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_480c70b55c9d4f9d9c49bfccf948395b-1"&gt;&lt;/a&gt;find . -type f -print0 &lt;span class="p"&gt;|&lt;/span&gt; xargs -0 dos2unix
 &lt;/pre&gt;&lt;p&gt;I got it, of course, form &lt;a class="reference external" href="http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory"&gt;http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Unix</category><category>Useful Commands</category><category>Windows</category><guid>https://carlosvin.github.io/posts/recursive-dos-unix/</guid><pubDate>Fri, 12 Feb 2016 09:34:00 GMT</pubDate></item><item><title>REST URLs</title><link>https://carlosvin.github.io/posts/rest-urls/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;First time I designed a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Application_programming_interface"&gt;API&lt;/a&gt; I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Representational_state_transfer"&gt;REST&lt;/a&gt; &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Uniform_resource_locator"&gt;URL&lt;/a&gt; with examples.&lt;/p&gt;
 &lt;div class="contents topic" id="contents"&gt;
 &lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
@@ -165,42 +284,4 @@ You install source files in Windows format in your Unix environment.&lt;/p&gt;
 &lt;tr class="field"&gt;&lt;th class="field-name"&gt;Preventive:&lt;/th&gt;&lt;td class="field-body"&gt;Activities to ease the future system maintenance.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>Software Engineering</category><category>Software Maintenance</category><guid>https://carlosvin.github.io/posts/software-maintenance/</guid><pubDate>Sat, 11 Oct 2014 19:00:00 GMT</pubDate></item><item><title>Build C++ project with Gradle</title><link>https://carlosvin.github.io/posts/gradle-cpp/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div class="section" id="introduction"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/posts/gradle-cpp/#id7"&gt;Introduction&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;I am more and more worried about building, dependency management and distribution of my projects. I'd like to find a tool unifies those processes with  independence of the language. I know several tools those almost fit to what I'm looking for, like I know several tools those almost fit to what I'm looking for, like &lt;a class="reference external" href="http://www.scons.org"&gt;SCons&lt;/a&gt;, &lt;a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction"&gt;Autotools&lt;/a&gt;, &lt;a class="reference external" href="http://ant.apache.org"&gt;Ant&lt;/a&gt;, &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt; and lately &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;I've made several projects with Gradle, but always I was focused in &lt;a class="reference external" href="http://www.java.com"&gt;Java&lt;/a&gt; and &lt;a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html"&gt;Android&lt;/a&gt; projects.
-In &lt;a class="reference external" href="http://www.java.com"&gt;Java&lt;/a&gt; projects I've found a &lt;a class="reference external" href="http://maven.apache.org"&gt;Maven&lt;/a&gt; replacement, because it is faster, easier and less verbose.
-About &lt;a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html"&gt;Android&lt;/a&gt; projects I suffered the early adoption of &lt;a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html"&gt;Android Studio + Gradle&lt;/a&gt;, although currently I think the are more mature and they work fine.&lt;/p&gt;
-&lt;p&gt;First of all, I have to say: building C/C++/Objective-C projects with &lt;a class="reference external" href="http://www.gradle.org"&gt;Gradle&lt;/a&gt; is in &lt;a class="reference external" href="http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating"&gt;incubation&lt;/a&gt; phase, although now we can perform advanced tasks like:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;Generation several artifacts within same project (libraries and executables).&lt;/li&gt;
-&lt;li&gt;Dependency management between artifacts (no versions).&lt;/li&gt;
-&lt;li&gt;Different "flavors" of the same software, e.g: we can generate a “Community” release and other one with more enabled features called “Enterprise”.&lt;/li&gt;
-&lt;li&gt;It allows multi-platform binary generation.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;As I said, this plugin is still having limitations although they are working on it: &lt;a class="reference external" href="http://www.gradleware.com/resources/cpp/"&gt;Gradle C++ roadmap&lt;/a&gt;. If they achieve it I'll leave &lt;a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction"&gt;Autotools&lt;/a&gt; (I'm going to regret saying that).&lt;/p&gt;
-&lt;div class="contents topic" id="index"&gt;
-&lt;p class="topic-title first"&gt;Index&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#introduction" id="id7"&gt;Introduction&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#case-study" id="id8"&gt;Case study&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#project-structure" id="id9"&gt;Project Structure&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#c-application" id="id10"&gt;C++ Application&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#building-with-gradle" id="id11"&gt;Building with Gradle&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#base-case" id="id12"&gt;Base case&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#different-flavors" id="id13"&gt;Different "Flavors"&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#community" id="id14"&gt;Community&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#enterprise" id="id15"&gt;Enterprise&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#release-or-debug" id="id16"&gt;Release or Debug&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#multi-platform" id="id17"&gt;Multi-platform&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#try-it-yourself" id="id18"&gt;Try it yourself&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/gradle-cpp/#conclusions" id="id19"&gt;Conclusions&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/gradle-cpp/"&gt;Read more…&lt;/a&gt; (6 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Build Software</category><category>Build System</category><category>C++</category><category>Dependency Management</category><category>Gradle</category><guid>https://carlosvin.github.io/posts/gradle-cpp/</guid><pubDate>Sat, 27 Sep 2014 10:00:00 GMT</pubDate></item></channel></rss>
+&lt;/table&gt;&lt;/div&gt;</description><category>Software Engineering</category><category>Software Maintenance</category><guid>https://carlosvin.github.io/posts/software-maintenance/</guid><pubDate>Sat, 11 Oct 2014 19:00:00 GMT</pubDate></item></channel></rss>

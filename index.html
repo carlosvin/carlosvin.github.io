@@ -19,7 +19,7 @@
   gtag('js', new Date());
 
   gtag('config', 'UA-1328360-10');
-</script><link rel="prefetch" href="posts/creating-custom-maven-plugin-default/" type="text/html">
+</script><link rel="prefetch" href="posts/react-typescript-parcel/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -84,7 +84,148 @@ navbar-dark bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-micro" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/creating-custom-maven-plugin-default/" class="u-url">Custom Maven Plugin: Override default build lifecycle</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/react-typescript-parcel/" class="u-url">Create SPA: React + Typescript + Parcel</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Carlos Martín Sánchez
+            </span></p>
+            <p class="dateline">
+            <a href="posts/react-typescript-parcel/" rel="bookmark">
+            <time class="published dt-published" datetime="2019-01-01T13:30:02+01:00" itemprop="datePublished" title="1/1/19, 1:30 PM">1/1/19, 1:30 PM</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="posts/react-typescript-parcel/#disqus_thread" data-disqus-identifier="cache/posts/react-typescript-parcel.en.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<h2>Create SPA: React + Typescript + Parcel</h2>
+<p>I was about to start yet another personal project, it consists of a SPA (Single Page Application) for a travel journal.</p>
+<p>Some time ago a tried <a href="https://parceljs.org">Parcel</a>, I really loved how simple was to create a simple project from scratch using <a href="https://www.typescriptlang.org/">Typescript</a> + <a href="https://reactjs.org">React</a> stack. I've decided to create this template project, so next time I want to create a new SPA with my favorite frontend stack, I will only have to <code>git clone https://github.com/carlosvin/react-typescript-parcel-template.git</code>.</p>
+<h2>Quick start</h2>
+<h3>Development server</h3>
+<pre class="code literal-block"><span></span>git clone https://github.com/carlosvin/react-typescript-parcel-template.git
+<span class="nb">cd</span> react-typescript-parcel-template
+yarn install
+yarn start
+</pre>
+
+
+<p>Last <code>yarn start</code> command will:
+- start a development server at http://localhost:1234 with <a href="https://en.parceljs.org/hmr.html">hot module replacement</a>
+- build automatically development javascript files with source maps</p>
+<p>Basically each time you save a file, you will see automatically the result at http://localhost:1234 without refreshing the page.</p>
+<h3>Build production bundle</h3>
+<pre class="code literal-block"><span></span>yarn build
+</pre>
+
+
+<p><a href="https://en.parceljs.org/production.html#optimisations">Parcel's default optimizations</a> will be applied to generated files.</p>
+<p>Files are saved at <code>dist</code> folder.
+Inside <code>dist</code> folder there is also a file with information about bundle content sizes: <code>dist/report.html</code>.</p>
+<h2>Step by step project creation</h2>
+<p>In this section I will describe how I created this project.</p>
+<p>Firstly, create <code>package.json</code> with <a href="https://yarnpkg.com/lang/en/docs/cli/init/">yarn init</a> command.</p>
+<pre class="code literal-block"><span></span>yarn init
+</pre>
+
+
+<h3>Add required dependencies</h3>
+<p>Add react dependencies.</p>
+<pre class="code literal-block"><span></span>yarn add @types/react @types/react-dom react react-dom
+</pre>
+
+
+<p>Previous command modifies <code>package.json</code> file adding <code>dependencies</code> section and will also install React packages in <code>node_modules</code> folder.</p>
+<pre class="code literal-block"><span></span><span class="p">{</span>
+  <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"project_name"</span><span class="p">,</span>
+  <span class="nt">"version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
+  <span class="nt">"main"</span><span class="p">:</span> <span class="s2">"index.js"</span><span class="p">,</span>
+  <span class="nt">"license"</span><span class="p">:</span> <span class="s2">"MIT"</span><span class="p">,</span>
+  <span class="nt">"dependencies"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"@types/react"</span><span class="p">:</span> <span class="s2">"^16.7.18"</span><span class="p">,</span>
+    <span class="nt">"@types/react-dom"</span><span class="p">:</span> <span class="s2">"^16.0.11"</span><span class="p">,</span>
+    <span class="nt">"react"</span><span class="p">:</span> <span class="s2">"^16.7.0"</span><span class="p">,</span>
+    <span class="nt">"react-dom"</span><span class="p">:</span> <span class="s2">"^16.7.0"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Add <a href="https://www.typescriptlang.org/">Typescript</a> compiler as development dependency.</p>
+<pre class="code literal-block"><span></span>yarn add --dev typescript
+</pre>
+
+
+<p>We also need <a href="https://parceljs.org/">Parcel bundler</a>.</p>
+<pre class="code literal-block"><span></span>yarn add --dev parcel-bundler
+</pre>
+
+
+<p>I've added a non-required dependency, it is a plugin to generate a report of generated bundle contents (the parcel version of webpack-bundle-analyzer).</p>
+<pre class="code literal-block"><span></span>yarn add --dev parcel-plugin-bundle-visualiser
+</pre>
+
+
+<h3>Create application source code</h3>
+<p>First we create the React application in <code>index.tsx</code> file.</p>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="o">*</span> <span class="k">as</span> <span class="n">React</span> <span class="kn">from</span> <span class="s2">"react"</span><span class="p">;</span>
+<span class="kn">import</span> <span class="o">*</span> <span class="k">as</span> <span class="n">ReactDOM</span> <span class="kn">from</span> <span class="s2">"react-dom"</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">App</span> <span class="n">extends</span> <span class="n">React</span><span class="o">.</span><span class="n">PureComponent</span> <span class="p">{</span>
+    <span class="n">render</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">Hello</span> <span class="n">world</span><span class="err">!</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ReactDOM</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+    <span class="o">&lt;</span><span class="n">App</span> <span class="o">/&gt;</span><span class="p">,</span>
+    <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s2">"app"</span><span class="p">)</span>
+<span class="p">);</span>
+</pre>
+
+
+<p>Parcel can take index.html file as entry file and it figures out how to build the application.</p>
+<pre class="code literal-block"><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">"app"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"./index.tsx"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre>
+
+
+<h3>Configure Typescript (optional)</h3>
+<p>Create a <code>tsconfig.json</code> file.</p>
+<pre class="code literal-block"><span></span><span class="p">{</span>
+    <span class="nt">"compilerOptions"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"outDir"</span><span class="p">:</span> <span class="s2">"./dist/"</span><span class="p">,</span>
+        <span class="nt">"sourceMap"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">"noImplicitAny"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">"module"</span><span class="p">:</span> <span class="s2">"commonjs"</span><span class="p">,</span>
+        <span class="nt">"target"</span><span class="p">:</span> <span class="s2">"es5"</span><span class="p">,</span>
+        <span class="nt">"jsx"</span><span class="p">:</span> <span class="s2">"react"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>With this configuration, Typescript compiler will:</p>
+<ul>
+<li>Generate files in <code>dist</code> folder.</li>
+<li>Generate <a href="https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Use_a_source_map">source maps</a>.</li>
+<li>Will not allow to declare <code>any</code> type, for example following declaration is not allowed: <code>const elements: any;</code>
+</li>
+<li>Generated module code will be <a href="https://requirejs.org/docs/commonjs.html">CommonJs</a>.</li>
+<li>Generated code will be <a href="https://es.wikipedia.org/wiki/ECMAScript">ECMAScript</a> 5 compliant.</li>
+<li>Support <a href="https://www.typescriptlang.org/docs/handbook/jsx.html">JSX</a> in .tsx files, in this case React type.</li>
+</ul>
+</div>
+    </div>
+    </article><article class="h-entry post-micro" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/creating-custom-maven-plugin-default/" class="u-url">Custom Maven Plugin: Override default build lifecycle</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Carlos Martín Sánchez
@@ -110,7 +251,7 @@ navbar-dark bg-dark
 <p class="last">I've also created an <a class="reference external" href="https://maven.apache.org/guides/introduction/introduction-to-archetypes.html">archetype</a> so you can easily create and play with the example.</p>
 </div>
 <p>Create example project just by running following command:</p>
-<pre class="code bash"><a name="rest_code_6e081981e1c14094ac720b4f4a6c97df-1"></a>mvn archetype:generate -DarchetypeGroupId<span class="o">=</span>com.github.carlosvin.archetype -DartifactId<span class="o">=</span>lifecycle-maven-plugin-archetype -DarchetypeVersion<span class="o">=</span><span class="m">0</span>.6
+<pre class="code bash"><a name="rest_code_6f29d225028b4e63b4a57301afe0b844-1"></a>mvn archetype:generate -DarchetypeGroupId<span class="o">=</span>com.github.carlosvin.archetype -DartifactId<span class="o">=</span>lifecycle-maven-plugin-archetype -DarchetypeVersion<span class="o">=</span><span class="m">0</span>.6
 </pre>
 </div>
     </div>
@@ -366,7 +507,7 @@ navbar-dark bg-dark
 <p>If you are developing from a Windows environment to a Unix target environment, most likely you have had this issue:
 You install source files in Windows format in your Unix environment.</p>
 <p>There is a way quite simple to convert all your files from Windows to Unix format:</p>
-<pre class="code bash"><a name="rest_code_dc6ca09241ad4998bbb19a60c0754676-1"></a>find . -type f -print0 <span class="p">|</span> xargs -0 dos2unix
+<pre class="code bash"><a name="rest_code_480c70b55c9d4f9d9c49bfccf948395b-1"></a>find . -type f -print0 <span class="p">|</span> xargs -0 dos2unix
 </pre>
 <p>I got it, of course, form <a class="reference external" href="http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory">http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory</a></p>
 </div>
@@ -461,67 +602,6 @@ You install source files in Windows format in your Unix environment.</p>
 </tr>
 </tbody>
 </table>
-</div>
-    </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/gradle-cpp/" class="u-url">Build C++ project with Gradle</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Carlos Martín Sánchez
-            </span></p>
-            <p class="dateline">
-            <a href="posts/gradle-cpp/" rel="bookmark">
-            <time class="published dt-published" datetime="2014-09-27T12:00:00+02:00" itemprop="datePublished" title="9/27/14, 12:00 PM">9/27/14, 12:00 PM</time></a>
-            </p>
-                <p class="commentline">
-        
-    <a href="posts/gradle-cpp/#disqus_thread" data-disqus-identifier="cache/posts/gradle-cpp.en.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="p-summary entry-summary">
-    <div class="section" id="introduction">
-<h2><a class="toc-backref" href="posts/gradle-cpp/#id7">Introduction</a></h2>
-<p>I am more and more worried about building, dependency management and distribution of my projects. I'd like to find a tool unifies those processes with  independence of the language. I know several tools those almost fit to what I'm looking for, like I know several tools those almost fit to what I'm looking for, like <a class="reference external" href="http://www.scons.org">SCons</a>, <a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction">Autotools</a>, <a class="reference external" href="http://ant.apache.org">Ant</a>, <a class="reference external" href="http://maven.apache.org">Maven</a> and lately <a class="reference external" href="http://www.gradle.org">Gradle</a>.</p>
-<p>I've made several projects with Gradle, but always I was focused in <a class="reference external" href="http://www.java.com">Java</a> and <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a> projects.
-In <a class="reference external" href="http://www.java.com">Java</a> projects I've found a <a class="reference external" href="http://maven.apache.org">Maven</a> replacement, because it is faster, easier and less verbose.
-About <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android</a> projects I suffered the early adoption of <a class="reference external" href="http://developer.android.com/sdk/installing/studio-build.html">Android Studio + Gradle</a>, although currently I think the are more mature and they work fine.</p>
-<p>First of all, I have to say: building C/C++/Objective-C projects with <a class="reference external" href="http://www.gradle.org">Gradle</a> is in <a class="reference external" href="http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating">incubation</a> phase, although now we can perform advanced tasks like:</p>
-<ul class="simple">
-<li>Generation several artifacts within same project (libraries and executables).</li>
-<li>Dependency management between artifacts (no versions).</li>
-<li>Different "flavors" of the same software, e.g: we can generate a “Community” release and other one with more enabled features called “Enterprise”.</li>
-<li>It allows multi-platform binary generation.</li>
-</ul>
-<p>As I said, this plugin is still having limitations although they are working on it: <a class="reference external" href="http://www.gradleware.com/resources/cpp/">Gradle C++ roadmap</a>. If they achieve it I'll leave <a class="reference external" href="http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction">Autotools</a> (I'm going to regret saying that).</p>
-<div class="contents topic" id="index">
-<p class="topic-title first">Index</p>
-<ul class="simple">
-<li><a class="reference internal" href="posts/gradle-cpp/#introduction" id="id7">Introduction</a></li>
-<li>
-<a class="reference internal" href="posts/gradle-cpp/#case-study" id="id8">Case study</a><ul>
-<li><a class="reference internal" href="posts/gradle-cpp/#project-structure" id="id9">Project Structure</a></li>
-<li><a class="reference internal" href="posts/gradle-cpp/#c-application" id="id10">C++ Application</a></li>
-<li>
-<a class="reference internal" href="posts/gradle-cpp/#building-with-gradle" id="id11">Building with Gradle</a><ul>
-<li><a class="reference internal" href="posts/gradle-cpp/#base-case" id="id12">Base case</a></li>
-<li>
-<a class="reference internal" href="posts/gradle-cpp/#different-flavors" id="id13">Different "Flavors"</a><ul>
-<li><a class="reference internal" href="posts/gradle-cpp/#community" id="id14">Community</a></li>
-<li><a class="reference internal" href="posts/gradle-cpp/#enterprise" id="id15">Enterprise</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="posts/gradle-cpp/#release-or-debug" id="id16">Release or Debug</a></li>
-<li><a class="reference internal" href="posts/gradle-cpp/#multi-platform" id="id17">Multi-platform</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="posts/gradle-cpp/#try-it-yourself" id="id18">Try it yourself</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="posts/gradle-cpp/#conclusions" id="id19">Conclusions</a></li>
-</ul>
-</div>
-<p class="more"><a href="posts/gradle-cpp/">Read more…</a></p>
 </div>
     </div>
     </article>
