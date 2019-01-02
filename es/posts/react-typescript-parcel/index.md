@@ -93,7 +93,7 @@ yarn add --dev parcel-plugin-bundle-visualiser
 ```
 
 ## Create application source code
-First we create the React application in `index.tsx` file.
+First we create the React application in `src/index.tsx` file.
 ```tsx
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -110,7 +110,7 @@ ReactDOM.render(
 );
 ```
 
-Parcel can take index.html file as entry file and it figures out how to build the application.
+Parcel can take index.html file as entry file and it figures out how to build the application. We create `src/index.html` as follows.
 
 ```html
 <html>
@@ -120,6 +120,33 @@ Parcel can take index.html file as entry file and it figures out how to build th
   </body>
 </html>
 ```
+
+We need `div` tag for React to inject the DOM elements. 
+The `script` declaration is used by Parcel to find entry point to build.
+
+I've added the commands:
+ 
+- `build`: Check "Build production bundle" section.
+- `start`: Check "Development server" section.
+
+```json
+    "scripts": {
+        "start": "parcel src/index.html",
+        "build": "parcel build src/index.html"
+    }
+```
+
+## Add scripts to run Parcel
+
+There is another approach described in [Parcel documentation](https://en.parceljs.org/getting_started.html) that consists of installing Parcel globally. 
+
+I've opted for more isolated approach that affects only project you are working on, you just install Parcel as `devDependency`. There is a tiny drawback, you can't just run `parcel index.html`, because it is not installed in your system, but in `node_modules`.
+
+There is a simple way to run any binary installed in `node_modules`, you can just run `npx parcel index.html`.
+
+I like more to define build steps in `package.json` file, so you can have well defined commands to build your project. 
+
+
 
 ## Configure Typescript (optional)
 Create a `tsconfig.json` file.
