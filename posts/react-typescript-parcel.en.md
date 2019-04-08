@@ -13,6 +13,9 @@ Some time ago I tried [Parcel](https://parceljs.org), I really loved how simple 
 git clone https://github.com/carlosvin/react-typescript-parcel-template.git
 ```
 
+# Table of Contents
+[TOC]
+
 # Quick start
 
 ## Development server
@@ -23,6 +26,7 @@ cd react-typescript-parcel-template
 yarn install
 yarn start
 ```
+<!--TEASER_END-->
 Last `yarn start` command will:
 - start a development server at http://localhost:1234 with [hot module replacement](https://en.parceljs.org/hmr.html)
 - build automatically development javascript files with source maps
@@ -176,8 +180,9 @@ With this configuration, Typescript compiler will:
 
 # Full source code
 
-You can find full example at: https://github.com/carlosvin/react-typescript-parcel-template
+You can find full example at: [https://github.com/carlosvin/react-typescript-parcel-template](https://github.com/carlosvin/react-typescript-parcel-template).
 
 Or you can directly download the source code:
+
  - [zip](https://github.com/carlosvin/react-typescript-parcel-template/archive/1.0.zip)
  - [tar.gz](https://github.com/carlosvin/react-typescript-parcel-template/archive/1.0.tar.gz)
