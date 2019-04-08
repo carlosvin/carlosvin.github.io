@@ -7,7 +7,11 @@
 
 I was about to start yet another personal project, it consists of a SPA (Single Page Application) for a travel journal.
 
-Some time ago I tried [Parcel](https://parceljs.org), I really loved how simple it was to create a simple project, from scratch, using [Typescript](https://www.typescriptlang.org/) + [React](https://reactjs.org) stack. I've decided to create this template or base project, so next time I want to create a new SPA with my favorite frontend stack, I will only have to `git clone https://github.com/carlosvin/react-typescript-parcel-template.git`.
+Some time ago I tried [Parcel](https://parceljs.org), I really loved how simple it was to create a simple project from scratch, using [Typescript](https://www.typescriptlang.org/) + [React](https://reactjs.org) stack. I've decided to create this template or base project, so next time I want to create a new SPA with my favorite frontend stack, I will only have to:
+
+```bash
+git clone https://github.com/carlosvin/react-typescript-parcel-template.git
+```
 
 # Quick start
 
@@ -103,7 +107,7 @@ ReactDOM.render(
 );
 ```
 
-Parcel can take index.html file as entry file and it figures out how to build the application. We create `src/index.html` as follows.
+Parcel can take `index.html` file as entry file and it figures out how to build the application, so let's create `src/index.html` as follows:
 
 ```html
 <html>
@@ -169,3 +173,11 @@ With this configuration, Typescript compiler will:
 - Generated module code will be [CommonJs](https://requirejs.org/docs/commonjs.html).
 - Generated code will be [ECMAScript](https://es.wikipedia.org/wiki/ECMAScript) 5 compliant.
 - Support [JSX](https://www.typescriptlang.org/docs/handbook/jsx.html) in .tsx files, in this case React type.
+
+# Full source code
+
+You can find full example at: https://github.com/carlosvin/react-typescript-parcel-template
+
+Or you can directly download the source code:
+ - [zip](https://github.com/carlosvin/react-typescript-parcel-template/archive/1.0.zip)
+ - [tar.gz](https://github.com/carlosvin/react-typescript-parcel-template/archive/1.0.tar.gz)
