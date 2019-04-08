@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
-" lang="es">
+<html prefix="" lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width">
 <title>Alineación de una Estructura C++ en Memoria | Carlos says "bla bla"</title>
-<link href="../../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
-<meta name="theme-color" content="#5670d4">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../../rss.xml">
+<link href="../../../assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 <link rel="alternate" type="application/rss+xml" title="RSS (es)" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../../rss.xml">
 <link rel="canonical" href="https://carlosvin.github.io/es/posts/cpp-pragma-pack/">
 <!--[if lt IE 9]><script src="../../../assets/js/html5.js"></script><![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-1328360-10"></script><script>
   window.dataLayer = window.dataLayer || [];
@@ -31,88 +29,60 @@
 <link rel="alternate" hreflang="en" href="../../../posts/cpp-pragma-pack/">
 </head>
 <body>
-<a href="#content" class="sr-only sr-only-focusable">Ir al contenido principal</a>
-
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
-"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="https://carlosvin.github.io/es/">
-
-            <span id="blog-title">Carlos says "bla bla"</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="../../archive.html" class="nav-link">Archivos</a>
-                </li>
-<li class="nav-item">
-<a href="../../categories/index.html" class="nav-link">Categorías</a>
-                </li>
-<li class="nav-item">
-<a href="../../rss.xml" class="nav-link">RSS</a>
-
-                
-            </li>
-</ul>
-<form method="get" action="http://www.google.com/search" class="navbar-form navbar-right" role="search">
-<div class="form-group">
-<input type="text" name="q" class="form-control" placeholder="Search">
+    <a href="#content" class="sr-only sr-only-focusable">Ir al contenido principal</a>
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+            styles, `#sidebar-checkbox` for behavior. -->
+    <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox"><!-- Toggleable sidebar --><div class="sidebar" id="sidebar">
+        <div class="sidebar-item">
+<form class="form-inline" role="search" action="https://duckduckgo.com/">
+  <div class="form-group">
+    <input type="search" name="q" class="form-control" placeholder="Search on Carlos says " bla><input type="hidden" name="sites" value="https://carlosvin.github.io/">
 </div>
-<input type="hidden" name="sitesearch" value="https://carlosvin.github.io/">
+  <button type="submit" class="search-icon">
+    <svg viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></button>
 </form>
-
-
-            <ul class="navbar-nav navbar-right">
-<li>
-            </li>
-<li class="nav-item"><a href="https://carlosvin.github.io/" rel="alternate" hreflang="en" class="nav-link">English</a></li>
-
-                
-                    
-    
-    <li class="nav-item">
-    <a href="index.rst" id="sourcelink" class="nav-link">Código fuente</a>
-    </li>
-
-
-                
-            </ul>
 </div>
-<!-- /.navbar-collapse -->
-    </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
         
+    <nav id="menu" role="navigation" class="sidebar-nav"><a class="sidebar-nav-item" href="../../archive.html">Archivos</a>
+        <a class="sidebar-nav-item" href="../../categories/index.html">Categorías</a>
+        <a class="sidebar-nav-item" href="../../rss.xml">RSS</a>
+    
+    
+    </nav><div class="sidebar-item">
+          <a href="https://www.linkedin.com/in/carlosvin" target="blank">Carlos Martín Sánchez</a><br><a href="https://twitter.com/intent/user?screen_name=carlosvin" class="twitter-follow-button">
+            @carlosvin
+          </a>
+        </div>
+        </div>
+    
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          
+    <h3 id="brand" class="masthead-title">
+      <a href="https://carlosvin.github.io/es/" title="Carlos says " bla rel="home">Carlos says "bla bla"</a>
+    </h3>
+
+        </div>
+      </div>
+
+      <div class="container content" id="content">
         
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Alineación de una Estructura C++ en Memoria</a></h1>
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="post-title p-name entry-title" itemprop="headline name"><a href="." class="u-url">Alineación de una Estructura C++ en Memoria</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                    Carlos Martín Sánchez
-            </span></p>
-            <p class="dateline">
-            <a href="." rel="bookmark">
-            <time class="published dt-published" datetime="2012-11-26T12:00:00+01:00" itemprop="datePublished" title="26/11/12 12:00">26/11/12 12:00</time></a>
-            </p>
+            <p class="byline author vcard"><span class="byline-name fn">Carlos Martín Sánchez</span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="post-date published dt-published" datetime="2012-11-26T12:00:00+01:00" itemprop="datePublished" title="26/11/12 12:00">26/11/12 12:00</time></a></p>
                 <p class="commentline">
         
     <a href="#disqus_thread" data-disqus-identifier="cache/posts/cpp-pragma-pack.en.html">Comments</a>
 
 
-            
-        </p>
-<p class="sourceline"><a href="index.rst" class="sourcelink">Código fuente</a></p>
-
-        </div>
+                <meta name="description" itemprop="description" content="Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria"></p>
+</div>
         
         <div class="metadata posttranslations translations">
             <h3 class="posttranslations-intro">También disponible en:</h3>
@@ -135,11 +105,11 @@ navbar-dark bg-dark
 <div class="section" id="estructura-de-ejemplo">
 <h2><a class="toc-backref" href="#id1">Estructura de ejemplo</a></h2>
 <p>Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un booleano (un byte). En C++ queda de la siguiente forma:</p>
-<pre class="code c++"><a name="rest_code_317a1a1490f6412fba0d25629473c744-1"></a><span class="k">struct</span> <span class="n">SampleStruct</span>
-<a name="rest_code_317a1a1490f6412fba0d25629473c744-2"></a><span class="p">{</span>
-<a name="rest_code_317a1a1490f6412fba0d25629473c744-3"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_317a1a1490f6412fba0d25629473c744-4"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_317a1a1490f6412fba0d25629473c744-5"></a><span class="p">};</span>
+<pre class="code c++"><a name="rest_code_735e2f417a684b399127ed8c5f2b9c8e-1"></a><span class="k">struct</span> <span class="n">SampleStruct</span>
+<a name="rest_code_735e2f417a684b399127ed8c5f2b9c8e-2"></a><span class="p">{</span>
+<a name="rest_code_735e2f417a684b399127ed8c5f2b9c8e-3"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_735e2f417a684b399127ed8c5f2b9c8e-4"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_735e2f417a684b399127ed8c5f2b9c8e-5"></a><span class="p">};</span>
 </pre>
 <p>Si hacemos un <code>sizeof</code> de la una instancia de la estructura deberíamos obtener un tamaño de 5 bytes. Y la memoria quedaría de la siguiente forma:</p>
 <div class="figure" style="width: 50%">
@@ -151,44 +121,44 @@ navbar-dark bg-dark
 <img alt="/galleries/c-mem-struct/8b.png" src="../../../galleries/c-mem-struct/8b.png" style="width: 30%;"><p class="caption">Estructura de 5 bytes que realmente ocupa 8 bytes en memoria. Para ser más precisos, debería haber dibujado la memoria no usada a continuación del atributo flag.</p>
 </div>
 <p>Vamos a ver un fragmento de código que imprime el tamaño de la estructura y el de cada uno de sus atributos y verificar, en este caso 4 + 1 no es 5.</p>
-<pre class="code c++"><a name="rest_code_109544742df04bb48dbc94e473e48efc-1"></a><span class="cp">#include</span>  <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-2"></a>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-3"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-4"></a>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-5"></a><span class="k">struct</span> <span class="n">SampleStruct</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-6"></a><span class="p">{</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-7"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-8"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-9"></a><span class="p">};</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-10"></a>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-11"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">print</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">sz</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_flag</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_timeout</span><span class="p">)</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-12"></a><span class="p">{</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-13"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">flag: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-14"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">+"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-15"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">timeout: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-16"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">="</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-17"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">+</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-18"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"sizeof struct:  "</span> <span class="o">&lt;&lt;</span> <span class="n">sz</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-19"></a><span class="p">}</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-20"></a>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-21"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-22"></a><span class="p">{</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-23"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStruct"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-24"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-25"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-26"></a>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-27"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<a name="rest_code_109544742df04bb48dbc94e473e48efc-28"></a><span class="p">}</span>
+<pre class="code c++"><a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-1"></a><span class="cp">#include</span>  <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-2"></a>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-3"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-4"></a>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-5"></a><span class="k">struct</span> <span class="n">SampleStruct</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-6"></a><span class="p">{</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-7"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-8"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-9"></a><span class="p">};</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-10"></a>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-11"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">print</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">sz</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_flag</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_timeout</span><span class="p">)</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-12"></a><span class="p">{</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-13"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">flag: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-14"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">+"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-15"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">timeout: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-16"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">="</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-17"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">+</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-18"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"sizeof struct:  "</span> <span class="o">&lt;&lt;</span> <span class="n">sz</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-19"></a><span class="p">}</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-20"></a>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-21"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-22"></a><span class="p">{</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-23"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStruct"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-24"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-25"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-26"></a>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-27"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_86aa9eff5a4f44a3beb56d562eebf373-28"></a><span class="p">}</span>
 </pre>
 <p><a class="reference external" href="http://coliru.stacked-crooked.com/a/c7deb3df49bebd40">Ejecutando el código sin la directiva pragma</a>, tenemos que nuestra estructura ocupa 8 bytes en lugar de 5 bytes.</p>
-<pre class="code bash"><a name="rest_code_ba576451e08445f1a3c5c455d734a7b1-1"></a>SampleStruct
-<a name="rest_code_ba576451e08445f1a3c5c455d734a7b1-2"></a>flag: <span class="m">1</span> Bytes
-<a name="rest_code_ba576451e08445f1a3c5c455d734a7b1-3"></a>+
-<a name="rest_code_ba576451e08445f1a3c5c455d734a7b1-4"></a>timeout: <span class="m">4</span> <span class="nv">Bytes</span>
-<a name="rest_code_ba576451e08445f1a3c5c455d734a7b1-5"></a><span class="o">=</span>
-<a name="rest_code_ba576451e08445f1a3c5c455d734a7b1-6"></a><span class="m">5</span> Bytes
-<a name="rest_code_ba576451e08445f1a3c5c455d734a7b1-7"></a>sizeof struct:  <span class="m">8</span> Bytes
-<a name="rest_code_ba576451e08445f1a3c5c455d734a7b1-8"></a>--
+<pre class="code bash"><a name="rest_code_7d40a34415174de9904217b132c67d39-1"></a>SampleStruct
+<a name="rest_code_7d40a34415174de9904217b132c67d39-2"></a>flag: <span class="m">1</span> Bytes
+<a name="rest_code_7d40a34415174de9904217b132c67d39-3"></a>+
+<a name="rest_code_7d40a34415174de9904217b132c67d39-4"></a>timeout: <span class="m">4</span> <span class="nv">Bytes</span>
+<a name="rest_code_7d40a34415174de9904217b132c67d39-5"></a><span class="o">=</span>
+<a name="rest_code_7d40a34415174de9904217b132c67d39-6"></a><span class="m">5</span> Bytes
+<a name="rest_code_7d40a34415174de9904217b132c67d39-7"></a>sizeof struct:  <span class="m">8</span> Bytes
+<a name="rest_code_7d40a34415174de9904217b132c67d39-8"></a>--
 </pre>
 <div class="admonition tip">
 <p class="first admonition-title">Consejo</p>
@@ -198,106 +168,106 @@ navbar-dark bg-dark
 <div class="section" id="la-directiva-pragma-pack-en-struct-c">
 <h2><a class="toc-backref" href="#id2">La directiva #pragma pack en struct C++</a></h2>
 <p>Se trata de una directiva del preprocesador que indica al compilador cómo debe realizar la alineación de la memoria. Vamos a ver como se comporta con un ejemplo:</p>
-<pre class="code c++"><a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-1"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-2"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-3"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-4"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-5"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">print</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">sz</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_flag</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_timeout</span><span class="p">)</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-6"></a><span class="p">{</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-7"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" flag: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span><span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-8"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" +"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-9"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" timeout: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">&lt;&lt;</span> <span class="s">"Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-10"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" ="</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-11"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">+</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">"Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-12"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" sizeof struct:  "</span> <span class="o">&lt;&lt;</span> <span class="n">sz</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-13"></a><span class="p">}</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-14"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-15"></a><span class="cp">#pragma pack (1)</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-16"></a><span class="k">struct</span> <span class="n">SampleStructPack1</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-17"></a><span class="p">{</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-18"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-19"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-20"></a><span class="p">};</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-21"></a><span class="cp">#pragma pack(0)</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-22"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-23"></a><span class="cp">#pragma pack (2)</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-24"></a><span class="k">struct</span> <span class="n">SampleStructPack2</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-25"></a><span class="p">{</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-26"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-27"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-28"></a><span class="p">};</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-29"></a><span class="cp">#pragma pack(0)</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-30"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-31"></a><span class="cp">#pragma pack (4)</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-32"></a><span class="k">struct</span> <span class="n">SampleStructPack4</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-33"></a><span class="p">{</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-34"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-35"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-36"></a><span class="p">};</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-37"></a><span class="cp">#pragma pack(0)</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-38"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-39"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-40"></a><span class="k">struct</span> <span class="n">SampleStruct</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-41"></a><span class="p">{</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-42"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-43"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-44"></a><span class="p">};</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-45"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-46"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-47"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-48"></a><span class="p">{</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-49"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-50"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-51"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-52"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-53"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-54"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-55"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-56"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-57"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack4"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-58"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-59"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-60"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStruct"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-61"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-62"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-63"></a>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-64"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<a name="rest_code_a4e26386eee2477f8db361afa33c6ea0-65"></a><span class="p">}</span>
+<pre class="code c++"><a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-1"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-2"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-3"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-4"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-5"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">print</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">sz</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_flag</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">sz_timeout</span><span class="p">)</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-6"></a><span class="p">{</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-7"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" flag: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span><span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-8"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" +"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-9"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" timeout: "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">&lt;&lt;</span> <span class="s">"Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-10"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" ="</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-11"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">sz_timeout</span> <span class="o">+</span> <span class="n">sz_flag</span> <span class="o">&lt;&lt;</span> <span class="s">"Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-12"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" sizeof struct:  "</span> <span class="o">&lt;&lt;</span> <span class="n">sz</span> <span class="o">&lt;&lt;</span> <span class="s">" Bytes"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-13"></a><span class="p">}</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-14"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-15"></a><span class="cp">#pragma pack (1)</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-16"></a><span class="k">struct</span> <span class="n">SampleStructPack1</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-17"></a><span class="p">{</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-18"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-19"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-20"></a><span class="p">};</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-21"></a><span class="cp">#pragma pack(0)</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-22"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-23"></a><span class="cp">#pragma pack (2)</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-24"></a><span class="k">struct</span> <span class="n">SampleStructPack2</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-25"></a><span class="p">{</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-26"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-27"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-28"></a><span class="p">};</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-29"></a><span class="cp">#pragma pack(0)</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-30"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-31"></a><span class="cp">#pragma pack (4)</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-32"></a><span class="k">struct</span> <span class="n">SampleStructPack4</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-33"></a><span class="p">{</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-34"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-35"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-36"></a><span class="p">};</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-37"></a><span class="cp">#pragma pack(0)</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-38"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-39"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-40"></a><span class="k">struct</span> <span class="n">SampleStruct</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-41"></a><span class="p">{</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-42"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-43"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-44"></a><span class="p">};</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-45"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-46"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-47"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-48"></a><span class="p">{</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-49"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-50"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack1"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-51"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack1</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-52"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-53"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-54"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack2"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-55"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack2</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-56"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-57"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack4"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-58"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStructPack4</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-59"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-60"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStruct"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-61"></a>    <span class="n">print</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">flag</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">SampleStruct</span><span class="o">::</span><span class="n">timeout</span><span class="p">));</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-62"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" -- "</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-63"></a>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-64"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_4c3a819029334bf3be9fd4ff9b7fcbc0-65"></a><span class="p">}</span>
 </pre>
 <p><a class="reference external" href="http://coliru.stacked-crooked.com/a/7c18ee6585e57366">Ejecutando el código con las directivas pragma</a>, tenemos distintos resultados dependiendo del valor de pragma.</p>
-<pre class="code bash"><a name="rest_code_c589731343734fd5a2f50258ec712664-1"></a>SampleStructPack1
-<a name="rest_code_c589731343734fd5a2f50258ec712664-2"></a> flag: <span class="m">1</span> Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-3"></a> +
-<a name="rest_code_c589731343734fd5a2f50258ec712664-4"></a> timeout: <span class="nv">4Bytes</span>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-5"></a> <span class="o">=</span>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-6"></a> 5Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-7"></a> sizeof struct:  <span class="m">5</span> Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-8"></a> --
-<a name="rest_code_c589731343734fd5a2f50258ec712664-9"></a>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-10"></a>SampleStructPack2
-<a name="rest_code_c589731343734fd5a2f50258ec712664-11"></a> flag: <span class="m">1</span> Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-12"></a> +
-<a name="rest_code_c589731343734fd5a2f50258ec712664-13"></a> timeout: <span class="nv">4Bytes</span>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-14"></a> <span class="o">=</span>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-15"></a> 5Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-16"></a> sizeof struct:  <span class="m">6</span> Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-17"></a>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-18"></a>SampleStructPack4
-<a name="rest_code_c589731343734fd5a2f50258ec712664-19"></a> flag: <span class="m">1</span> Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-20"></a> +
-<a name="rest_code_c589731343734fd5a2f50258ec712664-21"></a> timeout: <span class="nv">4Bytes</span>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-22"></a> <span class="o">=</span>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-23"></a> 5Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-24"></a> sizeof struct:  <span class="m">8</span> Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-25"></a>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-26"></a>SampleStruct
-<a name="rest_code_c589731343734fd5a2f50258ec712664-27"></a> flag: <span class="m">1</span> Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-28"></a> +
-<a name="rest_code_c589731343734fd5a2f50258ec712664-29"></a> timeout: <span class="nv">4Bytes</span>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-30"></a> <span class="o">=</span>
-<a name="rest_code_c589731343734fd5a2f50258ec712664-31"></a> 5Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-32"></a> sizeof struct:  <span class="m">8</span> Bytes
-<a name="rest_code_c589731343734fd5a2f50258ec712664-33"></a> --
+<pre class="code bash"><a name="rest_code_47742b1904c748c09d158cb5f0fb5208-1"></a>SampleStructPack1
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-2"></a> flag: <span class="m">1</span> Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-3"></a> +
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-4"></a> timeout: <span class="nv">4Bytes</span>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-5"></a> <span class="o">=</span>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-6"></a> 5Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-7"></a> sizeof struct:  <span class="m">5</span> Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-8"></a> --
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-9"></a>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-10"></a>SampleStructPack2
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-11"></a> flag: <span class="m">1</span> Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-12"></a> +
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-13"></a> timeout: <span class="nv">4Bytes</span>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-14"></a> <span class="o">=</span>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-15"></a> 5Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-16"></a> sizeof struct:  <span class="m">6</span> Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-17"></a>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-18"></a>SampleStructPack4
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-19"></a> flag: <span class="m">1</span> Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-20"></a> +
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-21"></a> timeout: <span class="nv">4Bytes</span>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-22"></a> <span class="o">=</span>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-23"></a> 5Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-24"></a> sizeof struct:  <span class="m">8</span> Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-25"></a>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-26"></a>SampleStruct
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-27"></a> flag: <span class="m">1</span> Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-28"></a> +
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-29"></a> timeout: <span class="nv">4Bytes</span>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-30"></a> <span class="o">=</span>
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-31"></a> 5Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-32"></a> sizeof struct:  <span class="m">8</span> Bytes
+<a name="rest_code_47742b1904c748c09d158cb5f0fb5208-33"></a> --
 </pre>
 <p>Veamos caso por caso:</p>
 <dl class="docutils">
@@ -327,98 +297,98 @@ Para el caso del booleano, necesita un bloque de 1 byte, pero como mínimo tiene
 <h2><a class="toc-backref" href="#id3">Rendimiento</a></h2>
 <p>Vamos a hacer una prueba simple de rendimiento, en la que se va a reservar el mismo número de elementos en arrays para cada tipo de estructura.</p>
 <p>Este es el resultado:</p>
-<pre class="code bash"><a name="rest_code_d917b44e0b6b4445b895aa0234fda267-1"></a>SampleStructPack1: <span class="m">500000000000000000</span> bytes allocated in <span class="m">94311</span> nanoseconds
-<a name="rest_code_d917b44e0b6b4445b895aa0234fda267-2"></a>SampleStructPack2: <span class="m">600000000000000000</span> bytes allocated in <span class="m">1777</span> nanoseconds
-<a name="rest_code_d917b44e0b6b4445b895aa0234fda267-3"></a>SampleStructPack4: <span class="m">800000000000000000</span> bytes allocated in <span class="m">1519</span> nanoseconds
+<pre class="code bash"><a name="rest_code_c7c00b9bb4284f909c27dd7651cb801a-1"></a>SampleStructPack1: <span class="m">500000000000000000</span> bytes allocated in <span class="m">94311</span> nanoseconds
+<a name="rest_code_c7c00b9bb4284f909c27dd7651cb801a-2"></a>SampleStructPack2: <span class="m">600000000000000000</span> bytes allocated in <span class="m">1777</span> nanoseconds
+<a name="rest_code_c7c00b9bb4284f909c27dd7651cb801a-3"></a>SampleStructPack4: <span class="m">800000000000000000</span> bytes allocated in <span class="m">1519</span> nanoseconds
 </pre>
 <p>Como vemos cuanto más ajustada es la alineación de memoria, más tiempo se tarda en reservar y liberar. Puedes <a class="reference external" href="http://coliru.stacked-crooked.com/a/954ad542659c7591">ejecutar la prueba de rendimiento en este enlace</a>.</p>
 <p>A continuación pego el código de la prueba de rendimiento.</p>
-<pre class="code c++"><a name="rest_code_547f4695a66e4337bee3934e307c9061-1"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-2"></a><span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-3"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-4"></a><span class="cp">#pragma pack (1)</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-5"></a><span class="k">struct</span> <span class="n">SampleStructPack1</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-6"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-7"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-8"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-9"></a><span class="p">};</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-10"></a><span class="cp">#pragma pack(0)</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-11"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-12"></a><span class="cp">#pragma pack (2)</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-13"></a><span class="k">struct</span> <span class="n">SampleStructPack2</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-14"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-15"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-16"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-17"></a><span class="p">};</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-18"></a><span class="cp">#pragma pack(0)</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-19"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-20"></a><span class="cp">#pragma pack (4)</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-21"></a><span class="k">struct</span> <span class="n">SampleStructPack4</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-22"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-23"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-24"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-25"></a><span class="p">};</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-26"></a><span class="cp">#pragma pack(0)</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-27"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-28"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-29"></a><span class="k">struct</span> <span class="n">SampleStruct</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-30"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-31"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-32"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-33"></a><span class="p">};</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-34"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-35"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">long</span> <span class="n">MAX_ELEMENTS</span> <span class="o">=</span> <span class="mi">100000000000000000</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-36"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-37"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-38"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-39"></a><span class="kt">void</span> <span class="nf">allocate1</span><span class="p">()</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-40"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-41"></a>    <span class="n">SampleStructPack1</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-42"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack1: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-43"></a><span class="p">}</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-44"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-45"></a><span class="kt">void</span> <span class="nf">allocate2</span><span class="p">()</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-46"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-47"></a>    <span class="n">SampleStructPack2</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-48"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack2: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-49"></a><span class="p">}</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-50"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-51"></a><span class="kt">void</span> <span class="nf">allocate4</span><span class="p">()</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-52"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-53"></a>    <span class="n">SampleStructPack4</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-54"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack4: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-55"></a><span class="p">}</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-56"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-57"></a><span class="kt">void</span> <span class="nf">chrono1</span><span class="p">()</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-58"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-59"></a>    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-60"></a>    <span class="n">allocate1</span><span class="p">();</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-61"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-62"></a><span class="p">}</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-63"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-64"></a><span class="kt">void</span> <span class="nf">chrono2</span><span class="p">()</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-65"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-66"></a>    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-67"></a>    <span class="n">allocate2</span><span class="p">();</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-68"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-69"></a><span class="p">}</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-70"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-71"></a><span class="kt">void</span> <span class="nf">chrono4</span><span class="p">()</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-72"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-73"></a>    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-74"></a>    <span class="n">allocate4</span><span class="p">();</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-75"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-76"></a><span class="p">}</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-77"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-78"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-79"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-80"></a><span class="p">{</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-81"></a>    <span class="n">chrono1</span><span class="p">();</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-82"></a>    <span class="n">chrono2</span><span class="p">();</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-83"></a>    <span class="n">chrono4</span><span class="p">();</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-84"></a>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-85"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<a name="rest_code_547f4695a66e4337bee3934e307c9061-86"></a><span class="p">}</span>
+<pre class="code c++"><a name="rest_code_8f53b079698a49a2b2d9168b80409b94-1"></a><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-2"></a><span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-3"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-4"></a><span class="cp">#pragma pack (1)</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-5"></a><span class="k">struct</span> <span class="n">SampleStructPack1</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-6"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-7"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-8"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-9"></a><span class="p">};</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-10"></a><span class="cp">#pragma pack(0)</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-11"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-12"></a><span class="cp">#pragma pack (2)</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-13"></a><span class="k">struct</span> <span class="n">SampleStructPack2</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-14"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-15"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-16"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-17"></a><span class="p">};</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-18"></a><span class="cp">#pragma pack(0)</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-19"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-20"></a><span class="cp">#pragma pack (4)</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-21"></a><span class="k">struct</span> <span class="n">SampleStructPack4</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-22"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-23"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-24"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-25"></a><span class="p">};</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-26"></a><span class="cp">#pragma pack(0)</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-27"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-28"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-29"></a><span class="k">struct</span> <span class="n">SampleStruct</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-30"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-31"></a>    <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-32"></a>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-33"></a><span class="p">};</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-34"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-35"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">long</span> <span class="n">MAX_ELEMENTS</span> <span class="o">=</span> <span class="mi">100000000000000000</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-36"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-37"></a><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-38"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-39"></a><span class="kt">void</span> <span class="nf">allocate1</span><span class="p">()</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-40"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-41"></a>    <span class="n">SampleStructPack1</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-42"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack1: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-43"></a><span class="p">}</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-44"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-45"></a><span class="kt">void</span> <span class="nf">allocate2</span><span class="p">()</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-46"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-47"></a>    <span class="n">SampleStructPack2</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-48"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack2: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-49"></a><span class="p">}</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-50"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-51"></a><span class="kt">void</span> <span class="nf">allocate4</span><span class="p">()</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-52"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-53"></a>    <span class="n">SampleStructPack4</span> <span class="n">elements</span> <span class="p">[</span><span class="n">MAX_ELEMENTS</span><span class="p">];</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-54"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SampleStructPack4: "</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" bytes allocated"</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-55"></a><span class="p">}</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-56"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-57"></a><span class="kt">void</span> <span class="nf">chrono1</span><span class="p">()</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-58"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-59"></a>    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-60"></a>    <span class="n">allocate1</span><span class="p">();</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-61"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-62"></a><span class="p">}</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-63"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-64"></a><span class="kt">void</span> <span class="nf">chrono2</span><span class="p">()</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-65"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-66"></a>    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-67"></a>    <span class="n">allocate2</span><span class="p">();</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-68"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-69"></a><span class="p">}</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-70"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-71"></a><span class="kt">void</span> <span class="nf">chrono4</span><span class="p">()</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-72"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-73"></a>    <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-74"></a>    <span class="n">allocate4</span><span class="p">();</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-75"></a>    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" in "</span> <span class="o">&lt;&lt;</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">nanoseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">high_resolution_clock</span><span class="o">::</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" nanoseconds"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-76"></a><span class="p">}</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-77"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-78"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-79"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-80"></a><span class="p">{</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-81"></a>    <span class="n">chrono1</span><span class="p">();</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-82"></a>    <span class="n">chrono2</span><span class="p">();</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-83"></a>    <span class="n">chrono4</span><span class="p">();</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-84"></a>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-85"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_8f53b079698a49a2b2d9168b80409b94-86"></a><span class="p">}</span>
 </pre>
 </div>
 </div>
@@ -455,33 +425,23 @@ Para el caso del booleano, necesita un bloque de 1 byte, pero como mínimo tiene
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </section></article><script>var disqus_shortname="carlosvin";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer"><div class="page-footer">
-        <div class="page-footer-wrapper">
-            <a href="https://www.linkedin.com/in/carlosvin" style="margin-right: 3%;">Carlos Martín Sánchez</a>
-            <a href="https://twitter.com/intent/user?screen_name=carlosvin" class="twitter-follow-button">
-                @carlosvin
-            </a>
-            <div class="copyright">
+        </section></article><script>var disqus_shortname="carlosvin";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>
+        
    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
    <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>
-</div>
-            <div class="poweredby">Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
-</div>
-        </div>
-    </div>
-    
+        Powered by <a href="http://getnikola.com" rel="nofollow" target="_blank">Nikola</a>
+</p>
             
         </footer>
 </div>
-</div>
-
-
-        <script src="../../../assets/js/all-nocdn.js"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script>
+    </div>
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+    
+    
+    
+            <script src="../../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("es");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates -->
 </body>
 </html>
