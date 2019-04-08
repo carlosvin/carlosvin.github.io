@@ -11,6 +11,8 @@ Haciendo memoria sobre lo que había dado en mi primera asignatura de Ingenierí
 
 Hoy por casualidad he encontrado mis apuntes de Ingeniería del Software y estos son los tipos de mantenimiento ordenados de más a menos porcentaje de tiempo dedicado.
 
+.. TEASER_END
+
 :Perfectivo:
 	Actividades para mejorar o añadir nuevas funcionalidades requeridas por el usuario.
 

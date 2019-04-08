@@ -298,7 +298,7 @@ COMPILERS = {
                              # the main (the newest) index page (index.html)
 
 # Name of the theme to use.
-THEME = "bootstrap4"
+THEME = "lanyon"
 
 
 # Color scheme to be used for code blocks. If your theme provides
@@ -352,24 +352,15 @@ LICENSE = """
    style="border-width:0; margin-bottom:12px;"
    src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
 
+
+
 # A small copyright notice for the page footer (in HTML).
 CONTENT_FOOTER = '''
-    <div class="page-footer">
-        <div class="page-footer-wrapper">
-            <a href="https://www.linkedin.com/in/{nickname}" style="margin-right: 3%;">{author}</a>
-            <a href="https://twitter.com/intent/user?screen_name={nickname}" class="twitter-follow-button">
-                @{nickname}
-            </a>
-            <div class="copyright">{license}</div>
-            <div class="poweredby">Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a></div>
-        </div>
-    </div>
-    '''
+        {license}
+        Powered by <a href="http://getnikola.com" rel="nofollow" target="_blank">Nikola</a>
+'''
 
-CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
-                                       author=BLOG_AUTHOR,
-                                       license=LICENSE,
-                                       nickname=NICKNAME)
+CONTENT_FOOTER = CONTENT_FOOTER.format(license=LICENSE)
 
 # To use comments, you can choose between different third party comment
 # systems, one of "disqus", "livefyre", "intensedebate", "moot",
@@ -485,7 +476,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra', 'toc', 'admonition'
 # HIDE_SOURCELINK = False
 # Copy the source files for your pages?
 # Setting it to False implies HIDE_SOURCELINK = True
-# COPY_SOURCES = True
+COPY_SOURCES = False
 
 # Modify the number of Post per Index Page
 # Defaults to 10
@@ -510,13 +501,19 @@ FEED_TEASERS = True
 #
 # SEARCH_FORM = """"""
 SEARCH_FORM = """
-<form method="get" action="http://www.google.com/search" class="navbar-form navbar-right" role="search">
-<div class="form-group">
-<input type="text" name="q" class="form-control" placeholder="Search"/>
-</div>
-<input type="hidden" name="sitesearch" value="%s"/>
+<form class="form-inline" role="search" action="https://duckduckgo.com/">
+  <div class="form-group">
+    <input type="search" name="q" class="form-control" placeholder="Search on {blog_title}">
+    <input type="hidden" name="sites" value="{site_url}">
+  </div>
+  <button type="submit" class="search-icon" >
+    <svg viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        <path d="M0 0h24v24H0z" fill="none"/>
+    </svg>
+  </button>
 </form>
-""" % SITE_URL
+""".format(blog_title=BLOG_TITLE, site_url=SITE_URL)
 
 
 #EXTRA_HEAD_DATA = """
@@ -651,7 +648,10 @@ LOGGING_HANDLERS = {
 
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
-# GLOBAL_CONTEXT = {}
+GLOBAL_CONTEXT = {
+    'nickname': NICKNAME,
+    'author': BLOG_AUTHOR
+}
 
 # List XML-RPC services (recommended) in PING_XMLRPC_SERVICES and HTTP
 # GET services (web pages) in PING_GET_SERVICES.

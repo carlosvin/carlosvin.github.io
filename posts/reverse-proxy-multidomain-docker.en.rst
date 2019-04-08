@@ -128,13 +128,13 @@ So we can open our favourite web browser and go to a.domain.com. It will show *A
 
   a.domain.com
 
+
 .. thumbnail:: /galleries/docker-multidomain/b.screenshot.png
 
   b.domain.com
 
 
 .. note:: In most of Linux distros you will need privileges to run Docker commands (sudo).
-
 
 
 .. _NGINX: https://www.nginx.com
