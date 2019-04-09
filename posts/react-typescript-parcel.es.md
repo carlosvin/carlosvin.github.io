@@ -3,13 +3,13 @@
 .. date: 2019/01/01 13:30:02
 .. tags: React, Typescript, Parcel, SPA
 .. link: https://github.com/carlosvin/react-typescript-parcel-template
-.. description: Projecto de ejemplo en el que se muestra cómo crear una aplicación web de página única (SPA) con React, Typescript y Parcel.
+.. description: proyecto de ejemplo en el que se muestra cómo crear una aplicación web de página única (SPA) con React, Typescript y Parcel.
 
-Estaba a punto de empezar otro projecto personal para crear una aplicación web de página única ([SPA - Single Page App](https://es.wikipedia.org/wiki/Single-page_application)) en la que gestionar mi blog de viaje. 
+Estaba a punto de empezar otro proyecto personal para crear una aplicación web de página única ([SPA - Single Page App](https://es.wikipedia.org/wiki/Single-page_application)) en la que gestionar mi blog de viaje. 
 
 Tenía claras las tecnologías a utilizar, porque últimamente he trabajado bastante con [React](https://reactjs.org) y [Typescript](https://www.typescriptlang.org/) y me encuentro muy cómodo con esta pareja de tecnologías. Normalmente uso [Webpack](https://webpack.js.org/) como empaquetador, pero hace algún tiempo había probado [Parcel](https://parceljs.org) y me encantó lo simple y rápido que era crear un proyecto desde cero utilizando [Typescript](https://www.typescriptlang.org/) y [React](https://reactjs.org). 
 
-He decidido crear un proyecto base, para poder reutilizarlo la próxima vez que quiera crear una [SPA](https://es.wikipedia.org/wiki/Single-page_application) con mis tecnologías frontend favoritas, al menos hasta ahora. De esta forma, la próxima vez que quiera empezar un proyecto nuevo sólamente tengo que:
+He decidido crear un proyecto base, para poder reutilizarlo la próxima vez que quiera crear una [SPA](https://es.wikipedia.org/wiki/Single-page_application) con mis tecnologías frontend favoritas, al menos hasta ahora. De esta forma, la próxima vez que quiera empezar un proyecto nuevo solamente tengo que:
 
 ```bash
 git clone https://github.com/carlosvin/react-typescript-parcel-template.git
@@ -33,7 +33,7 @@ yarn start
 El último comando `yarn start`:
 
 - Arrancará un servidor de desarrollo en `http://localhost:1234` con [reemplazo de módulos en caliente](https://en.parceljs.org/hmr.html).
-- Construirá automáticamente el projecto cada vez que guardemos los cambios.
+- Construirá automáticamente el proyecto cada vez que guardemos los cambios.
 
 !!! type "En resumen"
     Cada vez que guardes tus cambios, verás el resultado en `http://localhost:1234`  sin tener que refrescar la página.
@@ -46,8 +46,8 @@ Las [optimizaciones que Parcel aplica por defecto](https://en.parceljs.org/produ
 
 Dentro de la carpeta `dist` hay un informe sobre el tamaño de los archivos generados y el tamaño de las dependencias: `dist/report.html`, siempre está bien conocer cuán pesada es tu aplicación.
 
-# Creación del projecto paso a paso
-Si simplemente quieres utilizar el projecto puedes saltarte esta sección, aquí voy a describir paso a paso lo que hice para crear este projecto base.
+# Creación del proyecto paso a paso
+Si simplemente quieres utilizar el proyecto puedes saltarte esta sección, aquí voy a describir paso a paso lo que hice para crear este proyecto base.
 
 Comenzamos creando el archivo `package.json` con el comando [yarn init](https://yarnpkg.com/lang/en/docs/cli/init/).
 
@@ -90,7 +90,7 @@ También necesitamos como dependencia de desarrollo nuestro empaquetador [Parcel
 yarn add --dev parcel-bundler
 ```
 
-He añadido una dependencia opcional, se trata del plugin para Parcel, para generar el informe del contenido del paquete. Es muy util para detectar casos en los que añadimos una dependencia para, por ejemplo, comparar vectores de números, pero resulta que esta librería ocupa más que nuestra propia aplicación. En este caso hay que considerar otras librerías que hagan lo mismo y sean más ligeras.
+He añadido una dependencia opcional, se trata del plugin para Parcel, para generar el informe del contenido del paquete. Es muy útil para detectar casos en los que añadimos una dependencia para, por ejemplo, comparar vectores de números, pero resulta que esta librería ocupa más que nuestra propia aplicación. En este caso hay que considerar otras librerías que hagan lo mismo y sean más ligeras.
 
 Este plugin es la versión para Parcel de [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer).
 
@@ -132,7 +132,7 @@ Parcel puede utilizar un archivo `index.html` como punto de entrada a la aplicac
 Necesitamos la etiqueta `div` para que React pueda inyectar el DOM virtual que utiliza para trabajar. 
 La declaración `script` es utilizada por Parcel para saber que tiene que empezar construyendo el archivo `index.tsx`.
 
-## Comandos para construir el projecto
+## Comandos para construir el proyecto
  
 - `build`: Descrito en la sección "Generar un paquete listo para producción".
 - `start`: Descrito en "Servidor de desarrollo".
