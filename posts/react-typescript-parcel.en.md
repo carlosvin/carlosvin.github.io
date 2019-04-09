@@ -12,8 +12,6 @@ Some time ago I tried [Parcel](https://parceljs.org), I really loved how simple 
 ```bash
 git clone https://github.com/carlosvin/react-typescript-parcel-template.git
 ```
-
-# Table of Contents
 [TOC]
 
 # Quick start
@@ -31,7 +29,9 @@ Last `yarn start` command will:
 - start a development server at http://localhost:1234 with [hot module replacement](https://en.parceljs.org/hmr.html)
 - build automatically development javascript files with source maps
 
-Basically each time you save a file, you will see automatically the result at http://localhost:1234 without refreshing the page.
+!!! type "As abstract"
+    Each time you save a file, you will see automatically the result at http://localhost:1234 without refreshing the page
+
 
 ## Build production bundle
 
@@ -125,6 +125,8 @@ Parcel can take `index.html` file as entry file and it figures out how to build 
 We need `div` tag for React to inject the DOM elements. 
 The `script` declaration is used by Parcel to find entry point to build.
 
+## Add commands build the project
+
 I've added the commands:
  
 - `build`: Check "Build production bundle" section.
@@ -142,17 +144,13 @@ Then to it is really easy to:
  - run development server: `yarn start`
  - generate a production bundle: `yarn build`
 
-## Add scripts to run Parcel
-
 There is another approach described in [Parcel documentation](https://en.parceljs.org/getting_started.html) that consists of installing Parcel globally. 
 
 I've opted for more isolated approach that affects only project you are working on, you just install Parcel as `devDependency`. There is a tiny drawback, you can't just run `parcel index.html`, because it is not installed in your system, but in `node_modules`.
 
 There is a simple way to run any binary installed in `node_modules`, you can just run `npx parcel index.html`.
 
-I like more to define build steps in `package.json` file, so you can have well defined commands to build your project. 
-
-
+I like more to define build steps in `package.json` file, so you can have well defined commands more suited to build your project. You can also use these commands as documentation how to build your project.
 
 ## Configure Typescript (optional)
 Create a `tsconfig.json` file.
@@ -176,7 +174,7 @@ With this configuration, Typescript compiler will:
 - Will not allow to declare `any` type, for example following declaration is not allowed: `const elements: any;`
 - Generated module code will be [CommonJs](https://requirejs.org/docs/commonjs.html).
 - Generated code will be [ECMAScript](https://es.wikipedia.org/wiki/ECMAScript) 5 compliant.
-- Support [JSX](https://www.typescriptlang.org/docs/handbook/jsx.html) in .tsx files, in this case React type.
+- Support [JSX](https://www.typescriptlang.org/docs/handbook/jsx.html) in .tsx files.
 
 # Full source code
 
