@@ -47,12 +47,14 @@ NAVIGATION_LINKS = {
     'es': (
         ('/es/archive.html', u'Archivos'),
         ('/es/categories/index.html', u'Categorías'),
-        ('/es/rss.xml', 'RSS'),
+        ('/es/rss.xml', u'RSS'),
+        ('/', u'In English'),
     ),
     DEFAULT_LANG: (
         ('/archive.html', 'Archives'),
         ('/categories/index.html', 'Tags'),
         ('/rss.xml', 'RSS'),
+        ('/es', u'En Español'),
     ),
 }
 
