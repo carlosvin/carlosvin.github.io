@@ -356,8 +356,8 @@ LICENSE = """
 
 # A small copyright notice for the page footer (in HTML).
 CONTENT_FOOTER = '''
+        <span>Powered by <a href="http://getnikola.com" rel="nofollow" target="_blank">Nikola</a></span>
         {license}
-        Powered by <a href="http://getnikola.com" rel="nofollow" target="_blank">Nikola</a>
 '''
 
 CONTENT_FOOTER = CONTENT_FOOTER.format(license=LICENSE)
