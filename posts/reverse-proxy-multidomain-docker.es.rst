@@ -4,6 +4,7 @@
 .. tags: Docker, Microservices
 .. description: Cómo crear varios contenedores Docker con diferentes dominios en la misma máquina.
 .. type: text
+.. previewimage: /docker-multidomain/proxy.png
 
 .. contents::
 
@@ -14,7 +15,7 @@ Tenemos varias aplicaciones servidoras a la vez en un mismo entorno de desarroll
 
 Utilizando docker estas aplicaciones tienen la misma dirección IP en nuestra máquina, una forma de distinguirlas es cambiando el puerto que exponen.
 
-.. thumbnail:: /galleries/docker-multidomain/ip.png
+.. thumbnail:: /docker-multidomain/ip.png
 
   Aplicaciones exponiendo la misma dirección IP utilizando diferentes puertos para diferenciar las aplicaciones
 
@@ -28,7 +29,7 @@ Sería mucho más sencillo de recordar algo así:
 - Si queremos llamar a la "aplicación A" haremos algo así: GET http://a.domain.com/colors/red
 - Si queremos llamar a la "aplicación B" haremos algo así: GET http://b.domain.com/fruits/tomato
 
-.. thumbnail:: /galleries/docker-multidomain/domain.png
+.. thumbnail:: /docker-multidomain/domain.png
 
   Diferenciando aplicaciones por nombre de dominio
 
@@ -45,7 +46,7 @@ Dije que era fácil porque no vamos a tener que hacer casi nada, ya que otro con
 
 Así que al final no tendremos 2 contenedores, sino también tendremos un tercero que hará las veces de proxy.
 
-.. thumbnail:: /galleries/docker-multidomain/proxy.png
+.. thumbnail:: /docker-multidomain/proxy.png
 
   Los 2 contenedores y el proxy
 
@@ -126,11 +127,11 @@ Ya están las tres contenedores arrancados.
 
 Ahora podemos abrir nuestro navegador y escribir a.domain.com y nos mostrará el texto *App A works!*. Si escribimos b.domain.com entonces veremos *App B works!*.
 
-.. thumbnail:: /galleries/docker-multidomain/a.screenshot.png
+.. thumbnail:: /docker-multidomain/a.screenshot.png
 
   a.domain.com en el navegador
 
-.. thumbnail:: /galleries/docker-multidomain/b.screenshot.png
+.. thumbnail:: /docker-multidomain/b.screenshot.png
 
   b.domain.com en el navegador
 

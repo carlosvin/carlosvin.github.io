@@ -4,6 +4,7 @@
 .. tags: Docker, Microservices
 .. description: How to create different Docker containers with different domain names in the same host
 .. type: text
+.. previewimage: /docker-multidomain/proxy.png
 
 .. contents::
 
@@ -14,7 +15,7 @@ We have several server applications in the same development environment, each ap
 
 With Docker those applications have the same IP address. One way to differentiate and access to an specific application is exposing different ports.
 
-.. thumbnail:: /galleries/docker-multidomain/ip.png
+.. thumbnail:: /docker-multidomain/ip.png
 
   Containers exposing the same IP address and different ports
 
@@ -28,7 +29,7 @@ It would be simpler and easier to remind something like:
 - Calling "Application A": GET http://a.domain.com/colors/red
 - Calling "Application B": GET http://b.domain.com/fruits/tomato
 
-.. thumbnail:: /galleries/docker-multidomain/domain.png
+.. thumbnail:: /docker-multidomain/domain.png
 
   Accessing applications by domain name
 
@@ -45,7 +46,7 @@ So, we will have 2 applications + 1 proxy, that is 3 containers.
 
 .. note:: You can download the full example at  https://github.com/carlosvin/docker-reverse-proxy-multi-domain
 
-.. thumbnail:: /galleries/docker-multidomain/proxy.png
+.. thumbnail:: /docker-multidomain/proxy.png
 
   3 containers, 2 applications + 1 proxy
 
@@ -124,12 +125,12 @@ The 3 containers are running now.
 
 So we can open our favourite web browser and go to a.domain.com. It will show *App A works!*. If we go to b.domain.com then we will see *App B works!*.
 
-.. thumbnail:: /galleries/docker-multidomain/a.screenshot.png
+.. thumbnail:: /docker-multidomain/a.screenshot.png
 
   a.domain.com
 
 
-.. thumbnail:: /galleries/docker-multidomain/b.screenshot.png
+.. thumbnail:: /docker-multidomain/b.screenshot.png
 
   b.domain.com
 

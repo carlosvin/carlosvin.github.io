@@ -5,6 +5,7 @@
 .. tags: C++
 .. type: text
 .. description: Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria
+.. previewimage: /c-mem-struct/8b.png
 
 Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia. Podemos considerarlo como una clase con visibilidad publica por defecto para sus atributos y funciones.
 
@@ -20,7 +21,7 @@ Estructura de ejemplo
 Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un booleano (un byte). En C++ queda de la siguiente forma:
 
 .. code-block:: c++
-	
+
 	struct SampleStruct
 	{
 	    bool flag;
@@ -29,7 +30,7 @@ Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un boole
 
 Si hacemos un :code:`sizeof` de la una instancia de la estructura deberíamos obtener un tamaño de 5 bytes. Y la memoria quedaría de la siguiente forma:
 
-.. figure:: /galleries/c-mem-struct/5b.png
+.. thumbnail:: /c-mem-struct/5b.png
 	:width: 30%
 	:figwidth: 50%
 
@@ -40,7 +41,7 @@ Pero no es tan sencillo, a continuación veremos que no nos podemos olvidar de l
 
 Por ejemplo, si en mi máquina hago un :code:`sizeof` de la estructura, obtengo un tamaño de 8 bytes. Lo que está sucediendo es que el compilador reserva más memoria al final de la estructura para que cuadre en bloques de 2n bytes. La memoria queda de la siguiente forma:
 
-.. figure:: /galleries/c-mem-struct/8b.png
+.. thumbnail:: /c-mem-struct/8b.png
 	:width: 30%
 	:figwidth: 50%
 	

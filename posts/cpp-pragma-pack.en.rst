@@ -5,6 +5,7 @@
 .. tags: C++, Performance, Compilers
 .. type: text
 .. description: Understanding pragma pack preprocessor directive and how it affects to memory alignment
+.. previewimage: /c-mem-struct/8b.png
 
 A C++ struct is an element that allows grouping attributes with different type so we can manipulate all elements together using same reference. It is like a class with public visibility by default for functions and attributes. 
 
@@ -20,7 +21,7 @@ Example Struct
 It has two attributes: an integer (4 bytes) and a boolean (1 byte). 
 
 .. code-block:: c++
-	
+
 	struct SampleStruct
 	{
 	    bool flag;
@@ -29,9 +30,7 @@ It has two attributes: an integer (4 bytes) and a boolean (1 byte).
 
 If we get the instance size using :code:`sizeof` we should get 5 bytes size and memory would be like:
 
-.. figure:: /galleries/c-mem-struct/5b.png
-	:width: 30%
-	:figwidth: 50%
+.. thumbnail:: /c-mem-struct/5b.png
 
 	5 bytes struct which uses 5 bytes in memory 
 
@@ -39,9 +38,7 @@ If we get the instance size using :code:`sizeof` we should get 5 bytes size and 
 
 For example, in my local host with :code:`sizeof` of structure, I get a 8 bytes size. What is happening is that compiler allocates more memory at the end of structure so it fits in 2n bytes blocks. Memory looks like:
 
-.. figure:: /galleries/c-mem-struct/8b.png
-	:width: 30%
-	:figwidth: 50%
+.. thumbnail:: /c-mem-struct/8b.png
 	
 	5 bytes structure that actually spends 8 bytes in memory
 
@@ -100,7 +97,7 @@ Let's see a code snippet that prints structure and attributes size, in this case
 It is a preprocessor directive to indicate to compiler how to align data in memory. 
 
 .. code-block:: c++
-	
+
 	#include <iostream>
     
 	using namespace std;
