@@ -61,7 +61,7 @@ Transferring the example to REST_ APIs_:
 
 ::
 
-  GET   http://cardealer.com/api/cars/fiat-bravo-19-emotion-120cv
+  GET   https://cardealer.com/api/cars/fiat-bravo-19-emotion-120cv
 
 Now our API_ can supply the car info.
 
@@ -69,7 +69,7 @@ This is a very simple example, but actually when we access to a specific resourc
 
 ::
 
-  GET  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+  GET  https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 
 But our API_, like a shop, it hasn't to be so strict. We can ask for cars with several features:
 
@@ -79,7 +79,7 @@ Then, the dealer kindly will show you all Fiat Bravo he has available. Let's see
 
 ::
 
-  GET  http://cardealer.com/api/cars/?brand=fiat&model=bravo
+  GET  https://cardealer.com/api/cars/?brand=fiat&model=bravo
 
 API_ will return all cars with Fiat brand and Bravo model.
 
@@ -98,11 +98,11 @@ We want to **update** so we use the equivalency HTTP_ verb: **PUT**.
 
 ::
 
-  PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+  PUT   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 
 Actually something else is missing, we have to say what thing of the car we want to change, for example, let's imagine we want to change the engine power and set it to 100CV.
 
-We have to send the new engine power to following URL_  http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f through HTTP_ using **PUT** verb.
+We have to send the new engine power to following URL_  https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f through HTTP_ using **PUT** verb.
 
 HTTP_ protocol allows sending data within PUT message, we have to choose a sending format.
 
@@ -125,7 +125,7 @@ We'll keep the URL_ that identifies the resource, but we change the verb: we don
 
 ::
 
-  DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+  DELETE   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
 
 We don't have to supply any additional info, only de verb (DELETE) and the resource identifier.
 
@@ -136,7 +136,7 @@ And the last verb is **to create (POST)**. In this case we don't have to identif
 
 ::
 
-  POST   http://cardealer.com/api/cars/
+  POST   https://cardealer.com/api/cars/
 
 But we have to send the data to create the resource.
 
@@ -193,7 +193,7 @@ When we add a car to cars collection, what we do is create a new car, so it is t
 
 To add a new engine oil to the car cce05bee-386b-11e5-a151-feff819cdc9f, that already exists::
 
-  POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+  POST   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 
   {
   "type": "5W30",
@@ -203,7 +203,7 @@ To add a new engine oil to the car cce05bee-386b-11e5-a151-feff819cdc9f, that al
 
 If we want to add another one::
 
-  POST   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+  POST   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 
   {
   "type": "10W30",
@@ -215,7 +215,7 @@ Update a collection item
 
 If we want to update the info of oil *5W30* of car *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  PUT   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/5W30/
+  PUT   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/5W30/
 
   {
   "type": "5W30",
@@ -228,7 +228,7 @@ Delete a collection item
 
 To delete an oil *10W30* from car *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  DELETE   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
+  DELETE   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
 
 
 Read a collection item
@@ -236,7 +236,7 @@ Read a collection item
 
 To get the oil info *10W30* of the car *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
+  GET   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
 
 
 List collection items
@@ -246,23 +246,23 @@ As we have seen at `Read a collection item`_, we can get the info of every colle
 
 We can get all supported oils for a car *cce05bee-386b-11e5-a151-feff819cdc9f*, it is as simple as::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+  GET   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
 
 We can also get sorted items::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?sort_by=type&order=asc
+  GET   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?sort_by=type&order=asc
 
 We can ask API_ to return the first 10 oils for car *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?number_of_elements=10
+  GET   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?number_of_elements=10
 
 API_ can support also pagination::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=3&number_of_elements=2
+  GET   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=3&number_of_elements=2
 
 Above request is telling API_ that returns the page 3 of all oils of car *cce05bee-386b-11e5-a151-feff819cdc9f* and it has to shown 2 oils per page. If we want to go to next page::
 
-  GET   http://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=4&number_of_elements=2
+  GET   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=4&number_of_elements=2
 
 All those features are supported by **query parameters**.
 
@@ -275,11 +275,11 @@ My main mistake was the URLs_ design, I added my own *verbs* skipping HTTP_ *ver
 
 For example::
 
-	POST	http://example.com/api/cars/ford-focus/delete-oil/5W30
+	POST	https://example.com/api/cars/ford-focus/delete-oil/5W30
 
 The right::
 
-	DELETE	http://example.com/api/cars/ford-focus/oils/5W30
+	DELETE	https://example.com/api/cars/ford-focus/oils/5W30
 
 
 Video Tutorials
@@ -298,7 +298,7 @@ These 2 videos help me to understand REST_ URLs_, I encourage you to watch them 
 .. _URLs: https://en.wikipedia.org/wiki/Uniform_resource_locator
 .. _HTTP: https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
 .. _CRUD: https://en.wikipedia.org/wiki/CRUD
-.. _`REST Tutorial`: http://www.restapitutorial.com/
+.. _`REST Tutorial`: https://www.restapitutorial.com/
 .. _UUID: https://en.wikipedia.org/wiki/Universally_unique_identifier
 .. _JSON: https://en.wikipedia.org/wiki/JSON
 .. _XML: https://en.wikipedia.org/wiki/XML

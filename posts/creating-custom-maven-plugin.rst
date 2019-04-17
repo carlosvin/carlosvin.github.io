@@ -5,7 +5,7 @@
 .. description: Example to understand Maven plugins concepts and how to create a custom Maven plugin from scratch
 .. type: text
 
-Maven has lots of plugins to assist you in project construction, testing, packaging and deployment. For example if you want to compile C++ code instead of Java, you can use `native-maven-plugin <http://www.mojohaus.org/maven-native/native-maven-plugin/>`_ . But what if you need something more specific? Then you can create a custom Maven plugin. 
+Maven has lots of plugins to assist you in project construction, testing, packaging and deployment. For example if you want to compile C++ code instead of Java, you can use `native-maven-plugin <https://www.mojohaus.org/maven-native/native-maven-plugin/>`_ . But what if you need something more specific? Then you can create a custom Maven plugin. 
 
 I will explain how to create a simple custom maven plugin to generate static blog site from Markdown files. I know we can already do that with `maven-site-plugin <https://maven.apache.org/plugins/maven-site-plugin/examples/creating-content.html>`_ since version 3.3, I will just use it for learning purposes.  
 
@@ -22,7 +22,7 @@ Mojo_
     An executable goal in Maven, e.g: ``mvn your-plugin:your-mojo`` will execute a maven goal ``your-mojo`` declared as part of ``your-plugin``. 
 
 Goal
-    It is equivalent to `Mojo <http://maven.apache.org/plugin-developers/index.html>`_ execution
+    It is equivalent to `Mojo <https://maven.apache.org/plugin-developers/index.html>`_ execution
 
 Lifecycle
     It is a well-defined sequence of phases. Each phase consists of a sequence of goals.
@@ -47,7 +47,7 @@ Create your custom plugin (Site Lifecycle)
 
 The plugin we are about to explain will `override site lifecycle <https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle>`_, which has only 2 default phases, so when we run ``mvn site`` using our new custom plugin it will execute the goals we are about to create. 
 
-Our plugin will work with ``md`` file bindings: It will build the project and deploy it using `maven deployment plugin <http://maven.apache.org/plugins/maven-deploy-plugin/>`_.
+Our plugin will work with ``md`` file bindings: It will build the project and deploy it using `maven deployment plugin <https://maven.apache.org/plugins/maven-deploy-plugin/>`_.
 
 
 Project structure
@@ -72,7 +72,7 @@ Project structure
 Dependency Injection
 --------------------
 
-Maven has finally chosen `JSR-330 <https://maven.apache.org/maven-jsr330.html>`_ as `dependency injection standard <http://javax-inject.github.io/javax-inject/>`_ (previously it was Plexus Annotations API).
+Maven has finally chosen `JSR-330 <https://maven.apache.org/maven-jsr330.html>`_ as `dependency injection standard <https://javax-inject.github.io/javax-inject/>`_ (previously it was Plexus Annotations API).
 
 To use dependency injection with Maven we have to: 
 
@@ -383,8 +383,8 @@ Verification script, it is checking if ``target/site/README.html`` file was gene
     assert generated.isFile()
 
 
-.. _Maven: http://maven.apache.org
-.. _Mojo: http://maven.apache.org/plugin-developers/index.html
+.. _Maven: https://maven.apache.org
+.. _Mojo: https://maven.apache.org/plugin-developers/index.html
 .. _`Mojo API`: https://maven.apache.org/developers/mojo-api-specification.html
 .. _`JUnit 4`: https://junit.org/junit4/
 .. _maven-failsafe-plugin: https://maven.apache.org/surefire/maven-failsafe-plugin

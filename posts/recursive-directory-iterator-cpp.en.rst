@@ -9,7 +9,7 @@ Introduction
 ------------
 
 Since C++17 new filesystem abstractions will be added to C++ environment. So far they are available as 
-`Experimental C++ Features <http://en.cppreference.com/w/cpp/experimental>`_. If you want to dig more about this new library, here it is the `final draft of File System Technical Specification <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf>`_.
+`Experimental C++ Features <https://en.cppreference.com/w/cpp/experimental>`_. If you want to dig more about this new library, here it is the `final draft of File System Technical Specification <https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf>`_.
 
 .. contents::
 
@@ -45,7 +45,7 @@ Let's see a simple example with ``std::filesystem::path`` class.
         return 0;
     }
 
-`Compile and run: Basic C++17 example <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_
+`Compile and run: Basic C++17 example <https://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_
 
 Run output is: 
 
@@ -60,11 +60,11 @@ Run output is:
 
 C++17 Filesystem Features
 --------------------------
-In this section, we are going to explain some `std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ features with examples, which will help us to highlight differences between C++11 and C++17 so we can get a better idea about what this new library will supply and how it might make developer's work easier.
+In this section, we are going to explain some `std::filesystem <https://en.cppreference.com/w/cpp/filesystem>`_ features with examples, which will help us to highlight differences between C++11 and C++17 so we can get a better idea about what this new library will supply and how it might make developer's work easier.
 
 std::filesystem::path
 =====================
-Upper we have seen a tiny `use case for std::filesystem::path  <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_. That is a quite powerful and convenient feature that supplies an multi-platform abstraction for paths to files using the correct directory path separator depending on the platform we are building our application for (``\`` for Windows based systems and ``/`` Unix based systems). 
+Upper we have seen a tiny `use case for std::filesystem::path  <https://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_. That is a quite powerful and convenient feature that supplies an multi-platform abstraction for paths to files using the correct directory path separator depending on the platform we are building our application for (``\`` for Windows based systems and ``/`` Unix based systems). 
 
 Directory separator
 ===================
@@ -88,7 +88,7 @@ When we want our application to use the correct directory separator in C++11, we
         return 0;
     }
 
-`Compile and run: C++11 separator example <http://coliru.stacked-crooked.com/a/5023ee989105fc54>`_
+`Compile and run: C++11 separator example <https://coliru.stacked-crooked.com/a/5023ee989105fc54>`_
 
 With C++17 it is just simpler:
 
@@ -106,11 +106,11 @@ With C++17 it is just simpler:
         return 0;
     }
 
-`Compile and run: C++17 separator example <http://coliru.stacked-crooked.com/a/1f2f63b3f5597d05>`_
+`Compile and run: C++17 separator example <https://coliru.stacked-crooked.com/a/1f2f63b3f5597d05>`_
 
 Directory Separator Operator
 ============================
-`std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_ implements **/** operator which allows to easily concatenate paths to files and directories.
+`std::filesystem::path <https://en.cppreference.com/w/cpp/filesystem/path>`_ implements **/** operator which allows to easily concatenate paths to files and directories.
 
 When we want to concatenate paths in C++11, we have to add extra logic to avoid adding duplicate separators and to select the correct separator for target platform:
 
@@ -139,10 +139,10 @@ When we want to concatenate paths in C++11, we have to add extra logic to avoid 
         return 0;
     }
 
-`Compile and run: Concatenate paths in C++11 <http://coliru.stacked-crooked.com/a/290b278ec1de9573>`_. 
+`Compile and run: Concatenate paths in C++11 <https://coliru.stacked-crooked.com/a/290b278ec1de9573>`_. 
 
 Checking program output we notice it is not fully correct, we should have checked whether path parts already contains a separator so we don't append another separator again.
-That logic is already implemented in `std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_, so C++17 can be like: 
+That logic is already implemented in `std::filesystem::path <https://en.cppreference.com/w/cpp/filesystem/path>`_, so C++17 can be like: 
 
 .. code-block:: cpp
 
@@ -164,12 +164,12 @@ That logic is already implemented in `std::filesystem::path <http://en.cpprefere
         return 0;
     }
 
-`Compile and run: Concatenate paths in C++17 <http://coliru.stacked-crooked.com/a/a24d50875b4daad1>`_. 
+`Compile and run: Concatenate paths in C++17 <https://coliru.stacked-crooked.com/a/a24d50875b4daad1>`_. 
 Code is cleaner and just correct, there are no duplicated separators. 
 
 Create/Remove Directories
 =========================
-`std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ comes with some utilities to create and remove files and directories, but firstly let's check out a way to do so in C++11.
+`std::filesystem <https://en.cppreference.com/w/cpp/filesystem>`_ comes with some utilities to create and remove files and directories, but firstly let's check out a way to do so in C++11.
 
 .. code-block:: cpp
 
@@ -201,7 +201,7 @@ Create/Remove Directories
         return 0;
     }
 
-`Compile and run: Create and remove directories C++11 <http://coliru.stacked-crooked.com/a/26f4763ec5b42adb>`_. 
+`Compile and run: Create and remove directories C++11 <https://coliru.stacked-crooked.com/a/26f4763ec5b42adb>`_. 
 We have to create/remove one by one. We could rewrite this code snippet with less lines (using a loop), but we still have to pay attention to creation/deletion order, we cannot remove parent directory before we have removed all children. 
 
 Since C++17 we can create and remove nested directories with just one call.
@@ -226,7 +226,7 @@ Since C++17 we can create and remove nested directories with just one call.
         return 0;
     }
 
-`Compile and run: Create and remove directories C++17 <http://coliru.stacked-crooked.com/a/62c2d22fa0e7144c>`_.
+`Compile and run: Create and remove directories C++17 <https://coliru.stacked-crooked.com/a/62c2d22fa0e7144c>`_.
 
 Full example: Recursive Directory Iterator
 ------------------------------------------
@@ -236,10 +236,10 @@ To keep C++11 example simple, I haven't added filtering logic, but it is in C++1
 
 .. listing:: recursive-directory/filesystem.11.cpp cpp
 
-`Compile and run C++11 example <http://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.
+`Compile and run C++11 example <https://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.
 
 Following example also filters files by extension.
 
 .. listing:: recursive-directory/filesystem.17.cpp cpp
 
-`Compile and run C++17 example <http://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.
+`Compile and run C++17 example <https://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.

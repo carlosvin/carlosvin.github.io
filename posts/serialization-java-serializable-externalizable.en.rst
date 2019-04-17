@@ -149,13 +149,13 @@ Following you can see a graph_ with `Tests results`_.
 
 
 .. _`Code in Github`: https://github.com/carlosvin/serializations-performance-java/
-.. _`Tests results`: http://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html
-.. _`tiny example in which we serialize an object with 2 collections with 100000 elements each one`: http://carlosvin.github.io/serializations-performance-java/
-.. _Java: http://www.java.com/
-.. _JSON: http://www.json.org/
-.. _XML: http://en.wikipedia.org/wiki/XML
-.. _Serializable: http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
-.. _Externalizable: http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html
+.. _`Tests results`: https://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html
+.. _`tiny example in which we serialize an object with 2 collections with 100000 elements each one`: https://carlosvin.github.io/serializations-performance-java/
+.. _Java: https://www.java.com/
+.. _JSON: https://www.json.org/
+.. _XML: https://en.wikipedia.org/wiki/XML
+.. _Serializable: https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+.. _Externalizable: https://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html
 .. _`graph`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/gviz/chartiframe?oid=2110613848
 .. _`Open image`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&oid=2110613848&zx=t87gu6ve3lan
 .. _`Travis CI build status`:  https://travis-ci.org/carlosvin/serializations-performance-java

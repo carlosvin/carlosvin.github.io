@@ -21,7 +21,7 @@ First of all, I have to say: building C/C++/Objective-C projects with Gradle_ is
 -  Different "flavors" of the same software, e.g: we can generate a “Community” release and other one with more enabled features called “Enterprise”.
 -  It allows multi-platform binary generation.
 
-As I said, this plugin is still having limitations although they are working on it: `Gradle C++ roadmap <http://www.gradleware.com/resources/cpp/>`__. If they achieve it I'll leave Autotools_ (I'm going to regret saying that).
+As I said, this plugin is still having limitations although they are working on it: `Gradle C++ roadmap <https://blog.gradle.org/state-and-future-of-the-gradle-software-model#a-way-forward>`_. If they achieve it I'll leave Autotools_ (I'm going to regret saying that).
 
 .. contents:: Index
 
@@ -30,7 +30,7 @@ As I said, this plugin is still having limitations although they are working on 
 Case study
 ==========
 
-I've extracted all the case study from `here <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__. I've adapted the project to be multi-platform with 2 versions "Community" and "Enterprise".
+I've extracted all the case study from `Gradle user guide for native software <https://docs.gradle.org/current/userguide/native_software.html>`__. I've adapted the project to be multi-platform with 2 versions "Community" and "Enterprise".
 
 The application consists of an executable and a dynamic library. The executable will use the library.
 
@@ -401,19 +401,19 @@ I recommend you to `Try it yourself`_.
 .. note:: If you find any issue in this example, please write a comment, open a defect or fix it yourself at https://github.com/carlosvin/cpp_gradle
 
 
-.. _SCons: http://www.scons.org
-.. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
-.. _Ant: http://ant.apache.org
-.. _Maven: http://maven.apache.org
-.. _Gradle: http://www.gradle.org
-.. _`Android Studio + Gradle`: http://developer.android.com/sdk/installing/studio-build.html
-.. _incubation: http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating
-.. _Toolchain: http://en.wikipedia.org/wiki/Toolchain
-.. _Java: http://www.java.com
+.. _SCons: https://www.scons.org
+.. _Autotools: https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
+.. _Ant: https://ant.apache.org
+.. _Maven: https://maven.apache.org
+.. _Gradle: https://www.gradle.org
+.. _`Android Studio + Gradle`: https://developer.android.com/sdk/installing/studio-build.html
+.. _incubation: https://docs.gradle.org/current/userguide/feature_lifecycle.html#sec:incubating_state
+.. _Toolchain: https://en.wikipedia.org/wiki/Toolchain
+.. _Java: https://www.java.com
 .. _Makefile: https://www.gnu.org/software/make/manual/html_node/Makefiles.html
-.. _Android: http://developer.android.com/sdk/installing/studio-build.html
+.. _Android: https://developer.android.com/studio/build
 .. _GCC: https://gcc.gnu.org/
-.. _`Getting Started Gradle Native`: http://gradle.org/getting-started-native/
+.. _`Getting Started Gradle Native`: https://docs.gradle.org/current/userguide/native_software.html
 
 .. [n] 'n' Positive integer
 

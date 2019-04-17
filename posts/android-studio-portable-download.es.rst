@@ -9,5 +9,5 @@
 
 Para quien quiera utilizar `Android Studio`_ sin instalarlo, como un programa "portable", aquí os dejo el enlace a la `última versión de Android Studio`_.
 
-.. _`Android Studio`: http://developer.android.com/sdk/installing/studio.html
+.. _`Android Studio`: https://developer.android.com/studio
 .. _`última versión de Android Studio`: https://developer.android.com/studio/preview/

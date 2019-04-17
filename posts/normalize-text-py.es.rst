@@ -29,6 +29,6 @@ Ejecutando el ejemplo:
   b'aaaa eeee iiii oooo nnnn AAAA'
 
 
-.. _ASCII: http://es.wikipedia.org/wiki/ASCII
-.. _Unicode: http://es.wikipedia.org/wiki/Unicode
-.. _Python: http://www.python.org
+.. _ASCII: https://es.wikipedia.org/wiki/ASCII
+.. _Unicode: https://es.wikipedia.org/wiki/Unicode
+.. _Python: https://www.python.org

@@ -15,6 +15,6 @@ En la charla nos cuenta qué es, cómo funciona, cuándo utilizarlo y cuándo no
 
 .. youtube:: 9WV7juNmyE8
 
-.. _Python: http://www.python.org
-.. _`A. Jesse Jiryu Davis`: http://emptysqua.re/blog/
+.. _Python: https://www.python.org
+.. _`A. Jesse Jiryu Davis`: https://emptysqua.re/blog/
 .. _asycnio: https://docs.python.org/3.4/library/asyncio.html

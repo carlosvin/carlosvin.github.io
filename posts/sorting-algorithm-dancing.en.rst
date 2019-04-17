@@ -10,6 +10,6 @@ You can read `the wikipedia topic Popular sorting algorithms`_, although I think
 
 .. youtube:: ywWBy6J5gz8
 
-.. _Quicksort: http://en.wikipedia.org/wiki/Quicksort
+.. _Quicksort: https://en.wikipedia.org/wiki/Quicksort
 .. _AlgoRythmics: https://www.youtube.com/user/AlgoRythmics/videos
-.. _`the wikipedia topic Popular sorting algorithms`: http://en.wikipedia.org/wiki/Sorting_algorithm#Popular_sorting_algorithms
+.. _`the wikipedia topic Popular sorting algorithms`: https://en.wikipedia.org/wiki/Sorting_algorithm#Popular_sorting_algorithms

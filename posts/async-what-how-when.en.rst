@@ -10,6 +10,6 @@ Asycnio_ is a library added to Python_ 3.4. that provides infrastructure for wri
 
 .. youtube:: 9WV7juNmyE8
 
-.. _Python: http://www.python.org
-.. _`A. Jesse Jiryu Davis`: http://emptysqua.re/blog/
+.. _Python: https://www.python.org
+.. _`A. Jesse Jiryu Davis`: https://emptysqua.re/blog/
 .. _asycnio: https://docs.python.org/3.4/library/asyncio.html

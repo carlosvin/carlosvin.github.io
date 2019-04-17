@@ -30,7 +30,7 @@ Para poder depurar nuestro programa de prueba :code:`tests-mylib`
 
 .. [#] Herramienta que pertenece a la Autotools_ usada para crear bibliotecas de software portables.
 
-.. [libtooldoc] Esta información la he sacado de http://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables
+.. [libtooldoc] Esta información la he sacado de https://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables
 
-.. _libtool: http://www.gnu.org/software/libtool/libtool.html
-.. _Autotools: http://es.wikipedia.org/wiki/GNU_build_system
+.. _libtool: https://www.gnu.org/software/libtool/libtool.html
+.. _Autotools: https://es.wikipedia.org/wiki/GNU_build_system

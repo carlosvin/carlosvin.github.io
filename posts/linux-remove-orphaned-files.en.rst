@@ -31,5 +31,5 @@ Debian_
    
    apt-get remove --purge $(deborphan)
 
-.. _Debian: http://debian.org/
-.. _Archlinux: http://archlinux.org/
+.. _Debian: https://debian.org/
+.. _Archlinux: https://archlinux.org/

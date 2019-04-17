@@ -10,7 +10,7 @@ Introducción
 
 A partir de C++17 se añadirán nuevas abstracciones sobre el sistema de ficheros. De momento están disponibles como parte de las 
 `Características Experimentales de C++ 
-<http://en.cppreference.com/w/cpp/experimental>`_. Si queréis profundizar aquí está el `borrador final de la Especificación Técnica del Sistema de Ficheros <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf>`_. 
+<https://en.cppreference.com/w/cpp/experimental>`_. Si queréis profundizar aquí está el `borrador final de la Especificación Técnica del Sistema de Ficheros <https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf>`_. 
 
 .. contents::
 
@@ -46,7 +46,7 @@ Veamos un ejemplo muy simple utilizando la clase ``std::filesystem::path``.
         return 0;
     }
 
-`Compilar y ejecutar: ejemplo básico C++17 <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_
+`Compilar y ejecutar: ejemplo básico C++17 <https://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_
 
 Como vemos el resultado de la ejecución es: 
 
@@ -61,11 +61,11 @@ Como vemos el resultado de la ejecución es:
 
 Características de filesystem C++17
 -----------------------------------
-A continuación vamos a analizar algunas características que nos proporciona `std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ con ejemplos en C++11 y C++17, de esta forma podremos hacernos una idea de las utilidades que esta nueva librería nos trae y cómo efectivamente ayuda al desarrollador a escribir código más claro y seguro. 
+A continuación vamos a analizar algunas características que nos proporciona `std::filesystem <https://en.cppreference.com/w/cpp/filesystem>`_ con ejemplos en C++11 y C++17, de esta forma podremos hacernos una idea de las utilidades que esta nueva librería nos trae y cómo efectivamente ayuda al desarrollador a escribir código más claro y seguro. 
 
 std::filesystem::path
 =====================
-Más arriba ya hemos visto un pequeño `ejemplo de uso de clase std::filesystem::path  <http://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_. Ésta abstracción nos proporciona una ruta a ficheros y directorios multi-plataforma, utilizando el separador de directorios correspondiente a la plataforma en la que trabajamos ``\`` en sistemas basados en Windows y ``/`` en sistemas basados en Unix. 
+Más arriba ya hemos visto un pequeño `ejemplo de uso de clase std::filesystem::path  <https://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7>`_. Ésta abstracción nos proporciona una ruta a ficheros y directorios multi-plataforma, utilizando el separador de directorios correspondiente a la plataforma en la que trabajamos ``\`` en sistemas basados en Windows y ``/`` en sistemas basados en Unix. 
 
 Separador de directorios
 ========================
@@ -89,7 +89,7 @@ Si quisiéramos que nuestro software utilizase el separador de directorios corre
         return 0;
     }
 
-`Compilar y ejecutar: ejemplo separador C++11 <http://coliru.stacked-crooked.com/a/5023ee989105fc54>`_
+`Compilar y ejecutar: ejemplo separador C++11 <https://coliru.stacked-crooked.com/a/5023ee989105fc54>`_
 
 En C++17 sería algo más sencillo:
 
@@ -107,11 +107,11 @@ En C++17 sería algo más sencillo:
         return 0;
     }
 
-`Compilar y ejecutar: ejemplo separador C++17 <http://coliru.stacked-crooked.com/a/1f2f63b3f5597d05>`_
+`Compilar y ejecutar: ejemplo separador C++17 <https://coliru.stacked-crooked.com/a/1f2f63b3f5597d05>`_
 
 Operador separador de directorios
 =================================
-`std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_ implementa el operador **/**, el cual nos permite concatenar fácilmente rutas a ficheros o directorios.
+`std::filesystem::path <https://en.cppreference.com/w/cpp/filesystem/path>`_ implementa el operador **/**, el cual nos permite concatenar fácilmente rutas a ficheros o directorios.
 
 Si quisiéramos construir rutas a directorios en C++11, tendríamos que implementar cierta lógica extra para detectar que no añadimos separadores extra y para utilizar el separador correcto:
 
@@ -140,9 +140,9 @@ Si quisiéramos construir rutas a directorios en C++11, tendríamos que implemen
         return 0;
     }
 
-`Compilar y ejecutar: ejemplo concatenar rutas C++11 <http://coliru.stacked-crooked.com/a/290b278ec1de9573>`_. Como vemos el resultado no es del todo correcto, deberíamos comprobar si las partes de la ruta ya contienen separador, para no añadirlo.
+`Compilar y ejecutar: ejemplo concatenar rutas C++11 <https://coliru.stacked-crooked.com/a/290b278ec1de9573>`_. Como vemos el resultado no es del todo correcto, deberíamos comprobar si las partes de la ruta ya contienen separador, para no añadirlo.
 
-Toda esta lógica está ya implementada en `std::filesystem::path <http://en.cppreference.com/w/cpp/filesystem/path>`_, así que el código en C++17 sería algo así: 
+Toda esta lógica está ya implementada en `std::filesystem::path <https://en.cppreference.com/w/cpp/filesystem/path>`_, así que el código en C++17 sería algo así: 
 
 .. code-block:: cpp
 
@@ -164,11 +164,11 @@ Toda esta lógica está ya implementada en `std::filesystem::path <http://en.cpp
         return 0;
     }
 
-`Compilar y ejecutar: ejemplo concatenar rutas C++17 <http://coliru.stacked-crooked.com/a/a24d50875b4daad1>`_. Aquí el código es más limpio y el resultado es simplemente correcto, no hay separadores duplicados. 
+`Compilar y ejecutar: ejemplo concatenar rutas C++17 <https://coliru.stacked-crooked.com/a/a24d50875b4daad1>`_. Aquí el código es más limpio y el resultado es simplemente correcto, no hay separadores duplicados. 
 
 Crear y borrar directorios
 ==========================
-`std::filesystem <http://en.cppreference.com/w/cpp/filesystem>`_ introduce algunas facilidades para crear y borrar directorios y ficheros, primero vamos a ver una de las formas de hacerlo en C++11.
+`std::filesystem <https://en.cppreference.com/w/cpp/filesystem>`_ introduce algunas facilidades para crear y borrar directorios y ficheros, primero vamos a ver una de las formas de hacerlo en C++11.
 
 .. code-block:: cpp
     
@@ -200,7 +200,7 @@ Crear y borrar directorios
         return 0;
     }
 
-`Compilar y ejecutar: crear y borrar directorios C++11 <http://coliru.stacked-crooked.com/a/26f4763ec5b42adb>`_. Para crear y borrar directorios anidados, debemos hacerlo uno por uno. Podemos escribir este fragmento de código con menos líneas, pero aún así tendremos que tener cuidado del orden en el que creamos/borramos los directorios. 
+`Compilar y ejecutar: crear y borrar directorios C++11 <https://coliru.stacked-crooked.com/a/26f4763ec5b42adb>`_. Para crear y borrar directorios anidados, debemos hacerlo uno por uno. Podemos escribir este fragmento de código con menos líneas, pero aún así tendremos que tener cuidado del orden en el que creamos/borramos los directorios. 
 
 En C++17 podemos borrar y crear directorios anidados con una sola llamada.
 
@@ -224,7 +224,7 @@ En C++17 podemos borrar y crear directorios anidados con una sola llamada.
         return 0;
     }
 
-`Compilar y ejecutar: crear y borrar directorios C++17 <http://coliru.stacked-crooked.com/a/62c2d22fa0e7144c>`_.
+`Compilar y ejecutar: crear y borrar directorios C++17 <https://coliru.stacked-crooked.com/a/62c2d22fa0e7144c>`_.
 
 Ejemplo completo: Iterar Recursivamente por Directorios
 -------------------------------------------------------
@@ -234,10 +234,10 @@ Este es el ejemplo en C++11, sin filtrar por extension, para evitar complicarlo:
 
 .. listing:: recursive-directory/filesystem.11.cpp cpp
 
-`Compilar y ejecutar el ejemplo C++11 <http://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.
+`Compilar y ejecutar el ejemplo C++11 <https://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.
 
 El siguiente ejemplo filtra los ficheros por extension.
 
 .. listing:: recursive-directory/filesystem.17.cpp cpp
 
-`Compilar y ejecutar el ejemplo C++17 <http://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.
+`Compilar y ejecutar el ejemplo C++17 <https://coliru.stacked-crooked.com/a/af4228e039a281b3>`_.

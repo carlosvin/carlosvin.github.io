@@ -13,6 +13,6 @@ Siempre puedes consultar en la wikipedia `Algoritmos de ordenamiento`_, aunque n
 
 .. youtube:: ywWBy6J5gz8
 
-.. _Quicksort: http://es.wikipedia.org/wiki/Quicksort
+.. _Quicksort: https://es.wikipedia.org/wiki/Quicksort
 .. _AlgoRythmics: https://www.youtube.com/user/AlgoRythmics/videos
-.. _`Algoritmos de ordenamiento`: http://es.wikipedia.org/wiki/Algoritmo_de_ordenamiento#Lista_de_algoritmos_de_ordenamiento
+.. _`Algoritmos de ordenamiento`: https://es.wikipedia.org/wiki/Algoritmo_de_ordenamiento#Lista_de_algoritmos_de_ordenamiento

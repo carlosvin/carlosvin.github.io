@@ -61,7 +61,7 @@ Trasladando el ejemplo a las APIs_ REST_:
 
 ::
 
-  GET   http://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
+  GET   https://tiendadecoches.es/api/coches/fiat-bravo-19-emotion-120cv
 
 De esta forma nuestra API_ nos puede proporcionar información del coche.
 
@@ -69,7 +69,7 @@ Esto es un ejemplo muy simplificado, pero realmente cuando accedemos a un recurs
 
 ::
 
-  GET  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+  GET  https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
 
 Pero nuestra API_, al igual que una tienda, no tiene por qué ser tan estricta, podemos preguntar por los coches que tienen ciertas caracteríticas, podemos ir al concesionario y decir:
 
@@ -79,7 +79,7 @@ Y el dependiente, amablemente, te mostrará todos los Fiat Bravo que tiene. Veam
 
 ::
 
-  GET  http://tiendadecoches.es/api/coches/?marca=fiat&modelo=bravo
+  GET  https://tiendadecoches.es/api/coches/?marca=fiat&modelo=bravo
 
 Nuestra API_ nos devolverá todos los coches que son marca Fiat y modelo Bravo.
 
@@ -96,11 +96,11 @@ Antes queríamos información (leer) y utilizábamos nuestro verbo GET, ahora lo
 
 ::
 
-  PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+  PUT   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
 
 Pero nos falta algo, tenemos que decir qué queremos cambiar del coche, por ejemplo, imaginemos que queremos cambiar la cilintrada y poner 100CV.
 
-Tenemos que enviar la nueva cilindrada a esta URL_  http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f por HTTP_ utilizando el verbo **PUT**.
+Tenemos que enviar la nueva cilindrada a esta URL_  https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f por HTTP_ utilizando el verbo **PUT**.
 
 El protocolo HTTP_ nos permite enviar información en un mensaje PUT, así que solo nos falta pensar en el formato en que lo vamos a enviar.
 
@@ -122,7 +122,7 @@ Continuando con el ejemplo de los coches, imaginemos que ahora somos el concesio
 
 ::
 
-  DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
+  DELETE   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f
 
 En el caso del borrado, no hay que proporcionar ninguna información adicional, con el verbo (DELETE) y el recurso es suficiente.
 
@@ -133,7 +133,7 @@ Y nos queda último verbo, crear (POST). En este caso no hay que identificar el 
 
 ::
 
-  POST   http://tiendadecoches.es/api/coches/
+  POST   https://tiendadecoches.es/api/coches/
 
 Lo que sí que tenemos que enviar son los datos del recurso que vamos a crear.
 
@@ -188,7 +188,7 @@ Si queremos añadir un elemento a la colección de coches lo que vamos a hacer e
 
 Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que ya existe::
 
-  POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+  POST   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
 
   {
   "tipo": "5W30",
@@ -198,7 +198,7 @@ Para añadir un nuevo aceite al coche cce05bee-386b-11e5-a151-feff819cdc9f, que 
 
 Si queremos añadir otro aceite::
 
-  POST   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+  POST   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
 
   {
   "tipo": "10W30",
@@ -210,7 +210,7 @@ Modificar un elemento de la colección
 
 Si queremos modificar los datos del aceite *5W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  PUT   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
+  PUT   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/5W30/
 
   {
   "tipo": "5W30",
@@ -223,14 +223,14 @@ Borrar un elemento de la colección
 
 Para borrar un aceite *10W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  DELETE   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+  DELETE   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
 
 Leer un elemento de la colección
 ********************************
 
 Para obtener la información del aceite *10W30* del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
+  GET   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/10W30
 
 
 Listar elementos de la colección
@@ -240,23 +240,23 @@ Como hemos visto en `Leer un elemento de la colección`_, podemos obtener inform
 
 Podemos obtener todos los aceites soportados por el coche *cce05bee-386b-11e5-a151-feff819cdc9f*, es tan simple como::
 
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
+  GET   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/
 
 Pero también podemos proporcionar otras funcionalidades en nuestra API_, como obtener los resultados ordenados::
 
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&orden=ascendente
+  GET   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?ordenar_por=tipo&orden=ascendente
 
 Podemos pedir al API_ que nos devuelva los 10 primeros aceites del coche *cce05bee-386b-11e5-a151-feff819cdc9f*::
 
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
+  GET   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?numero_de_elementos=10
 
 Cuando no queremos mostrar toda la lista completa, podemos proporcionar un sistema de paginación::
 
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&numero_de_elementos=3
+  GET   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=3&numero_de_elementos=3
 
 En la petición de arriba, estamos diciendo que nos devuelva la página 3 de los aceites del coche *cce05bee-386b-11e5-a151-feff819cdc9f* y que nos muestre 3 aceites por página. Si quisiéramos ir a la página siguiente::
 
-  GET   http://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&numero_de_elementos=3
+  GET   https://tiendadecoches.es/api/coches/cce05bee-386b-11e5-a151-feff819cdc9f/aceites/?pagina=4&numero_de_elementos=3
 
 Todas estas funcionalidades, son posibles gracias a los **parámetros de consulta**.
 
@@ -271,13 +271,13 @@ Por ejemplo, creaba URLs_ del tipo:
 
 ::
 
-	POST	http://example.com/api/coches/seat-ibiza/borrar-rueda/3
+	POST	https://example.com/api/coches/seat-ibiza/borrar-rueda/3
 
 Cuando lo correcto sería
 
 ::
 
-	DELETE	http://example.com/api/coches/seat-ibiza/ruedas/3
+	DELETE	https://example.com/api/coches/seat-ibiza/ruedas/3
 
 
 Video Tutoriales
@@ -296,7 +296,7 @@ Estos tutoriales me fueron de gran ayuda y os recomiendo que los veáis enteros:
 .. _URLs: https://es.wikipedia.org/wiki/Localizador_de_recursos_uniforme
 .. _HTTP: https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol
 .. _CRUD: https://es.wikipedia.org/wiki/CRUD
-.. _`REST Tutorial`: http://www.restapitutorial.com/
+.. _`REST Tutorial`: https://www.restapitutorial.com/
 .. _UUID: https://es.wikipedia.org/wiki/Universally_unique_identifier
 .. _JSON: https://es.wikipedia.org/wiki/JSON
 .. _XML: https://es.wikipedia.org/wiki/XML

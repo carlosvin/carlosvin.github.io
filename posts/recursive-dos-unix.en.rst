@@ -14,4 +14,4 @@ There is a way quite simple to convert all your files from Windows to Unix forma
 	
 	find . -type f -print0 | xargs -0 dos2unix
   
-I got it, of course, form http://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory
+I got it, of course, form https://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory

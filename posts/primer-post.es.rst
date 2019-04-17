@@ -70,22 +70,22 @@ Tengo que decir que quería un generador de sitios estáticos, porque están de 
 .. [#] Don't Repeat Yourself (En español, "no te repitas")
 .. [#] Content Management System ("Sistema de gestión de contenidos")
 
-.. _DRY: http://en.wikipedia.org/wiki/Don't_repeat_yourself
+.. _DRY: https://en.wikipedia.org/wiki/Don't_repeat_yourself
 .. _PhpNuke: https://www.phpnuke.org/
 .. _Drupal: https://drupal.org/
 .. _Wordpress: https://wordpress.org/
-.. _PHP: http://www.php.net/
-.. _Python: http://www.python.org
+.. _PHP: https://www.php.net/
+.. _Python: https://www.python.org
 .. _Django: https://www.djangoproject.com/
 .. _CMSdj: https://bitbucket.org/carlosvin/cmsdj
 .. _Bitbucket: https://bitbucket.org
-.. _Nikola: http://getnikola.com/
-.. _Jekyll: http://jekyllrb.com/
-.. _Pelican: http://blog.getpelican.com/
-.. _Mynt: http://mynt.mirroredwhite.com/
+.. _Nikola: https://getnikola.com/
+.. _Jekyll: https://jekyllrb.com/
+.. _Pelican: https://blog.getpelican.com/
+.. _Mynt: https://mynt.mirroredwhite.com/
 .. _Travis: https://travis-ci.org/
-.. _Github: http://www.github.com
-.. _CSS3: http://www.w3.org/Style/CSS/current-work
-.. _HTML5: http://www.w3.org/html/
-.. _Jenkins: http://jenkins-ci.org/
+.. _Github: https://www.github.com
+.. _CSS3: https://www.w3.org/Style/CSS/current-work
+.. _HTML5: https://www.w3.org/html/
+.. _Jenkins: https://jenkins-ci.org/
 

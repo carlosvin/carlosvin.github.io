@@ -8,5 +8,5 @@
 
 If you want to use `Android Studio`_ without installation, as a portable software, here you have the  link to `last portable version of Android Studio`_.
 
-.. _`Android Studio`: http://developer.android.com/sdk/installing/studio.html
+.. _`Android Studio`: https://developer.android.com/studio
 .. _`last portable version of Android Studio`: https://developer.android.com/studio/preview/

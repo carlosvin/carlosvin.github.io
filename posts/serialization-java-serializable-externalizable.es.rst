@@ -148,13 +148,13 @@ A continuación os dejo los enlaces a:
 
 
 .. _`Código en github`: https://github.com/carlosvin/serializations-performance-java/
-.. _`Resultados de los tests`: http://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html
-.. _`pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos`: http://carlosvin.github.io/serializations-performance-java/
-.. _Java: http://www.java.com/
-.. _JSON: http://www.json.org/
-.. _XML: http://en.wikipedia.org/wiki/XML
-.. _Serializable: http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
-.. _Externalizable: http://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html
+.. _`Resultados de los tests`: https://carlosvin.github.io/serializations-performance-java/reports/tests/classes/com.diky.contacts.SerializationTest.html
+.. _`pequeño ejemplo en el que se serializa un objeto con dos colecciones con 100000 emails y 100000 teléfonos`: https://carlosvin.github.io/serializations-performance-java/
+.. _Java: https://www.java.com/
+.. _JSON: https://www.json.org/
+.. _XML: https://en.wikipedia.org/wiki/XML
+.. _Serializable: https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+.. _Externalizable: https://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html
 .. _`gráfico`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/gviz/chartiframe?oid=2110613848
 .. _`Abrir imagen`: https://docs.google.com/spreadsheets/d/1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8/embed/oimg?id=1V9p6shPMpSr7RcaTruXpj_0ZQUpVjMFdeh7AnObaBL8&oid=2110613848&zx=t87gu6ve3lan
 .. _`Construcción en travis`:  https://travis-ci.org/carlosvin/serializations-performance-java

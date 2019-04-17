@@ -63,11 +63,11 @@ Meson_
 I've found two interesting comparisons about available C++ build systems, they might be a little be biased because those comparisons come from Meson_ and Scons_.
 
 - `C++ build systems comparison from Scons <https://bitbucket.org/scons/scons/wiki/SconsVsOtherBuildTools>`_.
-- `C++ build systems comparison from Meson <http://mesonbuild.com/Simple-comparison.html>`_.
+- `C++ build systems comparison from Meson <https://mesonbuild.com/Simple-comparison.html>`_.
 
 Unit Testing Framework
 ======================
-I have used some xUnit_ based libraries like `UnitTest++ <https://github.com/unittest-cpp/unittest-cpp>`_, `CppUTest <http://cpputest.github.io/>`_ or `Google Test`_ which match perfectly with `Google Mock <https://github.com/google/googletest/tree/master/googlemock>`_.
+I have used some xUnit_ based libraries like `UnitTest++ <https://github.com/unittest-cpp/unittest-cpp>`_, `CppUTest <https://cpputest.github.io/>`_ or `Google Test`_ which match perfectly with `Google Mock <https://github.com/google/googletest/tree/master/googlemock>`_.
 If you want a safe bet that fulfills almost of your testing needs I highly recommend `Google Test`_.
 
 But time ago I found a testing framework with some interesting features, Catch_:
@@ -75,7 +75,7 @@ But time ago I found a testing framework with some interesting features, Catch_:
 - It is just a header file with no external dependencies, so very easy to start (wget + include downloaded file).
 - You can use normal unit test style or BDD_-style
 
-If you want to know more about Catch_, I recommend you to give it a try, it is a matter of 2 minutes to have a `simple example up and running <https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests>`_. You can also read some interesting articles like `Why do we need yet another C++ test framework? <https://github.com/philsquared/Catch/blob/master/docs/why-catch.md>`_ or `Testing C++ With A New Catch <http://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/>`_.
+If you want to know more about Catch_, I recommend you to give it a try, it is a matter of 2 minutes to have a `simple example up and running <https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests>`_. You can also read some interesting articles like `Why do we need yet another C++ test framework? <https://github.com/philsquared/Catch/blob/master/docs/why-catch.md>`_ or `Testing C++ With A New Catch <https://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/>`_.
 
 doctest_: A Catch_ alternative
 ------------------------------
@@ -321,17 +321,16 @@ Project structure (`Fork project <https://github.com/carlosvin/uuid-cpp>`_)
 .. _Make: https://www.gnu.org/software/make/manual/make.html
 .. _Gradle: https://gradle.org/
 .. _Maven: https://maven.apache.org/
-.. _Scons: http://scons.org/
-.. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
-.. _Meson: http://mesonbuild.com/
+.. _Scons: https://scons.org/
+.. _Autotools: https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
+.. _Meson: https://mesonbuild.com/
 .. _Gnome: https://www.gnome.org/
-.. _Scons: http://scons.org/
 .. _Ninja: https://ninja-build.org/
 .. _Python: https://python.org/
 .. _Catch: https://github.com/philsquared/Catch
 .. _xUnit: https://en.wikipedia.org/wiki/XUnit
 .. _BDD: https://en.wikipedia.org/wiki/Behavior-driven_development
 .. _UUID: https://en.wikipedia.org/wiki/Universally_unique_identifier
-.. _mt19937: http://www.cplusplus.com/reference/random/mt19937/
+.. _mt19937: https://www.cplusplus.com/reference/random/mt19937/
 .. _doctest: https://github.com/onqtam/doctest
 .. _`benchmark results`: https://github.com/onqtam/doctest/blob/master/doc/markdown/benchmarks.md

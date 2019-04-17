@@ -22,11 +22,11 @@ Abajo está un `Gist del Código`_, he vuelto a escribir el código de cabeza y 
 
 
 
-.. _mutex: http://es.wikipedia.org/wiki/Exclusi%C3%B3n_mutua_(inform%C3%A1tica)
-.. _`C++11`: http://es.wikipedia.org/wiki/C%2B%2B11
-.. _C: http://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)
-.. _`clase mutex`: http://es.cppreference.com/w/cpp/thread/mutex
-.. _`clase mutex de C++11`: http://es.cppreference.com/w/cpp/thread/mutex
-.. _pthread: http://en.wikipedia.org/wiki/POSIX_Threads
-.. _`versiones de compiladores previos a C++11`: http://clang.llvm.org/cxx_status.html
+.. _mutex: https://es.wikipedia.org/wiki/Exclusi%C3%B3n_mutua_(inform%C3%A1tica)
+.. _`C++11`: https://es.wikipedia.org/wiki/C%2B%2B11
+.. _C: https://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)
+.. _`clase mutex`: https://es.cppreference.com/w/cpp/thread/mutex
+.. _`clase mutex de C++11`: https://es.cppreference.com/w/cpp/thread/mutex
+.. _pthread: https://en.wikipedia.org/wiki/POSIX_Threads
+.. _`versiones de compiladores previos a C++11`: https://clang.llvm.org/cxx_status.html
 .. _`Gist del Código`: https://gist.github.com/carlosvin/11257689

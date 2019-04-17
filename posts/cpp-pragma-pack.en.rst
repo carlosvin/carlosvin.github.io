@@ -327,7 +327,7 @@ Performance test source code:
 	    return 0;
 	}
 
-.. _`Executing code without pragma pack directive`: http://coliru.stacked-crooked.com/a/c7deb3df49bebd40
-.. _`Executing code with pragma pack directive`: http://coliru.stacked-crooked.com/a/7c18ee6585e57366
-.. _`execute performance test`: http://coliru.stacked-crooked.com/a/954ad542659c7591
+.. _`Executing code without pragma pack directive`: https://coliru.stacked-crooked.com/a/c7deb3df49bebd40
+.. _`Executing code with pragma pack directive`: https://coliru.stacked-crooked.com/a/7c18ee6585e57366
+.. _`execute performance test`: https://coliru.stacked-crooked.com/a/954ad542659c7591
 

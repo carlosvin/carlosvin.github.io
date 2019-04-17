@@ -330,7 +330,7 @@ A continuación pego el código de la prueba de rendimiento.
 	    return 0;
 	}
 
-.. _`Ejecutando el código sin la directiva pragma`: http://coliru.stacked-crooked.com/a/c7deb3df49bebd40
-.. _`Ejecutando el código con las directivas pragma`: http://coliru.stacked-crooked.com/a/7c18ee6585e57366
-.. _`ejecutar la prueba de rendimiento en este enlace`: http://coliru.stacked-crooked.com/a/954ad542659c7591
+.. _`Ejecutando el código sin la directiva pragma`: https://coliru.stacked-crooked.com/a/c7deb3df49bebd40
+.. _`Ejecutando el código con las directivas pragma`: https://coliru.stacked-crooked.com/a/7c18ee6585e57366
+.. _`ejecutar la prueba de rendimiento en este enlace`: https://coliru.stacked-crooked.com/a/954ad542659c7591
 

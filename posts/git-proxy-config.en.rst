@@ -39,4 +39,4 @@ password
 
 More info in `official Git configuration`_. 
 
-.. _`official Git configuration`: http://git-scm.com/docs/git-config
+.. _`official Git configuration`: https://git-scm.com/docs/git-config

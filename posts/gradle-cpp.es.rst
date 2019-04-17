@@ -20,7 +20,7 @@ Antes de nada hay que decir que la construcción de proyectos C/C++ y Objective-
 -  Generar distintos “sabores” de aplicaciones, por ejemplo: podremos generar una aplicación “Community” y otra con más características habilitadas llamada “Enterprise”.
 -  Permite generar binarios para distintas plataformas, esto depende de las cadenas de herramientas ( Toolchains_ ) que tengamos instaladas en la máquina de compilación.
 
-Como decía todavía tiene limitaciones, aunque están trabajando en ello y `si consiguen lo que tienen planeado <http://www.gradleware.com/resources/cpp/>`__ dejaré Autotools_ (me arrepentiré de haber dicho esto).
+Como decía todavía tiene limitaciones, aunque están trabajando en ello y `si consiguen lo que tienen planeado <https://blog.gradle.org/state-and-future-of-the-gradle-software-model#a-way-forward>`_ dejaré Autotools_ (me arrepentiré de haber dicho esto).
 
 .. contents:: índice
 
@@ -29,7 +29,7 @@ Como decía todavía tiene limitaciones, aunque están trabajando en ello y `si 
 Un caso práctico
 ================
 
-Básicamente he sacado todo el ejemplo de `aquí <http://www.gradle.org/docs/current/userguide/nativeBinaries.html>`__ y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.
+Básicamente he sacado todo el ejemplo de `la guia de construcción de software native de Gradle <https://docs.gradle.org/current/userguide/native_software.html>`__ y lo he adaptado a un caso en el que hay varias plataformas y quiero generar dos versiones distintas de mi software “Community” y “Enterprise”.
 
 La aplicación es un ejecutable y una librería dinámica. El ejecutable hace uso de esta librería. Ya está, solo quiero mostrar lo que nos permite hacer Gradle_.
 
@@ -389,20 +389,20 @@ Os recomiendo que lo descarguéis y probéis lo sencillo que resulta.
 .. note:: Si encontráis algún problema en el ejemplo, escribir un comentario, abrir un defecto o corregirlo vosotros mismos en https://github.com/carlosvin/cpp_gradle
 
 
-.. _SCons: http://www.scons.org
-.. _Autotools: http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
-.. _Ant: http://ant.apache.org
-.. _Maven: http://maven.apache.org
-.. _Gradle: http://www.gradle.org
-.. _`Android Studio + Gradle`: http://developer.android.com/sdk/installing/studio-build.html
-.. _incubación: http://www.gradle.org/docs/current/userguide/feature_lifecycle.html#incubating
-.. _Toolchains: http://es.wikipedia.org/wiki/Cadena_de_herramientas
-.. _Java: http://www.java.com
-.. _Makefile: http://es.wikipedia.org/wiki/Make
-.. _Android: http://developer.android.com/sdk/installing/studio-build.html
-.. _`Instala Gradle`: http://www.gradle.org/docs/current/userguide/installation.html
+.. _SCons: https://www.scons.org
+.. _Autotools: https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html#Autotools-Introduction
+.. _Ant: https://ant.apache.org
+.. _Maven: https://maven.apache.org
+.. _Gradle: https://www.gradle.org
+.. _`Android Studio + Gradle`: https://developer.android.com/studio/build
+.. _incubación: https://docs.gradle.org/current/userguide/feature_lifecycle.html#sec:incubating_state
+.. _Toolchains: https://es.wikipedia.org/wiki/Cadena_de_herramientas
+.. _Java: https://www.java.com
+.. _Makefile: https://es.wikipedia.org/wiki/Make
+.. _Android: https://developer.android.com/studio/build
+.. _`Instala Gradle`: https://www.gradle.org/docs/current/userguide/installation.html
 .. _GCC: https://gcc.gnu.org/
-.. _`Getting Started Gradle Native`: http://gradle.org/getting-started-native/
+.. _`Getting Started Gradle Native`: https://docs.gradle.org/current/userguide/native_software.html
 
 .. [n] 'n' es un número entero positivo
 

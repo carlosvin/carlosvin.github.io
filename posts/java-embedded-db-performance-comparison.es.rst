@@ -171,25 +171,25 @@ A continuación podéis ver un con los resultados de los tests.
 
 .. _`Abrir el gráfico interactivo`: https://docs.google.com/spreadsheets/d/1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE/gviz/chartiframe?oid=1952366256
 .. _`Abrir imagen`: https://docs.google.com/spreadsheets/d/1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE/embed/oimg?id=1v9sSGGXzi_YTSx-7zfOYrjwFiqaNGt-rz8e6PY7ZVDE&oid=1952366256&zx=vovadjcmpie1
-.. _Gradle: http://www.gradle.org
+.. _Gradle: https://www.gradle.org
 .. _DerbyDB: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java
 .. _SqliteDB: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java
 .. _JdbcDb: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/JdbcDb.java
-.. _JDBC: http://es.wikipedia.org/wiki/Java_Database_Connectivity
-.. _JDK: http://es.wikipedia.org/wiki/Java_Development_Kit
-.. _ACID: http://es.wikipedia.org/wiki/ACID
-.. _NoSQL: http://es.wikipedia.org/wiki/NoSQL
-.. _Derby: http://db.apache.org/derby/
-.. _`Java EE`: http://es.wikipedia.org/wiki/Java_EE
-.. _JavaDB: http://www.oracle.com/technetwork/es/java/javadb/overview/index.html
-.. _`ANSI/ISO SQL`: http://es.wikipedia.org/wiki/SQL
-.. _`SQL-92`: http://en.wikipedia.org/wiki/SQL-92
-.. _`ANSI C`: http://es.wikipedia.org/wiki/ANSI_C
-.. _`desde otros lenguajes de programación`: http://es.wikipedia.org/wiki/Sqlite#Lenguajes_de_programaci.C3.B3n
-.. _`base de datos orientada a objetos`: http://es.wikipedia.org/wiki/Base_de_datos_orientada_a_objetos
-.. _JPA: http://es.wikipedia.org/wiki/Java_Persistence_API
-.. _Java: http://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)
-.. _SQL: http://es.wikipedia.org/wiki/SQL
-.. _CRUD: http://es.wikipedia.org/wiki/CRUD
+.. _JDBC: https://es.wikipedia.org/wiki/Java_Database_Connectivity
+.. _JDK: https://es.wikipedia.org/wiki/Java_Development_Kit
+.. _ACID: https://es.wikipedia.org/wiki/ACID
+.. _NoSQL: https://es.wikipedia.org/wiki/NoSQL
+.. _Derby: https://db.apache.org/derby/
+.. _`Java EE`: https://es.wikipedia.org/wiki/Java_EE
+.. _JavaDB: https://www.oracle.com/technetwork/es/java/javadb/overview/index.html
+.. _`ANSI/ISO SQL`: https://es.wikipedia.org/wiki/SQL
+.. _`SQL-92`: https://en.wikipedia.org/wiki/SQL-92
+.. _`ANSI C`: https://es.wikipedia.org/wiki/ANSI_C
+.. _`desde otros lenguajes de programación`: https://es.wikipedia.org/wiki/Sqlite#Lenguajes_de_programaci.C3.B3n
+.. _`base de datos orientada a objetos`: https://es.wikipedia.org/wiki/Base_de_datos_orientada_a_objetos
+.. _JPA: https://es.wikipedia.org/wiki/Java_Persistence_API
+.. _Java: https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)
+.. _SQL: https://es.wikipedia.org/wiki/SQL
+.. _CRUD: https://es.wikipedia.org/wiki/CRUD
 .. _Price: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java
 .. _DB: https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DB.java

@@ -20,11 +20,11 @@ Then I leave my code proposal (`Gist code`_).
 .. gist:: 11257689
 
 
-.. _mutex: http://en.wikipedia.org/wiki/Mutex
-.. _`C++11`: http://en.wikipedia.org/wiki/C%2B%2B11
-.. _C: http://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)
-.. _`mutex class`: http://en.cppreference.com/w/cpp/thread/mutex
-.. _`C++11 mutex class`: http://en.cppreference.com/w/cpp/thread/mutex
-.. _pthread: http://en.wikipedia.org/wiki/POSIX_Threads
-.. _`previous C++11 compiler versions`: http://clang.llvm.org/cxx_status.html
+.. _mutex: https://en.wikipedia.org/wiki/Mutex
+.. _`C++11`: https://en.wikipedia.org/wiki/C%2B%2B11
+.. _C: https://es.wikipedia.org/wiki/C_(lenguaje_de_programaci%C3%B3n)
+.. _`mutex class`: https://en.cppreference.com/w/cpp/thread/mutex
+.. _`C++11 mutex class`: https://en.cppreference.com/w/cpp/thread/mutex
+.. _pthread: https://en.wikipedia.org/wiki/POSIX_Threads
+.. _`previous C++11 compiler versions`: https://clang.llvm.org/cxx_status.html
 .. _`Gist code`: https://gist.github.com/carlosvin/11257689

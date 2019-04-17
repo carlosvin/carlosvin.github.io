@@ -37,5 +37,5 @@ En distribuciones basadas en Debian_, pasa lo mismo que en Archlinux_ (bueno par
    
    apt-get remove --purge $(deborphan)
 
-.. _Debian: http://debian.org/
-.. _Archlinux: http://archlinux.org/
+.. _Debian: https://debian.org/
+.. _Archlinux: https://archlinux.org/

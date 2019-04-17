@@ -40,4 +40,4 @@ puerto
 
 Más información en `la configuración oficial de Git`_. 
 
-.. _`la configuración oficial de Git`: http://git-scm.com/book/es/Personalizando-Git-Configuraci%C3%B3n-de-Git
+.. _`la configuración oficial de Git`: https://git-scm.com/book/es/Personalizando-Git-Configuraci%C3%B3n-de-Git
