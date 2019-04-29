@@ -349,10 +349,10 @@ INDEX_TEASERS = True
 # I recommend using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
 LICENSE = """
-   <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+   <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/2.5/">
    <img alt="Creative Commons License BY-NC-SA"
    style="border-width:0; margin-bottom:12px;"
-   src="https://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
+   src="https://licensebuttons.net/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
 
 
 
