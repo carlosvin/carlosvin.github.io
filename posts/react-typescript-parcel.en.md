@@ -1,6 +1,7 @@
 .. title: Create SPA: React + Typescript + Parcel
 .. slug: react-typescript-parcel
 .. date: 2019/01/01 13:30:02
+.. modified: 2019/07/10 13:30:02
 .. tags: React, Typescript, Parcel, SPA
 .. link: https://github.com/carlosvin/react-typescript-parcel-template
 .. description: Example project how to create a Single Page Application with React, Typescript and Parcel.
@@ -12,7 +13,17 @@ Some time ago I tried [Parcel](https://parceljs.org), I really loved how simple 
 ```bash
 git clone https://github.com/carlosvin/react-typescript-parcel-template.git
 ```
+
 [TOC]
+
+# Read this before: Parcel is not as mature as Webpack
+
+If you want to create a production ready React application, use [Webpack](https://webpack.js.org/) or better [create-react-app](https://facebook.github.io/create-react-app/) which bring everything you need to develop a [PWA](https://developers.google.com/web/progressive-web-apps/) with React and Typescript. Following you can find an example of an app I am developing using [create-react-app](https://facebook.github.io/create-react-app/): https://github.com/carlosvin/budget-tracker. 
+
+Parcel is a package bundler under development, not as mature as webpack. There are no go errors for me, at least in regards to Typescript support, see this [issue in github #1378](https://github.com/parcel-bundler/parcel/issues/1378).
+
+I still think it is a promising project, bringing more simplicity and speed to JS bundlers world, I will give it a try again for serious projects when Parcel 2 is ready, check [Parcel 2 development status](https://github.com/parcel-bundler/parcel/projects/5). 
+
 
 # Quick start
 
@@ -24,6 +35,8 @@ cd react-typescript-parcel-template
 yarn install
 yarn start
 ```
+
+
 <!--TEASER_END-->
 Last `yarn start` command will:
 - start a development server at http://localhost:1234 with [hot module replacement](https://en.parceljs.org/hmr.html)

@@ -1,6 +1,7 @@
 .. title: SPA: React + Typescript + Parcel
 .. slug: react-typescript-parcel
 .. date: 2019/01/01 13:30:02
+.. modified: 2019/07/10 13:30:02
 .. tags: React, Typescript, Parcel, SPA
 .. link: https://github.com/carlosvin/react-typescript-parcel-template
 .. description: proyecto de ejemplo en el que se muestra cómo crear una aplicación web de página única (SPA) con React, Typescript y Parcel.
@@ -17,6 +18,19 @@ git clone https://github.com/carlosvin/react-typescript-parcel-template.git
 O simplemente descargar el [archivo ZIP con el proyecto](https://github.com/carlosvin/react-typescript-parcel-template/archive/1.0.zip).
 
 [TOC]
+
+
+# Leer antes: Parcel no está tan maduro como Webpack
+
+Si quieres crear una aplicación React lista para producción, utiliza [Webpack](https://webpack.js.org/) o mejor aún utiliza [create-react-app](https://facebook.github.io/create-react-app/) que viene con todo lo que necesitas para crear una [PWA](https://developers.google.com/web/progressive-web-apps/) con React y Typescript, aquí puedes encontrar un ejemplo de una applicación que estoy desarrollando: https://github.com/carlosvin/budget-tracker. 
+
+
+Parcel esta en desarrollo y para mí todavía hay problemas por los que no lo considero para proyectos serios. Una de las razones es que el soporte para Typescript deja bastante que desear, por ejemplo mira este [problema en github #1378](https://github.com/parcel-bundler/parcel/issues/1378).
+
+Creo que sigue siendo un proyecto prometedor, por la simplicidad y rapided que trae al mundo de los empaquetadores para Javascript, pero de momento no está listo para producción, al menos para aplicaciones desarrolladas con React y Typescript.
+
+Volveré a probarlo cuando Parcel 2 esté listo: [Estado actual de Parcel 2](https://github.com/parcel-bundler/parcel/projects/5).
+
 
 # Inicio Rápido
 
