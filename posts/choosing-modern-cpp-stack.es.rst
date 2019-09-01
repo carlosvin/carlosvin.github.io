@@ -20,33 +20,37 @@ Elegir un Sistema de Construcción (Meson_)
 Ya he utilizado antes Make_, Maven_, Scons_, Gradle_ y Autotools_, pero tengo algunas razones para probar algo diferente, hay algunas cosas que no me gustan:
 
 Autotools_
-    No es fácil de configurar y mantener: hay distintos ficheros de configuración y distintos pasos de configuración. 
-    
+    No es fácil de configurar y mantener: hay distintos ficheros de configuración y distintos pasos de configuración.
+
 Gradle_
     La construcción de proyectos C++ está todavía en desarrollo, los modelos y APIs están cambiando. No es muy rápido. Puedes ver un ejemplo en este artículo  `Construir un proyecto C++ con Gradle </posts/gradle-cpp/>`_.
 
 Make_
     A medida que el proyecto crece los archivos de configuración se van complicando y volviendo poco manejables.
     La sintáxis no me parece clara (esto es una custión de gustos).
-    
+
 Scons_
-    Es más lento y un poco más difícil de comprender que Meson_. 
+    Es más lento y un poco más difícil de comprender que Meson_.
 
 Maven_
     Es lento y puedes terminar "*Javatizando*" la estructura del proyecto.
 
-.. note:: He nombrado solo las cosas que no gustan, pero estos sistemas de construcción tienen otras grandes virtudes, personalmente me encantan Gradle_, Autotools_ y Scons_.
+.. note:: He nombrado solo las cosas que no gustan, pero estos sistemas de construcción tienen otras grandes virtudes, personalmente me encantan Gradle_, Autotools_ y Maven_ (solo para projectos Java).
 
 CMake_ vs Meson_
 -----------------
 
-Después de descartar los anteriores, estoy considerando Meson_ y CMake_.
+Después de descartar los anteriores, estoy considerando Meson_ y CMake_. Los dos son bastante rápidos:
 
-CMake_ 
+Aunque Meson_ está hecho en Python_, simplemente genera projectos Ninja_. La primera vez tenemos que ejecutar Meson_ para configurar el proyecto, el resto de ejecuciones para compilar o ejecutar pruebas, realmente estaremos ejecutando directamente Ninja_.
+
+CMake_ también puede generar proyectos Ninja_ entre otros formatos, `mira la documentación "CMake generators" <https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html>`_.
+
+CMake_
     Tiene una gran ventaja sobre Meson_, es mucho más maduro y es mucho más usado, lo que significa que podrás encontrar muy fácilmente ejemplos, documentación y ayuda en Internet. No importa el tipo de proyecto que estés empezando, lo más seguro es que CMake_ sea una buena elección.
 
-Meson_ 
-    Es un proyecto jóven comparado con CMake_, pero está creciendo rápido y ya ha sido adoptado por algunos proyectos importantes como Gnome_, donde han comenzado una iniciativa para `migrar desde Autotools a Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_. 
+Meson_
+    Es un proyecto jóven comparado con CMake_, pero está creciendo rápido y ya ha sido adoptado por algunos proyectos importantes como Gnome_, donde han comenzado una iniciativa para `migrar desde Autotools a Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_.
 
 **Finalmente he elegido** Meson_ porque:
 

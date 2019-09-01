@@ -37,7 +37,11 @@ Maven_
 
 .. note:: I've listed just things I don't like, those projects have other great features.
 
-After discarding previous ones, I'm considering Meson_ or CMake_.
+After discarding previous ones, I'm considering Meson_ or CMake_. Both are fast build systems:
+
+Although Meson_ is written in Python_, it generates a Ninja_ build project. First time you configure the project you have to run Meson_, but for building or testing you are actually running Ninja_.
+
+CMake_ is also able to generate Ninja_ files among other formats, `check CMake generators documentation for more information <https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html>`_.
 
 CMake_ vs Meson_
 -----------------
@@ -48,10 +52,7 @@ CMake_
 Meson_
     It is a young project compared with CMake_, but it is growing quite fast and it has been adopted in other big projects like Gnome_, they have an initiative to `port from Autotools to Meson <https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting>`_.
 
-**Finally I've chosen** Meson_ because:
-
-- Syntax is really clear to me, when I read `meson.build` file I can quickly understand what is happening during build process.
-- It is fast. Altought it is written in Python_, it generates a Ninja_ build project. First time you configure the project you has to run Meson_, but for building or testing you are actually running Ninja_.
+**Finally I've chosen** Meson_ because syntax is really clear to me, when I read `meson.build` file I can quickly understand what is happening during build process.
 
 .. code:: bash
 
