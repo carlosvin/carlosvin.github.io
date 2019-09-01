@@ -1,6 +1,7 @@
 .. title: Choosing a Modern C++ stack
 .. slug: choosing-modern-cpp-stack
 .. date: 2017/09/15 20:50:00
+.. updated: 2019/08/31 10:00:00
 .. tags: C++, Unit Testing, Build System, Build Software, Meson, Catch, doctest
 .. description: My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton.
 .. type: text

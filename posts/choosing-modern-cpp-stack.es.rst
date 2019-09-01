@@ -1,8 +1,9 @@
 .. title: Elegir tecnologías para mi nuevo proyeco C++
 .. slug: choosing-modern-cpp-stack
 .. date: 2017/09/24 20:00:00
+.. updated: 2019/08/31 10:00:00
 .. tags: C++, Unit Testing, Build System, Build Software, Meson, Catch, doctest
-.. description: Las tecnologías que he elegido para mi proyecto C++.My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton. 
+.. description: Las tecnologías que he elegido para mi proyecto C++.My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton.
 .. type: text
 
 Estoy empezando un pequeño proyecto en C++ y antes de nada me han surgido un par de preguntas:
