@@ -63,7 +63,86 @@
         
 
 <div class="posts">
-    <article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="posts/react-typescript-parcel/" class="u-url">SPA: React + Typescript + Parcel</a></h1>
+    <article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="posts/pwa-lessons-learned-cra/" class="u-url">Lecciones aprendidas creando una PWA con create-react-app</a></h1>
+        <div class="metadata">
+            <p class="dateline"><a href="posts/pwa-lessons-learned-cra/" rel="bookmark"><time class="post-date published dt-published" datetime="2019-11-04T00:00:00+01:00" title="4/11/19 0:00">4/11/19 0:00</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/pwa-lessons-learned-cra/#disqus_thread" data-disqus-identifier="cache/posts/pwa-lessons-learned-cra.en.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<blockquote>
+<p>Traduciendo al Español, en unos días estará listo.</p>
+</blockquote>
+<p>I started working with <a href="https://reactjs.org">React</a> few year ago, always the project creation was from scratch, not using any template/scaffolding. Regarding bundlers normally I used either <a href="https://webpack.js.org">Webpack</a> at work or <a href="https://parceljs.org">Parcel</a> for personal projects.</p>
+<p>Few months ago, I wanted to start a personal project to keep track of my travel expenses. I was in a kind of rush because at that time, I was almost in the middle of my gap year, I wanted to focus on implementing main functionality and get an <a href="https://en.wikipedia.org/wiki/Minimum_viable_product">MVP</a> (minimum viable product) the sooner the better, so I thought it was the right time to try out <a href="https://create-react-app.dev">Create React App</a> or <a href="https://create-react-app.dev">CRA</a>. </p>
+<p><a href="https://create-react-app.dev">CRA</a> allows you to have a production ready <a href="https://developers.google.com/web/progressive-web-apps/">PWA</a> in <a href="https://reactjs.org">React</a>, which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project.</p>
+<p>As I said, I wanted to be implementing business logic ASAP, so together with using <a href="https://create-react-app.dev">CRA</a>, I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about them in following sections.</p>
+<h2 id="chosen-technology-stack-for-budget-tracker">Chosen Technology Stack for <a href="https://btapp.netlify.com">Budget Tracker</a>
+</h2>
+<ul>
+<li><a href="https://create-react-app.dev">CRA</a></li>
+<li><a href="https://reactjs.org">React</a></li>
+<li><a href="https://www.typescriptlang.org">Typescript</a></li>
+<li><a href="https://material-ui.com">Material UI</a></li>
+<li><a href="https://frappe.io/charts">Frappe charts</a></li>
+<li><a href="https://firebase.google.com/docs/firestore">Firestore</a></li>
+<li>
+<a href="https://firebase.google.com/docs/auth">Firebase Authentication</a>.</li>
+</ul>
+<p>So far I am quite happy with the result, but with the lessons learned while developing this app, <strong>in the future, with enough time, most likely I will not choose same technology stack again</strong>. You can try the application <a href="https://btapp.netlify.com">Budget Tracker</a> and judge for yourself.</p>
+<p>Along this post I will describe what are, in my experience, the benefits and drawbacks of taking these shortcuts and design decisions.</p>
+<div class="toc">
+<ul>
+<li><a href="posts/pwa-lessons-learned-cra/#chosen-technology-stack-for-budget-tracker">Chosen Technology Stack for Budget Tracker</a></li>
+<li>
+<a href="posts/pwa-lessons-learned-cra/#create-react-application-cra">Create React Application: CRA</a><ul>
+<li><a href="posts/pwa-lessons-learned-cra/#service-worker">Service worker</a></li>
+<li><a href="posts/pwa-lessons-learned-cra/#web-worker">Web worker</a></li>
+<li><a href="posts/pwa-lessons-learned-cra/#webpack">Webpack</a></li>
+</ul>
+</li>
+<li>
+<a href="posts/pwa-lessons-learned-cra/#firebase">Firebase</a><ul>
+<li>
+<a href="posts/pwa-lessons-learned-cra/#drawbacks">Drawbacks</a><ul>
+<li><a href="posts/pwa-lessons-learned-cra/#bundle-size">Bundle size</a></li>
+<li>
+<a href="posts/pwa-lessons-learned-cra/#offline-first-not-really">Offline first, not really</a><ul>
+<li>
+<a href="posts/pwa-lessons-learned-cra/#how-did-i-deal-with-this-issue-with-budget-tracker">How did I deal with this issue with Budget Tracker?</a><ul>
+<li><a href="posts/pwa-lessons-learned-cra/#implementation-details">Implementation details</a></li>
+<li><a href="posts/pwa-lessons-learned-cra/#benefits">Benefits</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="posts/pwa-lessons-learned-cra/#data-model">Data model</a></li>
+</ul>
+</li>
+<li><a href="posts/pwa-lessons-learned-cra/#firebase-alternatives">Firebase alternatives</a></li>
+</ul>
+</li>
+<li><a href="posts/pwa-lessons-learned-cra/#ui-components-library-material-ui">UI Components Library: Material UI</a></li>
+<li><a href="posts/pwa-lessons-learned-cra/#charts-library">Charts library</a></li>
+<li>
+<a href="posts/pwa-lessons-learned-cra/#conclusion">Conclusion</a><ul>
+<li><a href="posts/pwa-lessons-learned-cra/#do-not-go-for-cra-if">Do not go for CRA if</a></li>
+<li><a href="posts/pwa-lessons-learned-cra/#do-not-go-for-firestore-if">Do not go for Firestore if</a></li>
+<li><a href="posts/pwa-lessons-learned-cra/#do-not-go-blindly-for-the-best-charting-library">Do not go blindly for the best charting library</a></li>
+</ul>
+</li>
+<li><a href="posts/pwa-lessons-learned-cra/#what-next">What next?</a></li>
+</ul>
+</div>
+<p class="more"><a href="posts/pwa-lessons-learned-cra/">Leer más…</a></p>
+</div>
+    </div>
+    </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="posts/react-typescript-parcel/" class="u-url">SPA: React + Typescript + Parcel</a></h1>
         <div class="metadata">
             <p class="dateline"><a href="posts/react-typescript-parcel/" rel="bookmark"><time class="post-date published dt-published" datetime="2019-01-01T13:30:02+01:00" title="1/1/19 13:30">1/1/19 13:30</time></a></p>
                 <p class="commentline">
@@ -403,24 +482,6 @@ yarn start
 </ul>
 </div>
 <p class="more"><a href="posts/rest-urls/">Leer más…</a></p>
-</div>
-    </div>
-    </article><article class="post h-entry post-text"><header><h1 class="post-title p-name"><a href="posts/software-maintenance/" class="u-url">Mantenimiento de Software</a></h1>
-        <div class="metadata">
-            <p class="dateline"><a href="posts/software-maintenance/" rel="bookmark"><time class="post-date published dt-published" datetime="2014-10-11T21:00:00+02:00" title="11/10/14 21:00">11/10/14 21:00</time></a></p>
-                <p class="commentline">
-        
-    <a href="posts/software-maintenance/#disqus_thread" data-disqus-identifier="cache/posts/software-maintenance.en.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="p-summary entry-summary">
-    <div>
-<p>Hace unos días en el trabajo tuve que rellenar un documento en el que debía indicar el tipo de mantenimiento que debía hacer y sólo tenía dos opciones: correctivo y adaptativo. Esto me extrañó, porque el cambio que yo quería hacer no terminaba de encajar en ninguno de los dos tipos.</p>
-<p>Haciendo memoria sobre lo que había dado en mi primera asignatura de Ingeniería del Software, conseguí recordar tres tipos, pero me parecía que me faltaba un tipo.</p>
-<p>Hoy por casualidad he encontrado mis apuntes de Ingeniería del Software y estos son los tipos de mantenimiento ordenados de más a menos porcentaje de tiempo dedicado.</p>
-<p class="more"><a href="posts/software-maintenance/">Leer más…</a></p>
 </div>
     </div>
     </article>

@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Carlos says "bla bla"</title><link>https://carlosvin.github.io/</link><description>What is going on in my mind and its surroundings</description><atom:link href="https://carlosvin.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 01 Sep 2019 04:15:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Create SPA: React + Typescript + Parcel</title><link>https://carlosvin.github.io/posts/react-typescript-parcel/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I was about to start yet another personal project, it consists of a SPA (Single Page Application) for a travel journal.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Carlos says "bla bla"</title><link>https://carlosvin.github.io/</link><description>What is going on in my mind and its surroundings</description><atom:link href="https://carlosvin.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 04 Nov 2019 06:12:00 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Lessons learned developing a PWA with create-react-app</title><link>https://carlosvin.github.io/posts/pwa-lessons-learned-cra/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I started working with &lt;a href="https://reactjs.org"&gt;React&lt;/a&gt; few year ago, always the project creation was from scratch, not using any template/scaffolding. Regarding bundlers normally I used either &lt;a href="https://webpack.js.org"&gt;Webpack&lt;/a&gt; at work or &lt;a href="https://parceljs.org"&gt;Parcel&lt;/a&gt; for personal projects.&lt;/p&gt;
+&lt;p&gt;Few months ago, I wanted to start a personal project to keep track of my travel expenses. I was in a kind of rush because at that time, I was almost in the middle of my gap year, I wanted to focus on implementing main functionality and get an &lt;a href="https://en.wikipedia.org/wiki/Minimum_viable_product"&gt;MVP&lt;/a&gt; (minimum viable product) the sooner the better, so I thought it was the right time to try out &lt;a href="https://create-react-app.dev"&gt;Create React App&lt;/a&gt; or &lt;a href="https://create-react-app.dev"&gt;CRA&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;&lt;a href="https://create-react-app.dev"&gt;CRA&lt;/a&gt; allows you to have a production ready &lt;a href="https://developers.google.com/web/progressive-web-apps/"&gt;PWA&lt;/a&gt; in &lt;a href="https://reactjs.org"&gt;React&lt;/a&gt;, which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project.&lt;/p&gt;
+&lt;p&gt;As I said, I wanted to be implementing business logic ASAP, so together with using &lt;a href="https://create-react-app.dev"&gt;CRA&lt;/a&gt;, I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about them in following sections.&lt;/p&gt;
+&lt;h2 id="chosen-technology-stack-for-budget-tracker"&gt;Chosen Technology Stack for &lt;a href="https://btapp.netlify.com"&gt;Budget Tracker&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://create-react-app.dev"&gt;CRA&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://reactjs.org"&gt;React&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.typescriptlang.org"&gt;Typescript&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://material-ui.com"&gt;Material UI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://frappe.io/charts"&gt;Frappe charts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://firebase.google.com/docs/firestore"&gt;Firestore&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://firebase.google.com/docs/auth"&gt;Firebase Authentication&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So far I am quite happy with the result, but with the lessons learned while developing this app, &lt;strong&gt;in the future, with enough time, most likely I will not choose same technology stack again&lt;/strong&gt;. You can try the application &lt;a href="https://btapp.netlify.com"&gt;Budget Tracker&lt;/a&gt; and judge for yourself.&lt;/p&gt;
+&lt;p&gt;Along this post I will describe what are, in my experience, the benefits and drawbacks of taking these shortcuts and design decisions.&lt;/p&gt;
+&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#chosen-technology-stack-for-budget-tracker"&gt;Chosen Technology Stack for Budget Tracker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#create-react-application-cra"&gt;Create React Application: CRA&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#service-worker"&gt;Service worker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#web-worker"&gt;Web worker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#webpack"&gt;Webpack&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#firebase"&gt;Firebase&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#drawbacks"&gt;Drawbacks&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#bundle-size"&gt;Bundle size&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#offline-first-not-really"&gt;Offline first, not really&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#how-did-i-deal-with-this-issue-with-budget-tracker"&gt;How did I deal with this issue with Budget Tracker?&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#implementation-details"&gt;Implementation details&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#benefits"&gt;Benefits&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#data-model"&gt;Data model&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#firebase-alternatives"&gt;Firebase alternatives&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#ui-components-library-material-ui"&gt;UI Components Library: Material UI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#charts-library"&gt;Charts library&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#conclusion"&gt;Conclusion&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#do-not-go-for-cra-if"&gt;Do not go for CRA if&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#do-not-go-for-firestore-if"&gt;Do not go for Firestore if&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#do-not-go-blindly-for-the-best-charting-library"&gt;Do not go blindly for the best charting library&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/#what-next"&gt;What next?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/pwa-lessons-learned-cra/"&gt;Read more…&lt;/a&gt; (7 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>CRA</category><category>create-react-app</category><category>Firebase</category><category>Firestore</category><category>PWA</category><category>React</category><category>Sapper</category><category>Svelte</category><category>Typescript</category><guid>https://carlosvin.github.io/posts/pwa-lessons-learned-cra/</guid><pubDate>Sun, 03 Nov 2019 23:00:00 GMT</pubDate></item><item><title>Create SPA: React + Typescript + Parcel</title><link>https://carlosvin.github.io/posts/react-typescript-parcel/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I was about to start yet another personal project, it consists of a SPA (Single Page Application) for a travel journal.&lt;/p&gt;
 &lt;p&gt;Some time ago I tried &lt;a href="https://parceljs.org"&gt;Parcel&lt;/a&gt;, I really loved how simple it was to create a simple project from scratch, using &lt;a href="https://www.typescriptlang.org/"&gt;Typescript&lt;/a&gt; + &lt;a href="https://reactjs.org"&gt;React&lt;/a&gt; stack. I've decided to create this template or base project, so next time I want to create a new SPA with my favorite frontend stack, I will only have to:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;git clone https://github.com/carlosvin/react-typescript-parcel-template.git
 &lt;/pre&gt;
@@ -36,7 +89,7 @@ yarn start
 &lt;/pre&gt;
 
 
-&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/react-typescript-parcel/"&gt;Read more…&lt;/a&gt; (3 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Parcel</category><category>React</category><category>SPA</category><category>Typescript</category><guid>https://carlosvin.github.io/posts/react-typescript-parcel/</guid><pubDate>Tue, 01 Jan 2019 12:30:02 GMT</pubDate></item><item><title>Custom Maven Plugin: Override default build lifecycle</title><link>https://carlosvin.github.io/posts/creating-custom-maven-plugin-default/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I explained in previous article &lt;a class="reference external" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/"&gt;Example how to create custom Maven Plugin&lt;/a&gt; which &lt;a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle"&gt;overrides site lifecycle&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/react-typescript-parcel/"&gt;Read more…&lt;/a&gt; (2 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Parcel</category><category>React</category><category>SPA</category><category>Typescript</category><guid>https://carlosvin.github.io/posts/react-typescript-parcel/</guid><pubDate>Tue, 01 Jan 2019 12:30:02 GMT</pubDate></item><item><title>Custom Maven Plugin: Override default build lifecycle</title><link>https://carlosvin.github.io/posts/creating-custom-maven-plugin-default/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I explained in previous article &lt;a class="reference external" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/"&gt;Example how to create custom Maven Plugin&lt;/a&gt; which &lt;a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle"&gt;overrides site lifecycle&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;I have created another example to demonstrate how to override &lt;a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#default_Lifecycle"&gt;default Maven build lifecycle&lt;/a&gt;. Default build lifecycle is used to construct your software project, for example, it is executed when you run &lt;tt class="docutils literal"&gt;mvn install&lt;/tt&gt; in &lt;tt class="docutils literal"&gt;jar&lt;/tt&gt; type project.&lt;/p&gt;
 &lt;p&gt;You can find source code example at &lt;a class="reference external" href="https://github.com/carlosvin/lifecycle-maven-plugin"&gt;https://github.com/carlosvin/lifecycle-maven-plugin&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="admonition hint"&gt;
@@ -100,7 +153,7 @@ yarn start
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/choosing-modern-cpp-stack/"&gt;Read more…&lt;/a&gt; (6 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Build Software</category><category>Build System</category><category>C++</category><category>Catch</category><category>doctest</category><category>Meson</category><category>Unit Testing</category><guid>https://carlosvin.github.io/posts/choosing-modern-cpp-stack/</guid><pubDate>Fri, 15 Sep 2017 18:50:00 GMT</pubDate></item><item><title>Filesystem in C++17</title><link>https://carlosvin.github.io/posts/recursive-directory-iterator/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div class="section" id="introduction"&gt;
+&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/choosing-modern-cpp-stack/"&gt;Read more…&lt;/a&gt; (5 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Build Software</category><category>Build System</category><category>C++</category><category>Catch</category><category>doctest</category><category>Meson</category><category>Unit Testing</category><guid>https://carlosvin.github.io/posts/choosing-modern-cpp-stack/</guid><pubDate>Fri, 15 Sep 2017 18:50:00 GMT</pubDate></item><item><title>Filesystem in C++17</title><link>https://carlosvin.github.io/posts/recursive-directory-iterator/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div class="section" id="introduction"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://carlosvin.github.io/posts/recursive-directory-iterator/#id4"&gt;Introduction&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Since C++17 new filesystem abstractions will be added to C++ environment. So far they are available as
 &lt;a class="reference external" href="https://en.cppreference.com/w/cpp/experimental"&gt;Experimental C++ Features&lt;/a&gt;. If you want to dig more about this new library, here it is the &lt;a class="reference external" href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf"&gt;final draft of File System Technical Specification&lt;/a&gt;.&lt;/p&gt;
@@ -186,7 +239,4 @@ You install source files in Windows format in your Unix environment.&lt;/p&gt;
 &lt;li&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/rest-urls/#video-tutorials" id="id16"&gt;Video Tutorials&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/rest-urls/"&gt;Read more…&lt;/a&gt; (6 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>API</category><category>REST</category><category>Web Services</category><guid>https://carlosvin.github.io/posts/rest-urls/</guid><pubDate>Sun, 16 Aug 2015 12:00:00 GMT</pubDate></item><item><title>Software Maintenance</title><link>https://carlosvin.github.io/posts/software-maintenance/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Few days ago at work, I had to fulfill a document where I had to select a type of software maintenance that I was going to apply.&lt;/p&gt;
-&lt;p&gt;The fact was I had only two choices, it seemed to me very weird because during my degree I studied 3 or 4 kinds of software maintenance.&lt;/p&gt;
-&lt;p&gt;Today I have found my Software Engineering class notes, then the types of Software Maintenance sorted descending by percentage of time spent:&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/software-maintenance/"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Software Engineering</category><category>Software Maintenance</category><guid>https://carlosvin.github.io/posts/software-maintenance/</guid><pubDate>Sat, 11 Oct 2014 19:00:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/rest-urls/"&gt;Read more…&lt;/a&gt; (5 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>API</category><category>REST</category><category>Web Services</category><guid>https://carlosvin.github.io/posts/rest-urls/</guid><pubDate>Sun, 16 Aug 2015 12:00:00 GMT</pubDate></item></channel></rss>
