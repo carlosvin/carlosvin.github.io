@@ -1,22 +1,20 @@
-.. title: Lecciones aprendidas creando una PWA con create-react-app
+.. title: Lecciones aprendidas creando una PWA con Create React App
 .. slug: pwa-lessons-learned-cra
 .. date: 2019/11/04
-.. tags: React, Typescript, CRA, PWA, create-react-app, Firebase, Firestore, Svelte, Sapper
+.. tags: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
 .. link: https://btapp.netlify.com
 .. description: Lecciones aprendidas durante la creacion de una PWA: Budget Tracker
 
-> Traduciendo al Español, en unos días estará listo.
+Empezé trabajando con [React] hace unos años, siempre he comenzado los proyectos desde cero, sin utilizar ninguna plantilla o generador de proyectos. En lo que ser refiere a los empaquetadores, normalmente utilizo [Webpack] en el trabajo o [Parcel] en proyectos personales.
 
+Hace unos meses, quería comenzar un proyecto personal para hacer un seguimiento de mis gastos durante mi año sabático, [Budget Tracker] lo llamé. Llevaba un poco de prisa, porque en ese momento llevaba ya unos 4 meses viajando y quería centrarme cuanto antes en implementar la funcionalidad principal y tener algo funcionando cuanto antes, un [MVP](https://en.wikipedia.org/wiki/Minimum_viable_product) (minimum viable product), estaba en la situación perfecta para probar [Create React App] o [CRA].
 
-I started working with [React] few year ago, always the project creation was from scratch, not using any template/scaffolding. Regarding bundlers normally I used either [Webpack] at work or [Parcel] for personal projects.
+>[CRA] te permite crear una [PWA] en [React] lista para producción en un momento, lo que es impresionante. Solo tienes el esqueleto de la aplicación, tampoco hace milagros, el resto lo tienes que programar tú.
+[CRA] se encarga de la gestión de dependencias de desarrollo y configuración de el empaquetador, [Webpack] en este caso.
 
-Few months ago, I wanted to start a personal project to keep track of my travel expenses. I was in a kind of rush because at that time, I was almost in the middle of my gap year, I wanted to focus on implementing main functionality and get an [MVP](https://en.wikipedia.org/wiki/Minimum_viable_product) (minimum viable product) the sooner the better, so I thought it was the right time to try out [Create React App] or [CRA]. 
+Como decía antes, quería implementar la lógica del programa cuanto antes, así que junto con la utilización de [CRA], tambien tomé otras decisiones y atajos, condicionados por la necesidad de acelerar el proceso de desarrollo, hablaré sobre todas estas decisiones a lo largo de este artículo.
 
-[CRA] allows you to have a production ready [PWA] in [React], which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project.
-
-As I said, I wanted to be implementing business logic ASAP, so together with using [CRA], I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about them in following sections.
-
-# Chosen Technology Stack for [Budget Tracker]
+# Tecnologías escogidas para crear [Budget Tracker]
 
 - [CRA]
 - [React]
@@ -26,146 +24,161 @@ As I said, I wanted to be implementing business logic ASAP, so together with usi
 - [Firestore]
 - [Firebase Authentication].
 
-So far I am quite happy with the result, but with the lessons learned while developing this app, **in the future, with enough time, most likely I will not choose same technology stack again**. You can try the application [Budget Tracker] and judge for yourself.
+Estoy bastante contento con el resultado, pero teniendo en cuenta lo aprendido durante el desarrollo de este proyecto, **en el futuro y con el tiempo suficiente, lo más seguro es que no volviese a elegir este mismo conjunto**.
 
-Along this post I will describe what are, in my experience, the benefits and drawbacks of taking these shortcuts and design decisions.
+Puedes evaluar el resultado de usar este conjunto de tecnologías abriendo [Budget Tracker].
+
+A continuación, haré un análisis más detallado de algunos de los beneficios e inconvenientes de las decisiones y atajos que tomé durante el desarrollo de [Budget Tracker].
 
 [TOC]
 
 <!--TEASER_END-->
 
 # Create React Application: [CRA]
-[Create React App] doesn't support [Web Workers] neither allows to customize [Service Worker] implementation without [ejecting](https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app) .  
+[Create React App] no ofrece soporte para [Web Workers] ni permite modificar la implementación del [Service Worker] sin [expulsar (eject)](https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app) la configuración.   
+
+> ¿Qué significa explusar o "eject" en [CRA]? Básicamente es que la configuración de tu proyecto ya no está gestionada por [CRA], por lo que tienes que te tienes que hacer cargo de ella, mantener las dependencias y configuración de todos los aspectos de tu proyecto como las pruebas, el análisis estático de código, la configuración de Babel y la lista continúa.
 
 ## Service worker
-You might want to customize your [Service Worker] to send/receive [post messages], to perform [background sync](https://wicg.github.io/BackgroundSync/spec/) or [show notifications](https://developer.mozilla.org/en/docs/Web/API/notification). In that case you will have to [eject your project] and maintain the configuration by yourself, which might imply a little bit of headache.
+Es posible que necesites modificar el comportamiento de tu [Service Worker] para enviar/recibir [mensajes post], para realizar [sincronización en segundo plano](https://wicg.github.io/BackgroundSync/spec/) o [mostrar notificaciones web](https://developer.mozilla.org/en/docs/Web/API/notification). En ese caso tendrá  que [extraer tu proyecto (eject)] y mantener la configuración por tí misma/mismo, lo cual puede suponer algún que otro dolor de cabeza innecesario.
 
-There are [other options to customize service worker and avoid ejecting CRA](https://www.freecodecamp.org/news/how-to-customize-service-workers-with-create-react-app-4424dda6210c/), but they are not straightforward enough for my taste.
+Hay [otras opciones para evitar extraer CRA](https://www.freecodecamp.org/news/how-to-customize-service-workers-with-create-react-app-4424dda6210c/), pero son un poco complicadas para mi gusto.
 
 ## Web worker
-If you need to perform any heavy processing without blocking the main thread, you can just use a [Web Worker], but this feature is not supported by [CRA]. The [Web Worker] can communicate with main thread using [post messages] and it can also show [web push notifications](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c).
+Cuando necesitas ejecutar algún procesamiento sin bloquear el hilo principal, puedes enviarlo a un [Web Worker], lo malo es que tampoco están soportados por [CRA]. El [Web Worker] también puebe comunicarse con el hilo principal usando [mensajes post] y también puede mostrar [notificaciones web](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c).
 
-There are also [other options to use Web Workers in CRA and not eject](https://medium.com/@danilog1905/how-to-use-web-workers-with-react-create-app-and-not-ejecting-in-the-attempt-3718d2a1166b), but they require quite some extra work.
+También hay [otras opciones para evitar extraer la configuración de CRA](https://medium.com/@danilog1905/how-to-use-web-workers-with-react-create-app-and-not-ejecting-in-the-attempt-3718d2a1166b), pero requieren un poco de trabajo extra.
 
 ## Webpack
-[Webpack] is the bundler used by [CRA]. You don't need to know much about it, unless you [eject your project], then you will have to deal with [Webpack configuration file](https://webpack.js.org/configuration/), this is just an tiny warning just in case you are not comfortable with it.
+[Webpack] es el empaquetador utilizado por [CRA]. Cuando utilizas [CRA], no necesitas saber mucho sobre éste, pero cuando tienes que [extraer tu proyecto (eject)], entonces tendrás que lidiar con el [archivo de configuracion de Webpack](https://webpack.js.org/configuration/).
 
-# Firebase 
-[Budget Tracker] allows to synchronize your data between different devices, so the application requires a [backend] side to deal with authentication and to save/read data remotely. I considered two options: [Firebase] or implement [REST] API.
+# Firebase
+[Budget Tracker] permite sincronizar tus presupuestos entre distintos dispositivos, por lo que esta aplicación necesita un lado [backend] para gestionar la autenticación y guardar/leer los datos. Consideré dos opciones: [Firebase] implementar una API [REST].
 
-For this [backend], I chose [Firebase] because it is super easy to implement, because there is nothing to implement. You only have to configure [authentication methods](https://support.google.com/firebase/answer/6400716?hl=en) and [security rules](https://firebase.google.com/docs/firestore/security/get-started) for [Firestore].
+Elegí [Firebase] porque no hay que implementar nada en el lado servidor, sólo hay que configurar los [métodos de autenticación](https://support.google.com/firebase/answer/6400716?hl=en) y las [reglas de seguridad](https://firebase.google.com/docs/firestore/security/get-started) en [Firestore].
 
-But [Firebase] brings some drawbacks you must know before choosing it. 
+Pero [Firebase] viene con algunos inconvenientes que debes conocer antes de elegirlo.
 
-## Drawbacks
+## Inconvenientes
 
-### Bundle size
-I got really shocked first time I analyzed [Budget Tracker] bundle size after integrating it with [Firebase], it grew around a 39%!
+### Tamaño de la librería
+Me sorprendió mucho la primera vez que analicé el tamaño de la aplicación [Budget Tracker] justo después de integrarla con [Firebase], **¡creció un 39%!**.
 
-* 27% from [Firestore] library.
-* 12% from [Firebase Authentication] library.
+* 27% por la librería [Firestore].
+* 12% por la librería [Firebase Authentication].
 
-Happily [Budget Tracker] implementation is following [code-splitting](https://reactjs.org/docs/code-splitting.html) principle, so user experience was not really affected with this integration. But user's device will eventually have to download this **extra 39%** (**539KB**). 
+Afortunadamente [Budget Tracker] está implementado particionando el código ([code-splitting](https://reactjs.org/docs/code-splitting.html)), lo que permite cargar solo las partes necesarias de la aplicación, así que, la experiencia de usuario no se vió gravemente afectada. Lo malo es que el usuario, en algún momento, tendrá que descargar ese **39% extra** (**539KB**).
 
-### Offline first, not really
-[Firestore] requires user to be authenticated, but [user can be anonymous](https://firebase.google.com/docs/auth/web/anonymous-auth), this is really cool feature if you don't want to force the user to identify to use the app.
-
-Another very useful and cool [Firestore] feature is that [it supports offline mode](https://firebase.google.com/docs/firestore/manage-data/enable-offline), so data can be saved even there is no Internet connection. 
-
-So... what is this ["Offline first, not really"](#offline-first-not-really) issue about? First time the application is opened, [Firebase] needs to authenticate the user, to do so, user's device has to be connected to Internet, so **you have to consider following scenario** and be OK with it:
-
-1. [PWA] is installed in your device.
-2. User is not authenticated.
-3. User's device is offline.
-4. User opens the [PWA] and tries to save some data.
-5. **That data won't be saved correctly**, because there is no user to link the data with, not even an anonymous user. 
-
-This is not big deal, because it will seldomly affect application user. If you want to deal with it anyway, you implement a local persistence layer for this scenario.
-
-#### How did I deal with this issue with Budget Tracker?
-First of all, this **might not be an issue for your use case**, because it will happen only first time application is loaded. I just wanted [Budget Tracker] to be fully offline first, because it brings other benefits.
-
-##### Implementation details
- - Implement 2 persistence layers: Local ([IndexedDB]) and Remote ([Firestore]).
- - Save always data locally, regardless user authentication status. 
- - If there is any authenticated user, after saving to local layer, propagate same action to remote layer [Firestore] asynchronously.
-
-##### Benefits
-- If user is not authenticated, [Budget Tracker] won't load [Firestore] client bundle. As I explained before, it is 27% of application size.
-- Application reads and writes are faster, because latest valid data is always saved locally.
-   - **Clarification**: Save data in [Firestore] is also fast, because data is also cached locally, but it does a little bit more than just saving to [IndexedDB] and you need an authenticated user.
-- You can find a [more detailed performance report](https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1), where I analyze 3 different implementations: only firebase client, local and remote persistence layers and the same as previous one but remote layer implemented in service worker.
+### No realmente primero offline
+> Esto no es relevante, si para tu caso de uso no tienes que vincular los datos al usuario.
  
-### Data model
-Firestore API is easy and intuitive, I really like it, but don't assume will have same features as other document DBs or SQL DBs. 
+[Firestore] necesita un usuario identificado para realizar lecturas y escrituras, pero [permite trabajar con usuarios anónimos](https://firebase.google.com/docs/auth/web/anonymous-auth), esta característica es muy interesante si no quieres forzar al usuario a identificarse para utilizar la aplicación.
 
-Check if [Firestore limitations](https://googleapis.github.io/google-cloud-dotnet/docs/Google.Cloud.Firestore/datamodel.html) fit into your data model, or if it is not too late, define your data model following [Firestore best practices](https://cloud.google.com/firestore/docs/best-practices) and having those limitations in mind.
+Otra característica muy útil es que [soporta modo offline](https://firebase.google.com/docs/firestore/manage-data/enable-offline), lo que permite guardar y leer información cuando no hay conexión a Internet.
 
-## Firebase alternatives
-Besides implementing a [REST] API, there are other services similar to [Firebase] with smaller client bundle size and other features which might fit better to your requirements.
+Los usuarios anónimos junto con el modo offline, casi permiten tener una aplicación que funcione completamente offline.
 
-Consider other alternatives:
+Entonces... ¿Qué es esto de ["No realmente primero offline"](#no-realmente-primero-offline)? Esto significa, que la primera vez que la aplicación es abierta, [Firebase] necesita identificar al usuario, para ello, en este momento, el dispositivo del usuario debe estar conectado a Internet, en este caso, **debes considerar el siguiente escenario**:
 
-- Based on [Apache CouchDB](http://couchdb.apache.org/): [PouchDB](https://pouchdb.com), [Cloudant](https://en.wikipedia.org/wiki/Cloudant).
-- Based on [Parse server](https://parseplatform.org/): [back4apps](https://www.back4app.com).
+1. La [PWA] está instalada en tu dispositivo.
+2. El usuario no está identificado.
+3. El dipositivo no tiene acceso a Internet.
+4. El usuario abre la [PWA] e intenta guardar o leer datos.
+5. **La información no se podrá guardar correctamente**, porque se desconoce el usuario al que pertenece esta información y tampoco se puede vincular a un usuario anónimo, porque se necesita conexión para crearlo. 
 
-# UI Components Library: [Material UI]
-I chose [Material UI]: *"React components for faster and easier web development. Build your own design system, or start with Material Design"*, quoting their website.
+Esto no es un problema importane, la aplicación funcionará perfectamente en la mayoría de casos. Si, aún así quieres resolver este caso, a continuación explicaré cómo lo he solucionado en [Budget Tracker].
 
-There were two good reasons which drove me to pick up an UI Components library:
+#### Convertir Budget Tracker como offline first
+Antes de nada, me gustaría remarcar que esto **podría no ser necesario para tu caso de uso**, porque sólo ocurrirá la primera vez que arranque la aplicación y no tenga conexión a Internet. En el caso de [Budget Tracker] me aseguré de que funcionase en todo momento en modo offline porque traía otros beneficios que más adelante enumeraré.
 
-- To create simple UI components which are accessible, responsible and with a consistent design is tricky and time consuming.
-- It has SVG set of [Material Icons](https://material-ui.com/components/material-icons/). [Budget Tracker] allows to create categories defined by a name and a selectable icon, so this icon set was really convenient.
+##### Detalles de implementación
+ - Crear dos capas de persistencia: Local ([IndexedDB]) y Remota ([Firestore]).
+ - Guardar los datos siempre de forma local, independientemente de si el usuario está identificado o no. 
+ - Si hay un usuario que ya está identificado, después de actuar sobre el almacenamiento local, realizar exactamente la misma acción sobre la capa de almacenamiento remoto [Firestore] de forma asíncrona.
 
-There are some **drawbacks**, not very important in my opinion, maybe the most annoying for me is the first one:
+##### Beneficios
+- Si el usuario no se ha identificado, [Budget Tracker] no cargará la librería cliente de [Firestore]. Como ya comenté antes, ésta supone un 27% del tamaño de la aplicación.
+- Las escrituras y lecturas son algo más rápidas, porque el almacenamiento primario es local.
+-  **Aclaración**: La interación con [Firestore] también es rápida, porque también almacena la información localmente, pero también hace unas cuantas cosas más que simplemente interactuar con [IndexedDB] y necesitas un usuario identificado.
 
-- Jest Snapshots + Material UI: The snapshots are generated with Material UI class names, but classes order might not be deterministic, so a test might pass in your local host but not in CI host. They are working on solve [this issue, more info at github](https://github.com/mui-org/material-ui/issues/14357).
-- Performance: There are some performance [issues in Github](https://github.com/mui-org/material-ui/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+performance). During last months, whilst I've been using this library, I can say they are working hard on fix them and bring new features.
-- UI components libraries are complex and do quite a lot work, so most of them are quite heavy. [Material UI bundle size weights: 304.2kB minified](https://bundlephobia.com/result?p=@material-ui/core@4.5.2). You can find some [recommendations to reduce bundle size at Material UI website](https://material-ui.com/guides/minimizing-bundle-size).
+Puedes encontrar un [informe más detallado sobre el rendimiento](https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1), donde se analizan tres escenarios diferentes:
 
-# Charts library
-Many of the chart libraries I've found are really powerful and complete, but they are also heavy because they depend on other third party libraries like [D3].
+  1. [Firestore] como única capa de persistencia.
+  2. Dos capas de persistencia, una local ([IndexedDB]) y otra remota ([Firestore]),
+  3. Igual que la anterior, pero se interactúa con [Firestore] desde un service worker.
 
-Initially I chose [Victory], but I realized that I only needed charts to show percentages and time series and [Victory]'s [bundle size is 468KB minified](https://bundlephobia.com/result?p=victory@33.1.2).
+En general, se obtienen mejores resultados con la opción 2.
 
-After quick search in the Internet I discovered other lighter alternatives:
+### Modelo de Datos
+La API de [Firestore] es fácil e intuitiva, me encanta, pero no asumas que tendrá todas las características que ofrecen otras bases de datos documentales o relacionales (SQL). 
 
-- [Frappe charts] [63KB minified](https://bundlephobia.com/result?p=frappe-charts@1.3.0).
-- [Chartist] [39KB minified](https://bundlephobia.com/result?p=chartist@0.11.4).
+Comprueba que las [limitaciones de Firestore](https://googleapis.github.io/google-cloud-dotnet/docs/Google.Cloud.Firestore/datamodel.html) encajan con tu modelo de datos, o si no es demasiado tarde, diseña tu modelo de datos siguiendo la guía de [buenas prácticas de Firestore](https://cloud.google.com/firestore/docs/best-practices).
 
-I tried them and I liked both. I chose [Frappe charts] because I thought its default color scheme fits better with [Budget Tracker] theme.
+## Alternativas a Firebase
+A parte de implementar una API [REST] para tu aplicación, hay otros servicios similares a [Firebase] con un tamaño menor de la librería cliente y otras características que pueden adaptarse mejor a tus necesidades.
 
-Both libraries come with more chart types than just bars and XY axis, take a quick look at their websites if you are interested about their supported chart set and to check how they look like.
+Algunas alternativas a considerar:
 
-# Conclusion
-I will try to come up with a conclusion better than: "It depends", "Your use case will tell you" and so on.
+- Basado en [Apache CouchDB](http://couchdb.apache.org/): [PouchDB](https://pouchdb.com), [Cloudant](https://en.wikipedia.org/wiki/Cloudant).
+- Basado en [Parse server](https://parseplatform.org/): [back4apps](https://www.back4app.com).
 
-That said. It depends on your needs :p.
+# Librería de componentes de interfaz de usuario: [Material UI]
+Elegí [Material UI]: *"Componentes de React para un desarrollo web más rápido y sencillo. Construya su propio sistema de diseño, o empiece con Material Design."*, citando su sitio web.
 
-Seriously, let's play "do not go for ... if ...":
+Hay dos razones principales por las que elegí una libreria de componentes UI:
 
-## Do not go for CRA if
+- Es laborioso crear tus propios componentes de interfaz de usuario que sean accesibles, que se adapten correctamente a distintos dispositivos y con un diseño estéticamente correcto.
+- [Material UI] tiene un conjunto de iconos SVG, [Material Icons](https://material-ui.com/components/material-icons/). Esto me venía muy bien para [Budget Tracker], porque permite crear categorías para gastos y asignar un icono a éstas categorías.
 
-- You need to use [Service Worker] for [Background sync](https://developers.google.com/web/updates/2015/12/background-sync) or [showing push notifications](https://developer.mozilla.org/en/docs/Web/API/notification).
-- You need to use [Web Workers].
+Hay algunos **problemas**, no muy importantes en mi opinión, quizá el que me resulta más molesto es el primero:
 
-## Do not go for Firestore if
-- You are aiming for your app to be hit by many users and you don't know the estimated amount of reads/writes, otherwise you might get surprised with the bill. [Firestore] scales like charm, maybe your budget doesn't. 
-- Bundle size is critical for your web application. Remember that bundle size is not that critical if you are implementing a [PWA], because your app files are cached.
+- [Jest Snapshots] + [Material UI]: Los [Jest Snapshots] guardan también las classes CSS utilizadas por [Material UI], pero el orden de estas clases podría no ser determinístico, por lo que el resultado de una prueba podría ser satisfactorio en tu portátil, pero podría fallar en cualquier otro sitio, como en la máquina donde se ejecuta el servidor de integración continua ([CI]). Están trabajando en solucionar [este problema, más información en Github](https://github.com/mui-org/material-ui/issues/14357).
+- Rendimiento: Hay algunos [problemas de rendimiento en Github](https://github.com/mui-org/material-ui/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+performance). A lo largo de los últimos meses, mientras he utilizado esta librería, puedo decir que el equipo de desarrollo está trabajando duro en mejorar esta librería y supongo que los solucionarán pronto.
+- Las librerías de componentes de interfaz de usuario son complejas y hacen muchas cosas, por ello la mayoría son bastante pesadas. [El tamaño de Material UI reducido son 304.2kB](https://bundlephobia.com/result?p=@material-ui/core@4.5.2). Puedes encontrar [recomendaciones para reducir el tamaño de tu aplicación al utilizar Material UI en su documentación](https://material-ui.com/guides/minimizing-bundle-size).
 
-## Do not go blindly for the best charting library
-First of all, check what kind of charts you need. In many applications you are OK with XY axis chart, time series, bars or pie charts. 
-You can easily get an smaller bundle size by just using a simple charting library like [Frappe charts] or [Chartist]
+# Librerías de gráficas
+Muchas de las librerías que he encontrado son muy potentes y completas, pero también ocupan bastante, entre otras cosas porque dependen en otras librerías como [D3].
+
+Inicialmente elegí [Victory], pero me dí cuenta de que sólamente necesitaba gráficos para mostrar porcentajes y series temporales. Otro hecho relevante es que [Victory] tiene un [tamaño de 468KB](https://bundlephobia.com/result?p=victory@33.1.2) y yo no estaba utilizando la mayor parte de ese código.
+
+Después de una búsqueda rápida en Internet, encontré otras alternativas mucho más ligeras y más que suficientes para mis necesidades:
+
+- [Frappe charts]: [63KB](https://bundlephobia.com/result?p=frappe-charts@1.3.0).
+- [Chartist]: [39KB](https://bundlephobia.com/result?p=chartist@0.11.4).
+
+Probé las dos y me encantaron las dos, finalmente elegí [Frappe charts] porque su esquema de colores se ajusta mejor al tema de [Budget Tracker].
+
+Ambas librerías traen más tipos de gráficos que los de ejes de coordenadas XY o gráfico de barras. Echa un vistazo a sus sitios web si quieres saber un poco más.
+
+# Conclusión
+Intentaré llegar a una conclusión algo mejor que *"Depende"*, *"Tu caso de uso te dirá"*, etc. Dicho esto, depende de lo que necesites :p.
+
+Ya en serio, voy a listar las conclusiones en la forma *"No utilices ... si ..."*.
+
+## No utilices CRA si
+
+- Si tienes que modificar el [Service Worker] para realizar [Background sync](https://developers.google.com/web/updates/2015/12/background-sync) o para [mostrar notificaciones web](https://developer.mozilla.org/en/docs/Web/API/notification).
+- Si tienes que utilizar [Web Workers].
+
+## No utilices Firestore si
+
+- Si esperas que tu aplicación sea utilizada por muchos usuarios y no tienes idea de la cantidad de lecturas y escrituras que necesitas por usuario, te podrías llevar un sorpresa en la factura que te pase Google. [Firestore] escala perfectamente, pero tu presupuesto quizá no.
+- Si el tamaño de tu aplicación web es algo crítico. Recuerda que el tamaño de tu aplicación, si se trata de una [PWA], no es tan importante, porque los archivos normalmente estará cacheados para que la aplicación pueda abrirse offline.
+
+## No elijas la mejor librería de gráficos
+Antes de nada, analiza qué tipos de gráficos necesitas. En muchos casos, es más que suficiente con gráficos XY, de tarta o de barras.
+Puedes fácilmente reducir el tamaño de tu aplicación utilizando librerías como [Frappe charts] or [Chartist]
 
 ---
 
-> Just check what are your requirements, if you are not sure about them, the [technology stack I used for Budget Tracker](#chosen-technology-stack-for-budget-tracker) consists of awesome products which most likely will fit your use case.
+> Simplemente asegúrate de que tus requisitos son compatibles con las limitaciones o problemas de los que acabo de hablar. Si no estás segura o seguro, el [conjunto de tecnologías que he utilizado para el desarrollo de Budget Tracker](#chosen-technology-stack-for-budget-tracker) debería ser suficiente para cualquier [PWA].
 
-# What next?
+# ¿Y ahora qué?
+Mi próxima apuesta para el lado [frontend] es [Svelte]/[Sapper]. Es un proyecto prometedor que ha cambiado el paradigma de framework en tiempo de ejecución a framework en tiempo de compilación. Hasta ahora, los resultados en proyectos pequeños son impresionantes, sobre todo en lo relacionado con el tamaño de la aplicación generada y con lo fácil e intuitivo que resulta el desarrollo con [Svelte].
 
-My next technology stack bet goes for [Svelte]/[Sapper], it is promising project, the results for small projects are really impressive, mainly in regards to bundle size, it is ridiculously small and development experience is quick and intuitive.
+He creado una sencilla [PWA] para [calcular el dinero que pierdes](https://currency-loss.netlify.com) cuando vas a una casa de cambio: [currency-loss.netlify.com](https://currency-loss.netlify.com). 
 
-I've created a tiny [PWA] to estimate [currency exchange loss](https://currency-loss.netlify.com) when you go to a money changer shop: [currency-loss.netlify.com](https://currency-loss.netlify.com). Note, I got that app up and running in few hours, thanks to [Svelte].
+Terminé esta aplicación en pocas horas gracias a [Svelte].
 
 [React]: https://reactjs.org
 [Webpack]: https://webpack.js.org
@@ -193,6 +206,9 @@ I've created a tiny [PWA] to estimate [currency exchange loss](https://currency-
 [Frappe charts]: https://frappe.io/charts
 [Chartist]: https://gionkunz.github.io/chartist-js
 [D3]: https://d3js.org/
-[post messages]: https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage
-[eject your project]: https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app
+[mensajes post]: https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage
+[extraer tu proyecto (eject)]: https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app
 [backend]: https://en.wikipedia.org/wiki/Front_and_back_ends
+[frontend]: https://en.wikipedia.org/wiki/Front_and_back_ends
+[Jest Snapshots]: https://jestjs.io/docs/en/snapshot-testing
+[CI]: https://en.wikipedia.org/wiki/Continuous_integration

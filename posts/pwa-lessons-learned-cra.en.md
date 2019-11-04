@@ -1,7 +1,7 @@
-.. title: Lessons learned developing a PWA with create-react-app
+.. title: Lessons learned developing a PWA with Create React App
 .. slug: pwa-lessons-learned-cra
 .. date: 2019/11/04
-.. tags: React, Typescript, CRA, PWA, create-react-app, Firebase, Firestore, Svelte, Sapper
+.. tags: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
 .. link: https://btapp.netlify.com
 .. description: Lessons learned developing a PWA: Budget Tracker
 
@@ -25,7 +25,7 @@ As I said, I wanted to be implementing business logic ASAP, so together with usi
 
 So far I am quite happy with the result, but with the lessons learned while developing this app, **in the future, with enough time, most likely I will not choose same technology stack again**. You can try the application [Budget Tracker] and judge for yourself.
 
-Along this post I will describe what are, in my experience, the benefits and drawbacks of taking these shortcuts and design decisions.
+Along this post I will describe what are, in my experience, the benefits and drawbacks of taking these shortcuts and technical decisions.
 
 [TOC]
 
@@ -65,9 +65,11 @@ I got really shocked first time I analyzed [Budget Tracker] bundle size after in
 Happily [Budget Tracker] implementation is following [code-splitting](https://reactjs.org/docs/code-splitting.html) principle, so user experience was not really affected with this integration. But user's device will eventually have to download this **extra 39%** (**539KB**). 
 
 ### Offline first, not really
+> This section is not relevant if your use case doesn't imply saving data linked to the user.
+
 [Firestore] requires user to be authenticated, but [user can be anonymous](https://firebase.google.com/docs/auth/web/anonymous-auth), this is really cool feature if you don't want to force the user to identify to use the app.
 
-Another very useful and cool [Firestore] feature is that [it supports offline mode](https://firebase.google.com/docs/firestore/manage-data/enable-offline), so data can be saved even there is no Internet connection. 
+Another very useful and cool [Firestore] feature is that [it supports offline mode](https://firebase.google.com/docs/firestore/manage-data/enable-offline), so data can be saved and read even there is no Internet connection. 
 
 So... what is this ["Offline first, not really"](#offline-first-not-really) issue about? First time the application is opened, [Firebase] needs to authenticate the user, to do so, user's device has to be connected to Internet, so **you have to consider following scenario** and be OK with it:
 
@@ -75,7 +77,7 @@ So... what is this ["Offline first, not really"](#offline-first-not-really) issu
 2. User is not authenticated.
 3. User's device is offline.
 4. User opens the [PWA] and tries to save some data.
-5. **That data won't be saved correctly**, because there is no user to link the data with, not even an anonymous user. 
+5. **That data won't be saved correctly**, because there is no user to link the data with, not even an anonymous user, because application needs to call [Firebase] API to create an anonymous user. 
 
 This is not big deal, because it will seldomly affect application user. If you want to deal with it anyway, you implement a local persistence layer for this scenario.
 
@@ -91,7 +93,12 @@ First of all, this **might not be an issue for your use case**, because it will 
 - If user is not authenticated, [Budget Tracker] won't load [Firestore] client bundle. As I explained before, it is 27% of application size.
 - Application reads and writes are faster, because latest valid data is always saved locally.
    - **Clarification**: Save data in [Firestore] is also fast, because data is also cached locally, but it does a little bit more than just saving to [IndexedDB] and you need an authenticated user.
-- You can find a [more detailed performance report](https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1), where I analyze 3 different implementations: only firebase client, local and remote persistence layers and the same as previous one but remote layer implemented in service worker.
+- You can find a [more detailed performance report](https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1), where I analyze 3 different implementations: 
+1. Only firebase client.
+2. Local ([IndexedDB]) and remote ([Firestore]) persistence layers.
+3. Same as previous one, but remote layer implemented in service worker.
+
+The performance results were in general better for option 2.
  
 ### Data model
 Firestore API is easy and intuitive, I really like it, but don't assume will have same features as other document DBs or SQL DBs. 
@@ -111,12 +118,12 @@ I chose [Material UI]: *"React components for faster and easier web development.
 
 There were two good reasons which drove me to pick up an UI Components library:
 
-- To create simple UI components which are accessible, responsible and with a consistent design is tricky and time consuming.
+- To create simple UI components which are accessible, [responsive](https://material-ui.com/guides/responsive-ui/#responsive-ui) and with a consistent design is tricky and time consuming.
 - It has SVG set of [Material Icons](https://material-ui.com/components/material-icons/). [Budget Tracker] allows to create categories defined by a name and a selectable icon, so this icon set was really convenient.
 
 There are some **drawbacks**, not very important in my opinion, maybe the most annoying for me is the first one:
 
-- Jest Snapshots + Material UI: The snapshots are generated with Material UI class names, but classes order might not be deterministic, so a test might pass in your local host but not in CI host. They are working on solve [this issue, more info at github](https://github.com/mui-org/material-ui/issues/14357).
+- [Jest Snapshots](https://jestjs.io/docs/en/snapshot-testing) + [Material UI]: The snapshots are generated with [Material UI] CSS class names, but CSS classes order might not be deterministic, so a test might pass in your local host but not in [CI] host. They are working on solve [this issue, more info at github](https://github.com/mui-org/material-ui/issues/14357).
 - Performance: There are some performance [issues in Github](https://github.com/mui-org/material-ui/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+performance). During last months, whilst I've been using this library, I can say they are working hard on fix them and bring new features.
 - UI components libraries are complex and do quite a lot work, so most of them are quite heavy. [Material UI bundle size weights: 304.2kB minified](https://bundlephobia.com/result?p=@material-ui/core@4.5.2). You can find some [recommendations to reduce bundle size at Material UI website](https://material-ui.com/guides/minimizing-bundle-size).
 
@@ -143,7 +150,7 @@ Seriously, let's play "do not go for ... if ...":
 
 ## Do not go for CRA if
 
-- You need to use [Service Worker] for [Background sync](https://developers.google.com/web/updates/2015/12/background-sync) or [showing push notifications](https://developer.mozilla.org/en/docs/Web/API/notification).
+- You need to customize [Service Worker] for [Background sync](https://developers.google.com/web/updates/2015/12/background-sync) or [showing push notifications](https://developer.mozilla.org/en/docs/Web/API/notification).
 - You need to use [Web Workers].
 
 ## Do not go for Firestore if
@@ -193,3 +200,4 @@ I've created a tiny [PWA] to estimate [currency exchange loss](https://currency-
 [post messages]: https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage
 [eject your project]: https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app
 [backend]: https://en.wikipedia.org/wiki/Front_and_back_ends
+[CI]: https://en.wikipedia.org/wiki/Continuous_integration
