@@ -1,7 +1,7 @@
-.. title: Lessons learned developing a PWA with create-react-app
+.. title: Lessons learned developing a PWA with Create React App
 .. slug: pwa-lessons-learned-cra
 .. date: 2019/11/04
-.. tags: React, Typescript, CRA, PWA, create-react-app, Firebase, Firestore, Svelte, Sapper
+.. tags: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
 .. link: https://btapp.netlify.com
 .. description: Lessons learned developing a PWA: Budget Tracker
 

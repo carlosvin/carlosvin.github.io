@@ -1,20 +1,20 @@
-.. title: Lecciones aprendidas creando una PWA con create-react-app
+.. title: Lecciones aprendidas creando una PWA con Create React App
 .. slug: pwa-lessons-learned-cra
 .. date: 2019/11/04
-.. tags: React, Typescript, CRA, PWA, create-react-app, Firebase, Firestore, Svelte, Sapper
+.. tags: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
 .. link: https://btapp.netlify.com
 .. description: Lecciones aprendidas durante la creacion de una PWA: Budget Tracker
 
 > Traduciendo al Español, en unos días estará listo.
 
+Empezé trabajando con [React] hace unos años, comenzaba el proyecto desde cero, sin utilizar ninguna plantilla o generador de proyectos. En lo que ser refiere a los empaquetadores, normalmente utilizo [Webpack]en el trabajo o [Parcel] en proyectos personales.
 
-I started working with [React] few year ago, always the project creation was from scratch, not using any template/scaffolding. Regarding bundlers normally I used either [Webpack] at work or [Parcel] for personal projects.
+Hace unos meses, quería comenzar un proyecto personal para hacer un seguimiento de mis gastos durante mi viaje. Llevaba un poco de prisa, porque en ese momento llevaba ya unos 4 meses viajando y quería centrarme cuanto antes en implementar la funcionalidad principal y tener algo funcionando cuanto antes, [MVP](https://en.wikipedia.org/wiki/Minimum_viable_product) (minimum viable product), estaba en la situación perfecta para probar [Create React App] o [CRA].
 
-Few months ago, I wanted to start a personal project to keep track of my travel expenses. I was in a kind of rush because at that time, I was almost in the middle of my gap year, I wanted to focus on implementing main functionality and get an [MVP](https://en.wikipedia.org/wiki/Minimum_viable_product) (minimum viable product) the sooner the better, so I thought it was the right time to try out [Create React App] or [CRA]. 
+[CRA] te permite crear una [PWA] en [React] lista para producción en un momento, lo que es impresionante. Solo tienes el esqueleto de la aplicación, tampoco hace milagros, el resto lo tienes que programar tú.
+[CRA] se encarga de la gestión de dependencias de desarrollo y configuración de el empaquetador, [Webpack] en este caso.
 
-[CRA] allows you to have a production ready [PWA] in [React], which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project.
-
-As I said, I wanted to be implementing business logic ASAP, so together with using [CRA], I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about them in following sections.
+Como decía antes, quería implementar la lógica del programa cuanto antes, así que junto con la utilización de [CRA], tambien tomé otras decisiones de diseño y atajos, condicionados por la necesidad de acelerar el proceso de desarrollo, hablaré sobre todas estas decisiones a lo largo de este artículo.
 
 # Chosen Technology Stack for [Budget Tracker]
 
