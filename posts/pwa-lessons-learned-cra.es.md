@@ -20,7 +20,7 @@ Como decía antes, quería implementar la lógica del programa cuanto antes, as�
 - [React]
 - [Typescript](https://www.typescriptlang.org)
 - [Material UI]
-- [Frappe charts]
+- ~~[Victory]~~ [Frappe charts]
 - [Firestore]
 - [Firebase Authentication].
 

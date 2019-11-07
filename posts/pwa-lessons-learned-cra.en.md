@@ -9,9 +9,9 @@ I started working with [React] few year ago, always the project creation was fro
 
 Few months ago, I wanted to start a personal project to keep track of my travel expenses. I was in a kind of rush because at that time, I was almost in the middle of my gap year, I wanted to focus on implementing main functionality and get an [MVP](https://en.wikipedia.org/wiki/Minimum_viable_product) (minimum viable product) the sooner the better, so I thought it was the right time to try out [Create React App] or [CRA]. 
 
-[CRA] allows you to have a production ready [PWA] in [React], which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project.
+[CRA] allows you to have a production ready [PWA] in [React] quickly, which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project and of course, implement your project, [CRA] is good, but is not magic.
 
-As I said, I wanted to be implementing business logic ASAP, so together with using [CRA], I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about them in following sections.
+As I said, I wanted to be implementing business logic ASAP, so together with using [CRA], I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about those choices in following sections describing some drawbacks and benefits.
 
 # Chosen Technology Stack for [Budget Tracker]
 
@@ -19,11 +19,11 @@ As I said, I wanted to be implementing business logic ASAP, so together with usi
 - [React]
 - [Typescript](https://www.typescriptlang.org)
 - [Material UI]
-- [Frappe charts]
+- ~~[Victory]~~ [Frappe charts]
 - [Firestore]
 - [Firebase Authentication].
 
-So far I am quite happy with the result, but with the lessons learned while developing this app, **in the future, with enough time, most likely I will not choose same technology stack again**. You can try the application [Budget Tracker] and judge for yourself.
+So far I am quite happy with the outcome, but with the lessons learned while developing this app, **in the future, with enough time, most likely I will not choose same technology stack again**. You can try the application [Budget Tracker] and judge for yourself.
 
 Along this post I will describe what are, in my experience, the benefits and drawbacks of taking these shortcuts and technical decisions.
 
@@ -35,20 +35,20 @@ Along this post I will describe what are, in my experience, the benefits and dra
 [Create React App] doesn't support [Web Workers] neither allows to customize [Service Worker] implementation without [ejecting](https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app) .  
 
 ## Service worker
-You might want to customize your [Service Worker] to send/receive [post messages], to perform [background sync](https://wicg.github.io/BackgroundSync/spec/) or [show notifications](https://developer.mozilla.org/en/docs/Web/API/notification). In that case you will have to [eject your project] and maintain the configuration by yourself, which might imply a little bit of headache.
+You might want to customize your [Service Worker] to send/receive [post messages], to perform [background sync](https://wicg.github.io/BackgroundSync/spec/) or [show web notifications](https://developer.mozilla.org/en/docs/Web/API/notification). In that case, you will have to [eject your project] and maintain the configuration by yourself, which might imply a little bit of headache.
 
 There are [other options to customize service worker and avoid ejecting CRA](https://www.freecodecamp.org/news/how-to-customize-service-workers-with-create-react-app-4424dda6210c/), but they are not straightforward enough for my taste.
 
 ## Web worker
 If you need to perform any heavy processing without blocking the main thread, you can just use a [Web Worker], but this feature is not supported by [CRA]. The [Web Worker] can communicate with main thread using [post messages] and it can also show [web push notifications](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c).
 
-There are also [other options to use Web Workers in CRA and not eject](https://medium.com/@danilog1905/how-to-use-web-workers-with-react-create-app-and-not-ejecting-in-the-attempt-3718d2a1166b), but they require quite some extra work.
+There are also [other options to use Web Workers in CRA and not eject](https://medium.com/@danilog1905/how-to-use-web-workers-with-react-create-app-and-not-ejecting-in-the-attempt-3718d2a1166b), but they imply quite some extra work.
 
 ## Webpack
-[Webpack] is the bundler used by [CRA]. You don't need to know much about it, unless you [eject your project], then you will have to deal with [Webpack configuration file](https://webpack.js.org/configuration/), this is just an tiny warning just in case you are not comfortable with it.
+[Webpack] is the bundler used by [CRA]. You don't need to know much about it, unless you [eject your project], then you will have to deal with [Webpack configuration file](https://webpack.js.org/configuration/), this is just a warning, just in case you are not comfortable with it.
 
 # Firebase 
-[Budget Tracker] allows to synchronize your data between different devices, so the application requires a [backend] side to deal with authentication and to save/read data remotely. I considered two options: [Firebase] or implement [REST] API.
+[Budget Tracker] supports data synchronization between different devices, so it requires a [backend] side to deal with authentication and to save/read data remotely. I considered two options: [Firebase] or implement [REST] API.
 
 For this [backend], I chose [Firebase] because it is super easy to implement, because there is nothing to implement. You only have to configure [authentication methods](https://support.google.com/firebase/answer/6400716?hl=en) and [security rules](https://firebase.google.com/docs/firestore/security/get-started) for [Firestore].
 
@@ -57,12 +57,12 @@ But [Firebase] brings some drawbacks you must know before choosing it.
 ## Drawbacks
 
 ### Bundle size
-I got really shocked first time I analyzed [Budget Tracker] bundle size after integrating it with [Firebase], it grew around a 39%!
+I got really shocked first time I analyzed [Budget Tracker] bundle size after integrating it with [Firebase], **it grew around a 39%!**
 
 * 27% from [Firestore] library.
 * 12% from [Firebase Authentication] library.
 
-Happily [Budget Tracker] implementation is following [code-splitting](https://reactjs.org/docs/code-splitting.html) principle, so user experience was not really affected with this integration. But user's device will eventually have to download this **extra 39%** (**539KB**). 
+Happily [Budget Tracker] implementation is following [code-splitting](https://reactjs.org/docs/code-splitting.html) principle, so user experience was not really affected with this integration. But user's device will eventually have to download this extra 39% (**539KB**). 
 
 ### Offline first, not really
 > This section is not relevant if your use case doesn't imply saving data linked to the user.
@@ -71,7 +71,9 @@ Happily [Budget Tracker] implementation is following [code-splitting](https://re
 
 Another very useful and cool [Firestore] feature is that [it supports offline mode](https://firebase.google.com/docs/firestore/manage-data/enable-offline), so data can be saved and read even there is no Internet connection. 
 
-So... what is this ["Offline first, not really"](#offline-first-not-really) issue about? First time the application is opened, [Firebase] needs to authenticate the user, to do so, user's device has to be connected to Internet, so **you have to consider following scenario** and be OK with it:
+Anonymous user + offline mode features will allow an application to work as offline first.
+
+So... what is this ["Offline first, not really"](#offline-first-not-really) issue about? Let me explain a tricky scenario. First time the application is opened, [Firebase] needs to authenticate the user, to do so, user's device has to be connected to Internet, so **you have to consider following scenario** and either be OK with it or deal with it:
 
 1. [PWA] is installed in your device.
 2. User is not authenticated.
@@ -79,7 +81,7 @@ So... what is this ["Offline first, not really"](#offline-first-not-really) issu
 4. User opens the [PWA] and tries to save some data.
 5. **That data won't be saved correctly**, because there is no user to link the data with, not even an anonymous user, because application needs to call [Firebase] API to create an anonymous user. 
 
-This is not big deal, because it will seldomly affect application user. If you want to deal with it anyway, you implement a local persistence layer for this scenario.
+This is not big deal, because it will seldom occur. If you want to deal with it anyway, check next section explaining how and why I did deal with this scenario.
 
 #### How did I deal with this issue with Budget Tracker?
 First of all, this **might not be an issue for your use case**, because it will happen only first time application is loaded. I just wanted [Budget Tracker] to be fully offline first, because it brings other benefits.
@@ -87,21 +89,23 @@ First of all, this **might not be an issue for your use case**, because it will 
 ##### Implementation details
  - Implement 2 persistence layers: Local ([IndexedDB]) and Remote ([Firestore]).
  - Save always data locally, regardless user authentication status. 
- - If there is any authenticated user, after saving to local layer, propagate same action to remote layer [Firestore] asynchronously.
+ - If there is any authenticated user, after saving to local layer, propagate same action to remote layer ([Firestore]) asynchronously.
 
 ##### Benefits
 - If user is not authenticated, [Budget Tracker] won't load [Firestore] client bundle. As I explained before, it is 27% of application size.
 - Application reads and writes are faster, because latest valid data is always saved locally.
    - **Clarification**: Save data in [Firestore] is also fast, because data is also cached locally, but it does a little bit more than just saving to [IndexedDB] and you need an authenticated user.
-- You can find a [more detailed performance report](https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1), where I analyze 3 different implementations: 
-1. Only firebase client.
+
+You can find a [more detailed performance report](https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1), where I analyze 3 different implementations:
+
+1. Only [Firestore] client.
 2. Local ([IndexedDB]) and remote ([Firestore]) persistence layers.
 3. Same as previous one, but remote layer implemented in service worker.
 
 The performance results were in general better for option 2.
  
 ### Data model
-Firestore API is easy and intuitive, I really like it, but don't assume will have same features as other document DBs or SQL DBs. 
+Firestore API is easy and intuitive, I really like it, but don't assume it will have same features as other document DBs or SQL DBs. 
 
 Check if [Firestore limitations](https://googleapis.github.io/google-cloud-dotnet/docs/Google.Cloud.Firestore/datamodel.html) fit into your data model, or if it is not too late, define your data model following [Firestore best practices](https://cloud.google.com/firestore/docs/best-practices) and having those limitations in mind.
 
@@ -116,7 +120,7 @@ Consider other alternatives:
 # UI Components Library: [Material UI]
 I chose [Material UI]: *"React components for faster and easier web development. Build your own design system, or start with Material Design"*, quoting their website.
 
-There were two good reasons which drove me to pick up an UI Components library:
+There were two reasons which drove me to use [Material UI]:
 
 - To create simple UI components which are accessible, [responsive](https://material-ui.com/guides/responsive-ui/#responsive-ui) and with a consistent design is tricky and time consuming.
 - It has SVG set of [Material Icons](https://material-ui.com/components/material-icons/). [Budget Tracker] allows to create categories defined by a name and a selectable icon, so this icon set was really convenient.
@@ -150,8 +154,8 @@ Seriously, let's play "do not go for ... if ...":
 
 ## Do not go for CRA if
 
-- You need to customize [Service Worker] for [Background sync](https://developers.google.com/web/updates/2015/12/background-sync) or [showing push notifications](https://developer.mozilla.org/en/docs/Web/API/notification).
-- You need to use [Web Workers].
+- You want to customize [Service Worker] for [Background sync](https://developers.google.com/web/updates/2015/12/background-sync) or [showing push notifications](https://developer.mozilla.org/en/docs/Web/API/notification).
+- You want to use [Web Workers].
 
 ## Do not go for Firestore if
 - You are aiming for your app to be hit by many users and you don't know the estimated amount of reads/writes, otherwise you might get surprised with the bill. [Firestore] scales like charm, maybe your budget doesn't. 
