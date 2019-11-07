@@ -96,8 +96,8 @@
     <div>
 <p>I started working with <a href="https://reactjs.org">React</a> few year ago, always the project creation was from scratch, not using any template/scaffolding. Regarding bundlers normally I used either <a href="https://webpack.js.org">Webpack</a> at work or <a href="https://parceljs.org">Parcel</a> for personal projects.</p>
 <p>Few months ago, I wanted to start a personal project to keep track of my travel expenses. I was in a kind of rush because at that time, I was almost in the middle of my gap year, I wanted to focus on implementing main functionality and get an <a href="https://en.wikipedia.org/wiki/Minimum_viable_product">MVP</a> (minimum viable product) the sooner the better, so I thought it was the right time to try out <a href="https://create-react-app.dev">Create React App</a> or <a href="https://create-react-app.dev">CRA</a>. </p>
-<p><a href="https://create-react-app.dev">CRA</a> allows you to have a production ready <a href="https://developers.google.com/web/progressive-web-apps/">PWA</a> in <a href="https://reactjs.org">React</a>, which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project.</p>
-<p>As I said, I wanted to be implementing business logic ASAP, so together with using <a href="https://create-react-app.dev">CRA</a>, I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about them in following sections.</p>
+<p><a href="https://create-react-app.dev">CRA</a> allows you to have a production ready <a href="https://developers.google.com/web/progressive-web-apps/">PWA</a> in <a href="https://reactjs.org">React</a> quickly, which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project and of course, implement your project, <a href="https://create-react-app.dev">CRA</a> is good, but is not magic.</p>
+<p>As I said, I wanted to be implementing business logic ASAP, so together with using <a href="https://create-react-app.dev">CRA</a>, I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about those choices in following sections describing some drawbacks and benefits.</p>
 <h2 id="chosen-technology-stack-for-budget-tracker">Chosen Technology Stack for <a href="https://btapp.netlify.com">Budget Tracker</a>
 </h2>
 <ul>
@@ -105,12 +105,14 @@
 <li><a href="https://reactjs.org">React</a></li>
 <li><a href="https://www.typescriptlang.org">Typescript</a></li>
 <li><a href="https://material-ui.com">Material UI</a></li>
-<li><a href="https://frappe.io/charts">Frappe charts</a></li>
+<li>
+<del><a href="https://formidable.com/open-source/victory">Victory</a></del> <a href="https://frappe.io/charts">Frappe charts</a>
+</li>
 <li><a href="https://firebase.google.com/docs/firestore">Firestore</a></li>
 <li>
 <a href="https://firebase.google.com/docs/auth">Firebase Authentication</a>.</li>
 </ul>
-<p>So far I am quite happy with the result, but with the lessons learned while developing this app, <strong>in the future, with enough time, most likely I will not choose same technology stack again</strong>. You can try the application <a href="https://btapp.netlify.com">Budget Tracker</a> and judge for yourself.</p>
+<p>So far I am quite happy with the outcome, but with the lessons learned while developing this app, <strong>in the future, with enough time, most likely I will not choose same technology stack again</strong>. You can try the application <a href="https://btapp.netlify.com">Budget Tracker</a> and judge for yourself.</p>
 <p>Along this post I will describe what are, in my experience, the benefits and drawbacks of taking these shortcuts and technical decisions.</p>
 <div class="toc">
 <ul>
@@ -161,32 +163,33 @@
 </h2>
 <p><a href="https://create-react-app.dev">Create React App</a> doesn't support <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">Web Workers</a> neither allows to customize <a href="https://developers.google.com/web/fundamentals/primers/service-workers">Service Worker</a> implementation without <a href="https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app">ejecting</a> .  </p>
 <h3 id="service-worker">Service worker</h3>
-<p>You might want to customize your <a href="https://developers.google.com/web/fundamentals/primers/service-workers">Service Worker</a> to send/receive <a href="https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage">post messages</a>, to perform <a href="https://wicg.github.io/BackgroundSync/spec/">background sync</a> or <a href="https://developer.mozilla.org/en/docs/Web/API/notification">show notifications</a>. In that case you will have to <a href="https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app">eject your project</a> and maintain the configuration by yourself, which might imply a little bit of headache.</p>
+<p>You might want to customize your <a href="https://developers.google.com/web/fundamentals/primers/service-workers">Service Worker</a> to send/receive <a href="https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage">post messages</a>, to perform <a href="https://wicg.github.io/BackgroundSync/spec/">background sync</a> or <a href="https://developer.mozilla.org/en/docs/Web/API/notification">show web notifications</a>. In that case, you will have to <a href="https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app">eject your project</a> and maintain the configuration by yourself, which might imply a little bit of headache.</p>
 <p>There are <a href="https://www.freecodecamp.org/news/how-to-customize-service-workers-with-create-react-app-4424dda6210c/">other options to customize service worker and avoid ejecting CRA</a>, but they are not straightforward enough for my taste.</p>
 <h3 id="web-worker">Web worker</h3>
 <p>If you need to perform any heavy processing without blocking the main thread, you can just use a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">Web Worker</a>, but this feature is not supported by <a href="https://create-react-app.dev">CRA</a>. The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">Web Worker</a> can communicate with main thread using <a href="https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage">post messages</a> and it can also show <a href="https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c">web push notifications</a>.</p>
-<p>There are also <a href="https://medium.com/@danilog1905/how-to-use-web-workers-with-react-create-app-and-not-ejecting-in-the-attempt-3718d2a1166b">other options to use Web Workers in CRA and not eject</a>, but they require quite some extra work.</p>
+<p>There are also <a href="https://medium.com/@danilog1905/how-to-use-web-workers-with-react-create-app-and-not-ejecting-in-the-attempt-3718d2a1166b">other options to use Web Workers in CRA and not eject</a>, but they imply quite some extra work.</p>
 <h3 id="webpack">Webpack</h3>
-<p><a href="https://webpack.js.org">Webpack</a> is the bundler used by <a href="https://create-react-app.dev">CRA</a>. You don't need to know much about it, unless you <a href="https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app">eject your project</a>, then you will have to deal with <a href="https://webpack.js.org/configuration/">Webpack configuration file</a>, this is just an tiny warning just in case you are not comfortable with it.</p>
+<p><a href="https://webpack.js.org">Webpack</a> is the bundler used by <a href="https://create-react-app.dev">CRA</a>. You don't need to know much about it, unless you <a href="https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app">eject your project</a>, then you will have to deal with <a href="https://webpack.js.org/configuration/">Webpack configuration file</a>, this is just a warning, just in case you are not comfortable with it.</p>
 <h2 id="firebase">Firebase</h2>
-<p><a href="https://btapp.netlify.com">Budget Tracker</a> allows to synchronize your data between different devices, so the application requires a <a href="https://en.wikipedia.org/wiki/Front_and_back_ends">backend</a> side to deal with authentication and to save/read data remotely. I considered two options: <a href="https://firebase.google.com/">Firebase</a> or implement <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API.</p>
+<p><a href="https://btapp.netlify.com">Budget Tracker</a> supports data synchronization between different devices, so it requires a <a href="https://en.wikipedia.org/wiki/Front_and_back_ends">backend</a> side to deal with authentication and to save/read data remotely. I considered two options: <a href="https://firebase.google.com/">Firebase</a> or implement <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API.</p>
 <p>For this <a href="https://en.wikipedia.org/wiki/Front_and_back_ends">backend</a>, I chose <a href="https://firebase.google.com/">Firebase</a> because it is super easy to implement, because there is nothing to implement. You only have to configure <a href="https://support.google.com/firebase/answer/6400716?hl=en">authentication methods</a> and <a href="https://firebase.google.com/docs/firestore/security/get-started">security rules</a> for <a href="https://firebase.google.com/docs/firestore">Firestore</a>.</p>
 <p>But <a href="https://firebase.google.com/">Firebase</a> brings some drawbacks you must know before choosing it. </p>
 <h3 id="drawbacks">Drawbacks</h3>
 <h4 id="bundle-size">Bundle size</h4>
-<p>I got really shocked first time I analyzed <a href="https://btapp.netlify.com">Budget Tracker</a> bundle size after integrating it with <a href="https://firebase.google.com/">Firebase</a>, it grew around a 39%!</p>
+<p>I got really shocked first time I analyzed <a href="https://btapp.netlify.com">Budget Tracker</a> bundle size after integrating it with <a href="https://firebase.google.com/">Firebase</a>, <strong>it grew around a 39%!</strong></p>
 <ul>
 <li>27% from <a href="https://firebase.google.com/docs/firestore">Firestore</a> library.</li>
 <li>12% from <a href="https://firebase.google.com/docs/auth">Firebase Authentication</a> library.</li>
 </ul>
-<p>Happily <a href="https://btapp.netlify.com">Budget Tracker</a> implementation is following <a href="https://reactjs.org/docs/code-splitting.html">code-splitting</a> principle, so user experience was not really affected with this integration. But user's device will eventually have to download this <strong>extra 39%</strong> (<strong>539KB</strong>). </p>
+<p>Happily <a href="https://btapp.netlify.com">Budget Tracker</a> implementation is following <a href="https://reactjs.org/docs/code-splitting.html">code-splitting</a> principle, so user experience was not really affected with this integration. But user's device will eventually have to download this extra 39% (<strong>539KB</strong>). </p>
 <h4 id="offline-first-not-really">Offline first, not really</h4>
 <blockquote>
 <p>This section is not relevant if your use case doesn't imply saving data linked to the user.</p>
 </blockquote>
 <p><a href="https://firebase.google.com/docs/firestore">Firestore</a> requires user to be authenticated, but <a href="https://firebase.google.com/docs/auth/web/anonymous-auth">user can be anonymous</a>, this is really cool feature if you don't want to force the user to identify to use the app.</p>
 <p>Another very useful and cool <a href="https://firebase.google.com/docs/firestore">Firestore</a> feature is that <a href="https://firebase.google.com/docs/firestore/manage-data/enable-offline">it supports offline mode</a>, so data can be saved and read even there is no Internet connection. </p>
-<p>So... what is this <a href="#offline-first-not-really">"Offline first, not really"</a> issue about? First time the application is opened, <a href="https://firebase.google.com/">Firebase</a> needs to authenticate the user, to do so, user's device has to be connected to Internet, so <strong>you have to consider following scenario</strong> and be OK with it:</p>
+<p>Anonymous user + offline mode features will allow an application to work as offline first.</p>
+<p>So... what is this <a href="#offline-first-not-really">"Offline first, not really"</a> issue about? Let me explain a tricky scenario. First time the application is opened, <a href="https://firebase.google.com/">Firebase</a> needs to authenticate the user, to do so, user's device has to be connected to Internet, so <strong>you have to consider following scenario</strong> and either be OK with it or deal with it:</p>
 <ol>
 <li>
 <a href="https://developers.google.com/web/progressive-web-apps/">PWA</a> is installed in your device.</li>
@@ -196,14 +199,14 @@
 <li>
 <strong>That data won't be saved correctly</strong>, because there is no user to link the data with, not even an anonymous user, because application needs to call <a href="https://firebase.google.com/">Firebase</a> API to create an anonymous user. </li>
 </ol>
-<p>This is not big deal, because it will seldomly affect application user. If you want to deal with it anyway, you implement a local persistence layer for this scenario.</p>
+<p>This is not big deal, because it will seldom occur. If you want to deal with it anyway, check next section explaining how and why I did deal with this scenario.</p>
 <h5 id="how-did-i-deal-with-this-issue-with-budget-tracker">How did I deal with this issue with Budget Tracker?</h5>
 <p>First of all, this <strong>might not be an issue for your use case</strong>, because it will happen only first time application is loaded. I just wanted <a href="https://btapp.netlify.com">Budget Tracker</a> to be fully offline first, because it brings other benefits.</p>
 <h6 id="implementation-details">Implementation details</h6>
 <ul>
 <li>Implement 2 persistence layers: Local (<a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">IndexedDB</a>) and Remote (<a href="https://firebase.google.com/docs/firestore">Firestore</a>).</li>
 <li>Save always data locally, regardless user authentication status. </li>
-<li>If there is any authenticated user, after saving to local layer, propagate same action to remote layer <a href="https://firebase.google.com/docs/firestore">Firestore</a> asynchronously.</li>
+<li>If there is any authenticated user, after saving to local layer, propagate same action to remote layer (<a href="https://firebase.google.com/docs/firestore">Firestore</a>) asynchronously.</li>
 </ul>
 <h6 id="benefits">Benefits</h6>
 <ul>
@@ -211,14 +214,16 @@
 <li>Application reads and writes are faster, because latest valid data is always saved locally.</li>
 <li>
 <strong>Clarification</strong>: Save data in <a href="https://firebase.google.com/docs/firestore">Firestore</a> is also fast, because data is also cached locally, but it does a little bit more than just saving to <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">IndexedDB</a> and you need an authenticated user.</li>
-<li>You can find a <a href="https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1">more detailed performance report</a>, where I analyze 3 different implementations: </li>
-<li>Only firebase client.</li>
+</ul>
+<p>You can find a <a href="https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1">more detailed performance report</a>, where I analyze 3 different implementations:</p>
+<ol>
+<li>Only <a href="https://firebase.google.com/docs/firestore">Firestore</a> client.</li>
 <li>Local (<a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">IndexedDB</a>) and remote (<a href="https://firebase.google.com/docs/firestore">Firestore</a>) persistence layers.</li>
 <li>Same as previous one, but remote layer implemented in service worker.</li>
-</ul>
+</ol>
 <p>The performance results were in general better for option 2.</p>
 <h4 id="data-model">Data model</h4>
-<p>Firestore API is easy and intuitive, I really like it, but don't assume will have same features as other document DBs or SQL DBs. </p>
+<p>Firestore API is easy and intuitive, I really like it, but don't assume it will have same features as other document DBs or SQL DBs. </p>
 <p>Check if <a href="https://googleapis.github.io/google-cloud-dotnet/docs/Google.Cloud.Firestore/datamodel.html">Firestore limitations</a> fit into your data model, or if it is not too late, define your data model following <a href="https://cloud.google.com/firestore/docs/best-practices">Firestore best practices</a> and having those limitations in mind.</p>
 <h3 id="firebase-alternatives">Firebase alternatives</h3>
 <p>Besides implementing a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> API, there are other services similar to <a href="https://firebase.google.com/">Firebase</a> with smaller client bundle size and other features which might fit better to your requirements.</p>
@@ -230,7 +235,7 @@
 <h2 id="ui-components-library-material-ui">UI Components Library: <a href="https://material-ui.com">Material UI</a>
 </h2>
 <p>I chose <a href="https://material-ui.com">Material UI</a>: <em>"React components for faster and easier web development. Build your own design system, or start with Material Design"</em>, quoting their website.</p>
-<p>There were two good reasons which drove me to pick up an UI Components library:</p>
+<p>There were two reasons which drove me to use <a href="https://material-ui.com">Material UI</a>:</p>
 <ul>
 <li>To create simple UI components which are accessible, <a href="https://material-ui.com/guides/responsive-ui/#responsive-ui">responsive</a> and with a consistent design is tricky and time consuming.</li>
 <li>It has SVG set of <a href="https://material-ui.com/components/material-icons/">Material Icons</a>. <a href="https://btapp.netlify.com">Budget Tracker</a> allows to create categories defined by a name and a selectable icon, so this icon set was really convenient.</li>
@@ -260,8 +265,8 @@
 <p>Seriously, let's play "do not go for ... if ...":</p>
 <h3 id="do-not-go-for-cra-if">Do not go for CRA if</h3>
 <ul>
-<li>You need to customize <a href="https://developers.google.com/web/fundamentals/primers/service-workers">Service Worker</a> for <a href="https://developers.google.com/web/updates/2015/12/background-sync">Background sync</a> or <a href="https://developer.mozilla.org/en/docs/Web/API/notification">showing push notifications</a>.</li>
-<li>You need to use <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">Web Workers</a>.</li>
+<li>You want to customize <a href="https://developers.google.com/web/fundamentals/primers/service-workers">Service Worker</a> for <a href="https://developers.google.com/web/updates/2015/12/background-sync">Background sync</a> or <a href="https://developer.mozilla.org/en/docs/Web/API/notification">showing push notifications</a>.</li>
+<li>You want to use <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">Web Workers</a>.</li>
 </ul>
 <h3 id="do-not-go-for-firestore-if">Do not go for Firestore if</h3>
 <ul>
