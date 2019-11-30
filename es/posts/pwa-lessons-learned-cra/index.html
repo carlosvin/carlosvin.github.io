@@ -13,7 +13,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'UA-1328360-10');
 </script><meta name="author" content="Carlos Martín Sánchez">
 <link rel="prev" href="../react-typescript-parcel/" title="SPA: React + Typescript + Parcel" type="text/html">
@@ -83,7 +82,7 @@
             <p class="dateline"><a href="." rel="bookmark"><time class="post-date published dt-published" datetime="2019-11-04T00:00:00+01:00" itemprop="datePublished" title="4/11/19 0:00">4/11/19 0:00</time></a></p>
                 <p class="commentline">
         
-    <a href="#disqus_thread" data-disqus-identifier="cache/posts/pwa-lessons-learned-cra.en.html">Comments</a>
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/pwa-lessons-learned-cra.en.html">Comentarios</a>
 
 
                 <meta name="description" itemprop="description" content="Lecciones aprendidas durante la creacion de una PWA: Budget Tracker"></p>
@@ -102,7 +101,7 @@
 </blockquote>
 <p>Como decía antes, quería implementar la lógica del programa cuanto antes, así que junto con la utilización de <a href="https://create-react-app.dev">CRA</a>, tambien tomé otras decisiones y atajos, condicionados por la necesidad de acelerar el proceso de desarrollo, hablaré sobre todas estas decisiones a lo largo de este artículo.</p>
 <h2 id="tecnologias-escogidas-para-crear-budget-tracker">Tecnologías escogidas para crear <a href="https://btapp.netlify.com">Budget Tracker</a>
-</h2>
+<a href="#tecnologias-escogidas-para-crear-budget-tracker" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <ul>
 <li><a href="https://create-react-app.dev">CRA</a></li>
 <li><a href="https://reactjs.org">React</a></li>
@@ -164,32 +163,32 @@
 <!--TEASER_END-->
 
 <h2 id="create-react-application-cra">Create React Application: <a href="https://create-react-app.dev">CRA</a>
-</h2>
+<a href="#create-react-application-cra" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p><a href="https://create-react-app.dev">Create React App</a> no ofrece soporte para <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">Web Workers</a> ni permite modificar la implementación del <a href="https://developers.google.com/web/fundamentals/primers/service-workers">Service Worker</a> sin <a href="https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app">expulsar (eject)</a> la configuración.   </p>
 <blockquote>
 <p>¿Qué significa explusar o "eject" en <a href="https://create-react-app.dev">CRA</a>? Básicamente es que la configuración de tu proyecto ya no está gestionada por <a href="https://create-react-app.dev">CRA</a>, por lo que tienes que te tienes que hacer cargo de ella, mantener las dependencias y configuración de todos los aspectos de tu proyecto como las pruebas, el análisis estático de código, la configuración de Babel y la lista continúa.</p>
 </blockquote>
-<h3 id="service-worker">Service worker</h3>
+<h3 id="service-worker">Service worker<a href="#service-worker" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>Es posible que necesites modificar el comportamiento de tu <a href="https://developers.google.com/web/fundamentals/primers/service-workers">Service Worker</a> para enviar/recibir <a href="https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage">mensajes post</a>, para realizar <a href="https://wicg.github.io/BackgroundSync/spec/">sincronización en segundo plano</a> o <a href="https://developer.mozilla.org/en/docs/Web/API/notification">mostrar notificaciones web</a>. En ese caso tendrá  que <a href="https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app">extraer tu proyecto (eject)</a> y mantener la configuración por tí misma/mismo, lo cual puede suponer algún que otro dolor de cabeza innecesario.</p>
 <p>Hay <a href="https://www.freecodecamp.org/news/how-to-customize-service-workers-with-create-react-app-4424dda6210c/">otras opciones para evitar extraer CRA</a>, pero son un poco complicadas para mi gusto.</p>
-<h3 id="web-worker">Web worker</h3>
+<h3 id="web-worker">Web worker<a href="#web-worker" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>Cuando necesitas ejecutar algún procesamiento sin bloquear el hilo principal, puedes enviarlo a un <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">Web Worker</a>, lo malo es que tampoco están soportados por <a href="https://create-react-app.dev">CRA</a>. El <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">Web Worker</a> también puebe comunicarse con el hilo principal usando <a href="https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage">mensajes post</a> y también puede mostrar <a href="https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c">notificaciones web</a>.</p>
 <p>También hay <a href="https://medium.com/@danilog1905/how-to-use-web-workers-with-react-create-app-and-not-ejecting-in-the-attempt-3718d2a1166b">otras opciones para evitar extraer la configuración de CRA</a>, pero requieren un poco de trabajo extra.</p>
-<h3 id="webpack">Webpack</h3>
+<h3 id="webpack">Webpack<a href="#webpack" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p><a href="https://webpack.js.org">Webpack</a> es el empaquetador utilizado por <a href="https://create-react-app.dev">CRA</a>. Cuando utilizas <a href="https://create-react-app.dev">CRA</a>, no necesitas saber mucho sobre éste, pero cuando tienes que <a href="https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app">extraer tu proyecto (eject)</a>, entonces tendrás que lidiar con el <a href="https://webpack.js.org/configuration/">archivo de configuracion de Webpack</a>.</p>
-<h2 id="firebase">Firebase</h2>
+<h2 id="firebase">Firebase<a href="#firebase" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p><a href="https://btapp.netlify.com">Budget Tracker</a> permite sincronizar tus presupuestos entre distintos dispositivos, por lo que esta aplicación necesita un lado <a href="https://en.wikipedia.org/wiki/Front_and_back_ends">backend</a> para gestionar la autenticación y guardar/leer los datos. Consideré dos opciones: <a href="https://firebase.google.com/">Firebase</a> implementar una API <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a>.</p>
 <p>Elegí <a href="https://firebase.google.com/">Firebase</a> porque no hay que implementar nada en el lado servidor, sólo hay que configurar los <a href="https://support.google.com/firebase/answer/6400716?hl=en">métodos de autenticación</a> y las <a href="https://firebase.google.com/docs/firestore/security/get-started">reglas de seguridad</a> en <a href="https://firebase.google.com/docs/firestore">Firestore</a>.</p>
 <p>Pero <a href="https://firebase.google.com/">Firebase</a> viene con algunos inconvenientes que debes conocer antes de elegirlo.</p>
-<h3 id="inconvenientes">Inconvenientes</h3>
-<h4 id="tamano-de-la-libreria">Tamaño de la librería</h4>
+<h3 id="inconvenientes">Inconvenientes<a href="#inconvenientes" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<h4 id="tamano-de-la-libreria">Tamaño de la librería<a href="#tamano-de-la-libreria" class="headerlink" title="Permalink to this heading">¶</a></h4>
 <p>Me sorprendió mucho la primera vez que analicé el tamaño de la aplicación <a href="https://btapp.netlify.com">Budget Tracker</a> justo después de integrarla con <a href="https://firebase.google.com/">Firebase</a>, <strong>¡creció un 39%!</strong>.</p>
 <ul>
 <li>27% por la librería <a href="https://firebase.google.com/docs/firestore">Firestore</a>.</li>
 <li>12% por la librería <a href="https://firebase.google.com/docs/auth">Firebase Authentication</a>.</li>
 </ul>
 <p>Afortunadamente <a href="https://btapp.netlify.com">Budget Tracker</a> está implementado particionando el código (<a href="https://reactjs.org/docs/code-splitting.html">code-splitting</a>), lo que permite cargar solo las partes necesarias de la aplicación, así que, la experiencia de usuario no se vió gravemente afectada. Lo malo es que el usuario, en algún momento, tendrá que descargar ese <strong>39% extra</strong> (<strong>539KB</strong>).</p>
-<h4 id="no-realmente-primero-offline">No realmente primero offline</h4>
+<h4 id="no-realmente-primero-offline">No realmente primero offline<a href="#no-realmente-primero-offline" class="headerlink" title="Permalink to this heading">¶</a></h4>
 <blockquote>
 <p>Esto no es relevante, si para tu caso de uso no tienes que vincular los datos al usuario.</p>
 </blockquote>
@@ -206,15 +205,15 @@
 <strong>La información no se podrá guardar correctamente</strong>, porque se desconoce el usuario al que pertenece esta información y tampoco se puede vincular a un usuario anónimo, porque se necesita conexión para crearlo. </li>
 </ol>
 <p>Esto no es un problema importane, la aplicación funcionará perfectamente en la mayoría de casos. Si, aún así quieres resolver este caso, a continuación explicaré cómo lo he solucionado en <a href="https://btapp.netlify.com">Budget Tracker</a>.</p>
-<h5 id="convertir-budget-tracker-como-offline-first">Convertir Budget Tracker como offline first</h5>
+<h5 id="convertir-budget-tracker-como-offline-first">Convertir Budget Tracker como offline first<a href="#convertir-budget-tracker-como-offline-first" class="headerlink" title="Permalink to this heading">¶</a></h5>
 <p>Antes de nada, me gustaría remarcar que esto <strong>podría no ser necesario para tu caso de uso</strong>, porque sólo ocurrirá la primera vez que arranque la aplicación y no tenga conexión a Internet. En el caso de <a href="https://btapp.netlify.com">Budget Tracker</a> me aseguré de que funcionase en todo momento en modo offline porque traía otros beneficios que más adelante enumeraré.</p>
-<h6 id="detalles-de-implementacion">Detalles de implementación</h6>
+<h6 id="detalles-de-implementacion">Detalles de implementación<a href="#detalles-de-implementacion" class="headerlink" title="Permalink to this heading">¶</a></h6>
 <ul>
 <li>Crear dos capas de persistencia: Local (<a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">IndexedDB</a>) y Remota (<a href="https://firebase.google.com/docs/firestore">Firestore</a>).</li>
 <li>Guardar los datos siempre de forma local, independientemente de si el usuario está identificado o no. </li>
 <li>Si hay un usuario que ya está identificado, después de actuar sobre el almacenamiento local, realizar exactamente la misma acción sobre la capa de almacenamiento remoto <a href="https://firebase.google.com/docs/firestore">Firestore</a> de forma asíncrona.</li>
 </ul>
-<h6 id="beneficios">Beneficios</h6>
+<h6 id="beneficios">Beneficios<a href="#beneficios" class="headerlink" title="Permalink to this heading">¶</a></h6>
 <ul>
 <li>Si el usuario no se ha identificado, <a href="https://btapp.netlify.com">Budget Tracker</a> no cargará la librería cliente de <a href="https://firebase.google.com/docs/firestore">Firestore</a>. Como ya comenté antes, ésta supone un 27% del tamaño de la aplicación.</li>
 <li>Las escrituras y lecturas son algo más rápidas, porque el almacenamiento primario es local.</li>
@@ -229,10 +228,10 @@
 <li>Igual que la anterior, pero se interactúa con <a href="https://firebase.google.com/docs/firestore">Firestore</a> desde un service worker.</li>
 </ol>
 <p>En general, se obtienen mejores resultados con la opción 2.</p>
-<h4 id="modelo-de-datos">Modelo de Datos</h4>
+<h4 id="modelo-de-datos">Modelo de Datos<a href="#modelo-de-datos" class="headerlink" title="Permalink to this heading">¶</a></h4>
 <p>La API de <a href="https://firebase.google.com/docs/firestore">Firestore</a> es fácil e intuitiva, me encanta, pero no asumas que tendrá todas las características que ofrecen otras bases de datos documentales o relacionales (SQL). </p>
 <p>Comprueba que las <a href="https://googleapis.github.io/google-cloud-dotnet/docs/Google.Cloud.Firestore/datamodel.html">limitaciones de Firestore</a> encajan con tu modelo de datos, o si no es demasiado tarde, diseña tu modelo de datos siguiendo la guía de <a href="https://cloud.google.com/firestore/docs/best-practices">buenas prácticas de Firestore</a>.</p>
-<h3 id="alternativas-a-firebase">Alternativas a Firebase</h3>
+<h3 id="alternativas-a-firebase">Alternativas a Firebase<a href="#alternativas-a-firebase" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>A parte de implementar una API <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> para tu aplicación, hay otros servicios similares a <a href="https://firebase.google.com/">Firebase</a> con un tamaño menor de la librería cliente y otras características que pueden adaptarse mejor a tus necesidades.</p>
 <p>Algunas alternativas a considerar:</p>
 <ul>
@@ -240,7 +239,7 @@
 <li>Basado en <a href="https://parseplatform.org/">Parse server</a>: <a href="https://www.back4app.com">back4apps</a>.</li>
 </ul>
 <h2 id="libreria-de-componentes-de-interfaz-de-usuario-material-ui">Librería de componentes de interfaz de usuario: <a href="https://material-ui.com">Material UI</a>
-</h2>
+<a href="#libreria-de-componentes-de-interfaz-de-usuario-material-ui" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Elegí <a href="https://material-ui.com">Material UI</a>: <em>"Componentes de React para un desarrollo web más rápido y sencillo. Construya su propio sistema de diseño, o empiece con Material Design."</em>, citando su sitio web.</p>
 <p>Hay dos razones principales por las que elegí una libreria de componentes UI:</p>
 <ul>
@@ -255,7 +254,7 @@
 <li>Rendimiento: Hay algunos <a href="https://github.com/mui-org/material-ui/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+performance">problemas de rendimiento en Github</a>. A lo largo de los últimos meses, mientras he utilizado esta librería, puedo decir que el equipo de desarrollo está trabajando duro en mejorar esta librería y supongo que los solucionarán pronto.</li>
 <li>Las librerías de componentes de interfaz de usuario son complejas y hacen muchas cosas, por ello la mayoría son bastante pesadas. <a href="https://bundlephobia.com/result?p=@material-ui/core@4.5.2">El tamaño de Material UI reducido son 304.2kB</a>. Puedes encontrar <a href="https://material-ui.com/guides/minimizing-bundle-size">recomendaciones para reducir el tamaño de tu aplicación al utilizar Material UI en su documentación</a>.</li>
 </ul>
-<h2 id="librerias-de-graficas">Librerías de gráficas</h2>
+<h2 id="librerias-de-graficas">Librerías de gráficas<a href="#librerias-de-graficas" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Muchas de las librerías que he encontrado son muy potentes y completas, pero también ocupan bastante, entre otras cosas porque dependen en otras librerías como <a href="https://d3js.org/">D3</a>.</p>
 <p>Inicialmente elegí <a href="https://formidable.com/open-source/victory">Victory</a>, pero me dí cuenta de que sólamente necesitaba gráficos para mostrar porcentajes y series temporales. Otro hecho relevante es que <a href="https://formidable.com/open-source/victory">Victory</a> tiene un <a href="https://bundlephobia.com/result?p=victory@33.1.2">tamaño de 468KB</a> y yo no estaba utilizando la mayor parte de ese código.</p>
 <p>Después de una búsqueda rápida en Internet, encontré otras alternativas mucho más ligeras y más que suficientes para mis necesidades:</p>
@@ -267,27 +266,27 @@
 </ul>
 <p>Probé las dos y me encantaron las dos, finalmente elegí <a href="https://frappe.io/charts">Frappe charts</a> porque su esquema de colores se ajusta mejor al tema de <a href="https://btapp.netlify.com">Budget Tracker</a>.</p>
 <p>Ambas librerías traen más tipos de gráficos que los de ejes de coordenadas XY o gráfico de barras. Echa un vistazo a sus sitios web si quieres saber un poco más.</p>
-<h2 id="conclusion">Conclusión</h2>
+<h2 id="conclusion">Conclusión<a href="#conclusion" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Intentaré llegar a una conclusión algo mejor que <em>"Depende"</em>, <em>"Tu caso de uso te dirá"</em>, etc. Dicho esto, depende de lo que necesites :p.</p>
 <p>Ya en serio, voy a listar las conclusiones en la forma <em>"No utilices ... si ..."</em>.</p>
-<h3 id="no-utilices-cra-si">No utilices CRA si</h3>
+<h3 id="no-utilices-cra-si">No utilices CRA si<a href="#no-utilices-cra-si" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <ul>
 <li>Si tienes que modificar el <a href="https://developers.google.com/web/fundamentals/primers/service-workers">Service Worker</a> para realizar <a href="https://developers.google.com/web/updates/2015/12/background-sync">Background sync</a> o para <a href="https://developer.mozilla.org/en/docs/Web/API/notification">mostrar notificaciones web</a>.</li>
 <li>Si tienes que utilizar <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers">Web Workers</a>.</li>
 </ul>
-<h3 id="no-utilices-firestore-si">No utilices Firestore si</h3>
+<h3 id="no-utilices-firestore-si">No utilices Firestore si<a href="#no-utilices-firestore-si" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <ul>
 <li>Si esperas que tu aplicación sea utilizada por muchos usuarios y no tienes idea de la cantidad de lecturas y escrituras que necesitas por usuario, te podrías llevar un sorpresa en la factura que te pase Google. <a href="https://firebase.google.com/docs/firestore">Firestore</a> escala perfectamente, pero tu presupuesto quizá no.</li>
 <li>Si el tamaño de tu aplicación web es algo crítico. Recuerda que el tamaño de tu aplicación, si se trata de una <a href="https://developers.google.com/web/progressive-web-apps/">PWA</a>, no es tan importante, porque los archivos normalmente estará cacheados para que la aplicación pueda abrirse offline.</li>
 </ul>
-<h3 id="no-elijas-la-mejor-libreria-de-graficos">No elijas la mejor librería de gráficos</h3>
+<h3 id="no-elijas-la-mejor-libreria-de-graficos">No elijas la mejor librería de gráficos<a href="#no-elijas-la-mejor-libreria-de-graficos" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>Antes de nada, analiza qué tipos de gráficos necesitas. En muchos casos, es más que suficiente con gráficos XY, de tarta o de barras.
 Puedes fácilmente reducir el tamaño de tu aplicación utilizando librerías como <a href="https://frappe.io/charts">Frappe charts</a> or <a href="https://gionkunz.github.io/chartist-js">Chartist</a></p>
 <hr>
 <blockquote>
 <p>Simplemente asegúrate de que tus requisitos son compatibles con las limitaciones o problemas de los que acabo de hablar. Si no estás segura o seguro, el <a href="#chosen-technology-stack-for-budget-tracker">conjunto de tecnologías que he utilizado para el desarrollo de Budget Tracker</a> debería ser suficiente para cualquier <a href="https://developers.google.com/web/progressive-web-apps/">PWA</a>.</p>
 </blockquote>
-<h2 id="y-ahora-que">¿Y ahora qué?</h2>
+<h2 id="y-ahora-que">¿Y ahora qué?<a href="#y-ahora-que" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Mi próxima apuesta para el lado <a href="https://en.wikipedia.org/wiki/Front_and_back_ends">frontend</a> es <a href="https://svelte.dev">Svelte</a>/<a href="https://sapper.svelte.dev">Sapper</a>. Es un proyecto prometedor que ha cambiado el paradigma de framework en tiempo de ejecución a framework en tiempo de compilación. Hasta ahora, los resultados en proyectos pequeños son impresionantes, sobre todo en lo relacionado con el tamaño de la aplicación generada y con lo fácil e intuitivo que resulta el desarrollo con <a href="https://svelte.dev">Svelte</a>.</p>
 <p>He creado una sencilla <a href="https://developers.google.com/web/progressive-web-apps/">PWA</a> para <a href="https://currency-loss.netlify.com">calcular el dinero que pierdes</a> cuando vas a una casa de cambio: <a href="https://currency-loss.netlify.com">currency-loss.netlify.com</a>. </p>
 <p>Terminé esta aplicación en pocas horas gracias a <a href="https://svelte.dev">Svelte</a>.</p>
@@ -344,7 +343,7 @@ Puedes fácilmente reducir el tamaño de tu aplicación utilizando librerías co
     
     
     
-            <script src="../../../assets/js/all-nocdn.js"></script><!-- Go to www.addthis.com/dashboard to customize your tools --><script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5cbc89c8e11f495f"></script><!-- fancy dates --><script>
+            <script src="../../../assets/js/all-nocdn.js"></script><!-- Go to www.addthis.com/dashboard to customize your tools --><script async type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5cbc89c8e11f495f"></script><!-- fancy dates --><script>
     moment.locale("es");
     fancydates(0, "YYYY-MM-DD HH:mm");
     </script><!-- end fancy dates -->
