@@ -253,7 +253,7 @@ FILTERS = {
 # side optimization for very high traffic sites or low memory servers.
 GZIP_FILES = True
 # File extensions that will be compressed
-# GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml')
+GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml')
 # Use an external gzip command? None means no.
 # Example: GZIP_COMMAND = "pigz -k {filename}"
 # GZIP_COMMAND = None
@@ -588,7 +588,7 @@ TIMEZONE = 'Europe/Madrid'
 
 # If webassets is installed, bundle JS and CSS to make site loading faster
 USE_BUNDLES = True
-
+USE_CDN = True
 # Plugins you don't want to use. Be careful :-)
 # DISABLED_PLUGINS = ["render_galleries"]
 
