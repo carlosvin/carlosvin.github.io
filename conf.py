@@ -241,13 +241,17 @@ COMPILERS = {
 #
 # Many filters are shipped with Nikola.  A list is available in the manual:
 # <http://getnikola.com/handbook.html#post-processing-filters>
-# FILTERS = {
-#    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
-# }
+FILTERS = {
+    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
+    ".html": ["filters.add_header_permalinks"],
+    ".css": ["filters.yui_compressor"],
+    ".js": ["filters.yui_compressor"],
+
+}
 
 # Expert setting! Create a gzipped copy of each generated file. Cheap server-
 # side optimization for very high traffic sites or low memory servers.
-# GZIP_FILES = False
+GZIP_FILES = True
 # File extensions that will be compressed
 # GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml')
 # Use an external gzip command? None means no.
@@ -462,7 +466,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra', 'toc', 'admonition'
 # long time). Insert anything you want here, or even make it empty.
 SOCIAL_BUTTONS_CODE = """
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5cbc89c8e11f495f"></script>
+<script async type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5cbc89c8e11f495f"></script>
 """
 
 # Hide link to source for the posts?
@@ -522,7 +526,6 @@ EXTRA_HEAD_DATA="""
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'UA-1328360-10');
 </script>
 """
