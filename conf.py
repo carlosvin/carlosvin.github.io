@@ -466,7 +466,7 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra', 'toc', 'admonition'
 # long time). Insert anything you want here, or even make it empty.
 SOCIAL_BUTTONS_CODE = """
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
-<script async type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5cbc89c8e11f495f"></script>
+<script defer type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5cbc89c8e11f495f"></script>
 """
 
 # Hide link to source for the posts?
