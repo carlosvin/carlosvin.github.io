@@ -520,6 +520,7 @@ SEARCH_FORM = """
 #"""
 
 EXTRA_HEAD_DATA="""
+<meta name="yandex-verification" content="4a67205a0cc34bd2" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1328360-10"></script>
 <script>
