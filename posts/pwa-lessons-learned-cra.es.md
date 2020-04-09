@@ -1,9 +1,12 @@
-.. title: Lecciones aprendidas creando una PWA con Create React App
-.. slug: pwa-lessons-learned-cra
-.. date: 2019/11/04
-.. tags: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
-.. link: https://btapp.netlify.com
-.. description: Lecciones aprendidas durante la creacion de una PWA: Budget Tracker
+---
+title: Lecciones aprendidas creando una PWA con Create React App
+lang: es
+slug: pwa-lessons-learned-cra
+date: 2019/11/04
+tags: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
+link: https://btapp.netlify.com
+description: 'Lecciones aprendidas durante la creacion de una PWA: Budget Tracker'
+---
 
 Empezé trabajando con [React] hace unos años, siempre he comenzado los proyectos desde cero, sin utilizar ninguna plantilla o generador de proyectos. En lo que ser refiere a los empaquetadores, normalmente utilizo [Webpack] en el trabajo o [Parcel] en proyectos personales.
 
@@ -212,3 +215,4 @@ Terminé esta aplicación en pocas horas gracias a [Svelte].
 [frontend]: https://en.wikipedia.org/wiki/Front_and_back_ends
 [Jest Snapshots]: https://jestjs.io/docs/en/snapshot-testing
 [CI]: https://en.wikipedia.org/wiki/Continuous_integration
+

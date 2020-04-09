@@ -1,9 +1,12 @@
-.. title: Lessons learned developing a PWA with Create React App
-.. slug: pwa-lessons-learned-cra
-.. date: 2019/11/04
-.. tags: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
-.. link: https://btapp.netlify.com
-.. description: Lessons learned developing a PWA: Budget Tracker
+---
+title: Lessons learned developing a PWA with Create React App
+slug: pwa-lessons-learned-cra
+lang: en
+date: 2019/11/04
+tags: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
+link: https://btapp.netlify.com
+summary: 'Lessons learned developing a PWA: Budget Tracker'
+---
 
 I started working with [React] few year ago, always the project creation was from scratch, not using any template/scaffolding. Regarding bundlers normally I used either [Webpack] at work or [Parcel] for personal projects.
 

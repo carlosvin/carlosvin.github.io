@@ -1,10 +1,12 @@
-.. title: SPA: React + Typescript + Parcel
-.. slug: react-typescript-parcel
-.. date: 2019/01/01 13:30:02
-.. modified: 2019/07/10 13:30:02
-.. tags: React, Typescript, Parcel, SPA
-.. link: https://github.com/carlosvin/react-typescript-parcel-template
-.. description: proyecto de ejemplo en el que se muestra cómo crear una aplicación web de página única (SPA) con React, Typescript y Parcel.
+---
+title: 'SPA: React + Typescript + Parcel'
+lang: es
+date: 2019/01/01 13:30:02
+modified: 2019/07/10 13:30:02
+tags: React, Typescript, Parcel, SPA
+link: https://github.com/carlosvin/react-typescript-parcel-template
+description: proyecto de ejemplo en el que se muestra cómo crear una aplicación web de página única (SPA) con React, Typescript y Parcel.
+---
 
 Estaba a punto de empezar otro proyecto personal para crear una aplicación web de página única ([SPA - Single Page App](https://es.wikipedia.org/wiki/Single-page_application)) en la que gestionar mi blog de viaje. 
 
