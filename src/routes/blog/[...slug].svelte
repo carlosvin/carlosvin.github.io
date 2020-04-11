@@ -21,6 +21,11 @@
 	.content :global(h2) {
 		font-size: 1.4em;
 		font-weight: 500;
+		margin-top: 1.2em;
+	}
+
+	.content :global(h3) {
+		margin-top: 1em;
 	}
 
 	.content :global(pre) {
@@ -42,6 +47,12 @@
 
 	.content :global(li) {
 		margin: 0 0 0.5em 0;
+	}
+
+	.content :global(.admonitionblock) {
+		background: #e9e9e9;
+		padding: 1em;
+		border-radius: 0.2em;
 	}
 
 	h1 {
