@@ -1,0 +1,39 @@
+= Depurar librería generada con libtool
+2013/02/01 15:30:00
+:keywords: C++, Autotools, GNU, Tips and Tricks
+
+:toc:
+
+[abstract]
+== Abstract
+Cómo depurar un librería generada con libtool
+
+Trabajando con link:[libtool]footnote:[Herramienta que pertenece a la link:[Autotools] usada para crear bibliotecas de software portables.], cuando vamos a depurar un ejecutable que utiliza una librería generada con link:[libtool], es posible que nos encontremos con el siguiente error:
+
+[source,bash]
+----
+$ gdb ./tests-mylib 
+"tests-mylib": not in executable format: File format not recognized
+----
+
+`+libmylib.so+` es una librería dinámica generada con link:[libtool] `+tests-mylib+` es un ejecutable que utiliza la librería mylib
+
+Para los que estéis pensando que se me ha olvidado poner la opción de compilación `+-g+`, lo siento, pero este error ocurre aunque utilicemos `+-g+`.
+
+El error es debido a que estamos intentando ejecutar un script generado por link:[libtool], es una envoltura sobre el programa real, para facilitar la ejecución de éste link:#libtooldoc[[libtooldoc]].
+
+Para poder depurar nuestro programa de prueba `+tests-mylib+`
+
+[source,bash]
+----
+libtool --mode=execute gdb tests-mylib
+----
+
+_libtool::
+  https://www.gnu.org/software/libtool/libtool.html
+_Autotools::
+  https://es.wikipedia.org/wiki/GNU_build_system
+
+[[citations]]
+[#libtooldoc .citation-label]#libtooldoc#::
+  Esta información la he sacado de https://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables

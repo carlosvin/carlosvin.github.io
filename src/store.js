@@ -1,12 +1,15 @@
-import all from '../posts/**/*.md';
+import allMd from '../posts/**/*.md';
+import allAdoc from '../posts/**/*.adoc';
 import {toSlug} from './services/slug';
 import {getLangSimplified} from './services/lang';
 
-class BlogStore {
+const requiredFields = ['date', 'title', 'slug', 'lang'];
 
+class BlogStore {
+    
     constructor() {
         this._posts = new Map();
-        all.forEach(post => this._add(post)); // adds post to this._posts
+        [...allMd, ...allAdoc].forEach(post => this._add(post)); // adds post to this._posts
         this._lang = getLangSimplified();
         this._index = [];
         for (const byLang of this._posts.values()) {
@@ -39,6 +42,7 @@ class BlogStore {
         const slug = metadata.slug || toSlug(filename.split('.')[0]);
         const post = {
             ...metadata,
+            title: metadata.title || metadata.doctitle,
             lang: metadata.lang,
             summary: metadata.summary || metadata.description,
             html,
@@ -49,9 +53,12 @@ class BlogStore {
     }
 
     static validate(post) {
-        if (!post.date || !post.title || !post.slug || !post.lang) {
-            delete post.html;
-            throw `Invalid post data: ${JSON.stringify(post)}`;
+        requiredFields.forEach(f => BlogStore._validate(post, f));
+    }
+
+    static _validate(post, field) {
+        if (!post[field]) {
+            throw `Invalid post data: [${field}] field required`;
         }
     }
 

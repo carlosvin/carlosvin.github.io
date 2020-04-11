@@ -1,0 +1,374 @@
+= Elegir tecnologías para mi nuevo proyeco C++
+2017/09/24 20:00:00
+:keywords: C++, Unit Testing, Build System, Build Software, Meson, Catch, doctest
+
+:toc:
+
+[abstract]
+== Abstract
+Las tecnologías que he elegido para mi proyecto C++.My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton.
+
+Estoy empezando un pequeño proyecto en C++ y antes de nada me han surgido un par de preguntas:
+
+[arabic]
+. ¿Cómo voy a construirlo?
+. ¿Qué framework para pruebas unitarias utilizar?
+
+== Elegir un Sistema de Construcción (link:[Meson])
+
+Ya he utilizado antes link:[Make], link:[Maven], link:[Scons], link:[Gradle] y link:[Autotools], pero tengo algunas razones para probar algo diferente, hay algunas cosas que no me gustan:
+
+link:[Autotools]::
+  No es fácil de configurar y mantener: hay distintos ficheros de configuración y distintos pasos de configuración.
+link:[Gradle]::
+  La construcción de proyectos C++ está todavía en desarrollo, los modelos y APIs están cambiando. No es muy rápido. Puedes ver un ejemplo en este artículo link:/posts/gradle-cpp/[Construir un proyecto C++ con Gradle].
+link:[Make]::
+  A medida que el proyecto crece los archivos de configuración se van complicando y volviendo poco manejables. La sintáxis no me parece clara (esto es una custión de gustos).
+link:[Scons]::
+  Es más lento y un poco más difícil de comprender que link:[Meson].
+link:[Maven]::
+  Es lento y puedes terminar "_Javatizando_" la estructura del proyecto.
+
+[NOTE]
+.Note
+====
+He nombrado solo las cosas que no gustan, pero estos sistemas de construcción tienen otras grandes virtudes, personalmente me encantan link:[Gradle], link:[Autotools] y link:[Maven] (solo para projectos Java).
+======= link:[CMake] vs link:[Meson]
+
+Después de descartar los anteriores, estoy considerando link:[Meson] y link:[CMake]. Los dos son bastante rápidos:
+
+Aunque link:[Meson] está hecho en link:[Python], simplemente genera projectos link:[Ninja]. La primera vez tenemos que ejecutar link:[Meson] para configurar el proyecto, el resto de ejecuciones para compilar o ejecutar pruebas, realmente estaremos ejecutando directamente link:[Ninja].
+
+link:[CMake] también puede generar proyectos link:[Ninja] entre otros formatos, https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html[mira la documentación "CMake generators"].
+
+link:[CMake]::
+  Tiene una gran ventaja sobre link:[Meson], es mucho más maduro y es mucho más usado, lo que significa que podrás encontrar muy fácilmente ejemplos, documentación y ayuda en Internet. No importa el tipo de proyecto que estés empezando, lo más seguro es que link:[CMake] sea una buena elección.
+link:[Meson]::
+  Es un proyecto jóven comparado con link:[CMake], pero está creciendo rápido y ya ha sido adoptado por algunos proyectos importantes como link:[Gnome], donde han comenzado una iniciativa para https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting[migrar desde Autotools a Meson].
+
+*Finalmente he elegido* link:[Meson] porque:
+
+* La sintáxis es muy clara para mí, cuando leo un archivo [.title-ref]#meson.build# entiendo rápidamente lo ue está pasando durante el proceso de construcción.
+* Es rápido, aunque está escrito en link:[Python] utiliza link:[Ninja] para construir el proyecto. La primera vez tienes que utilizar link:[Meson] para configurar el proyecto, pero para construir y probar el proyecto relmente estamos ejecutando link:[Ninja].
+
+[source,bash]
+----
+$ meson build . # Primera vez, configuración del proyecto
+$ cd build
+$ ninja build   # cada vez que construyes el projecto
+$ ninja test    # cada vez que ejecutas tests
+----
+
+He encontrado un para de comparaciones interesantes entre algunos de los sistemas de construcción en C++, aunque puede que no sean del todo imparciales porque han sido realizadas por link:[Meson] y link:[Scons].
+
+* https://bitbucket.org/scons/scons/wiki/SconsVsOtherBuildTools[C++ build systems comparison from Scons].
+* https://mesonbuild.com/Simple-comparison.html[C++ build systems comparison from Meson].
+
+== Framework the Pruebas Unitarias
+
+Anteriorment he utilizado algunas librerías del tipo link:[xUnit] como https://github.com/unittest-cpp/unittest-cpp[UnitTest++], https://cpputest.github.io/[CppUTest] o https://github.com/google/googletest[Google Test] que encaja perfectamente con https://github.com/google/googletest/tree/master/googlemock[Google Mock].
+
+Si quires una apuesta segura que cumpla tus expectativas, te recomiendo https://github.com/google/googletest[Google Test].
+
+Pero hace algún tiempo encontré un framework de pruebas con algunas características no tan comunes en librerías de pruebas C++ y que resultaba realmente fácil de utilizar, estoy hablando de link:[Catch]:
+
+* Es simplemente un fichero de cabeceras C++ sin dependencias adicionales, por lo que resulta realmente rápido comenzar (wget y utilizar el fichero descargado desde tus pruebas).
+* Puedes utilizar el estilo normal de pruebas unitarias o el estilo link:[BDD].
+
+Si quieres saber más sobre link:[Catch], te recomiendo que directamente lo pruebes, el siguiente ejemplo, es cuestión de dos minutos https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests[simple example up and running]. Puedes también leer algunos artículos como https://github.com/philsquared/Catch/blob/master/docs/why-catch.md[Why do we need yet another C++ test framework?] o https://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/[Testing C++ With A New Catch].
+
+=== link:[doctest]: Una alternativa a link:[Catch]
+
+Hay otro framework de pruebas llamado link:[doctest], con los mismos principios que link:[Catch], pero promete ser más rápido y ligero (link:[resultados de las comparaciones de rendimiento]) que link:[Catch].
+
+link:[doctest] fue diseñado basándose en los puntos fuertes de link:[Catch], pero hay algunas https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch[diferencias].
+
+No es fácil decidirse por uno, los dos son muy parecidos, puedes comprobar las diferencias a continuación:
+
+[source,diff]
+----
+@@ -1,12 +1,12 @@
+-#define CATCH_CONFIG_MAIN // It tells Catch to provide a main() - only do this in one cpp file
++#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
+-#include "catch.hpp"
++#include "doctest.h"
+#include "Uuid.h"
+#include <string>
+
+constexpr int MAX_ITERS = 100;
+
+-TEST_CASE("Uuid", "[uuid]")
++TEST_CASE("Uuid")
+{
+for (int i = 0; i < MAX_ITERS; i++)
+{
+@@ -26,7 +26,7 @@ TEST_CASE("Uuid", "[uuid]")
+
+// BDD style
+
+-SCENARIO("UUID creation", "[Uuid]")
++SCENARIO("UUID creation")
+{
+
+GIVEN("A random UUID ")
+----
+
+Finalmente he elegido link:[doctest] simplemente porque es más rápido: link:[resultados de las comparaciones de rendimiento].
+
+[NOTE]
+.Note
+====
+He creado el proyecto de ejemplo utilizando ambos frameworks, puedes encontrarlos en diferentes ramas del repositorio: https://github.com/carlosvin/uuid-cpp/tree/doctest[rama doctest] or https://github.com/carlosvin/uuid-cpp/tree/catch[rama catch].
+====== Ejemplo
+
+He creado un ejemplo para ilustrar este artículo: https://github.com/carlosvin/uuid-cpp.
+
+Consiste en una implementación básica de un generador pseudo-aleatorio de link:[UUID], está basado en link:[mt19937] que no es criptográficamente seguro.
+
+=== Artefactos del Proyecto
+
+Cuando instalemos el proyecto, link:[Meson] (link:[Ninja] realmente) generará una serie de artefactos en nuestro sistema.
+
+* Librería compartida: `+libuuid+`.
+* Fichero de cabeceras para que los desarrolladores puedan usar la librería: `+include/Uuid.h+`.
+* Fichero ejecutable `+uuidgen+` (Generador de link:[UUID]).
+* Ejecutable de las pruebas unitarias (no será instalado).
+
+Si ejecutamos `+ninja install+` en Linux obtendremos los siguientes ficheros:
+
+[source,bash]
+----
+/usr/local/lib/libuuid.so
+/usr/local/include/Uuid.h
+/usr/local/bin/uuidgen
+----
+
+=== Estructura del Proyecto (https://github.com/carlosvin/uuid-cpp[Fork project])
+
+* {blank}
++
+https://github.com/carlosvin/uuid-cpp/blob/master/meson.build[meson.build]::
+  Fichero principal de configuración para construir el proyecto. Lo utilizamos para especificar las propiedades y subdirectorios del proyecto.
+  +
+[source,python]
+----
+project(
+    'cpp-meson-example', # project name
+    'cpp', # C++ project, e.g: for C project 
+    version : '1.0.0',
+    license : 'MIT',
+    default_options : ['cpp_std=c++11']) # compile for C++
+
+# it will be referred from subdir projects
+inc = include_directories('include') 
+
+# meson will try to find a meson.build file inside following directories
+subdir('include')
+subdir('src')
+subdir('test')
+----
+* {blank}
++
+https://github.com/carlosvin/uuid-cpp/blob/master/include/[include]::
+  ** {blank}
+  +
+  meson.build;;
+    Archivo de configuración para construir este directorio, no hay mucho que hacer aquí, simplemente indicamos qué ficheros de cabeceras han de ser instalados
+    +
+[source,python]
+----
+# Select header files to be installed 
+install_headers('Uuid.h')
+----
+  ** {blank}
+  +
+  https://github.com/carlosvin/uuid-cpp/blob/master/include/Uuid.h[Uuid.h];;
+    Archivos de cabeceras, es el interfaz que expone la librería y que será incluido por los usuarios de la misma.
+    +
+[source,cpp]
+----
+namespace ids {
+
+class Uuid {
+    private:
+    // ...
+----
+* {blank}
++
+https://github.com/carlosvin/uuid-cpp/blob/master/src[src]::
+  ** {blank}
+  +
+  https://github.com/carlosvin/uuid-cpp/blob/master/src/meson.build[meson.build (src)];;
+    Declara 2 artefactos de salida: La librería `+libuuid+` y el ejecutable `+uuidgen+`.
+    +
+[source,python]
+----
+libuuid = shared_library(
+    'uuid', # library name
+    'Uuid.cpp', # source files to be compile
+    include_directories : inc, # previously declared include directories in root :code:`meson.build`
+    install : true) # :code:`libuuid` will be part of project installation
+
+uuidgen = executable(
+    'uuidgen', # executable name
+    'main.cpp', # source files to compile
+    include_directories : inc, # previously declared include directories in root :code:`meson.build`
+    link_with : libuuid, # linking executable with shared previously declared shared library :code:`libuuid`
+    install : true) # :code:`uuidgen` executable be part of project installation
+----
+  ** {blank}
+  +
+  https://github.com/carlosvin/uuid-cpp/blob/master/src/main.cpp[main.cpp];;
+    Código fuente del ejecutable de la aplicación: `+uuidgen+`
+    +
+[source,cpp]
+----
+#include "Uuid.h"
+#include <iostream>
+
+int main() 
+{
+    ids::Uuid uuid;
+    std::cout << uuid.to_str() << std::endl;
+    return 0;
+}
+----
+  ** {blank}
+  +
+  https://github.com/carlosvin/uuid-cpp/blob/master/src/Uuid.cpp[Uuid.cpp];;
+    Implementación de la clase declarada en el fichero de cabeceras `+Uuid.h+`.
+    +
+[source,cpp]
+----
+#include "Uuid.h"
+
+Uuid::Uuid()
+{ // ...
+----
+* {blank}
++
+https://github.com/carlosvin/uuid-cpp/blob/master/test/[test]::
+  ** {blank}
+  +
+  https://github.com/carlosvin/uuid-cpp/blob/master/test/meson.build[meson.build (test)];;
+    Archivo de configuración para construir y ejecutar las pruebas unitarias.
+    +
+[source,python]
+----
+testexe = executable(
+    'testexe', # test executable name 
+    'uuid_test.cpp', # tests source files to be compiled
+    include_directories : inc,  # declared include directories in root :code:`meson.build`
+    link_with : libuuid) # link test executable with previously declared shared library :code:`libuuid`
+
+# test execution 
+test('Uuid test', testexe)
+
+# we can specify other test execution passing arguments or environment variables
+test('Uuid test with args and env', testexe, args : ['arg1', 'arg2'], env : ['FOO=bar'])
+----
+  ** {blank}
+  +
+  doctest.h;;
+    Librería link:[doctest] en un único fichero de cabeceras. Puedes tratar de automatizar el proceso de instalación de la librería, yo por el momento la he instalado manualmente, ya que es un proceso muy sencillo:
+    +
+[source,bash]
+----
+cd test
+wget https://raw.githubusercontent.com/onqtam/doctest/master/doctest/doctest.h 
+----
+  ** {blank}
+  +
+  https://github.com/carlosvin/uuid-cpp/blob/master/test/uuid_test.cpp[uuid_test.cpp];;
+    Implementación de las pruebas unitarias.
+    +
+[source,cpp]
+----
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
+#include "doctest.h"
+#include "Uuid.h"
+#include <string>
+
+constexpr int MAX_ITERS = 100;
+
+TEST_CASE("Uuid")
+{
+    for (int i = 0; i < MAX_ITERS; i++)
+    {
+        ids::Uuid uuid;
+        std::string uuid_str{uuid.to_str()};
+
+        INFO(uuid_str);
+
+        // If assertion fails test execution is stopped
+        REQUIRE(uuid_str.size() == 36);
+
+        // If assertion fails test execution continues
+        CHECK(uuid.most > 0);
+        CHECK(uuid.least > 0);
+    }
+}
+
+// BDD style
+
+SCENARIO("UUID creation")
+{
+
+    GIVEN("A random UUID ")
+    {
+
+        ids::Uuid uuid;
+        std::string uuid_str{uuid.to_str()};
+
+        REQUIRE(uuid_str.size() == 36);
+
+        WHEN("get the most and least")
+        {
+            THEN("should be more than 0")
+            {
+                CHECK(uuid.most > 0);
+                CHECK(uuid.least > 0);
+            }
+        }
+    }
+}
+----
+
+[HINT]
+.Hint
+====
+Puedes encontrar las instrucciones para construir y ejecutar el proyecto de ejemplo en: https://github.com/carlosvin/uuid-cpp#how-to-build-the-example
+====_CMake::
+  https://cmake.org/
+_Make::
+  https://www.gnu.org/software/make/manual/make.html
+_Gradle::
+  https://gradle.org/
+_Maven::
+  https://maven.apache.org/
+_Scons::
+  https://scons.org/
+_Autotools::
+  https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
+_Meson::
+  https://mesonbuild.com/
+_Gnome::
+  https://www.gnome.org/
+_Ninja::
+  https://ninja-build.org/
+_Python::
+  https://python.org/
+_Catch::
+  https://github.com/philsquared/Catch
+_xUnit::
+  https://en.wikipedia.org/wiki/XUnit
+_BDD::
+  https://en.wikipedia.org/wiki/Behavior-driven_development
+_UUID::
+  https://en.wikipedia.org/wiki/Universally_unique_identifier
+_mt19937::
+  https://www.cplusplus.com/reference/random/mt19937/
+_doctest::
+  https://github.com/onqtam/doctest

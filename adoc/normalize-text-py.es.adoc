@@ -1,0 +1,37 @@
+= Normalizar texto en Python
+2012/10/02 18:00:00
+:keywords: Python, Tips and Tricks
+
+:toc:
+
+[abstract]
+== Abstract
+Evitar problemas con textos que contienen caractéres no ASCII
+
+En muchos idiomas, como es el caso del español, hay caracteres que no tienen representación link:[ASCII], como por ejemplo la á (que sí que tiene representación en link:[Unicode]).
+
+Para evitar problemas o por simplificar, se ha dado una equivalencia entre los caracteres link:[Unicode] y los link:[ASCII]. A continuación os pondré un trozo de código en link:[Python] que hace esta conversión.
+
+[source,python]
+----
+# -*- coding: utf-8 -*-
+from unicodedata import normalize
+
+def normalize_text ( text ):
+  return normalize('NFKD', text).encode('ASCII', 'ignore')
+----
+
+Ejecutando el ejemplo:
+
+[source,python]
+----
+>>> normalize_text ( 'aáaá eéeé iíií oóoó ñnñn AÀAÀ' )
+b'aaaa eeee iiii oooo nnnn AAAA'
+----
+
+_ASCII::
+  https://es.wikipedia.org/wiki/ASCII
+_Unicode::
+  https://es.wikipedia.org/wiki/Unicode
+_Python::
+  https://www.python.org

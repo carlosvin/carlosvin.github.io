@@ -8,6 +8,7 @@ import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import markdown from '@jackfranklin/rollup-plugin-markdown'
 import glob from 'rollup-plugin-glob'
+import asciidoc from 'rollup-plugin-asciidoc'
 
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
@@ -20,6 +21,7 @@ export default {
 		input: config.client.input(),
 		output: config.client.output(),
 		plugins: [
+			asciidoc(),
 			markdown(),
       		glob(),
 			replace({
@@ -66,6 +68,7 @@ export default {
 		input: config.server.input(),
 		output: config.server.output(),
 		plugins: [
+			asciidoc(),
 			markdown(),
       		glob(),
 			replace({
