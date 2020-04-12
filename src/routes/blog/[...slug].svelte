@@ -13,6 +13,13 @@
 </script>
 
 <script>
+	// TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
+	import { onMount } from 'svelte'
+	onMount(async () => {
+		;[...document.querySelectorAll('a[href^="#"]')].map(
+		x => (x.href = document.location + new URL(x.href).hash)
+		)
+	})
 	import {getIsoDateStr} from '../../services/dates';
 	export let post;
 </script>
