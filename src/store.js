@@ -1,4 +1,3 @@
-import allMd from '../posts/**/*.md';
 import allAdoc from '../posts/**/*.adoc';
 import {toSlug} from './services/slug';
 import {getLangSimplified} from './services/lang';
@@ -9,7 +8,8 @@ class BlogStore {
     
     constructor() {
         this._posts = new Map();
-        [...allMd, ...allAdoc].forEach(post => this._add(post)); // adds post to this._posts
+        //allAdoc.forEach(a => console.log(a));
+        allAdoc.forEach(post => this._add(post)); // adds post to this._posts
         this._lang = getLangSimplified();
         this._index = [];
         for (const byLang of this._posts.values()) {
