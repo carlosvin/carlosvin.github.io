@@ -72,6 +72,8 @@
 	<title>{post.title}</title>
 	<meta name="date" content="{getIsoDateStr(post.date)}" scheme="YYYY-MM-DD">
 	<meta name="description" content="{post.summary}" scheme="YYYY-MM-DD">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css">
+	<script async defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
 </svelte:head>
 
 <h1>{post.title}</h1>
