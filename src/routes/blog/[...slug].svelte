@@ -19,6 +19,7 @@
 	let photos = [];
 
 	onMount(async () => {
+		// this could be a better solution https://svelte.dev/repl/3fef33867c47431b8f4edc99275640e8?version=3.12.1
 		hljs && hljs.initHighlighting();
 	});
 
