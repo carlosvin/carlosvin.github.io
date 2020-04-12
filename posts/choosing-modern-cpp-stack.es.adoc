@@ -1,5 +1,4 @@
 = Elegir tecnologías para mi nuevo proyeco C++
-:source-highlighter: highlightjs
 :date: 2017/09/24 20:00:00
 :keywords: C++, Unit Testing, Build System, Build Software, Meson, Catch, doctest
 :description: Las tecnologías que he elegido para mi proyecto C++. My chosen technologies stack for C++ project. It contains an easy to run example defining main project skeleton
@@ -66,13 +65,16 @@ Aunque {meson} está hecho en {python}, simplemente genera projectos {ninja}. La
 .Pasos para compilar y ejectuar tests
 [source,bash]
 ----
-$ meson build . # Primera vez, configuración del proyecto
+$ meson build . <1>
 $ cd build
-$ ninja build   # cada vez que construyes el projecto
-$ ninja test    # cada vez que ejecutas tests
+$ ninja build   <2>
+$ ninja test    <3>
 ----
+<1> Primera vez, configuración del proyecto
+<2> Cada vez que construyes el projecto
+<3> Cada vez que ejecutas tests
 
-=== Comparaciones de sistemas de construcción
+=== Otras comparaciones entre sistemas de construcción
 He encontrado un par de comparaciones interesantes entre algunos de los sistemas de construcción en C++, aunque puede que no sean del todo imparciales porque han sido realizadas por {meson} y {scons}.
 
 * https://bitbucket.org/scons/scons/wiki/SconsVsOtherBuildTools[C++ build systems comparison from Scons].
@@ -99,6 +101,7 @@ Hay otro framework de pruebas llamado {doctest}, con los mismos principios que {
 
 No es fácil decidirse por uno, los dos son muy parecidos, puedes comprobar las diferencias a continuación:
 
+.Differencias entre la rama usando {doctest} y la rama usando {catch}
 [source,diff]
 ----
 @@ -1,12 +1,12 @@
@@ -160,6 +163,8 @@ Si ejecutamos `+ninja install+` en Linux obtendremos los siguientes ficheros:
 
 https://github.com/carlosvin/uuid-cpp/blob/master/meson.build[meson.build]:: Fichero principal de configuración para construir el proyecto. 
 Lo utilizamos para especificar las propiedades y subdirectorios del proyecto.
+
+.meson.build
 [source,python]
 ----
 project(
@@ -181,7 +186,8 @@ subdir('test')
 https://github.com/carlosvin/uuid-cpp/blob/master/include/[include]::
   meson.build;;
     Archivo de configuración para construir este directorio, no hay mucho que hacer aquí, simplemente indicamos qué ficheros de cabeceras han de ser instalados
-    
+
+.include/meson.build
 [source,python]
 ----
 # Select header files to be installed 
@@ -191,6 +197,7 @@ install_headers('Uuid.h')
   https://github.com/carlosvin/uuid-cpp/blob/master/include/Uuid.h[Uuid.h];;
     Archivos de cabeceras, es el interfaz que expone la librería y que será incluido por los usuarios de la misma.
   
+.include/Uuid.h
 [source,cpp]
 ----
 namespace ids {
@@ -201,27 +208,37 @@ class Uuid {
 ----
 
 https://github.com/carlosvin/uuid-cpp/blob/master/src[src]::
-  https://github.com/carlosvin/uuid-cpp/blob/master/src/meson.build[meson.build (src)];; Declara 2 artefactos de salida: La librería `+libuuid+` y el ejecutable `+uuidgen+`.
-    
+  https://github.com/carlosvin/uuid-cpp/blob/master/src/meson.build[meson.build (src)];; Declara 2 artefactos de salida: La librería `libuuid` y el ejecutable `uuidgen`.
+
+.src/meson.build
 [source,python]
 ----
 libuuid = shared_library(
-    'uuid', # library name
-    'Uuid.cpp', # source files to be compile
-    include_directories : inc, # previously declared include directories in root :code:`meson.build`
-    install : true) # :code:`libuuid` will be part of project installation
+    'uuid', <1>
+    'Uuid.cpp', <2> 
+    include_directories : inc, <3>
+    install : true) <4>
 
 uuidgen = executable(
-    'uuidgen', # executable name
-    'main.cpp', # source files to compile
-    include_directories : inc, # previously declared include directories in root :code:`meson.build`
-    link_with : libuuid, # linking executable with shared previously declared shared library :code:`libuuid`
-    install : true) # :code:`uuidgen` executable be part of project installation
+    'uuidgen', <5>
+    'main.cpp', <6>
+    include_directories : inc, <7>
+    link_with : libuuid, <8>
+    install : true) <9>
 ----
-  
-  https://github.com/carlosvin/uuid-cpp/blob/master/src/main.cpp[main.cpp];;
-    Código fuente del ejecutable de la aplicación: `+uuidgen+`
-    
+<1> library name
+<2> source files to be compile
+<3> previously declared include directories in root `meson.build`
+<4> `libuuid` will be part of project installation
+<5> executable name
+<6> source files to compile
+<7> previously declared include directories in root `meson.build`
+<8> linking executable with shared previously declared shared library `libuuid`
+<9> `uuidgen` executable be part of project installation
+
+  https://github.com/carlosvin/uuid-cpp/blob/master/src/main.cpp[main.cpp];; Código fuente del ejecutable de la aplicación: `uuidgen`
+
+.src/main.cpp
 [source,cpp]
 ----
 #include "Uuid.h"
@@ -235,9 +252,9 @@ int main()
 }
 ----
   
-  https://github.com/carlosvin/uuid-cpp/blob/master/src/Uuid.cpp[Uuid.cpp];;
-    Implementación de la clase declarada en el fichero de cabeceras `+Uuid.h+`.
-  
+  https://github.com/carlosvin/uuid-cpp/blob/master/src/Uuid.cpp[Uuid.cpp];; Implementación de la clase declarada en el fichero de cabeceras `Uuid.h`.
+
+.src/Uuid.cpp
 [source,cpp]
 ----
 #include "Uuid.h"
@@ -250,23 +267,30 @@ https://github.com/carlosvin/uuid-cpp/blob/master/test/[test]::
   https://github.com/carlosvin/uuid-cpp/blob/master/test/meson.build[meson.build (test)];;
     Archivo de configuración para construir y ejecutar las pruebas unitarias.
 
+.test/meson.build
 [source,python]
 ----
 testexe = executable(
-    'testexe', # test executable name 
-    'uuid_test.cpp', # tests source files to be compiled
-    include_directories : inc,  # declared include directories in root :code:`meson.build`
-    link_with : libuuid) # link test executable with previously declared shared library :code:`libuuid`
+    'testexe', <1>
+    'uuid_test.cpp', <2>
+    include_directories : inc, <3>
+    link_with : libuuid) <4>
 
-# test execution 
-test('Uuid test', testexe)
+test('Uuid test', testexe) <5>
 
-# we can specify other test execution passing arguments or environment variables
-test('Uuid test with args and env', testexe, args : ['arg1', 'arg2'], env : ['FOO=bar'])
+test('Uuid test with args and env', testexe, args : ['arg1', 'arg2'], env : ['FOO=bar']) <6>
 ----
+<1> test executable name
+<2> tests source files to be compiled
+<3> declared include directories in root `meson.build`
+<4> link test executable with previously declared shared library `libuuid`
+<5> test execution
+<6> we can specify other test execution passing arguments or environment variables
 
   doctest.h;;
     Librería {doctest} en un único fichero de cabeceras. Puedes tratar de automatizar el proceso de instalación de la librería, yo por el momento la he instalado manualmente, ya que es un proceso muy sencillo:
+
+.Añadir {doctest} al proyecto
 [source,bash]
 ----
 cd test
@@ -276,6 +300,7 @@ wget https://raw.githubusercontent.com/onqtam/doctest/master/doctest/doctest.h
   https://github.com/carlosvin/uuid-cpp/blob/master/test/uuid_test.cpp[uuid_test.cpp];;
     Implementación de las pruebas unitarias.
 
+.test/uuid_test.cpp
 [source,cpp]
 ----
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
@@ -329,4 +354,4 @@ SCENARIO("UUID creation")
 }
 ----
 
-TIP: Puedes encontrar las instrucciones para construir y ejecutar el proyecto de ejemplo en: https://github.com/carlosvin/uuid-cpp
+TIP: Puedes encontrar las instrucciones para construir y ejecutar el proyecto de ejemplo en: https://github.com/carlosvin/uuid-cpp#how-to-build-the-example
