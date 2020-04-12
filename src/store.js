@@ -58,7 +58,7 @@ class BlogStore {
 
     static _validate(post, field) {
         if (!post[field]) {
-            throw `Invalid post data: [${field}] field required`;
+            throw `[${post.slug}-${post.lang}] Invalid post data: [${field}] field required`;
         }
     }
 
