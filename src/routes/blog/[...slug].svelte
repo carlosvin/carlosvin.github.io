@@ -13,7 +13,15 @@
 </script>
 
 <script>
+	import { onMount } from 'svelte';
 	import {getIsoDateStr} from '../../services/dates';
+
+	let photos = [];
+
+	onMount(async () => {
+		hljs && hljs.initHighlighting();
+	});
+
 	export let post;
 </script>
 
