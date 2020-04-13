@@ -1,0 +1,29 @@
+= Remove orphaned packages (Linux)
+:date: 2012/10/02 13:30:02
+:description: How to remove unused packages in Linux
+:lang: en
+:archlinux: https://archlinux.org/[Archlinux,window=_blank]
+:debian: https://debian.org/[Debian,window=_blank]
+
+When we install a package in most of Linux distributions, the package system installs other packages needed by the package that we are installing. If we uninstall the package, its dependencies might not be uninstalled, these unused dependencies are called orphaned packages.
+
+Let's see how to remove orphaned packages.
+
+== {archlinux}
+
+[source,bash]
+----
+pacman -Rsn $(pacman -Qdtq)
+----
+
+How does the command work?
+
+* `pacman -Qdt` list all orphaned packages
+* `pacman -Rsn` uninstall the listed packages
+
+== {debian}
+
+[source,bash]
+----
+apt-get remove --purge $(deborphan)
+----
