@@ -1,6 +1,8 @@
 <script context="module">
+	import {BLOG_BASE_PATH} from '../../conf';
+
 	export async function preload({ params, query }) {
-		const res = await this.fetch(`blog/${params.slug.join('/')}.json`);
+		const res = await this.fetch(`${BLOG_BASE_PATH}/${params.slug.join('/')}.json`);
 		const data = await res.json();
 
 		if (res.status === 200) {

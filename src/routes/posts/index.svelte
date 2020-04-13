@@ -1,6 +1,8 @@
 <script context="module">
+    import {BLOG_BASE_PATH} from '../../conf';
+
   export function preload({ params, query }) {
-    return this.fetch(`blog.json`)
+    return this.fetch(`${BLOG_BASE_PATH}.json`)
       .then(r => r.json())
       .then(posts => {
         return { posts };
@@ -53,7 +55,7 @@
 <ul>
   {#each posts as { summary, title, date, slug, lang, otherLangs }}
     <li>
-      <a rel="prefetch" href="blog/{slug}/{lang}">
+      <a rel="prefetch" href="{BLOG_BASE_PATH}/{slug}/{lang}">
         {title}
         <span class="date">{new Date(date).toLocaleDateString()}</span>
       </a>
@@ -64,7 +66,7 @@
         {#if otherLangs && otherLangs.length > 0}
           <span class="langs summary">Also available in
           {#each otherLangs as lang}
-            <span class="lang"><a href="blog/{slug}/{lang}">{lang}</a></span>
+            <span class="lang"><a href="{BLOG_BASE_PATH}/{slug}/{lang}">{lang}</a></span>
           {/each}
           </span>
         {/if}
