@@ -1,0 +1,32 @@
+= Normalizar texto en Python
+:date: 2012/10/02 18:00:00
+:keywords: Python, Tips and Tricks
+:description: Evitar problemas con textos que contienen caractéres no ASCII
+:lang: es
+:ASCII: https://es.wikipedia.org/wiki/ASCII[ASCII,window=_blank]
+:Unicode: https://es.wikipedia.org/wiki/Unicode[Unicode,window=_blank]
+:Python: https://www.python.org[Python,window=_blank]
+:normalForms: https://en.wikipedia.org/wiki/Unicode_equivalence#Normal_forms[Tipos de formas normales,window=_blank]
+
+En muchos idiomas, como es el caso del español, hay caracteres que no tienen representación {ASCII}, como por ejemplo la *á*, que sí que tiene representación en {Unicode}.
+
+Para evitar problemas o por simplificar, se ha dado una equivalencia entre los caracteres {Unicode} y los {ASCII}. A continuación os pondré un trozo de código en {Python} que hace esta conversión.
+
+[source,python]
+----
+# -*- coding: utf-8 -*-
+from unicodedata import normalize
+
+def normalize_text ( text ):
+  return normalize('NFKD', text) # <1>
+    .encode('ASCII', 'ignore') # <2>
+----
+<1> Especificamos la forma normal que aplicamos en la normalización. En este caso `NFKD`. Más información sobre {normalForms}.
+<2> Confertimos el resultado de la normalización a {ASCII}. En caso de que un carácter sea erróneo simplemente será ignorado. 
+
+.Ejecutando la función
+[source,python]
+----
+>>> normalize_text ( 'aáaá eéeé iíií oóoó ñnñn AÀAÀ' )
+b'aaaa eeee iiii oooo nnnn AAAA'
+----
