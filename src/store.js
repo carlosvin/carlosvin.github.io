@@ -8,7 +8,7 @@ class BlogStore {
     
     constructor() {
         this._posts = new Map();
-        //allAdoc.forEach(a => console.log(a));
+        this._langs = new Map();
         allAdoc.forEach(post => this._add(post)); // adds post to this._posts
         this._lang = getLangSimplified();
         this._index = [];
@@ -25,9 +25,24 @@ class BlogStore {
         this._index.sort((a, b) => b.date && b.date.localeCompare(a.date));
     }
 
+    _addLang (lang, date) {
+        let savedDate = this._langs.get(lang);
+        if (!savedDate || savedDate < date) {
+            this._langs.set(lang, date);
+        }
+    }
+
+    getByLang(inputLang) {
+        // TODO we could improve the performance here by storing posts by lang in a different map
+        return [...this.posts.values()]
+            .map(byLang => byLang[inputLang])
+            .filter(c => c !== undefined);
+    }
+
     _add(post) {
         const postModel = BlogStore._toModel(post);
-        const {slug, lang} = postModel;    
+        const {slug, lang, date} = postModel;
+        this._addLang(lang, date);
         let translatedPosts = this._posts.get(slug);
         if (translatedPosts) {
             translatedPosts = {...translatedPosts, [lang]: postModel};
@@ -72,6 +87,10 @@ class BlogStore {
             otherLangs,
             date: updated || modified || date
         };
+    }
+
+    get langEntries () {
+        return [...this._langs.entries()];
     }
 
     get index() {
