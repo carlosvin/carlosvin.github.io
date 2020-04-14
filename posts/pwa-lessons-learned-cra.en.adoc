@@ -1,0 +1,208 @@
+= Lessons learned developing a PWA with Create React App
+:date: 2019/11/04
+:lang: en
+:keywords: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
+:link: https://btapp.netlify.com
+:description: Lessons learned developing a PWA: Budget Tracker
+:toc:
+:React: https://reactjs.org[React,window=_blank]
+:Webpack: https://webpack.js.org[Webpack,window=_blank]
+:Parcel: https://parceljs.org[Parcel,window=_blank]
+:CRA: https://create-react-app.dev[CRA,window=_blank]
+:CRALong: https://create-react-app.dev[Create React App,window=_blank]
+:PWA: https://developers.google.com/web/progressive-web-apps/[PWA,window=_blank]
+:Typescript: https://www.typescriptlang.org[Typescript,window=_blank]
+:material-ui: https://material-ui.com[Material UI,window=_blank]
+:frappe: https://frappe.io/charts[Frappe charts,window=_blank]
+:btapp: https://btapp.netlify.com[Budget Tracker,window=_blank]
+:sw: https://developers.google.com/web/fundamentals/primers/service-workers[Service Worker,window=_blank]
+:firestore: https://firebase.google.com/docs/firestore[Firestore,window=_blank]
+:firebase-auth: https://firebase.google.com/docs/auth[Firebase Authentication,window=_blank]
+:ww: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers[Web Workers,window=_blank]
+:indexeddb: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API[IndexedDB,window=_blank]
+:Svelte: https://svelte.dev[Svelte,window=_blank]
+:Sapper: https://sapper.svelte.dev[Sapper,window=_blank]
+:firebase: https://firebase.google.com/[Firebase,window=_blank]
+
+I started working with {React} few year ago, always the project creation was from scratch, not using any template/scaffolding. Regarding bundlers normally I used either {Webpack} at work or {Parcel} for personal projects.
+
+Few months ago, I wanted to start a personal project to keep track of my travel expenses. I was in a kind of rush because at that time, I was almost in the middle of my gap year, I wanted to focus on implementing main functionality and get an https://en.wikipedia.org/wiki/Minimum_viable_product[MVP] (minimum viable product) the sooner the better, so I thought it was the right time to try out {CRALong} or {CRA}.
+
+NOTE: {CRA} allows you to have a production ready {PWA} in {React} quickly, which is awesome. They take care of configuration and package dependencies, you only have to take care of dependencies you need for your project and of course, implement your project, {CRA} is good, but is not magic.
+
+As I said, I wanted to be implementing business logic ASAP, so together with using {CRA}, I also took other decisions/shortcuts driven by the need of speeding up the development pace, I will talk about those choices in following sections describing some drawbacks and benefits.
+
+== Chosen Technology Stack for {btapp}
+
+* {CRA}
+* {React}
+* {Typescript}
+* {material-ui}
+* [line-through]#https://formidable.com/open-source/victory[Victory]# {frappe}
+* {firestore}
+* {firebase-auth}
+
+So far I am quite happy with the outcome, but with the lessons learned while developing this app, *in the future, with enough time, most likely I will not choose same technology stack again*. You can try the application {btapp} and judge for yourself.
+
+Along this post I will describe what are, in my experience, the benefits and drawbacks of taking these shortcuts and technical decisions.
+
+== Create React Application: {CRA}
+
+{CRALong} doesn’t support {ww} neither allows to customize {sw} implementation without https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app[ejecting].
+
+=== Service worker
+
+You might want to customize your {sw} to send/receive https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage[post messages], to perform https://wicg.github.io/BackgroundSync/spec/[background sync] or https://developer.mozilla.org/en/docs/Web/API/notification[show web notifications]. In that case, you will have to https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app[eject your project] and maintain the configuration by yourself, which might imply a little bit of headache.
+
+There are https://www.freecodecamp.org/news/how-to-customize-service-workers-with-create-react-app-4424dda6210c/[other options to customize service worker and avoid ejecting CRA], but they are not straightforward enough for my taste.
+
+=== Web worker
+
+If you need to perform any heavy processing without blocking the main thread, you can just use a {ww}, but this feature is not supported by {CRA}. The {ww} can communicate with main thread using https://developer.mozilla.org/en-US/docs/Web/API/Client/postMessage[post messages] and it can also show https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c[web push notifications].
+
+There are also https://medium.com/@danilog1905/how-to-use-web-workers-with-react-create-app-and-not-ejecting-in-the-attempt-3718d2a1166b[other options to use Web Workers in CRA and not eject], but they imply quite some extra work.
+
+=== Webpack
+
+{Webpack} is the bundler used by {CRA}. You don’t need to know much about it, unless you https://stackoverflow.com/questions/49737652/what-does-eject-do-in-create-react-app[eject your project], then you will have to deal with https://webpack.js.org/configuration/[Webpack configuration file], this is just a warning, just in case you are not comfortable with it.
+
+== Firebase
+
+{btapp} supports data synchronization between different devices, so it requires a https://en.wikipedia.org/wiki/Front_and_back_ends[backend] side to deal with authentication and to save/read data remotely. I considered two options: {firebase} or implement https://en.wikipedia.org/wiki/Representational_state_transfer[REST] API.
+
+For this https://en.wikipedia.org/wiki/Front_and_back_ends[backend], I chose {firebase} because it is super easy to implement, because there is nothing to implement. You only have to configure https://support.google.com/firebase/answer/6400716?hl=en[authentication methods] and https://firebase.google.com/docs/firestore/security/get-started[security rules] for {firestore}.
+
+But {firebase} brings some drawbacks you must know before choosing it.
+
+=== Drawbacks
+
+==== Bundle size
+
+I got really shocked first time I analyzed {btapp} bundle size after integrating it with {firebase}, *it grew around a 39%!*
+
+* 27% from {firestore} library.
+* 12% from {firebase-auth} library.
+
+Happily {btapp} implementation is following https://reactjs.org/docs/code-splitting.html[code-splitting] principle, so user experience was not really affected with this integration. But user’s device will eventually have to download this extra 39% (*539KB*).
+
+==== Offline first, not really
+
+IMPORTANT: This section is not relevant if your use case doesn’t imply saving data linked to the user.
+
+{firestore} requires user to be authenticated, but https://firebase.google.com/docs/auth/web/anonymous-auth[user can be anonymous], this is really cool feature if you don’t want to force the user to identify to use the app.
+
+Another very useful and cool {firestore} feature is that https://firebase.google.com/docs/firestore/manage-data/enable-offline[it supports offline mode], so data can be saved and read even there is no Internet connection.
+
+Anonymous user + offline mode features will allow an application to work as offline first.
+
+So… what is this <<Offline first, not really>> issue about? Let me explain a tricky scenario. First time the application is opened, {firebase} needs to authenticate the user, to do so, user’s device has to be connected to Internet, so *you have to consider following scenario* and either be OK with it or deal with it:
+
+. {PWA} is installed in your device.
+. User is not authenticated.
+. User’s device is offline.
+. User opens the {PWA} and tries to save some data.
+. *That data won’t be saved correctly*, because there is no user to link the data with, not even an anonymous user, because application needs to call {firebase} API to create an anonymous user.
+
+This is not big deal, because it will seldom occur. If you want to deal with it anyway, check next section explaining how and why I did deal with this scenario.
+
+===== How did I deal with this issue with Budget Tracker?
+
+First of all, this *might not be an issue for your use case*, because it will happen only first time application is loaded. I just wanted {btapp} to be fully offline first, because it brings other benefits.
+
+====== Implementation details
+
+* Implement 2 persistence layers: Local ({indexeddb}) and Remote ({firestore}).
+* Save always data locally, regardless user authentication status.
+* If there is any authenticated user, after saving to local layer, propagate same action to remote layer ({firestore}) asynchronously.
+
+====== Benefits
+
+* If user is not authenticated, {btapp} won’t load {firestore} client bundle. As I explained before, it is 27% of application size.
+* Application reads and writes are faster, because latest valid data is always saved locally.
+** *Clarification*: Save data in {firestore} is also fast, because data is also cached locally, but it does a little bit more than just saving to {indexeddb} and you need an authenticated user.
+
+You can find a https://github.com/carlosvin/budget-tracker/blob/master/doc/preformance.md#desktop-slow-clear-storage-0-budgets-1[more detailed performance report], where I analyze 3 different implementations:
+
+. Only {firestore} client.
+. Local ({indexeddb}) and remote ({firestore}) persistence layers.
+. Same as previous one, but remote layer implemented in service worker.
+
+The performance results were in general better for option 2.
+
+==== Data model
+
+Firestore API is easy and intuitive, I really like it, but don’t assume it will have same features as other document DBs or SQL DBs.
+
+Check if https://googleapis.github.io/google-cloud-dotnet/docs/Google.Cloud.Firestore/datamodel.html[Firestore limitations] fit into your data model, or if it is not too late, define your data model following https://cloud.google.com/firestore/docs/best-practices[Firestore best practices] and having those limitations in mind.
+
+=== Firebase alternatives
+
+Besides implementing a https://en.wikipedia.org/wiki/Representational_state_transfer[REST] API, there are other services similar to {firebase} with smaller client bundle size and other features which might fit better to your requirements.
+
+Consider other alternatives:
+
+* Based on http://couchdb.apache.org/[Apache CouchDB]: https://pouchdb.com[PouchDB], https://en.wikipedia.org/wiki/Cloudant[Cloudant].
+* Based on https://parseplatform.org/[Parse server]: https://www.back4app.com[back4apps].
+
+== UI Components Library: {material-ui}
+
+I chose {material-ui}.
+
+[quote, {material-ui}, from their web]
+React components for faster and easier web development. Build your own design system, or start with Material Design.
+
+There were two reasons which drove me to use {material-ui}:
+
+* To create simple UI components which are accessible, https://material-ui.com/guides/responsive-ui/#responsive-ui[responsive] and with a consistent design is tricky and time consuming.
+* It has SVG set of https://material-ui.com/components/material-icons/[Material Icons]. {btapp} allows to create categories defined by a name and a selectable icon, so this icon set was really convenient.
+
+There are some *drawbacks*, not very important in my opinion, maybe the most annoying for me is the first one:
+
+* https://jestjs.io/docs/en/snapshot-testing[Jest Snapshots] + {material-ui}: The snapshots are generated with {material-ui} CSS class names, but CSS classes order might not be deterministic, so a test might pass in your local host but not in https://en.wikipedia.org/wiki/Continuous_integration[CI] host. They are working on solve https://github.com/mui-org/material-ui/issues/14357[this issue, more info at github].
+* Performance: There are some performance https://github.com/mui-org/material-ui/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+performance[issues in Github]. During last months, whilst I’ve been using this library, I can say they are working hard on fix them and bring new features.
+* UI components libraries are complex and do quite a lot work, so most of them are quite heavy. https://bundlephobia.com/result?p=@material-ui/core@4.5.2[Material UI bundle size weights: 304.2kB minified]. You can find some https://material-ui.com/guides/minimizing-bundle-size[recommendations to reduce bundle size at Material UI website].
+
+== Charts library
+
+Many of the chart libraries I’ve found are really powerful and complete, but they are also heavy because they depend on other third party libraries like https://d3js.org/[D3].
+
+Initially I chose https://formidable.com/open-source/victory[Victory], but I realized that I only needed charts to show percentages and time series and https://formidable.com/open-source/victory[Victory]’s https://bundlephobia.com/result?p=victory@33.1.2[bundle size is 468KB minified].
+
+After quick search in the Internet I discovered other lighter alternatives:
+
+* {frappe} https://bundlephobia.com/result?p=frappe-charts@1.3.0[63KB minified].
+* https://gionkunz.github.io/chartist-js[Chartist] https://bundlephobia.com/result?p=chartist@0.11.4[39KB minified].
+
+I tried them and I liked both. I chose {frappe} because I thought its default color scheme fits better with {btapp} theme.
+
+Both libraries come with more chart types than just bars and XY axis, take a quick look at their websites if you are interested about their supported chart set and to check how they look like.
+
+== Conclusion
+
+I will try to come up with a conclusion better than: _"It depends"_, _"Your use case will tell you"_ and so on.
+
+That said. It depends on your needs :p.
+
+Seriously, let’s play _"do not go for … if …"_:
+
+=== Do not go for CRA if
+
+* You want to customize {sw} for https://developers.google.com/web/updates/2015/12/background-sync[Background sync] or https://developer.mozilla.org/en/docs/Web/API/notification[showing push notifications].
+* You want to use {ww}.
+
+=== Do not go for Firestore if
+
+* You are aiming for your app to be hit by many users and you don’t know the estimated amount of reads/writes, otherwise you might get surprised with the bill. {firestore} scales like charm, maybe your budget doesn’t.
+* Bundle size is critical for your web application. Remember that bundle size is not that critical if you are implementing a {PWA}, because your app files are cached.
+
+=== Do not go blindly for the best charting library
+
+First of all, check what kind of charts you need. In many applications you are OK with XY axis chart, time series, bars or pie charts. You can easily get an smaller bundle size by just using a simple charting library like {frappe} or https://gionkunz.github.io/chartist-js[Chartist]
+
+TIP: Just check what are your requirements, if you are not sure about them, <<Chosen Technology Stack for {btapp}>> consists of awesome products which most likely will fit your use case.
+
+== What next?
+
+My next technology stack bet goes for {Svelte}/{Sapper}, it is promising project, the results for small projects are really impressive, mainly in regards to bundle size, it is ridiculously small and development experience is quick and intuitive.
+
+I’ve created a tiny {PWA} to estimate https://currency-loss.netlify.com[currency exchange loss] when you go to a money changer shop: https://currency-loss.netlify.com[currency-loss.netlify.com]. Note, I got that app up and running in few hours, thanks to {Svelte}.
