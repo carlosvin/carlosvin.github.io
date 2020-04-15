@@ -4,7 +4,8 @@ export function get(req, res, next) {
 	const [slug, lang]  = req.params.slug;
 	const post = store.get(slug, lang);
 	if (post) {
-		res.writeHead(200, {
+		const code = lang ? 200 : 301;
+		res.writeHead(code, {
 			'Content-Type': 'application/json',
 			'Content-Language': post.lang,
 		});

@@ -9,6 +9,8 @@
 
     if (res.status === 200) {
       return { post: data };
+    } else if (res.status === 301) {
+      return { post: data, isCanonical: true };
     } else {
       this.error(res.status, data.message);
     }
@@ -19,13 +21,17 @@
 <script>
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   import { onMount } from "svelte";
+  import { path } from "../../services/models";
+  import { getIsoDateStr } from "../../services/dates";
+
   onMount(async () => {
     [...document.querySelectorAll('a[href^="#"]')].map(
       x => (x.href = document.location + new URL(x.href).hash)
     );
   });
-  import { getIsoDateStr } from "../../services/dates";
+  
   export let post;
+  export let isCanonical = false;
 </script>
 
 <style>
@@ -154,6 +160,9 @@
   <title>{post.title}</title>
   <meta name="date" content={getIsoDateStr(post.date)} scheme="YYYY-MM-DD" />
   <meta name="description" content={post.summary} scheme="YYYY-MM-DD" />
+  {#if isCanonical}
+    <link rel="canonical" href={path(post)} />
+  {/if}
   <link
     rel="preload"
     href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/vs.min.css"
