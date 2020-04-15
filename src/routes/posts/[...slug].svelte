@@ -27,14 +27,36 @@
 </script>
 
 <style>
+	h1 {
+		border-bottom: #e9e9e9 solid 1px;
+		font-size: 2rem;
+		margin-top: 2rem;
+	}
+
 	.content :global(h2) {
-		font-size: 1.4em;
+		font-size: 1.6rem;
 		font-weight: 500;
 		margin-top: 1.2em;
 	}
 
 	.content :global(h3) {
+		font-size: 1.4rem;
 		margin-top: 1em;
+	}
+
+	.content :global(h4) {
+		font-size: 1.2rem;
+		margin-top: 0.8em;
+	}
+
+	.content :global(h5) {
+		font-size: 1rem;
+		margin-top: 0.6em;
+	}
+
+	.content :global(h6) {
+		font-size: 0.8rem;
+		margin-top: 0.4em;
 	}
 
 	.content :global(pre) {
@@ -64,9 +86,6 @@
 		border-radius: 0.2em;
 	}
 
-	h1 {
-		border-bottom: #e9e9e9 solid 1px;
-	}
 </style>
 
 <svelte:head>
