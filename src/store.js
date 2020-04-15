@@ -61,7 +61,8 @@ class BlogStore {
             lang: metadata.lang,
             summary: metadata.summary || metadata.description,
             html,
-            slug
+            slug,
+            keywords: metadata.keywords ? metadata.keywords.split(',').map(k => k.trim()) : undefined,
         };
         BlogStore.validate(post);
         return post;
@@ -77,7 +78,7 @@ class BlogStore {
         }
     }
 
-    static _toIndexEntry({title, summary, slug, lang, date, modified, updated}, langs){
+    static _toIndexEntry({title, summary, slug, lang, date, modified, updated, keywords}, langs){
         const otherLangs = langs.filter(l => l !== lang);
         return {
             title, 
@@ -85,7 +86,8 @@ class BlogStore {
             slug, 
             lang, 
             otherLangs,
-            date: updated || modified || date
+            date: updated || modified || date,
+            keywords
         };
     }
 
