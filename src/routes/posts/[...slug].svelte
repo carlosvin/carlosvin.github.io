@@ -41,30 +41,30 @@
     vertical-align: middle;
   }
 
-  .content :global(h2::before, h3::before, h4::before, h5::before, h6::before) {
-    content: "> ";
+  .content :global(h2::after, h3::after, h4::after, h5::after, h6::after) {
+    content: " <";
     color: #bbb;
     font-weight: lighter;
   }
 
   .content
-    :global(h2:hover::before, h3:hover::before, h4:hover::before, h5:hover::before, h6:hover::before) {
+    :global(h2:hover::after, h3:hover::after, h4:hover::after, h5:hover::after, h6:hover::after) {
     color: #666;
   }
-  .content :global(h3::before) {
-    content: ">> ";
+  .content :global(h3::after) {
+    content: " <<";
   }
 
-  .content :global(h4::before) {
-    content: ">>> ";
+  .content :global(h4::after) {
+    content: " <<<";
   }
 
-  .content :global(h5::before) {
-    content: ">>>> ";
+  .content :global(h5::after) {
+    content: " <<<<";
   }
 
-  .content :global(h5::before) {
-    content: ">>>>> ";
+  .content :global(h6::after) {
+    content: " <<<<<";
   }
 
   .content :global(h3) {
