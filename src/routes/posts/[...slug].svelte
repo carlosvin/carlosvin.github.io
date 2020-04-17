@@ -124,6 +124,7 @@
     background: #e9e9e9;
     padding: 1em 0.5em;
     border-radius: 0.2em;
+    margin: 1em 0;
   }
 
   .content :global(.admonitionblock td.icon) {
@@ -153,6 +154,21 @@
   .content :global(.admonitionblock.important .icon .title::before) {
 	content: url(/icons/announcement-24px.svg);
     color: #bf0000;
+  }
+
+  .content :global(.center) {
+    text-align: center;
+  }
+
+  .content :global(.hdlist td, .hdlist p) {
+    vertical-align: top;
+  }
+  .content :global(.hdlist p) {
+    display: table-cell;
+  }
+
+  .content :global(.hdlist .hdlist1) {
+    font-weight: bold;
   }
 </style>
 
