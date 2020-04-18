@@ -29,7 +29,7 @@
       x => (x.href = document.location + new URL(x.href).hash)
     );
   });
-  
+
   export let post;
   export let isCanonical = false;
 </script>
@@ -120,6 +120,18 @@
     font-size: smaller;
   }
 
+  @font-face {
+    font-family: 'icomoon';
+    src:  url('/fonts/icomoon.eot?9eff78');
+    src:  url('/fonts/icomoon.eot?9eff78#iefix') format('embedded-opentype'),
+      url('/fonts/icomoon.ttf?9eff78') format('truetype'),
+      url('/fonts/icomoon.woff?9eff78') format('woff'),
+      url('/fonts/icomoon.svg?9eff78#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+  
   .content :global(.admonitionblock) {
     background: #e9e9e9;
     padding: 1em 0.5em;
@@ -128,32 +140,50 @@
   }
 
   .content :global(.admonitionblock td.icon) {
-	font-size: small;
-	font-weight: lighter;
-	cursor: default;
-	text-align: center;
-	padding-right: 0.4em;
-	padding-left: 0.3em;
+    font-size: 3em;
+    cursor: default;
+    text-align: center;
+    padding-right: 0.4em;
+    padding-left: 0.3em;
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  .content :global(.admonitionblock.note .icon .title::before) {
-	color: #19407c;
-	content: url(/icons/speaker_notes-24px.svg);
+
+  .content :global(.admonitionblock .icon > .title) {
+    font-size: small;
+    font-weight: lighter;
+  	font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   }
-  .content :global(.admonitionblock.tip .icon .title::before) {
-	color: rgb(6, 143, 148);
-	content: url(/icons/assistant-24px.svg);
+
+  .content :global(.admonitionblock.note .icon::before) {
+    color: #19407c;
+    content: "\e900";
   }
-  .content :global(.admonitionblock.warning .icon .title::before) {
-	content: url(/icons/warning-24px.svg);
+  .content :global(.admonitionblock.tip .icon::before) {
+    color: rgb(6, 143, 148);
+    content: "\e904";
+  }
+  .content :global(.admonitionblock.warning .icon::before) {
+    content: "\e906";
     color: #bf6900;
   }
-  .content :global(.admonitionblock.caution .icon .title::before) {
-	content: url(/icons/warning-24px.svg);
+  .content :global(.admonitionblock.caution .icon::before) {
+    content: "\e906";
     color: #bf3400;
   }
-  .content :global(.admonitionblock.important .icon .title::before) {
-	content: url(/icons/announcement-24px.svg);
-    color: #bf0000;
+  .content :global(.admonitionblock.important .icon::before) {
+    content: "\e902";
+    color: rgb(26, 180, 218);
   }
 
   .content :global(.center) {
@@ -166,7 +196,6 @@
   .content :global(.hdlist p) {
     display: table-cell;
   }
-
   .content :global(.hdlist .hdlist1) {
     font-weight: bold;
   }
