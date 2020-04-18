@@ -19,16 +19,16 @@
 </script>
 
 <script>
-  // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   import { onMount } from "svelte";
   import { path } from "../../services/models";
   import { getIsoDateStr } from "../../services/dates";
 
+  // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
-    [...document.querySelectorAll('a[href^="#"]')].map(
+    ;[...document.querySelectorAll('a[href^="#"]')].map(
       x => (x.href = document.location + new URL(x.href).hash)
-    );
-  });
+    )
+  })
 
   export let post;
   export let isCanonical = false;
