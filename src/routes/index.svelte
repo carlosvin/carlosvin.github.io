@@ -1,5 +1,6 @@
 <script context="module">
-    import {BLOG_BASE_PATH} from '../conf';
+  import { BLOG_BASE_PATH } from "../conf";
+  import { getSiteName } from "../services/lang";
 
   export function preload({ params, query }) {
     return this.fetch(`index.json`)
@@ -47,7 +48,7 @@
 </style>
 
 <svelte:head>
-  <title>Blog</title>
+  <title>{getSiteName()}</title>
 </svelte:head>
 
 <h1>Recent posts</h1>
@@ -64,10 +65,13 @@
           <span class="summary">{summary}.</span>
         {/if}
         {#if otherLangs && otherLangs.length > 0}
-          <span class="langs summary">Also available in
-          {#each otherLangs as lang}
-            <span class="lang"><a href="{BLOG_BASE_PATH}/{slug}/{lang}">{lang}</a></span>
-          {/each}
+          <span class="langs summary">
+            Also available in
+            {#each otherLangs as lang}
+              <span class="lang">
+                <a href="{BLOG_BASE_PATH}/{slug}/{lang}">{lang}</a>
+              </span>
+            {/each}
           </span>
         {/if}
       </div>

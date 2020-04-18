@@ -1,5 +1,5 @@
 
-import {DEFAULT_LANG, SITE_DESCRIPTION} from '../conf';
+import {DEFAULT_LANG, SITE_DESCRIPTION, SITE_NAME} from '../conf';
 
 export function getLang() {
     return (typeof navigator !== 'undefined') ? navigator.language : DEFAULT_LANG;
@@ -10,14 +10,22 @@ export function getLangSimplified() {
 }
 
 export function getDescription(lang = undefined) {
-    if (lang in SITE_DESCRIPTION) {
-        return SITE_DESCRIPTION[lang];
+    return getConfValue(SITE_DESCRIPTION, lang);
+}
+
+export function getSiteName(lang = undefined) {
+    return getConfValue(SITE_NAME, lang);
+}
+
+export function getConfValue(value, lang = undefined) {
+    if (lang in value) {
+        return value[lang];
     } else {
         lang = getLang();
-        if (lang in SITE_DESCRIPTION) {
-            return SITE_DESCRIPTION[lang];
+        if (lang in value) {
+            return value[lang];
         } else {
-            return Object.values(SITE_DESCRIPTION)[0];
+            return Object.values(value)[0];
         }
     }
 }

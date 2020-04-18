@@ -23,6 +23,6 @@
 }
 </style>
 
-<a {href} {target} class='icon {icon}'>
+<a {href} {target} class='icon {icon}' title={`Me at ${icon}`}>
     <slot></slot>
 </a>

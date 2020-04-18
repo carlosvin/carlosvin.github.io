@@ -1,5 +1,6 @@
 <script>
-	import {BLOG_BASE_PATH, SITE_NAME} from '../conf';
+	import {BLOG_BASE_PATH} from '../conf';
+	import {getSiteName} from '../services/lang';
 	import Social from './Social.svelte';
 	export let segment;
 </script>
@@ -54,11 +55,8 @@
 
 <nav>
 	<ul>
-		<li><a aria-current='{segment === undefined ? "page" : undefined}' href='.'>{SITE_NAME}</a></li>
+		<li><a aria-current='{segment === undefined ? "page" : undefined}' href='.'>{getSiteName()}</a></li>
 		<li><a aria-current='{segment === "about" ? "page" : undefined}' href='about'>About</a></li>
-		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
-		     the blog data when we hover over the link or tap it on a touchscreen 
-		<li><a rel=prefetch aria-current='{segment === BLOG_BASE_PATH ? "page" : undefined}' href={BLOG_BASE_PATH}>blog</a></li> -->
 	</ul>
 	<Social/>
 </nav>
