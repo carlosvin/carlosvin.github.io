@@ -1,46 +1,76 @@
+<script context="module">
+    import {BLOG_BASE_PATH} from '../conf';
+
+  export function preload({ params, query }) {
+    return this.fetch(`index.json`)
+      .then(r => r.json())
+      .then(posts => {
+        return { posts };
+      });
+  }
+</script>
+
+<script>
+  export let posts;
+</script>
+
 <style>
-	h1, figure, p {
-		text-align: center;
-		margin: 0 auto;
-	}
-
-	h1 {
-		font-size: 2.8em;
-		text-transform: uppercase;
-		font-weight: 700;
-		margin: 0 0 0.5em 0;
-	}
-
-	figure {
-		margin: 0 0 1em 0;
-	}
-
-	img {
-		width: 100%;
-		max-width: 400px;
-		margin: 0 0 1em 0;
-	}
-
-	p {
-		margin: 1em auto;
-	}
-
-	@media (min-width: 480px) {
-		h1 {
-			font-size: 4em;
-		}
-	}
+  ul {
+    margin: 0 0 1em 0;
+    line-height: 1.5;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+  }
+  li {
+    margin: 0.5em 1em;
+  }
+  .date {
+    font-size: small;
+    color: gray;
+  }
+  .date::before {
+    content: " - ";
+  }
+  .summary {
+    color: gray;
+  }
+  .lang {
+    padding-right: 0.2em;
+    padding-left: 0.2em;
+    color: #333;
+  }
+  .lang:not(:last-child)::after {
+    content: ", ";
+  }
 </style>
 
 <svelte:head>
-	<title>Sapper project template</title>
+  <title>Blog</title>
 </svelte:head>
 
-<h1>Great success!</h1>
+<h1>Recent posts</h1>
 
-<figure>
-	<img alt='Borat' src='great-success.png'>
-	<figcaption>HIGH FIVE!</figcaption>
-</figure>
-
-<p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>
+<ul>
+  {#each posts as { summary, title, date, slug, lang, otherLangs }}
+    <li>
+      <a rel="prefetch" href="{BLOG_BASE_PATH}/{slug}/{lang}">
+        {title}
+        <span class="date">{new Date(date).toLocaleDateString()}</span>
+      </a>
+      <div>
+        {#if summary}
+          <span class="summary">{summary}.</span>
+        {/if}
+        {#if otherLangs && otherLangs.length > 0}
+          <span class="langs summary">Also available in
+          {#each otherLangs as lang}
+            <span class="lang"><a href="{BLOG_BASE_PATH}/{slug}/{lang}">{lang}</a></span>
+          {/each}
+          </span>
+        {/if}
+      </div>
+    </li>
+  {/each}
+</ul>
