@@ -1,5 +1,6 @@
 import { store } from '../../store';
-import {BASE_URL, SITE_NAME, SITE_DESCRIPTION} from '../../conf';
+import { getDescription } from '../../services/lang';
+import {BASE_URL, SITE_NAME} from '../../conf';
 
 function url({lang, slug}) {
   return `${BASE_URL}/${slug}/${lang}`;
@@ -25,7 +26,7 @@ function renderXmlRssItem (post) {
   `;
 }
 
-function renderXmlRssFeed (posts) {
+function renderXmlRssFeed (posts, lang) {
     return `<?xml version="1.0" encoding="UTF-8" ?>
 <rss 
   xmlns:dc="http://purl.org/dc/elements/1.1/" 
@@ -34,7 +35,7 @@ function renderXmlRssFeed (posts) {
 <channel>
   <title><![CDATA[${SITE_NAME}]]></title>
   <link>${BASE_URL}</link>
-  <description><![CDATA[${SITE_DESCRIPTION}]]></description>
+  <description><![CDATA[${getDescription(lang)}]]></description>
   <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
   <image>
       <url>${BASE_URL}/logo-192.png</url>
@@ -46,16 +47,15 @@ function renderXmlRssFeed (posts) {
 </rss>`;
 }
 
-// TODO add preview image and lang.
-
 export function get(req, res) {
-
+  let lang = req.headers['accept-language'];
+  lang = lang ? lang.slice(0, 2) : 'en';
   res.writeHead(200, {
     'Cache-Control': `max-age=0, s-max-age=${600}`, // 10 minutes
     'Content-Type': 'application/rss+xml'
   });
 
-  const feed = renderXmlRssFeed(store.index);
+  const feed = renderXmlRssFeed(store.index, lang);
   res.end(feed);
 
 }
