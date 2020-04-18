@@ -1,7 +1,15 @@
 <script>
 	import Nav from '../components/Nav.svelte';
+	import { BASE_URL } from "../conf";
+  	import { getSiteName } from "../services/lang";
+	import Social from '../components/Social.svelte';
+	import IconLink from '../components/IconLink.svelte';
 
 	export let segment;
+
+	const siteName = getSiteName();
+	const rssTitle = `Subscribe to ${siteName}`;
+	const rssUrl = `${BASE_URL}/rss`;
 </script>
 
 <style>
@@ -15,7 +23,18 @@
 	}
 </style>
 
-<Nav {segment}/>
+<svelte:head>
+	<link
+		rel="alternate"
+		type="application/rss+xml"
+		title={rssTitle}
+		href={rssUrl} />
+</svelte:head>
+<Nav {segment} {siteName}>
+	<Social>
+		<IconLink icon="rss" href={rssUrl} title={rssTitle} />
+	</Social>
+</Nav>
 
 <main>
 	<slot></slot>

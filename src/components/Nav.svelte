@@ -1,8 +1,7 @@
 <script>
 	import {BLOG_BASE_PATH} from '../conf';
-	import {getSiteName} from '../services/lang';
-	import Social from './Social.svelte';
 	export let segment;
+	export let siteName;
 </script>
 
 <style>
@@ -55,8 +54,8 @@
 
 <nav>
 	<ul>
-		<li><a aria-current='{segment === undefined ? "page" : undefined}' href='.'>{getSiteName()}</a></li>
+		<li><a aria-current='{segment === undefined ? "page" : undefined}' href='.'>{siteName}</a></li>
 		<li><a aria-current='{segment === "about" ? "page" : undefined}' href='about'>About</a></li>
 	</ul>
-	<Social/>
+	<slot></slot>
 </nav>

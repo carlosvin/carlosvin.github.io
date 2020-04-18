@@ -19,6 +19,7 @@
 </style>
 
 <div class={horizontal ? 'h' : 'v'}>
+    <slot></slot>
     <IconLink href='https://github.com/carlosvin' icon='github'></IconLink>
     <IconLink href='https://twitter.com/carlosvin' icon='twitter'></IconLink>
     <IconLink href='https://stackoverflow.com/story/carlosvin' icon='stackoverflow'></IconLink>
