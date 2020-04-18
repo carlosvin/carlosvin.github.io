@@ -1,6 +1,6 @@
 <script>
 	import {BLOG_BASE_PATH, SITE_NAME} from '../conf';
-
+	import Social from './Social.svelte';
 	export let segment;
 </script>
 
@@ -9,6 +9,8 @@
 		border-bottom: 1px solid rgba(255,62,0,0.1);
 		font-weight: 300;
 		padding: 0 1em;
+		display: flex;
+		justify-content: space-between;
 	}
 
 	ul {
@@ -58,4 +60,5 @@
 		     the blog data when we hover over the link or tap it on a touchscreen 
 		<li><a rel=prefetch aria-current='{segment === BLOG_BASE_PATH ? "page" : undefined}' href={BLOG_BASE_PATH}>blog</a></li> -->
 	</ul>
+	<Social/>
 </nav>

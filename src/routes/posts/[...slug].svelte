@@ -120,18 +120,6 @@
     font-size: smaller;
   }
 
-  @font-face {
-    font-family: 'icomoon';
-    src:  url('/fonts/icomoon.eot?9eff78');
-    src:  url('/fonts/icomoon.eot?9eff78#iefix') format('embedded-opentype'),
-      url('/fonts/icomoon.ttf?9eff78') format('truetype'),
-      url('/fonts/icomoon.woff?9eff78') format('woff'),
-      url('/fonts/icomoon.svg?9eff78#icomoon') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-  }
-  
   .content :global(.admonitionblock) {
     background: #e9e9e9;
     padding: 1em 0.5em;
