@@ -187,6 +187,10 @@
   .content :global(.hdlist .hdlist1) {
     font-weight: bold;
   }
+  .content :global(.toc) {
+    font-size: 1.2em;
+  }
+
 </style>
 
 <svelte:head>
@@ -207,7 +211,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/vs.min.css" />
   </noscript>
 </svelte:head>
-
 <h1>{post.title}</h1>
 
 <div class="content">
