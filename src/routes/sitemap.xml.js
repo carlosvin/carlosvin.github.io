@@ -1,4 +1,5 @@
 import { url } from '../services/models';
+import { getIsoDate } from '../services/dates';
 import { store } from '../store';
 import { BASE_URL } from '../conf';
 
@@ -22,7 +23,7 @@ const render = (pages, posts) => `<?xml version="1.0" encoding="UTF-8"?>
 		<url>
 		<loc>${url({ slug, lang })}</loc>
 		<priority>0.69</priority>
-		<lastmod>${new Date(date).toISOString()}</lastmod>
+		<lastmod>${getIsoDate(new Date(date))}</lastmod>
 		${otherLangs ? otherLangs.map(l => `<xhtml:link 
 				rel="alternate"
 				hreflang="${l}"
