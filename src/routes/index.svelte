@@ -3,6 +3,8 @@
   import { getSiteName } from "../services/lang";
 
   export function preload({ params, query }) {
+    this.fetch(`posts/rss`);
+    this.fetch('sitemap.xml');
     return this.fetch(`index.json`)
       .then(r => r.json())
       .then(posts => {
