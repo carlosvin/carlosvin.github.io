@@ -1,5 +1,5 @@
 import allAdoc from '../posts/**/*.adoc';
-import {toSlug} from './services/slug';
+import {toSlug, toCapitalize} from './services/slug';
 import {getLangSimplified} from './services/lang';
 
 const requiredFields = ['date', 'title', 'slug', 'lang'];
@@ -9,6 +9,8 @@ class BlogStore {
     constructor() {
         this._posts = new Map();
         this._langs = new Map();
+        this._categories = new Map();
+        this._postsByCategory = new Map();
         allAdoc.forEach(post => this._add(post)); // adds post to this._posts
         this._lang = getLangSimplified();
         this._index = [];
@@ -43,6 +45,7 @@ class BlogStore {
         const postModel = BlogStore._toModel(post);
         const {slug, lang, date} = postModel;
         this._addLang(lang, date);
+        this._categorize(postModel);
         let translatedPosts = this._posts.get(slug);
         if (translatedPosts) {
             translatedPosts = {...translatedPosts, [lang]: postModel};
@@ -51,6 +54,20 @@ class BlogStore {
         }
         this._posts.set(slug, translatedPosts);
         return postModel;
+    }
+
+    _categorize(postModel){
+        if (postModel.keywords) {
+            postModel.keywords.forEach(k => {
+                let posts = this._postsByCategory.get(k);
+                if (posts === undefined) {
+                    posts = [postModel];
+                } else {
+                    posts.push(postModel);
+                }
+                this._categories.set(toSlug(k), toCapitalize(k));
+            });    
+        }
     }
 
     static _toModel({metadata, html, filename}) {
@@ -101,6 +118,10 @@ class BlogStore {
 
     get posts() {
         return this._posts;
+    }
+
+    get categories() {
+        return this._categories;
     }
 
     get(slug, lang = undefined) {
