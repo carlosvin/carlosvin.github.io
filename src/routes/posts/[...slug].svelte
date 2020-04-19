@@ -192,7 +192,7 @@
 <svelte:head>
   <title>{post.title}</title>
   <meta name="date" content={getIsoDateStr(post.date)} scheme="YYYY-MM-DD" />
-  <meta name="description" content={post.summary} scheme="YYYY-MM-DD" />
+  <meta name="description" content={post.summary} />
   {#if isCanonical}
     <link rel="canonical" href={path(post)} />
   {/if}

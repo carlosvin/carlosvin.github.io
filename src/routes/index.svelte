@@ -1,6 +1,6 @@
 <script context="module">
   import { BLOG_BASE_PATH } from "../conf";
-  import { getSiteName } from "../services/lang";
+  import { getSiteName, getDescription } from "../services/lang";
 
   export function preload({ params, query }) {
     this.fetch(`rss`);
@@ -15,6 +15,8 @@
 
 <script>
   export let posts;
+
+  $: numPosts = posts ? posts.length : 0;
 </script>
 
 <style>
@@ -31,13 +33,13 @@
   }
   .date {
     font-size: small;
-    color: gray;
+    color: #676767;
   }
   .date::before {
     content: " - ";
   }
   .summary {
-    color: gray;
+    color: #676767;
   }
   .lang {
     padding-right: 0.2em;
@@ -47,14 +49,29 @@
   .lang:not(:last-child)::after {
     content: ", ";
   }
+  header {
+    display: flex;
+    flex-flow: row;
+  }
+  h1 {
+    flex-grow: 1;
+  }
 </style>
 
 <svelte:head>
   <title>{getSiteName()}</title>
+  <meta name="description" content={getDescription()} />
 </svelte:head>
 
-<h1>Recent posts</h1>
+<header>
 
+{#if numPosts > 0}
+  <h1>Recent posts</h1>
+  <span>Total {numPosts}</span>
+{:else}
+  <h1>There are no posts</h1>
+{/if}
+</header>
 <ul>
   {#each posts as { summary, title, date, slug, lang, otherLangs }}
     <li>

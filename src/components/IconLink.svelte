@@ -3,6 +3,7 @@
     export let target="_blank";
     export let icon = "github";
     export let title = `Me at ${icon}`;
+    let rel = target === "_blank" ? "noopener" : undefined;
 </script>
 
 <style>
@@ -24,6 +25,6 @@
 }
 </style>
 
-<a {href} {target} class='icon {icon}' {title}>
+<a {href} {target} class='icon {icon}' {title} {rel}>
     <slot></slot>
 </a>
