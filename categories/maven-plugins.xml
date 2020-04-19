@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Carlos says "bla bla" (Posts about Maven Plugins)</title><link>https://carlosvin.github.io/</link><description></description><atom:link href="https://carlosvin.github.io/categories/maven-plugins.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 30 Nov 2019 04:38:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Custom Maven Plugin: Override default build lifecycle</title><link>https://carlosvin.github.io/posts/creating-custom-maven-plugin-default/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;I explained in previous article &lt;a class="reference external" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/"&gt;Example how to create custom Maven Plugin&lt;/a&gt; which &lt;a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle"&gt;overrides site lifecycle&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I have created another example to demonstrate how to override &lt;a class="reference external" href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#default_Lifecycle"&gt;default Maven build lifecycle&lt;/a&gt;. Default build lifecycle is used to construct your software project, for example, it is executed when you run &lt;code class="docutils literal"&gt;mvn install&lt;/code&gt; in &lt;code class="docutils literal"&gt;jar&lt;/code&gt; type project.&lt;/p&gt;
+&lt;p&gt;You can find source code example at &lt;a class="reference external" href="https://github.com/carlosvin/lifecycle-maven-plugin"&gt;https://github.com/carlosvin/lifecycle-maven-plugin&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="admonition hint"&gt;
+&lt;p class="admonition-title"&gt;Hint&lt;/p&gt;
+&lt;p&gt;I've also created an &lt;a class="reference external" href="https://maven.apache.org/guides/introduction/introduction-to-archetypes.html"&gt;archetype&lt;/a&gt; so you can easily create and play with the example.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Create example project just by running following command:&lt;/p&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_904bd86ed17543f1bc2af35579eeda7e-1"&gt;&lt;/a&gt;mvn archetype:generate -DarchetypeGroupId&lt;span class="o"&gt;=&lt;/span&gt;com.github.carlosvin.archetype -DartifactId&lt;span class="o"&gt;=&lt;/span&gt;lifecycle-maven-plugin-archetype -DarchetypeVersion&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.6
+&lt;/pre&gt;&lt;/div&gt;</description><category>Build Systems</category><category>Java</category><category>Maven</category><category>Maven Plugins</category><guid>https://carlosvin.github.io/posts/creating-custom-maven-plugin-default/</guid><pubDate>Sat, 12 May 2018 13:00:00 GMT</pubDate></item><item><title>Example how to create custom Maven Plugin</title><link>https://carlosvin.github.io/posts/creating-custom-maven-plugin/</link><dc:creator>Carlos Martín Sánchez</dc:creator><description>&lt;div&gt;&lt;p&gt;Maven has lots of plugins to assist you in project construction, testing, packaging and deployment. For example if you want to compile C++ code instead of Java, you can use &lt;a class="reference external" href="https://www.mojohaus.org/maven-native/native-maven-plugin/"&gt;native-maven-plugin&lt;/a&gt; . But what if you need something more specific? Then you can create a custom Maven plugin.&lt;/p&gt;
+&lt;p&gt;I will explain how to create a simple custom maven plugin to generate static blog site from Markdown files. I know we can already do that with &lt;a class="reference external" href="https://maven.apache.org/plugins/maven-site-plugin/examples/creating-content.html"&gt;maven-site-plugin&lt;/a&gt; since version 3.3, I will just use it for learning purposes.&lt;/p&gt;
+&lt;p&gt;You can find whole source code example at &lt;a class="reference external" href="https://github.com/carlosvin/blog-maven-plugin"&gt;https://github.com/carlosvin/blog-maven-plugin&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="contents topic" id="contents"&gt;
+&lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#maven-plugin-concepts" id="id2"&gt;Maven plugin concepts&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#create-your-custom-plugin-site-lifecycle" id="id3"&gt;Create your custom plugin (Site Lifecycle)&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#project-structure" id="id4"&gt;Project structure&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#dependency-injection" id="id5"&gt;Dependency Injection&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#write-a-custom-mojo" id="id6"&gt;Write a custom Mojo&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#implement-mojo-interface" id="id7"&gt;1. Implement Mojo interface&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#configure-mojo-with-java-5-annotations" id="id8"&gt;2. Configure Mojo with Java 5 annotations&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#implement-execute-method" id="id9"&gt;3. Implement &lt;em&gt;execute&lt;/em&gt; method&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#unit-tests" id="id10"&gt;Unit tests&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#integration-tests" id="id11"&gt;Integration tests&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#how-does-invoker-plugin-work" id="id12"&gt;How does Invoker Plugin work?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#configure-invoker-plugin" id="id13"&gt;Configure Invoker Plugin&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#create-an-integration-test-project" id="id14"&gt;Create an Integration Test Project&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#pom-xml-arrange" id="id15"&gt;pom.xml (Arrange)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#invoker-properties-act" id="id16"&gt;invoker.properties (Act)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/#verify-groovy-assert" id="id17"&gt;verify.groovy (Assert)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href="https://carlosvin.github.io/posts/creating-custom-maven-plugin/"&gt;Read more…&lt;/a&gt; (7 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Build Systems</category><category>Java</category><category>Maven</category><category>Maven Plugins</category><category>maven-site-plugin</category><guid>https://carlosvin.github.io/posts/creating-custom-maven-plugin/</guid><pubDate>Sun, 11 Mar 2018 18:00:00 GMT</pubDate></item></channel></rss>
