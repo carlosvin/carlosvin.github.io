@@ -24,8 +24,6 @@
 
 I've migrated my blog infrastructure from {nikola} + {rst} to {sapper} + {asciidoc}.
 
-CAUTION: This post is work in progress.
-
 == Why leaving {nikola}
 
 This blog was powered by {nikola} since 2014, when {jamstack} term didn't even exist. It really did the job, it has out-of-the-box features that I needed:
@@ -34,27 +32,32 @@ This blog was powered by {nikola} since 2014, when {jamstack} term didn't even e
 - {rst} which I prefer over {md}. 
 - It was developed in {python}, a programming language that I know and I enjoy.
 
-But I was facing some issues which annoyed me for quite some time, some of the I am pretty sure I could have overcame.
+I faced some *issues* which annoyed me for quite some time:
 
-- My config file got bloat.
-- For me was not easy to modify or create templates, neither to find templates I liked.
-- Site performance was not awesome, my last {lighthouse} were between 70 to 80, depending on the section. Except SEO section, which was 96.
+- My config file got bloated.
+- It was not easy to modify or create templates, neither to find templates I liked.
+- Site performance was not awesome, my last {lighthouse} were around 80, depending on the section. Except SEO section, which was 96.
 
 == Why Sapper
 
+=== DX: Developer experience
+
 I already used {sapper} for creating some tiny {pwa}s footnote:[Progressive Web Application], here 2 examples I developed to learn {Svelte} and {Sapper}:
 
-https://currency-loss.netlify.app[Currency Exchage Loss Calculator,window=_blank]:: It is a helpful application for travellers visiting currency exchange houses. Based on the rate they offer and the money you want ot change it calculates the amount of money your are loosing.
+https://currency-loss.netlify.app[Currency Exchage Loss Calculator,window=_blank]:: It is a helpful application for travellers visiting currency exchange houses. Based on the rate they offer and the money you want ot change it calculates the amount of money that you are losing in that transaction.
 https://covid-stats-pwa.netlify.app[COVID-19 Stats,window=_blank]:: It shows COVID-19 statistics by country and date.
 
-While creating those {pwa}s, developing experience with {Sapper} was quite impressive. Lately I've seen the result of using {sapper} as static blog site generator like: the {sapper} blog, https://www.codingwithjesse.com/blog/statically-generating-a-blog-with-svelte-sapper/[Coding with Jessie,window=_blank] or https://www.swyx.io/writing/svelte-static/[swyx.io,window=_blank]. Check those blogs by yourself, IMHO user experience is pretty good in all of them. 
+While creating those {pwa}s, developing experience with {sapper}/{svelte} was quite impressive. 
 
-{sapper} is inspired in https://nextjs.org/[Next.js], here you can find https://sapper.svelte.dev/docs#Comparison_with_Next_js[a comparison with this better known JAMStack framework].
+=== UX: Final result of blogs in Sapper
+Lately I've stumbled upon with some blogs using {sapper} like the own {sapper} blog, https://www.codingwithjesse.com/blog/statically-generating-a-blog-with-svelte-sapper/[Coding with Jessie,window=_blank] or https://www.swyx.io/writing/svelte-static/[swyx.io,window=_blank]. Check those blogs by yourself, IMHO user experience is pretty good in all of them. 
+
+NOTE: {sapper} is inspired in https://nextjs.org/[Next.js], here you can find https://sapper.svelte.dev/docs#Comparison_with_Next_js[a comparison with this better known JAMStack framework].
 
 == {asciidoc}
-I don't have strong feelings about using {asciidoc} or {rst}. I am comfortable with both of them, but there is more support for {asciidoc} in other languages, like {js}. So basically I switched to {asciidoc} because I didn't find a {js} library able to properly convert {rst} to {html}.
+I don't have a strong opinion about using {asciidoc} or {rst}, I am comfortable with both of them, but there is more support for {asciidoc} in other programming languages, like {js}. So basically I switched to {asciidoc} because I didn't find a {js} library able to properly convert {rst} to {html}.
 
-The main issue here was the lack of {rollup} plugins to convert {asciidoc} to {html}, so I just created one, {rollup-plugin-asciidoc}. Implementation was quite simple, the plugin is just using {asciidoctorjs} {js} library to convert the text input to html. 
+The main issue I found not using {md} was the lack of {rollup} plugins to convert {asciidoc} to {html}, so I just created one, {rollup-plugin-asciidoc}. Implementation was quite simple, the plugin is just using {asciidoctorjs} {js} library to convert the text input to html. 
 
 === {rollup-plugin-asciidoc} to the rescue
 TIP: With {rollup-plugin-asciidoc} we can import {asciidoc} files in our blog and {rollup} will convert them to {html}.
@@ -90,11 +93,11 @@ console.log(doc);
 }
 ----
 
-Importing files one by one is not really convenient for a blog, where we have many files which we don't want to import manually.
+Importing files one by one is not really convenient for a blog where we have many files which we don't want to import manually.
 
 === {rollup-plugin-glob} to the rescue
 
-With this plugin we can import all the files in a directory by extension, so now we have our index of files automatically converted to html.
+With {rollup-plugin-glob} we can import all the files in a directory by extension, so now we have our index of posts automatically converted to {html}.
 
 [source,javascript]
 ----
@@ -116,8 +119,25 @@ allAdoc.forEach(post => this._add(post));
 ----
 
 == Syntax highlighting
-My blog is mainly about Software Engineering, so I have an strong requirement, code highlighting. 
+My blog is mainly about Software Engineering, so I have a strong requirement, code highlighting. 
 
-At the begging I started using https://highlightjs.org/usage/[highlightjs library from CDN,window=_blank]. In this way we have to import the {javascript} library to parse the source code and a CSS file to style it. But we can do the parsing work when we compile {asciidoc} to {html} in {rollup-plugin-asciidoc} implementation, so we don't have to download the {javascript} file.
+At the begging I started using https://highlightjs.org/usage/[highlightjs library from a CDN,window=_blank] for source code highlighting. We use imported library to parse the source code and for styling the result we need to import also a CSS file. 
 
-TIP: Doing code highlighting transformation during the site building phase we save bundle size (we don't need https://highlightjs.org/usage/[highlightjs javascript library] 27KB) and performance (source code parsing is done only once, while site is built).
+Later I realized that we can do the parsing work when we compile {asciidoc} to {html} in {rollup-plugin-asciidoc} implementation, so we don't have to download the {js} file.
+
+TIP: Doing code highlighting transformation during the site building phase we are improving application performance and reducing bundle size.
+
+Code highlighting transformation during site build step bring 2 great benefits:
+
+- Reducing bundle size: we don't need the 27KB of https://highlightjs.org/usage/[highlightjs javascript library].
+- Improving performance: source code parsing is done only once while site is built.
+
+== Result
+I still have some https://github.com/carlosvin/carlosvin.github.io/issues[work to do,window=_blank], but so far I have a blog with following features:
+
+- Automated generation of link:/sitemap.xml[Sitemap] and link:/rss[RSS feed].
+- Multi-language support (I still have to translate some texts).
+- Syntax highlighting.
+- 100 score in {lighthouse}.
+  
+image::/images/lighthouse-results.webp[alt=lighthouse score,width=95%]
