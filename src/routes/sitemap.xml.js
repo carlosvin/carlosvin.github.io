@@ -22,7 +22,7 @@ const render = (pages, posts) => `<?xml version="1.0" encoding="UTF-8"?>
 		<url>
 		<loc>${url({ slug, lang })}</loc>
 		<priority>0.69</priority>
-		<lastmod>${date}</lastmod>
+		<lastmod>${new Date(date).toISOString()}</lastmod>
 		${otherLangs ? otherLangs.map(l => `<xhtml:link 
 				rel="alternate"
 				hreflang="${l}"
