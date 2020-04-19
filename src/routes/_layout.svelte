@@ -1,6 +1,5 @@
 <script>
 	import Nav from '../components/Nav.svelte';
-	import { BASE_URL } from "../conf";
   	import { getSiteName } from "../services/lang";
 	import Social from '../components/Social.svelte';
 	import IconLink from '../components/IconLink.svelte';
@@ -9,7 +8,7 @@
 
 	const siteName = getSiteName();
 	const rssTitle = `Subscribe to ${siteName}`;
-	const rssUrl = `${BASE_URL}/rss`;
+	const rssUrl = `/rss`;
 </script>
 
 <style>
