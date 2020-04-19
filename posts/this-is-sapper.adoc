@@ -1,7 +1,9 @@
 = This is Sapper!
 :date: 2020-04-19
 :lang: en
-:description: This blog has been migrated from Nikola to Sapper. Following the reasons why, some thoughts and performance results.
+:description: This blog has been migrated from Nikola to Sapper. Following the reasons why, some thoughts and performance results
+:toc:
+:keywords: Sapper, Svelte, JAMStack
 :nikola: https://getnikola.com[Nikola,window='_blank']
 :rst: https://en.wikipedia.org/wiki/ReStructuredText[reStructuredText,window='_blank']
 :md: https://en.wikipedia.org/wiki/Markdown[Markdown,window='_blank']
@@ -10,9 +12,23 @@
 :lighthouse: https://developers.google.com/web/tools/lighthouse[Lighthouse audits,window='_blank']
 :js: https://en.wikipedia.org/wiki/JavaScript[JavaScript,window='_blank']
 :html: https://en.wikipedia.org/wiki/HTML[HTML,window='_blank']
+:rollup: https://rollupjs.org[Rollup,window='_blank']
+:pwa: https://web.dev/progressive-web-apps[PWA,window='_blank']
+:sapper: https://sapper.svelte.dev/[Sapper,window='_blank']
+:svelte:  https://svelte.dev[Svelte,window='_blank']
+:jamstack: https://jamstack.org[JAMStack,window='_blank']
+:html: https://developer.mozilla.org/en-US/docs/Web/HTML[HTML,window=_blank]
+:asciidoctorjs: https://asciidoctor.org/docs/asciidoctor.js/[Asciidoctor.js,window=_blank]
+:rollup-plugin-asciidoc: https://github.com/carlosvin/rollup-plugin-asciidoc[rollup-plugin-asciidoc,window=_blank]
+:rollup-plugin-glob: https://www.npmjs.com/package/rollup-plugin-glob[rollup-plugin-glob,window=_blank]
 
+I've migrated my blog infrastructure from {nikola} + {rst} to {sapper} + {asciidoc}.
 
-This blog was powered by {nikola} since 2014, which is not bad at all. It really did the job, it has out-of-the-box features that I needed:
+IMPORTANT: This post is work in progress.
+
+== Why leaving {nikola}
+
+This blog was powered by {nikola} since 2014, when {jamstack} term didn't even exist. It really did the job, it has out-of-the-box features that I needed:
 
 - Simple multi-lang support.
 - {rst} which I prefer over {md}. 
@@ -24,9 +40,84 @@ But I was facing some issues which annoyed me for quite some time, some of the I
 - For me was not easy to modify or create templates, neither to find templates I liked.
 - Site performance was not awesome, my last {lighthouse} were between 70 to 80, depending on the section. Except SEO section, which was 96.
 
-== Asciidoctor
-I don't have strong feelings about using {asciidoc} or {rst}. I am comfortable with both of them, there is more support for {asciidoc} in other languages, like {js}. So basically I switch to {asciidoc} because I didn't find a {js} library able to properly convert {rst} to {html}.
+== Why Sapper
 
-== Syntax highlinghting
+I already used {sapper} for creating some tiny {pwa}s footnote:[Progressive Web Application], here 2 examples I developed to learn {Svelte} and {Sapper}:
 
-== To improve
+https://currency-loss.netlify.app[Currency Exchage Loss Calculator,window=_blank]:: It is a helpful application for travellers visiting currency exchange houses. Based on the rate they offer and the money you want ot change it calculates the amount of money your are loosing.
+https://covid-stats-pwa.netlify.app[COVID-19 Stats,window=_blank]:: It shows COVID-19 statistics by country and date.
+
+While creating those {pwa}s, developing experience with {Sapper} was quite impressive. Lately I've seen the result of using {sapper} as static blog site generator like: the {sapper} blog, https://www.codingwithjesse.com/blog/statically-generating-a-blog-with-svelte-sapper/[Coding with Jessie,window=_blank] or https://www.swyx.io/writing/svelte-static/[swyx.io,window=_blank]. Check those blogs by yourself, IMHO user experience is pretty good in all of them. 
+
+{sapper} is inspired in https://nextjs.org/[Next.js], here you can find https://sapper.svelte.dev/docs#Comparison_with_Next_js[a comparison with this better known JAMStack framework].
+
+== {asciidoc}
+I don't have strong feelings about using {asciidoc} or {rst}. I am comfortable with both of them, but there is more support for {asciidoc} in other languages, like {js}. So basically I switched to {asciidoc} because I didn't find a {js} library able to properly convert {rst} to {html}.
+
+The main issue here was the lack of {rollup} plugins to convert {asciidoc} to {html}, so I just created one, {rollup-plugin-asciidoc}. Implementation was quite simple, the plugin is just using {asciidoctorjs} {js} library to convert the text input to html. 
+
+=== {rollup-plugin-asciidoc} to the rescue
+TIP: With {rollup-plugin-asciidoc} we can import {asciidoc} files in our blog and {rollup} will convert them to {html}.
+
+==== Example
+
+.a-blog-post.adoc
+[source,adoc]
+----
+= Post title
+:date: 2019-11-11
+
+Such a post!
+----
+
+.With {rollup-plugin-asciidoc} we can import {asciidoc} files one by one.
+[source,javascript]
+----
+import doc from './a-blog-post.adoc';
+
+console.log(doc);
+----
+
+.Output
+[source,javascript]
+----
+{
+  meta: {
+    title: "Post title",
+    date: "2019-11-11"
+  },
+  html: "<p>Such a post!</p>"
+}
+----
+
+Importing files one by one is not really convenient for a blog, where we have many files which we don't want to import manually.
+
+=== {rollup-plugin-glob} to the rescue
+
+With this plugin we can import all the files in a directory by extension, so now we have our index of files automatically converted to html.
+
+[source,javascript]
+----
+import allAdoc from '../posts/**/*.adoc';
+
+allAdoc.forEach(post => this._add(post));
+----
+
+.Output: List of posts already converted to HTML
+[source,javascript]
+----
+{ meta: { title: "Post title", date: "2019-11-11" },
+  html: "<p>Post 1.</p>"
+}
+{ meta: { title: "Post title", date: "2020-02-22" },
+  html: "<h2>Title post</h2><p>This is a sample post...</p>"
+}
+// ...
+----
+
+== Syntax highlighting
+My blog is mainly about Software Engineering, so I have an strong requirement, code highlighting. 
+
+At the begging I started using https://highlightjs.org/usage/[highlightjs library from CDN,window=_blank]. In this way we have to import the {javascript} library to parse the source code and a CSS file to style it. But we can do the parsing work when we compile {asciidoc} to {html} in {rollup-plugin-asciidoc} implementation, so we don't have to download the {javascript} file.
+
+TIP: Doing code highlighting transformation during the site building phase we save bundle size (we don't need https://highlightjs.org/usage/[highlightjs javascript library] 27KB) and performance (source code parsing is done only once, while site is built).
