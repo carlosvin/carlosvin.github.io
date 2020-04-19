@@ -75,7 +75,7 @@
 <ul>
   {#each posts as { summary, title, date, slug, lang, otherLangs }}
     <li>
-      <a rel="prefetch" href="{BLOG_BASE_PATH}/{slug}/{lang}">
+      <a rel="prefetch" href="{BLOG_BASE_PATH}/{slug}">
         {title}
         <span class="date">{new Date(date).toLocaleDateString()}</span>
       </a>
@@ -83,16 +83,17 @@
         {#if summary}
           <span class="summary">{summary}.</span>
         {/if}
-        {#if otherLangs && otherLangs.length > 0}
-          <span class="langs summary">
-            Also available in
-            {#each otherLangs as lang}
-              <span class="lang">
-                <a href="{BLOG_BASE_PATH}/{slug}/{lang}">{lang}</a>
-              </span>
-            {/each}
+        <span class="langs summary">
+          Available in 
+          <span class="lang">
+            <a href="{BLOG_BASE_PATH}/{slug}/{lang}">{lang}</a>
           </span>
-        {/if}
+          {#each otherLangs as lang}
+            <span class="lang">
+              <a href="{BLOG_BASE_PATH}/{slug}/{lang}">{lang}</a>
+            </span>
+          {/each}
+        </span>
       </div>
     </li>
   {/each}
