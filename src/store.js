@@ -58,14 +58,17 @@ class BlogStore {
 
     _categorize(postModel){
         if (postModel.keywords) {
-            postModel.keywords.forEach(k => {
-                let posts = this._postsByCategory.get(k);
-                if (posts === undefined) {
-                    posts = [postModel];
-                } else {
-                    posts.push(postModel);
-                }
-                this._categories.set(toSlug(k), toCapitalize(k));
+            postModel.keywords
+                .map(k=> [toSlug(k), toCapitalize(k)])
+                .forEach(([slug, name]) => {
+                    let posts = this._postsByCategory.get(slug);
+                    if (posts === undefined) {
+                        posts = [postModel];
+                        this._postsByCategory.set(slug, posts);
+                    } else {
+                        posts.push(postModel);
+                    }
+                    this._categories.set(slug, name);
             });    
         }
     }
@@ -122,6 +125,11 @@ class BlogStore {
 
     get categories() {
         return this._categories;
+    }
+
+    getByCategory(categorySlug) {
+        const posts = this._postsByCategory.get(categorySlug);
+        return posts ? posts : [];
     }
 
     get(slug, lang = undefined) {

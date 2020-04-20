@@ -4,7 +4,6 @@
     return this.fetch(`categories.json`)
       .then(r => r.json())
       .then(categories => {
-        console.log(categories);
         return { categories };
       }).catch(e => console.error(e));
   }
