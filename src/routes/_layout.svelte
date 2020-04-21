@@ -8,7 +8,7 @@
 
 	const siteName = getSiteName();
 	const rssTitle = `Subscribe to ${siteName}`;
-	const rssUrl = `/rss`;
+	const rssUrl = `/rss.xml`;
 </script>
 
 <style>
