@@ -18,12 +18,10 @@
 </script>
 
 <style>
-
 	li {
 		display: block;
 		float: left;
 	}
-
 
 	a {
 		text-decoration: none;
