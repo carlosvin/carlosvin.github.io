@@ -1,5 +1,5 @@
 
-import {path} from '../services/models';
+import {url} from '../services/models';
 
 class RssItem {
     constructor(post, baseUrl){
@@ -7,7 +7,7 @@ class RssItem {
         this.title = post.title;
         this.summary = post.summary;
         this.pubDate = new Date(post.date).toUTCString();
-        this.url = `/${path(post)}`;
+        this.url = url(post);
         this.categories = this.getCategories(post);
     }
 
