@@ -1,4 +1,5 @@
 
+import {path} from '../services/models';
 
 class RssItem {
     constructor(post, baseUrl){
@@ -6,12 +7,8 @@ class RssItem {
         this.title = post.title;
         this.summary = post.summary;
         this.pubDate = new Date(post.date).toUTCString();
-        this.url = this.getUrl(post);
+        this.url = `/${path(post)}`;
         this.categories = this.getCategories(post);
-    }
-
-    getUrl({lang, slug}) {
-        return `${this.baseUrl}/${slug}/${lang}`;
     }
 
     getCategories({keywords}) {
