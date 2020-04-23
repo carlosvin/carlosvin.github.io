@@ -1,14 +1,11 @@
 
 <script>
   import {path} from '../../services/models';
+  import Entry from '../Entry.svelte'
   export let post;
 </script>
 
 <style>
-
-  li {
-    margin: 0.5em 1em;
-  }
   .date {
     font-size: small;
     color: #676767;
@@ -30,8 +27,7 @@
 </style>
 
 {#if post}
-
-<li>
+<Entry>
   <a rel="prefetch" href={path(post.slug)}>
     {post.title}
     <span class="date">{new Date(post.date).toLocaleDateString()}</span>
@@ -54,5 +50,5 @@
       {/if}
     </span>
   </div>
-</li>
+</Entry>
 {/if}

@@ -12,6 +12,8 @@
 <script>
   import { CATEGORIES_BASE_PATH } from "../../conf";
   import { getSiteName } from "../../services/lang";
+  import Index from "../../components/Index.svelte";
+  import Entry from "../../components/Entry.svelte";
   
   export let categories;
 </script>
@@ -25,12 +27,12 @@
 </svelte:head>
 
 <h1>Categories</h1>
-<ul>
+<Index>
   {#each categories as [slug, name]}
-    <li>
+    <Entry>
       <a rel="prefetch" href="{CATEGORIES_BASE_PATH}/{slug}">
       {name}
       </a>
-    </li>
+    </Entry>
   {/each}
-</ul>
+</Index>
