@@ -198,7 +198,7 @@
   <meta name="date" content={getIsoDateStr(post.date)} scheme="YYYY-MM-DD" />
   <meta name="description" content={post.summary} />
   {#if isCanonical}
-    <link rel="canonical" href={path(post)} />
+    <link rel="canonical" href={path(post.slug, post.lang)} />
   {/if}
   <link
     rel="preload"
