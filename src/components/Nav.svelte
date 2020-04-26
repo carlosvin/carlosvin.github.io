@@ -1,5 +1,4 @@
 <script>
-	import {BLOG_BASE_PATH} from '../conf';
 	import NavEntry from './NavEntry.svelte';
 	export let segment;
 	export let siteName;

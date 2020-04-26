@@ -13,7 +13,6 @@
 <script>
   import Index from "../components/posts/Index.svelte";
   import Header from "../components/posts/Header.svelte";
-  import { BLOG_BASE_PATH } from "../conf";
   import { getSiteName, getDescription } from "../services/lang";
 
   export let posts;

@@ -1,10 +1,9 @@
 <script context="module">
-  import { BLOG_BASE_PATH } from "../../conf";
+  import { path } from "../../services/models";
 
   export async function preload({ params, query }) {
-    const res = await this.fetch(
-      `${BLOG_BASE_PATH}/${params.slug.join("/")}.json`
-    );
+    const [slug, lang] = params.slug;
+    const res = await this.fetch(path(slug, lang) + '.json');
     const data = await res.json();
 
     if (res.status === 200) {
@@ -20,7 +19,7 @@
 
 <script>
   import { onMount } from "svelte";
-  import { path, url } from "../../services/models";
+  import { url } from "../../services/models";
   import { getIsoDateStr } from "../../services/dates";
   import Share from "../../components/Share.svelte";
 
