@@ -23,6 +23,15 @@
     font-family: 'icomoon' !important;
     padding: 1em;
 }
+a {
+  text-decoration: none;
+}
+a:hover {
+  color: darkblue;
+}
+a:focus {
+  color: blue;
+}
 </style>
 
 <a {href} {target} class='icon {icon}' {title} {rel}>

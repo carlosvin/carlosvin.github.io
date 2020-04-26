@@ -3,7 +3,7 @@
 
   export async function preload({ params, query }) {
     const [slug, lang] = params.slug;
-    const res = await this.fetch(path(slug, lang) + '.json');
+    const res = await this.fetch(path(slug, lang) + ".json");
     const data = await res.json();
 
     if (res.status === 200) {
@@ -25,10 +25,10 @@
 
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
-    ;[...document.querySelectorAll('a[href^="#"]')].map(
+    [...document.querySelectorAll('a[href^="#"]')].map(
       x => (x.href = document.location + new URL(x.href).hash)
-    )
-  })
+    );
+  });
 
   export let post;
   export let isCanonical = false;
@@ -36,14 +36,25 @@
 
 <style>
   h1 {
-    border-bottom: #e9e9e9 solid 1px;
-    font-size: 2rem;
+    font-size: 2em;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .share {
+    font-size: 0.5em;
   }
 
   header {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
+    border-bottom: #e9e9e9 solid 1px;
+    padding-bottom: 0.4em;
+    margin-bottom: 1.2em;
+  }
+
+  .description {
+    margin: 0 0;
+    color: #644d4d;
+    
   }
 
   .content :global(h2) {
@@ -140,7 +151,7 @@
     padding-right: 0.4em;
     padding-left: 0.3em;
     /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'icomoon' !important;
+    font-family: "icomoon" !important;
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -156,7 +167,8 @@
   .content :global(.admonitionblock .icon > .title) {
     font-size: small;
     font-weight: lighter;
-  	font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen,
+      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   }
 
   .content :global(.admonitionblock.note .icon::before) {
@@ -196,7 +208,6 @@
   .content :global(.toc) {
     font-size: 1.2em;
   }
-
 </style>
 
 <svelte:head>
@@ -219,12 +230,17 @@
 </svelte:head>
 
 <header>
-<h1>{post.title}</h1>
-<Share 
-  title={post.title} 
-  keywords={post.keywords} 
-  text={post.description} 
-  url={url(post.slug, post.lang)} />
+  <h1>{post.title}
+    <span class='share'>
+    <Share
+      title={post.title}
+      keywords={post.keywords}
+      text={post.description}
+      url={url(post.slug, post.lang)} />
+    </span>
+  </h1>
+  <p class="description">{post.description} </p>
+  
 </header>
 
 <div class="content">
