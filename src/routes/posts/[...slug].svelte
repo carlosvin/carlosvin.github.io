@@ -220,9 +220,12 @@
 
 <header>
 <h1>{post.title}</h1>
-<Share title={post.title} text={post.description} url={url(post.slug, post.lang)} />
+<Share 
+  title={post.title} 
+  keywords={post.keywords} 
+  text={post.description} 
+  url={url(post.slug, post.lang)} />
 </header>
-
 
 <div class="content">
   {@html post.html}
