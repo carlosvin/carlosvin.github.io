@@ -2,7 +2,7 @@
     export let href;
     export let target="_blank";
     export let icon = "github";
-    export let title = `Me at ${icon}`;
+    export let title = `Find me at ${icon}`;
     let rel = target === "_blank" ? "noopener" : undefined;
 </script>
 
