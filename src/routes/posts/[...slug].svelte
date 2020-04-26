@@ -20,8 +20,9 @@
 
 <script>
   import { onMount } from "svelte";
-  import { path } from "../../services/models";
+  import { path, url } from "../../services/models";
   import { getIsoDateStr } from "../../services/dates";
+  import Share from "../../components/Share.svelte";
 
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
@@ -38,6 +39,12 @@
   h1 {
     border-bottom: #e9e9e9 solid 1px;
     font-size: 2rem;
+  }
+
+  header {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
   }
 
   .content :global(h2) {
@@ -211,7 +218,12 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/vs.min.css" />
   </noscript>
 </svelte:head>
+
+<header>
 <h1>{post.title}</h1>
+<Share title={post.title} text={post.description} url={url(post.slug, post.lang)} />
+</header>
+
 
 <div class="content">
   {@html post.html}
