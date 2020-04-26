@@ -7,7 +7,7 @@ class RssItem {
         this.title = post.title;
         this.summary = post.summary;
         this.pubDate = new Date(post.date).toUTCString();
-        this.url = url(post);
+        this.url = url(post.slug, post.lang);
         this.categories = this.getCategories(post);
     }
 

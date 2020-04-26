@@ -21,13 +21,13 @@ const render = (pages, posts) => `<?xml version="1.0" encoding="UTF-8"?>
 		.join("\r\n")}
   	${posts.map(({ slug, lang, date, otherLangs}) => `
 		<url>
-		<loc>${url({ slug, lang })}</loc>
+		<loc>${url(slug, lang)}</loc>
 		<priority>0.69</priority>
 		<lastmod>${getIsoDate(new Date(date))}</lastmod>
 		${otherLangs ? otherLangs.map(l => `<xhtml:link 
 				rel="alternate"
 				hreflang="${l}"
-				href="${url({ slug, lang: l })}"/>`) : ''
+				href="${url(slug, l )}"/>`) : ''
 			}
 		</url>`).join("\r\n")}
 </urlset>`;
