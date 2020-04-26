@@ -1,18 +1,10 @@
-
 <script>
-  import {path} from '../../services/models';
-  import Entry from '../Entry.svelte'
+  import { path } from "../../services/models";
+  import Entry from "../Entry.svelte";
   export let post;
 </script>
 
 <style>
-  .date {
-    font-size: small;
-    color: #676767;
-  }
-  .date::before {
-    content: " - ";
-  }
   .summary {
     color: #676767;
   }
@@ -24,31 +16,56 @@
   .lang:not(:last-child)::after {
     content: ", ";
   }
+  .description {
+    display: flex;
+  }
+
+  .description > .content {
+    flex-grow: 1;
+    width: 0;
+  }
+
+  .subtitle {
+    font-size: small;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .date::after {
+    content: " - ";
+  }
+
+  .title {
+    font-size: 1.2em;
+  }
 </style>
 
 {#if post}
-<Entry>
-  <a rel="prefetch" href={path(post.slug)}>
-    {post.title}
-    <span class="date">{new Date(post.date).toLocaleDateString()}</span>
-  </a>
-  <div>
-    {#if post.summary}
-      <span class="summary">{post.summary}.</span>
-    {/if}
-    <span class="langs summary">
-      Available in 
-      <span class="lang">
-        <a href={path(post.slug, post.lang)}>{post.lang}</a>
-      </span>
-      {#if post.otherLangs}
-      {#each post.otherLangs as lang}
-        <span class="lang">
-          <a href={path(post.slug, lang)}>{lang}</a>
+  <Entry>
+    <div class="container">
+      <a rel="prefetch" href={path(post.slug)} class="title">{post.title}</a>
+      <div class='subtitle'>
+        <span class="date">{new Date(post.date).toLocaleDateString()}</span>
+        <span class="langs summary">
+          Available in
+          <span class="lang">
+            <a href={path(post.slug, post.lang)}>{post.lang}</a>
+          </span>
+          {#if post.otherLangs}
+            {#each post.otherLangs as lang}
+              <span class="lang">
+                <a href={path(post.slug, lang)}>{lang}</a>
+              </span>
+            {/each}
+          {/if}
         </span>
-      {/each}
-      {/if}
-    </span>
-  </div>
-</Entry>
+      </div>
+      <div class="description">
+        <div class="content">
+          {#if post.summary}
+            <span class="summary">{post.summary}.</span>
+          {/if}
+        </div>
+      </div>
+    </div>
+  </Entry>
 {/if}
