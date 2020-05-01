@@ -35,5 +35,6 @@
       </a>
     </Entry>
   {/each}
-  <Entry><a href='/old'>Old</a></Entry>
+  <Entry><a href='/posts'>All posts</a></Entry>
+  <Entry><a href='/old'>Old urls</a></Entry>
 </Index>
