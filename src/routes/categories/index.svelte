@@ -35,4 +35,5 @@
       </a>
     </Entry>
   {/each}
+  <Entry><a href='/old'>Old</a></Entry>
 </Index>
