@@ -1,6 +1,5 @@
 <script context="module">
   import { path } from "../../services/models";
-  import { getLangSimplified } from "../../services/lang";
 
   export async function preload({ params, query }) {
     const [slug, lang] = params.slug;

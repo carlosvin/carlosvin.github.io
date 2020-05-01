@@ -103,10 +103,15 @@ class BlogStore {
         }
     }
 
-    static _toIndexEntry(post) {
+    static _toIndexEntry({ title, summary, slug, lang, date, modified, updated, keywords, otherLangs }) {
         return {
-            ...post, 
-            date: post.updated || post.modified || post.date,
+            title,
+            summary,
+            slug,
+            lang,
+            otherLangs,
+            keywords,
+            date: updated || modified || date,
         };
     }
 
