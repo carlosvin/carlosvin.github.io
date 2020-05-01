@@ -235,7 +235,7 @@
       url={url(post.slug, post.lang)} />
     </span>
   </h1>
-  <p class="description">{post.description}. <OtherLangs {post}/>.</p>
+  <p class="description">{post.description}<OtherLangs {post}/></p>
 </header>
 
 <div class="content">
