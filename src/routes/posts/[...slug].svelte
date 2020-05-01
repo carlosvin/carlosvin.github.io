@@ -1,20 +1,21 @@
 <script context="module">
   import { path } from "../../services/models";
+  import { getLangSimplified } from "../../services/lang";
 
   export async function preload({ params, query }) {
     const [slug, lang] = params.slug;
-    const res = await this.fetch(path(slug, lang) + ".json");
-    const data = await res.json();
-
-    if (res.status === 200) {
-      return { post: data };
-    } else if (res.status === 301) {
-      return { post: data, isCanonical: true };
+    if (lang) {
+      const res = await this.fetch(path(slug, lang) + ".json");
+      const data = await res.json();
+      if (res.status === 200) {
+        return { post: data, isCanonical: !lang };
+      } else {
+        this.error(res.status, data.message);
+      }
     } else {
-      this.error(res.status, data.message);
+      this.redirect(302, path(slug, getLangSimplified()));
     }
   }
-  // TODO add canonical link to translations
 </script>
 
 <script>
@@ -22,6 +23,7 @@
   import { url } from "../../services/models";
   import { getIsoDateStr } from "../../services/dates";
   import Share from "../../components/Share.svelte";
+  import OtherLangs from "../../components/posts/OtherLangs.svelte";
 
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
@@ -152,7 +154,6 @@
     padding-left: 0.3em;
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: "icomoon" !important;
-    speak: none;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -239,8 +240,7 @@
       url={url(post.slug, post.lang)} />
     </span>
   </h1>
-  <p class="description">{post.description} </p>
-  
+  <p class="description">{post.description}. <OtherLangs {post}/>.</p>
 </header>
 
 <div class="content">
