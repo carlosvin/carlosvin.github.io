@@ -11,5 +11,13 @@ describe('Metadata', () => {
 			.should('have.attr', 'content', '2014-09-27')
 			.should('have.attr', 'scheme', 'YYYY-MM-DD')
 	});
+});
+
+describe('Post View', () => {
+
+	it('Header', () => {
+		cy.visit('/posts/this-is-sapper/en')
+		cy.get('.subtitle .date').contains('19/04/2020')
+	});
 
 });
