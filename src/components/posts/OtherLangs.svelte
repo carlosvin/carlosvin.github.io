@@ -1,5 +1,5 @@
 <script>
-    import { path } from "../../services/models";
+    import { path } from "../../services/url";
     export let post;
 </script>
 

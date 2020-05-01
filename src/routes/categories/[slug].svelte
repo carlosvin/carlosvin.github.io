@@ -17,7 +17,7 @@
 
 <script>
   import { onMount } from "svelte";
-  import { path } from "../../services/models";
+  import { path } from "../../services/url";
   import { getIsoDateStr } from "../../services/dates";
   import Index from "../../components/posts/Index.svelte";
 

@@ -1,5 +1,5 @@
 <script>
-  import { path } from "../../services/models";
+  import { path } from "../../services/url";
   import Entry from "../Entry.svelte";
   import OtherLangs from "./OtherLangs.svelte";
   export let post;

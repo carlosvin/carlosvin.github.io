@@ -1,15 +1,16 @@
 <script context="module">
-  import { path } from "../../services/models";
+  import { path } from "../../services/url";
 
   export async function preload({ params, query }) {
     const [slug, lang] = params.slug;
     const res = await this.fetch(path(slug, lang) + ".json");
     const data = await res.json();
+    const {entry, html} = data;
     if (res.status === 200) {
       if (lang) {
-        return { post: data };
+        return { post: entry, html };
       } else {
-        this.redirect(302, path(slug, data.lang));
+        this.redirect(302, path(slug, entry.lang));
       }
     } else {
       this.error(res.status, data.message);
@@ -19,7 +20,7 @@
 
 <script>
   import { onMount } from "svelte";
-  import { url } from "../../services/models";
+  import { url } from "../../services/url";
   import { getIsoDateStr } from "../../services/dates";
   import Share from "../../components/Share.svelte";
   import OtherLangs from "../../components/posts/OtherLangs.svelte";
@@ -32,6 +33,7 @@
   });
 
   export let post;
+  export let html;
 </script>
 
 <style>
@@ -239,5 +241,5 @@
 </header>
 
 <div class="content">
-  {@html post.html}
+  {@html html}
 </div>

@@ -1,5 +1,5 @@
 
-import {url} from '../services/models';
+import {url} from '../services/url';
 
 class RssItem {
     constructor(post, baseUrl){

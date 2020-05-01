@@ -1,4 +1,4 @@
-import { url } from '../services/models';
+import { url } from '../services/url';
 import { getIsoDate } from '../services/dates';
 import { store } from '../store';
 import { BASE_URL } from '../conf';
