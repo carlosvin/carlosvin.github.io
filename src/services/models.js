@@ -3,7 +3,6 @@ import { toSlug } from './slug';
 
 const requiredFields = ['date', 'title', 'slug', 'lang'];
 
-
 export class IndexEntry {
     constructor(metadata, filename) {
         const {
@@ -14,13 +13,11 @@ export class IndexEntry {
         
 		this.title = title || doctitle;
 		this.lang = lang;
-        this.description = summary || description;
+        this.summary = summary || description;
         this.slug = slug || toSlug(filename.split('.')[0]),
         this.keywords = keywords ? keywords.split(',').map(k => k.trim()) : undefined;
         this.filename = filename;
         this.date = date || updated || modified;
-        this.validate();
-
         this.validate();
     }
 

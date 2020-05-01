@@ -1,6 +1,7 @@
 <script>
   import { path } from "../../services/url";
   import Entry from "../Entry.svelte";
+  import Details from "./Details.svelte";
   import OtherLangs from "./OtherLangs.svelte";
   export let post;
 </script>
@@ -18,11 +19,6 @@
     width: 0;
   }
 
-  .subtitle {
-    font-size: small;
-    font-family: 'Courier New', Courier, monospace;
-  }
-
   .title {
     font-size: 1.2em;
   }
@@ -32,10 +28,7 @@
   <Entry>
     <div class="container">
       <a rel="prefetch" href={path(post.slug)} class="title">{post.title}</a>
-      <div class='subtitle'>
-        <span class="date">{new Date(post.date).toLocaleDateString()}</span>
-        <OtherLangs {post}/>
-      </div>
+      <Details {post}/>
       <div class="description">
         <div class="content">
           {#if post.summary}

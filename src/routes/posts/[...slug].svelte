@@ -23,7 +23,7 @@
   import { url } from "../../services/url";
   import { getIsoDateStr } from "../../services/dates";
   import Share from "../../components/Share.svelte";
-  import OtherLangs from "../../components/posts/OtherLangs.svelte";
+  import Details from "../../components/posts/Details.svelte";
 
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
@@ -53,10 +53,9 @@
     margin-bottom: 1.2em;
   }
 
-  .description {
+  .summary {
     margin: 0 0;
-    color: #644d4d;
-    
+    color: #644d4d; 
   }
 
   .content :global(h2) {
@@ -233,11 +232,12 @@
     <Share
       title={post.title}
       keywords={post.keywords}
-      text={post.description}
+      text={post.summary}
       url={url(post.slug, post.lang)} />
     </span>
   </h1>
-  <p class="description">{post.description}<OtherLangs {post}/></p>
+  <Details {post}/>
+  <p class="summary">{post.summary}</p>
 </header>
 
 <div class="content">
