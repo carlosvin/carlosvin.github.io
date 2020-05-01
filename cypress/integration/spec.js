@@ -1,19 +1,33 @@
-describe('Sapper template app', () => {
+describe('Index page', () => {
 	beforeEach(() => {
 		cy.visit('/')
 	});
 
 	it('has the correct <h1>', () => {
-		cy.contains('h1', 'Great success!')
+		cy.contains('h1', 'Recent posts')
 	});
 
-	it('navigates to /about', () => {
-		cy.get('nav a').contains('about').click();
-		cy.url().should('include', '/about');
+});
+
+describe('Navigation bar', () => {
+	beforeEach(() => {
+		cy.visit('/')
 	});
 
-	it('navigates to /blog', () => {
-		cy.get('nav a').contains('blog').click();
-		cy.url().should('include', '/blog');
+	function assertNav(name, path) {
+		cy.get('nav a').contains(name).click();
+		cy.url().should('include', path);
+	}
+
+	it('navigates to about > home > categories', () => {
+		assertNav('About', '/about');
+		assertNav('Carlos says "bla bla"', '/');
+		assertNav('Categories', '/categories');
+	});
+
+	it('navigates to categories > home > about', () => {
+		assertNav('Categories', '/categories');
+		assertNav('Carlos says "bla bla"', '/');
+		assertNav('About', '/about');
 	});
 });
