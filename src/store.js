@@ -14,8 +14,8 @@ class BlogStore {
         for (const p of allAdoc) {
             const post = new Post(p);
             this._add(post);
-            this._categorize(post);
-            this._addLang(p);
+            this._categorize(post.entry);
+            this._addLang(post.entry);
         }
         this._addOtherLangs();
         this._generateIndex();
@@ -73,17 +73,17 @@ class BlogStore {
         return post;
     }
 
-    _categorize(postModel) {
-        if (postModel.keywords) {
-            postModel.keywords
+    _categorize(meta) {
+        if (meta.keywords) {
+            meta.keywords
                 .map(k => [toSlug(k), toCapitalize(k)])
                 .forEach(([slug, name]) => {
                     let posts = this._postsByCategory.get(slug);
                     if (posts === undefined) {
-                        posts = [postModel];
+                        posts = [meta];
                         this._postsByCategory.set(slug, posts);
                     } else {
-                        posts.push(postModel);
+                        posts.push(meta);
                     }
                     this._categories.set(slug, name);
                 });
