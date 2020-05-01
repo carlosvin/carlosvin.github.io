@@ -13,6 +13,12 @@ class BlogStore {
         this._postsByCategory = new Map();
         this._lang = getLangSimplified();
         allAdoc.forEach(post => this._add(post)); // adds post to this._posts
+        for (const byLang of this._posts.values()) {
+            const langs = Object.keys(byLang);
+            for (const lang in byLang) {
+                byLang[lang].otherLangs = langs.filter(l => l !== byLang[lang].lang);
+            }
+        }
         this._generateIndex();
     }
 
@@ -25,7 +31,6 @@ class BlogStore {
                 // TODO maybe it should try to get default site lang instead of first available
                 post = byLang[langs[0]];
             }
-            post.otherLangs = langs.filter(l => l !== post.lang);
             const entry = BlogStore._toIndexEntry(post);
             this._index.push(entry);
             this._categorize(entry);
