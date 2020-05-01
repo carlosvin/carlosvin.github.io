@@ -4,16 +4,16 @@
 
   export async function preload({ params, query }) {
     const [slug, lang] = params.slug;
-    if (lang) {
-      const res = await this.fetch(path(slug, lang) + ".json");
-      const data = await res.json();
-      if (res.status === 200) {
-        return { post: data, isCanonical: !lang };
+    const res = await this.fetch(path(slug, lang) + ".json");
+    const data = await res.json();
+    if (res.status === 200) {
+      if (lang) {
+        return { post: data };
       } else {
-        this.error(res.status, data.message);
+        this.redirect(302, path(slug, data.lang));
       }
     } else {
-      this.redirect(302, path(slug, getLangSimplified()));
+      this.error(res.status, data.message);
     }
   }
 </script>
@@ -33,7 +33,6 @@
   });
 
   export let post;
-  export let isCanonical = false;
 </script>
 
 <style>
@@ -215,9 +214,6 @@
   <title>{post.title}</title>
   <meta name="date" content={getIsoDateStr(post.date)} scheme="YYYY-MM-DD" />
   <meta name="description" content={post.summary} />
-  {#if isCanonical}
-    <link rel="canonical" href={path(post.slug, post.lang)} />
-  {/if}
   <link
     rel="preload"
     href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/vs.min.css"
