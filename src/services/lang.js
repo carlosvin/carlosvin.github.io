@@ -21,7 +21,7 @@ export function getConfValue(value, lang = undefined) {
     if (lang in value) {
         return value[lang];
     } else {
-        lang = getLang();
+        lang = getLangSimplified();
         if (lang in value) {
             return value[lang];
         } else {
