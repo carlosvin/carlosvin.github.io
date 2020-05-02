@@ -48,7 +48,6 @@ describe('Post View', () => {
 				date: '01/01/2019'
 			},
 		}
-		assertPost('/posts/react-typescript-parcel', 'Create SPA: React + Typescript + Parcel' ,'01/01/2019')
 		for (const [slug, d] of Object.entries(inputs)) {
 			for (const [lang, title] of Object.entries(d.titles)) {
 				console.warn(lang, slug, title)
