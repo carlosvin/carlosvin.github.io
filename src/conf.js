@@ -1,6 +1,6 @@
 export const SITE_NAME = {
-    "es": 'Carlos says "bla bla"',
-    "en": 'Carlos dice "bla bla"',
+    "en": 'Carlos says "bla bla"',
+    "es": 'Carlos dice "bla bla"',
 };
 
 export const SITE_DESCRIPTION = {
