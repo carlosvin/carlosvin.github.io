@@ -10,7 +10,7 @@
 </script>
 
 <script>
-  import { CATEGORIES_BASE_PATH } from "../../conf";
+  import { categoryPath } from "../../services/url";
   import { getSiteName } from "../../services/lang";
   import Index from "../../components/Index.svelte";
   import Entry from "../../components/Entry.svelte";
@@ -30,7 +30,7 @@
 <Index>
   {#each categories as [slug, name]}
     <Entry>
-      <a rel="prefetch" href="{CATEGORIES_BASE_PATH}/{slug}">
+      <a rel="prefetch" href={categoryPath(slug)}>
       {name}
       </a>
     </Entry>

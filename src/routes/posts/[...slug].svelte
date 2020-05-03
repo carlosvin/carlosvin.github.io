@@ -41,6 +41,7 @@
     font-size: 2em;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 0;
   }
 
   .share {
@@ -55,7 +56,9 @@
 
   .summary {
     margin: 0 0;
-    color: #644d4d; 
+    color: #644d4d;
+    line-height: 1.2em;
+    margin-bottom: 0.2em;
   }
 
   .content :global(h2) {
@@ -236,8 +239,8 @@
       url={url(post.slug, post.lang)} />
     </span>
   </h1>
-  <Details {post}/>
   <p class="summary">{post.summary}</p>
+  <Details {post}/>
 </header>
 
 <div class="content">

@@ -28,14 +28,14 @@
   <Entry>
     <div class="container">
       <a rel="prefetch" href={path(post.slug)} class="title">{post.title}</a>
-      <Details {post}/>
+      {#if post.summary}
       <div class="description">
         <div class="content">
-          {#if post.summary}
             <span class="summary">{post.summary}.</span>
-          {/if}
         </div>
       </div>
+      {/if}
+      <Details {post}/>
     </div>
   </Entry>
 {/if}

@@ -12,9 +12,6 @@
 .lang:not(:last-child)::after {
     content: ", ";
 }
-.langs::before {
-    content: " - ";
-}
 </style>
 
 <svelte:head>

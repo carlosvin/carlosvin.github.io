@@ -1,4 +1,4 @@
-import { BLOG_BASE_PATH, BASE_URL } from '../conf';
+import { BLOG_BASE_PATH, BASE_URL, CATEGORIES_BASE_PATH } from '../conf';
 
 export function path(slug, lang = '') {
     if (lang) {
@@ -10,4 +10,8 @@ export function path(slug, lang = '') {
 
 export function url(slug, lang = ''){
     return `${BASE_URL}${path(slug, lang)}`;
+}
+
+export function categoryPath(slug){
+    return `${CATEGORIES_BASE_PATH}/${slug}`;
 }

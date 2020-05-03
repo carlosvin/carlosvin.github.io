@@ -1,10 +1,8 @@
 <script context="module">
-  import { CATEGORIES_BASE_PATH, BLOG_BASE_PATH } from "../../conf";
+  import { categoryPath } from "../../services/url";
 
   export async function preload({ params, query }) {
-    const res = await this.fetch(
-      `${CATEGORIES_BASE_PATH}/${params.slug}.json`
-    );
+    const res = await this.fetch(`${categoryPath(params.slug)}.json`);
     const data = await res.json();
 
     if (res.status === 200) {
