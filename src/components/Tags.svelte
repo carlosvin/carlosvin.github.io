@@ -1,17 +1,21 @@
 <script>
     import Tag from './Tag.svelte';
-    import {categoryPath} from '../services/url';
+    
     export let tagList = [];
 </script>
 
 <style>
-    
+span {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
 </style>
 
 {#if tagList}
     <span>
     {#each tagList as t}
-        <Tag title={t} href={categoryPath(t)} />
+        <Tag title={t} />
     {/each}
     </span>
 {/if}

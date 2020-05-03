@@ -21,14 +21,17 @@
 
   export let category;
   export let posts;
+
+  $: title = `Posts related with ${category}`;
 </script>
 
 <style></style>
 
 <svelte:head>
-  <title>{category}</title>
-  <meta name="description" content={`Posts related with ${category}`} />
+  <title>{title}</title>
+  <meta name="description" content={title} />
 </svelte:head>
-<h1>{`Posts related with ${category}`}</h1>
+
+<h1>{title}</h1>
 
 <Index {posts}/>
