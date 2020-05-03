@@ -9,7 +9,7 @@ class BlogStore {
         this._posts = new Map();
         this._langs = new Map();
         this._categories = new Map();
-        this._postsByCategory = new Map();
+        this._slugsByCategory = new Map();
         this._lang = getLangSimplified();
         for (const p of allAdoc) {
             const post = new Post(p);
@@ -78,13 +78,12 @@ class BlogStore {
             meta.keywords
                 .map(k => [toSlug(k), toCapitalize(k)])
                 .forEach(([slug, name]) => {
-                    let posts = this._postsByCategory.get(slug);
+                    let posts = this._slugsByCategory.get(slug);
                     if (posts === undefined) {
-                        posts = [meta];
-                        this._postsByCategory.set(slug, posts);
-                    } else {
-                        posts.push(meta);
-                    }
+                        posts = new Set();
+                        this._slugsByCategory.set(slug, posts);
+                    } 
+                    posts.add(meta.slug);
                     this._categories.set(slug, name);
                 });
         }
@@ -107,8 +106,10 @@ class BlogStore {
     }
 
     getByCategory(categorySlug) {
-        const posts = this._postsByCategory.get(categorySlug);
-        return posts ? posts : [];
+        const slugs = this._slugsByCategory.get(categorySlug);
+        return [...[...slugs]
+            .map(s => this.get(s))
+            .map(s => s.entry)];
     }
 
     get(slug, lang = undefined) {
