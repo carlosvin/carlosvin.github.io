@@ -55,10 +55,9 @@
   }
 
   .summary {
-    margin: 0 0;
+    margin: 0.2em 0 0.6em 0;
     color: #644d4d;
     line-height: 1.2em;
-    margin-bottom: 0.2em;
   }
 
   .content :global(h2) {
