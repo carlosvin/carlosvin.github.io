@@ -1,1 +1,0 @@
-import{C as n,B as r,l as t}from"./client.f1e1f8a7.js";function $(n,t=""){return t?`/${r}/${n}/${t}`:`/${r}/${n}`}function a(n,r=""){return`${t}${$(n,r)}`}function s(r){return`${n}/${r}`}export{s as c,$ as p,a as u};
