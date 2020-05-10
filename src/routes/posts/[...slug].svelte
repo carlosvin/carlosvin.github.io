@@ -210,6 +210,29 @@
   .content :global(.toc) {
     font-size: 1.2em;
   }
+
+  .content :global(.listingblock) {
+    line-height: 1.2em;
+    background: rgba(0, 0, 0, 0.05);
+  }
+  .content :global(.listingblock .title) {
+    font-size: 1em;
+    padding: 0.1em 0.6em;
+  }
+  .content :global(pre.highlight) {
+    margin: 0;
+  }
+  .content :global(.colist p) {
+    margin: 0;
+  }
+  .content :global(.colist li) {
+    margin: 0;
+  }
+  .content :global(.colist ol) {  
+    margin: 0.1em 0.6em;
+    margin-inline-start: 0.6em;
+    padding-inline-start: 0.6em;    
+  }
 </style>
 
 <svelte:head>
