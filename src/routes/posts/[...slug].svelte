@@ -1,5 +1,6 @@
 <script context="module">
   import { path } from "../../services/url";
+  import { IndexEntry } from "../../services/models";
 
   export async function preload({ params, query }) {
     const [slug, lang] = params.slug;
@@ -8,7 +9,7 @@
     const {entry, html} = data;
     if (res.status === 200) {
       if (lang) {
-        return { post: entry, html };
+        return { post: new IndexEntry(entry), html };
       } else {
         this.redirect(302, path(slug, entry.lang));
       }
@@ -32,9 +33,11 @@
       x => (x.href = document.location + new URL(x.href).hash)
     );
   });
-
   export let post;
   export let html;
+
+  let jsonLd = `<script type="application/ld+json">${post.jsonLd +
+    "<"}/script>`;
 </script>
 
 <style>
@@ -64,6 +67,7 @@
 
 <svelte:head>
   <title>{post.title}</title>
+  {@html jsonLd}
   <meta name="date" content={getIsoDateStr(post.date)} scheme="YYYY-MM-DD" />
   <meta name="description" content={post.summary} />
   <link

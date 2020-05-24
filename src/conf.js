@@ -8,6 +8,8 @@ export const SITE_DESCRIPTION = {
     "en": "What is going on in my mind and its surroundings",
 };
 
+export const AUTHOR = "Carlos Martin Sanchez";
+
 export const BLOG_BASE_PATH = 'posts';
 export const CATEGORIES_BASE_PATH = 'categories';
 
