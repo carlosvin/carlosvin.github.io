@@ -1,12 +1,12 @@
 
 import { writable } from 'svelte/store';
 import { getLang, getLangSimplified } from './lang';
+import { DEFAULT_LANG } from '../conf';
 
 const langs = {
     en: import('../langs/en.js'),
     es: import('../langs/es.js'),
 };
-
 
 class Localization {
 
@@ -14,7 +14,7 @@ class Localization {
         this._lang = getLangSimplified();
         this._df = new Intl.DateTimeFormat(getLang());
         this._nf = new Intl.NumberFormat(getLang(), { notation: "compact", compactDisplay: "short" });
-        if (!this._lang in langs) {
+        if (!(this._lang in langs)) {
             this._lang = DEFAULT_LANG;
         }
         this._translations = undefined;

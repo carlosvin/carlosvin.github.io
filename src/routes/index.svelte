@@ -1,12 +1,10 @@
 <script context="module">
-  export function preload({ params, query }) {
+  export function preload() {
     this.fetch(`rss`);
     this.fetch('sitemap.xml');
     return this.fetch(`index.json`)
       .then(r => r.json())
-      .then(posts => {
-        return { posts };
-      });
+      .then(posts => ({ posts }));
   }
 </script>
 

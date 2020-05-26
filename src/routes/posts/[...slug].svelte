@@ -2,9 +2,9 @@
   import { path } from "../../services/url";
   import { IndexEntry } from "../../services/models";
 
-  export async function preload({ params, query }) {
+  export async function preload({ params }) {
     const [slug, lang] = params.slug;
-    const res = await this.fetch(path(slug, lang) + ".json");
+    const res = await this.fetch(`${path(slug, lang)  }.json`);
     const data = await res.json();
     const {entry, html} = data;
     if (res.status === 200) {
@@ -16,6 +16,7 @@
     } else {
       this.error(res.status, data.message);
     }
+    return false;
   }
 </script>
 
@@ -36,8 +37,7 @@
   export let post;
   export let html;
 
-  let jsonLd = `<script type="application/ld+json">${post.jsonLd +
-    "<"}/script>`;
+  let ldScript = post.jsonLdScript;
 </script>
 
 <style>
@@ -67,7 +67,7 @@
 
 <svelte:head>
   <title>{post.title}</title>
-  {@html jsonLd}
+  {@html ldScript}
   <meta name="date" content={getIsoDateStr(post.date)} scheme="YYYY-MM-DD" />
   <meta name="description" content={post.summary} />
   <link

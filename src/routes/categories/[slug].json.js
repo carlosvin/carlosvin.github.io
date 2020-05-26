@@ -2,7 +2,7 @@ import {store} from '../../store';
 import {reply} from '../../services/http';
 import { DEFAULT_LANG } from '../../conf';
 
-export function get(req, res, next) {
+export function get(req, res) {
 	const {slug}  = req.params;
 	const category = store.categories.get(slug);
 	const posts = [...store.getByCategory(slug)];

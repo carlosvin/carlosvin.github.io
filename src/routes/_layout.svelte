@@ -1,46 +1,46 @@
 <script>
-	import Nav from '../components/Nav.svelte';
-  	import { getSiteName } from "../services/lang";
-	import Social from '../components/Social.svelte';
-	import IconLink from '../components/IconLink.svelte';
+  import Nav from "../components/Nav.svelte";
+  import { getSiteName } from "../services/lang";
+  import Social from "../components/Social.svelte";
+  import IconLink from "../components/IconLink.svelte";
 
-	export let segment;
+  export let segment;
 
-	const siteName = getSiteName();
-	const rssTitle = `Subscribe to ${siteName}`;
-	const rssUrl = `/rss`;
+  const siteName = getSiteName();
+  const rssTitle = `Subscribe to ${siteName}`;
+  const rssUrl = `/rss`;
 </script>
 
 <style>
-	main {
-		position: relative;
-		max-width: 86%;
-		background-color: white;
-		padding: 2em;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
+  main {
+    position: relative;
+    max-width: 86%;
+    background-color: white;
+    padding: 2em;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
 
-	@media (max-width: 32em) {
-		main {
-			max-width: unset;
-		}
-	}
+  @media (max-width: 32em) {
+    main {
+      max-width: unset;
+    }
+  }
 </style>
 
 <svelte:head>
-	<link
-		rel="alternate"
-		type="application/rss+xml"
-		title={rssTitle}
-		href={rssUrl} />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={rssTitle}
+    href={rssUrl} />
 </svelte:head>
 <Nav {segment} {siteName}>
-	<Social>
-		<IconLink icon="rss" href={rssUrl} title={rssTitle} />
-	</Social>
+  <Social>
+    <IconLink icon="rss" href={rssUrl} title={rssTitle} />
+  </Social>
 </Nav>
 
 <main>
-	<slot></slot>
+  <slot />
 </main>

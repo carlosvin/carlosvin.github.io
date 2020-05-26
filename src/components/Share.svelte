@@ -10,9 +10,8 @@
 
     async function share () {
         try {
-            await navigator.share({
-                title, 
-                text : text + toHashtags(keywords), 
+            await navigator.share({    title, 
+                text: text + toHashtags(keywords), 
                 url});
         } catch(err) {
             console.error('Sharing', err);

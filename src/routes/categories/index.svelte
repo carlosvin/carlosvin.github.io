@@ -1,11 +1,9 @@
 <script context="module">
-  export function preload({ params, query }) {
+  export function preload() {
     
     return this.fetch(`categories.json`)
       .then(r => r.json())
-      .then(categories => {
-        return { categories };
-      }).catch(e => console.error(e));
+      .then(categories => ({ categories })).catch(e => console.error(e));
   }
 </script>
 

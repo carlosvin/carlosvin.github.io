@@ -70,6 +70,10 @@ export class IndexEntry {
         }`;
     }
 
+    get jsonLdScript () {
+        return `<script type="application/ld+json">${this.jsonLd}</script>`;
+    }
+
     validate() {
         requiredFields.forEach(f => this._validate(f));
     }

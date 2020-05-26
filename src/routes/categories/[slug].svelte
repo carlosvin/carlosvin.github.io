@@ -1,7 +1,7 @@
 <script context="module">
   import { categoryPath } from "../../services/url";
 
-  export async function preload({ params, query }) {
+  export async function preload({ params }) {
     const res = await this.fetch(`${categoryPath(params.slug)}.json`);
     const data = await res.json();
 
@@ -14,9 +14,6 @@
 </script>
 
 <script>
-  import { onMount } from "svelte";
-  import { path } from "../../services/url";
-  import { getIsoDateStr } from "../../services/dates";
   import Index from "../../components/posts/Index.svelte";
 
   export let category;

@@ -2,8 +2,7 @@ import { url } from '../services/url';
 import { getIsoDate } from '../services/dates';
 import { store } from '../store';
 import { BASE_URL } from '../conf';
-
-const fs = require('fs');
+import fs from 'fs';
 
 const pages = [""];
 
@@ -32,7 +31,7 @@ const render = (pages, posts) => `<?xml version="1.0" encoding="UTF-8"?>
 		</url>`).join("\r\n")}
 </urlset>`;
 
-export function get(req, res, next) {
+export function get(req, res) {
 	res.setHeader("Cache-Control", `max-age=0, s-max-age=${1800}`); // 30 minutes
 	res.setHeader("Content-Type", "application/rss+xml");
 	const sitemap = render(pages, store.index);

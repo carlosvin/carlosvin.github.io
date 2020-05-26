@@ -2,7 +2,6 @@
   import { path } from "../../services/url";
   import Entry from "../Entry.svelte";
   import Details from "./Details.svelte";
-  import OtherLangs from "./OtherLangs.svelte";
   export let post;
 </script>
 

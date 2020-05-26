@@ -1,5 +1,7 @@
 <script context="module">
-  export async function preload({ params, query }) {    const {slug, lang} = params;
+  // eslint-disable-next-line require-await
+  export async function preload() {
+    // eslint-disable-next-line no-invalid-this
     this.redirect(302, '/');
   }
 </script>
