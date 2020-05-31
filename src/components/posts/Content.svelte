@@ -153,14 +153,18 @@
 
   .content :global(.listingblock) {
     line-height: 1.2em;
+    margin-bottom: 0.8em;
+    border: 1px #bbb dashed;
     background: rgba(0, 0, 0, 0.05);
   }
   .content :global(.listingblock .title) {
     font-size: 1em;
-    padding: 0.1em 0.6em;
+    padding: 0.1em 0.5em;
+    border-bottom: 1px #bbb dashed;
   }
+  
   .content :global(pre.highlight) {
-    margin: 0;
+    margin: 0.2em 0 0 0;
   }
   .content :global(.colist p) {
     margin: 0;
