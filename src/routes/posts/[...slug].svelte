@@ -72,13 +72,13 @@
   <meta name="description" content={post.summary} />
   <link
     rel="preload"
-    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/vs.min.css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css"
     as="style"
     onload="this.onload=null;this.rel='stylesheet'" />
   <noscript>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/vs.min.css" />
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css" />
   </noscript>
 </svelte:head>
 
