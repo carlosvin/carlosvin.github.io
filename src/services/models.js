@@ -63,10 +63,7 @@ export class IndexEntry {
               "@type": "Person",
               "name": "${this.author}"
             },
-            "publisher":{
-                "@type":"Person",
-                "name": "${this.author}"
-            }
+            "publisher": "${this.author}"
         }`;
     }
 
