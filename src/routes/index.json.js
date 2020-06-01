@@ -1,11 +1,25 @@
 import {store} from '../store';
+import { getSiteName, getDescription } from "../services/lang";
 
-const contents = JSON.stringify(store.index);
+const ld = `<script type="application/ld+json">{
+	"@context": "http://schema.org",
+	"@type": "WebPage",
+	"name": ${getSiteName()},
+	"description": "${getDescription()}",
+	"publisher": {
+		"@type": "ProfilePage",
+		"name": "Patrick's Website"
+	}
+}</script>`;
+
+const indexData = JSON.stringify({
+	ld,
+	index: store.index,
+	name: getSiteName(),
+	description: getDescription()
+});
 
 export function get(req, res) {
-	res.writeHead(200, {
-		'Content-Type': 'application/json'
-	});
-
-	res.end(contents);
+	res.writeHead(200, {'Content-Type': 'application/json'});
+	res.end(indexData);
 }

@@ -4,27 +4,27 @@
     this.fetch('sitemap.xml');
     return this.fetch(`index.json`)
       .then(r => r.json())
-      .then(posts => ({ posts }));
+      .then(indexData => ({ ...indexData }));
   }
 </script>
 
 <script>
   import Index from "../components/posts/Index.svelte";
   import Header from "../components/posts/Header.svelte";
-  import { getSiteName, getDescription } from "../services/lang";
 
-  export let posts;
-
-  $: numPosts = posts ? posts.length : 0;
+  export let index;
+  export let name;
+  export let description;
+  export let ld;
+  
+  $: numPosts = index ? index.length : 0;
 </script>
 
-<style>
-</style>
-
-<svelte:head>
-  <title>{getSiteName()}</title>
-  <meta name="description" content={getDescription()} />
-</svelte:head>
+<sapper:head>
+  <title>{name}</title>
+  <meta name="description" content={description} />
+  {@html ld}
+</sapper:head>
 
 <Header {numPosts}/>
-<Index {posts}/>
+<Index posts={index}/>
