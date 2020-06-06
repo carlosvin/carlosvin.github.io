@@ -47,13 +47,6 @@ class BlogStore {
         return post;
     }
 
-    getByLang(inputLang) {
-        // TODO we could improve the performance here by storing posts by lang in a different map
-        return [...this.posts.values()]
-            .map(byLang => byLang[inputLang])
-            .filter(c => c !== undefined);
-    }
-
     _add(post) {
         const { slug, lang } = post.entry;
         let translatedPosts = this._posts.get(slug);
