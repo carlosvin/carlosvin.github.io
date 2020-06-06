@@ -19,39 +19,54 @@ describe('Post View', () => {
 		cy.get('.subtitle .date').contains('19/04/2020')
 	});
 
-	function assertPost(path, title, date) {
+	function assertPost(path, title, date, otherLangs = undefined) {
 		cy.visit(path)
 		cy.get('.subtitle .date').contains(date)
 		cy.get('main header h1').contains(title)
+		if (otherLangs) {
+			cy.log(otherLangs)
+			cy.get('.langs.summary').contains('Available in ' + otherLangs)
+		}
 	}
 
 	it('Post renders', () => {
 		const inputs = {
 			'this-is-sapper': { 
 				titles: { en: 'This is Sapper!' }, 
-				date: '19/04/2020' 
+				date: '19/04/2020',
+				otherLangs: {
+					'en': undefined,
+					'es': undefined
+				}
 			},
 			'debug-libtool-lib': { 
 				titles: { 
 					es: 'Depurar librería generada con libtool' 
 				}, 
-				date: '01/02/2013' 
+				date: '01/02/2013',
+				otherLangs: {
+					'es': undefined,
+					'en': undefined
+				}
 			},
 			'react-typescript-parcel': { 
 				titles: {
 					en: 'Create SPA: React + Typescript + Parcel',
 					es: 'SPA: React + Typescript + Parcel',
 				},
-				date: '01/01/2019'
+				date: '01/01/2019',
+				otherLangs: {
+					'en': 'es',
+					'es': 'en' 
+				}
 			},
 		}
 		for (const [slug, d] of Object.entries(inputs)) {
 			for (const [lang, title] of Object.entries(d.titles)) {
-				console.warn(lang, slug, title)
-				assertPost(path(slug, lang), title, d.date)
-				assertPost(`/${lang}/posts/${slug}`, title, d.date)
+				assertPost(path(slug, lang), title, d.date, d.otherLangs[lang])
+				assertPost(`/${lang}/posts/${slug}`, title, d.date, d.otherLangs[lang])
 			}
-			assertPost(path(slug), Object.values(d.titles)[0], d.date)
+			assertPost(path(slug), Object.values(d.titles)[0], d.date, d.otherLangs['en'])
 		}
 	});
 
