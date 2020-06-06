@@ -54,7 +54,8 @@ export class IndexEntry {
               "@id": "https://google.com/article"
             },
             "headline": "${this.title}",
-            "alternativeHeadline": "${this.description}",
+            "alternativeHeadline": "${this.summary}",
+            "description": "${this.summary}",
             "image": "${this.previewImage}",
             "datePublished": "${this.date}",
             "dateModified": "${this.modified}",
