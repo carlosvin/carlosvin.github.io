@@ -8,7 +8,7 @@ const ld = `<script type="application/ld+json">{
 	"description": "${getDescription()}",
 	"publisher": {
 		"@type": "ProfilePage",
-		"name": "Patrick's Website"
+		"name": "${getSiteName()}"
 	}
 }</script>`;
 
