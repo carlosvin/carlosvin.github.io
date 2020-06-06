@@ -14,14 +14,6 @@
 }
 </style>
 
-<svelte:head>
-{#if post.otherLangs && post.otherLangs.length > 0}
-    {#each post.otherLangs as lang}
-        <link rel="alternate" hreflang={lang} href={path(post.slug, lang)} />
-    {/each}
-{/if}
-</svelte:head>
-
 {#if post.otherLangs && post.otherLangs.length > 0}
 <span class="langs summary">
     Available in

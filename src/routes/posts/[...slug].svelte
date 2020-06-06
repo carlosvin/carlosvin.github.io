@@ -70,6 +70,11 @@
   {@html ldScript}
   <meta name="date" content={getIsoDateStr(post.date)} scheme="YYYY-MM-DD" />
   <meta name="description" content={post.summary} />
+  {#if post.otherLangs && post.otherLangs.length > 0}
+      {#each post.otherLangs as lang}
+          <link rel="alternate" hreflang={lang} href={path(post.slug, lang)} />
+      {/each}
+  {/if}
   <link
     rel="preload"
     href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css"

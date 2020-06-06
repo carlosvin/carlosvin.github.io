@@ -28,7 +28,9 @@
       <Entry><a rel="prefetch" href={oldPath(post)} class="title">{post.title} - {post.lang}</a></Entry>
       {#if post.otherLangs}
         {#each post.otherLangs as lang}
-          <Entry><a rel="prefetch" href={oldPath({...post, lang})} class="title">{post.title} - {lang}</a></Entry>
+          <Entry>
+            <a rel="prefetch" href={oldPath({...post, lang})} class="title">{post.title} - {lang}</a>
+          </Entry>
         {/each}
       {/if}
   {/each}
