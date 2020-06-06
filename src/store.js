@@ -32,17 +32,10 @@ class BlogStore {
     }
 
     _generateIndex() {
-        this._index = [];
-        for (const byLang of this._posts.values()) {
-            let post = byLang[this._lang];
-            const langs = Object.keys(byLang);
-            if (!post) {
-                // TODO maybe it should try to get default site lang instead of first available
-                post = byLang[langs[0]];
-            }
-            this._index.push(post.entry);
-        }
-        this._index.sort((a, b) => b.date && b.date.localeCompare(a.date));
+        this._index = [...this.posts.values()]
+            .map(byLang => byLang[this._lang] || Object.values(byLang)[0])
+            .map(c => c.entry)
+            .sort((a, b) => b.date && b.date.localeCompare(a.date));
     }
 
     _addLang(post) {
