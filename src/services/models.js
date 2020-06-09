@@ -1,4 +1,4 @@
-import { url as gUrl, path as gPath } from './url';
+import { url as gUrl, path as gPath, categoryPath } from './url';
 import { toSlug } from './slug';
 import { AUTHOR } from '../conf';
 
@@ -90,5 +90,18 @@ export class Post {
     constructor({ metadata, html, filename }) {
         this.entry = new IndexEntry(metadata, filename);
         this.html = html;
+    }
+}
+
+export class Category {
+    constructor({name, slug}) {
+        this.name = name;
+        this.slug = slug;
+        this.path = categoryPath(slug);
+        this.jsonLd = {
+            "@type": "ListItem",
+            "name": this.name,
+            "url": this.path    
+        };
     }
 }

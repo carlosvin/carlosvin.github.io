@@ -4,12 +4,7 @@
   export async function preload({ params }) {
     const res = await this.fetch(`${categoryPath(params.slug)}.json`);
     const data = await res.json();
-
-    if (res.status === 200) {
-      return data;
-    } else {
-      this.error(res.status, data.message);
-    }
+    return res.status === 200 ? data : this.error(res.status, data.message);
   }
 </script>
 
@@ -19,10 +14,8 @@
   export let category;
   export let posts;
 
-  $: title = `Posts related with ${category}`;
+  let title = `Posts related with ${category.name}`;
 </script>
-
-<style></style>
 
 <svelte:head>
   <title>{title}</title>

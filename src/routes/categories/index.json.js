@@ -1,10 +1,8 @@
 import {store} from '../../store';
+import {reply} from '../../services/http';
 
-const categories = JSON.stringify([...store.categories.entries()]);
+const categories = [...store.categories.values()];
 
 export function get(req, res) {
-	res.writeHead(200, {
-		'Content-Type': 'application/json'
-	});
-	res.end(categories);
+	reply(res, categories);
 }

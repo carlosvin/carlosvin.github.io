@@ -1,7 +1,7 @@
 import allAdoc from '../posts/**/*.adoc';
 import { toSlug, toCapitalize } from './services/slug';
 import { getLangSimplified } from './services/lang';
-import {Post} from './services/models';
+import {Post, Category} from './services/models';
 
 class BlogStore {
 
@@ -70,7 +70,7 @@ class BlogStore {
                         this._slugsByCategory.set(slug, posts);
                     } 
                     posts.add(meta.slug);
-                    this._categories.set(slug, name);
+                    this._categories.set(slug, new Category({slug, name}));
                 });
         }
     }

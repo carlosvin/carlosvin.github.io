@@ -13,5 +13,5 @@ export function url(slug, lang = ''){
 }
 
 export function categoryPath(slug){
-    return `${CATEGORIES_BASE_PATH}/${slug}`;
+    return `/${CATEGORIES_BASE_PATH}/${slug}`;
 }
