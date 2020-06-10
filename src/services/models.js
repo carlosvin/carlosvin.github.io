@@ -11,7 +11,7 @@ export class IndexEntry {
             summary, description,
             slug, keywords, lang,
             date, updated, modified,
-            previewImage, author,
+            previewimage, author,
             otherLangs
         } = metadata;
 
@@ -24,7 +24,7 @@ export class IndexEntry {
         this.modified = updated || modified || date;
         this.date = date || updated || modified;
         this.author = author || AUTHOR;
-        this.previewImage = previewImage || 'icons/icon-192x192.png';
+        this.previewimage = previewimage || 'icons/icon-192x192.png';
         this.otherLangs = otherLangs;
         this.validate();
     }
@@ -58,7 +58,7 @@ export class IndexEntry {
             "headline": "${this.title}",
             "alternativeHeadline": "${this.summary}",
             "description": "${this.summary}",
-            "image": "${this.previewImage}",
+            "image": "${this.previewimage}",
             "datePublished": "${this.date}",
             "dateModified": "${this.modified}",
             "keywords": "${this.keywords}",
