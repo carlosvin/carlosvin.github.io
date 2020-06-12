@@ -37,7 +37,7 @@ export default {
 
 			legacy && babel({
 				extensions: ['.js', '.mjs', '.html', '.svelte'],
-				runtimeHelpers: true,
+				babelHelpers: 'runtime',
 				exclude: ['node_modules/@babel/**'],
 				presets: [
 					['@babel/preset-env', {
@@ -57,6 +57,7 @@ export default {
 			}),
 		],
 
+		preserveEntrySignatures: false,
 		onwarn,
 	},
 
@@ -64,7 +65,7 @@ export default {
 		input: config.server.input(),
 		output: config.server.output(),
 		plugins: [
-      		glob(),
+            glob(),
 			replace({
 				'process.browser': false,
 				'process.env.NODE_ENV': JSON.stringify(mode)
@@ -84,8 +85,9 @@ export default {
 		),
 
 		onwarn,
+		preserveEntrySignatures: 'strict'
 	},
-
+	
 	serviceworker: {
 		input: config.serviceworker.input(),
 		output: config.serviceworker.output(),
@@ -100,5 +102,6 @@ export default {
 		],
 
 		onwarn,
+		preserveEntrySignatures: false
 	}
 };
