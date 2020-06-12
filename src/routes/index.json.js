@@ -6,7 +6,7 @@ const description = getDescription();
 const ld = `<script type="application/ld+json">{
 	"@context": "http://schema.org",
 	"@type": "WebPage",
-	"name": ${name},
+	"name": "${name}",
 	"description": "${description}",
 	"publisher": {
 		"@type": "ProfilePage",
