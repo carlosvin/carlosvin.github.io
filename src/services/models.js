@@ -1,4 +1,5 @@
 import { url as gUrl, path as gPath, categoryPath } from './url';
+import { jsonLdScript as toLdScript } from './html';
 import { toSlug } from './slug';
 import { AUTHOR } from '../conf';
 
@@ -48,30 +49,30 @@ export class IndexEntry {
     // articleBody
 
     get jsonLd() {
-        return `{
+        return {
             "@context": "https://schema.org",
             "@type": "Article",
             "mainEntityOfPage": {
               "@type": "Webpage",
               "@id": "https://google.com/article"
             },
-            "headline": "${this.title}",
-            "alternativeHeadline": "${this.summary}",
-            "description": "${this.summary}",
-            "image": "${this.previewimage}",
-            "datePublished": "${this.date}",
-            "dateModified": "${this.modified}",
-            "keywords": "${this.keywords}",
+            "headline": this.title,
+            "alternativeHeadline": this.summary,
+            "description": this.summary,
+            "image": this.previewimage,
+            "datePublished": this.date,
+            "dateModified": this.modified,
+            "keywords": this.keywords,
             "author": {
               "@type": "Person",
-              "name": "${this.author}"
+              "name": this.author
             },
-            "publisher": "${this.author}"
-        }`;
+            "publisher": this.author
+        };
     }
 
     get jsonLdScript () {
-        return `<script type="application/ld+json">${this.jsonLd}</script>`;
+        return toLdScript(JSON.stringify(this.jsonLd));
     }
 
     validate() {
