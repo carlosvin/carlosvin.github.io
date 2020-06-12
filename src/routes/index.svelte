@@ -15,7 +15,7 @@
   export let index;
   export let name;
   export let description;
-  export let ld;
+  export let ldScript;
   
   $: numPosts = index ? index.length : 0;
 </script>
@@ -23,7 +23,7 @@
 <sapper:head>
   <title>{name}</title>
   <meta name="description" content={description} />
-  {@html ld}
+  {@html ldScript}
 </sapper:head>
 
 <Header {numPosts}/>

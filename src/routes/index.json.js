@@ -3,19 +3,23 @@ import { getSiteName, getDescription } from "../services/lang";
 
 const name = getSiteName();
 const description = getDescription();
-const ld = `<script type="application/ld+json">{
+const ld = {
 	"@context": "http://schema.org",
 	"@type": "WebPage",
-	"name": "${name}",
-	"description": "${description}",
+	"name": name,
+	"description": description,
 	"publisher": {
 		"@type": "ProfilePage",
-		"name": "${name}"
+		"name": name
 	}
-}</script>`;
+};
+
+const ldScript = `<script type="application/ld+json">
+	${JSON.stringify(ld)}
+</script>`;
 
 const indexData = JSON.stringify({
-	ld,
+	ldScript,
 	index: store.index,
 	name,
 	description
