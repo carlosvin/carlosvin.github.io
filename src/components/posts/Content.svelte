@@ -85,6 +85,7 @@
     padding: 1em 0.5em;
     border-radius: 0.2em;
     margin: 1em 0;
+    font-size: 1.1em;
   }
 
   .content :global(.admonitionblock td.icon) {
