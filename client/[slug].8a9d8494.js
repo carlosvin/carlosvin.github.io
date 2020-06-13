@@ -1,1 +1,0 @@
-import{S as s,i as t,s as a}from"./client.34f5c22a.js";import{p as r}from"./url.abc0ad7b.js";async function c({params:s}){const{slug:t,lang:a}=s;this.redirect(302,r(t,a))}export default class extends s{constructor(s){super(),t(this,s,null,null,a,{})}}export{c as preload};
