@@ -34,6 +34,10 @@
 		display: none;
 	}
 
+	img.logo {
+		max-height: 1.6em;
+	}
+
 	@media only screen and (max-width: 600px) {
 		ul.open {
 			display: flex;
@@ -51,16 +55,28 @@
 			font-size: 2em;
 			height: 2em;
 		}
+
+		.siteName {
+			display: none;
+		}
 	}
 
 </style>
 
 <nav>
-	<button on:click={toggle}>≡</button>
+	<NavEntry href='/' segment={segment}>
+		<img class='logo' src='/favicon.png' alt={siteName} />
+	</NavEntry>
 	<ul class={open ? 'open' : 'closed'}>
-		<NavEntry href='.' segment={segment}>{siteName}</NavEntry>
-		<NavEntry href='categories' segment={segment}>Categories</NavEntry>
-		<NavEntry href='about' segment={segment}>About</NavEntry>
+		
+		<span class='siteName'>
+			<NavEntry href='/' segment={segment}>{siteName}</NavEntry>
+		</span>
+		<NavEntry href='/categories' segment={segment}>Categories</NavEntry>
+		<NavEntry href='/about' segment={segment}>About</NavEntry>
 	</ul>
-	<slot></slot>
+	{#if !open}
+		<slot></slot>
+	{/if} 
+	<button on:click={toggle}>≡</button>
 </nav>
