@@ -45,12 +45,10 @@
 		}
 
 		button {
-			display: flex;
-			justify-content: flex-start;
+			display: block;
 			background: transparent;
 			border: none;
 			font-size: 2em;
-			vertical-align: top;
 			height: 2em;
 		}
 	}
