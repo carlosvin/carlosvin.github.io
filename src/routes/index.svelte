@@ -16,7 +16,6 @@
   export let name;
   export let description;
   export let ldScript;
-  
   $: numPosts = index ? index.length : 0;
 </script>
 

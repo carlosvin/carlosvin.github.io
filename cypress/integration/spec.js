@@ -21,13 +21,13 @@ describe('Navigation bar', () => {
 
 	it('navigates to about > home > categories', () => {
 		assertNav('About', '/about');
-		assertNav('Carlos says "bla bla"', '/');
+		assertNav('Carlos says bla bla', '/');
 		assertNav('Categories', '/categories');
 	});
 
 	it('navigates to categories > home > about', () => {
 		assertNav('Categories', '/categories');
-		assertNav('Carlos says "bla bla"', '/');
+		assertNav('Carlos says bla bla', '/');
 		assertNav('About', '/about');
 	});
 });
