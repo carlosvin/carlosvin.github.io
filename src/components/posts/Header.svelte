@@ -1,6 +1,7 @@
 
 <script>
   export let numPosts;
+  export let title = numPosts > 0 ? 'Recent posts' : `There are no posts`;
 </script>
 
 <style>
@@ -13,14 +14,7 @@
   }
 </style>
 
-
 <header>
-
-{#if numPosts > 0}
-  <h1>Recent posts</h1>
-  <span>Total {numPosts}</span>
-{:else}
-  <h1>There are no posts</h1>
-{/if}
+  <h1>{title}</h1>
+  <slot></slot>
 </header>
-
