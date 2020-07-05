@@ -22,6 +22,4 @@
   <meta name="description" content={title} />
 </svelte:head>
 
-<h1>{title}</h1>
-
-<Index {posts}/>
+<Index {posts} {title}/>

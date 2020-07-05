@@ -10,13 +10,11 @@
 
 <script>
   import Index from "../components/posts/Index.svelte";
-  import Header from "../components/posts/Header.svelte";
 
   export let index;
   export let name;
   export let description;
   export let ldScript;
-  $: numPosts = index ? index.length : 0;
 </script>
 
 <sapper:head>
@@ -25,5 +23,4 @@
   {@html ldScript}
 </sapper:head>
 
-<Header {numPosts}/>
-<Index posts={index}/>
+<Index posts={index} />
