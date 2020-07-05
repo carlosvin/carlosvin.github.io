@@ -163,7 +163,9 @@
     padding: 0.1em 0.5em;
     border-bottom: 1px #bbb dashed;
   }
-  
+  .content :global(.hljs-comment) {
+    color: #777070 !important; 
+  }
   .content :global(pre.highlight) {
     margin: 0.2em 0 0 0;
   }
