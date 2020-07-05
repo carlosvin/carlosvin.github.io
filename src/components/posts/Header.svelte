@@ -9,8 +9,15 @@
     display: flex;
     flex-flow: row;
   }
+
   h1 {
     flex-grow: 1;
+  }
+
+  @media screen and (max-width: 640px) {
+    header {
+      flex-flow: column;
+    }
   }
 </style>
 

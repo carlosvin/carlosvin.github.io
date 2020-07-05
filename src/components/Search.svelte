@@ -19,7 +19,28 @@
     }
 </script>
 
-<label>
-    {founds ? founds.length : ''}
-    <input type="search" placeholder="Search" bind:value={search} />
-</label>
+<style>
+label {
+    font-size: smaller;
+    color: gray;
+}
+
+span {
+    display: flex;
+    flex-flow: column;
+}
+
+ @media screen and (max-width: 640px) {
+    span {
+      flex-flow: row;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+<span>
+<input type="search" placeholder="Search" bind:value={search} id='search-posts'/>
+{#if founds}
+<label for='search-posts'>{`Found ${founds.length}`}</label>
+{/if}
+</span>
