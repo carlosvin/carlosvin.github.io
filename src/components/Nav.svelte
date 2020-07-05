@@ -64,14 +64,15 @@
 </style>
 
 <nav>
-	<NavEntry href='/' segment={segment}>
-		<img class='logo' src='/favicon.png' alt={siteName} />
-	</NavEntry>
+	<ul>
+		<NavEntry href='/' segment={segment}>
+			<img class='logo' src='/favicon.png' alt={siteName} />
+		</NavEntry>
+	</ul>
 	<ul class={open ? 'open' : 'closed'}>
-		
-		<span class='siteName'>
-			<NavEntry href='/' segment={segment}>{siteName}</NavEntry>
-		</span>
+		<NavEntry href='/' segment={segment}>
+			<span class='siteName'>{siteName}</span>
+		</NavEntry>
 		<NavEntry href='/categories' segment={segment}>Categories</NavEntry>
 		<NavEntry href='/about' segment={segment}>About</NavEntry>
 	</ul>

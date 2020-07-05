@@ -22,7 +22,7 @@
 <style>
 label {
     font-size: smaller;
-    color: gray;
+    color: #644d4d;
 }
 
 span {
