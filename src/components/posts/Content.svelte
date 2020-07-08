@@ -88,6 +88,10 @@
     font-size: 1.1em;
   }
 
+  :global(.admonitionblock .content a) {
+    word-break: break-all;
+  }
+
   .content :global(.admonitionblock td.icon) {
     font-size: 3em;
     cursor: default;
