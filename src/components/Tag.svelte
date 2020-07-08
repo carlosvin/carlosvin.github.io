@@ -10,8 +10,8 @@ export let title;
 <style>
 a {
     text-decoration: none;
+    margin: 0.2em;
 }
-
 </style>
 
 <a href={categoryPath(toSlug(title))} {title}>

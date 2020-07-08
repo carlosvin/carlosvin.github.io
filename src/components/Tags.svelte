@@ -5,7 +5,7 @@
 </script>
 
 <style>
-span {
+.tags {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
@@ -13,7 +13,7 @@ span {
 </style>
 
 {#if tagList}
-    <span>
+    <span class='tags'>
     {#each tagList as t}
         <Tag title={t} />
     {/each}

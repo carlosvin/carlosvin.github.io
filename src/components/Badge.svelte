@@ -4,9 +4,7 @@ export let hover = true;
 <style>
 span {
     border-radius: 0.2em;
-    padding-left: 0.2em;
-    padding-right: 0.2em;
-    margin-right: 0.3em;
+    padding: 0 0.3em 0 0.3em;
     box-shadow: 0.0em 0.0em 0.1em #777;
     background: #eee;
     white-space: nowrap;
