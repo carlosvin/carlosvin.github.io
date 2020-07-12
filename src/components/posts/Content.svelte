@@ -111,6 +111,41 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  @media screen and (max-width: 480px) {
+    .content :global(.admonitionblock td.icon) {
+      font-size: 1em;
+    }
+
+    .content :global(.toc) {
+      font-size: 1em;
+    }
+
+    .content :global(.imageblock img) {
+      width: 90%;
+    }
+  }
+
+  .content :global(.dlist dd > p)  {
+    margin: 0 auto;
+  }
+
+  .content :global(.dlist dl)  {
+    margin: 0 auto;
+  }
+
+  .content :global(.toc ul) {
+    padding-right: 1em;
+    padding-left: 1em;
+  }
+
+  .content :global(.toc .sectlevel1) {
+    margin-block-start: 0.4em;
+  }
+
+  .content :global(.imageblock img) {
+    object-fit:cover;
+  }
+
   .content :global(.admonitionblock .icon > .title) {
     font-size: small;
     font-weight: lighter;
@@ -152,8 +187,13 @@
   .content :global(.hdlist .hdlist1) {
     font-weight: bold;
   }
+
   .content :global(.toc) {
     font-size: 1.2em;
+  }
+
+  .content :global(.toc li) {
+    font-size: smaller;
   }
 
   .content :global(.listingblock) {
