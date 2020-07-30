@@ -19,7 +19,7 @@
 
 <svelte:head>
   <title>{title}</title>
-  <meta name="description" content={title} />
+  <meta name="description" content="{title}" />
 </svelte:head>
 
 <Index {posts} {title}/>

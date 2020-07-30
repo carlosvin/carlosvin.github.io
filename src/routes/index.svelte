@@ -17,10 +17,10 @@
   export let ldScript;
 </script>
 
-<sapper:head>
+<svelte:head>
   <title>{name}</title>
-  <meta name="description" content={description} />
+  <meta name="description" content="{description}" />
   {@html ldScript}
-</sapper:head>
+</svelte:head>
 
 <Index posts={index} />

@@ -33,10 +33,10 @@ button::after {
 </style>
 
 {#if canShare}
-    <button on:click={share} title={title}/>
+    <button on:click={share} title="{title}"/>
 {:else}
     <IconLink 
-        href={`https://twitter.com/intent/tweet?url=${url}&text=${title}: ${text}&hashtags=${keywords.join(',')}`} 
-        title={`Share "${title}"`} 
-        icon='twitter'/>
+        href="{`https://twitter.com/intent/tweet?url=${url}&text=${title}: ${text}&hashtags=${keywords.join(',')}`}" 
+        title="{`Share "${title}"`}"
+        icon="twitter"/>
 {/if}

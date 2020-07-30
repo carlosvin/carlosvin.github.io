@@ -32,12 +32,12 @@
   <link
     rel="alternate"
     type="application/rss+xml"
-    title={rssTitle}
-    href={rssUrl} />
+    title="{rssTitle}"
+    href="{rssUrl}" />
 </svelte:head>
 <Nav {segment} {siteName}>
   <Social>
-    <IconLink icon="rss" href={rssUrl} title={rssTitle} />
+    <IconLink icon="rss" href="{rssUrl}" title="{rssTitle}" />
   </Social>
 </Nav>
 

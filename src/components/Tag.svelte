@@ -14,6 +14,6 @@ a {
 }
 </style>
 
-<a href={categoryPath(toSlug(title))} {title}>
+<a href="{categoryPath(toSlug(title))}" {title}>
     <Badge>{title}</Badge>
 </a>
