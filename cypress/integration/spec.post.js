@@ -16,12 +16,14 @@ describe('Post View', () => {
 
 	it('Header', () => {
 		cy.visit('/posts/this-is-sapper/en')
-		cy.get('.subtitle .date').contains('19/04/2020')
+		let expectedDate = new Date('2020-04-19').toLocaleDateString()
+		cy.get('.subtitle .date').contains(expectedDate)
 	});
 
 	function assertPost(path, title, date, otherLangs = undefined) {
 		cy.visit(path)
-		cy.get('.subtitle .date').contains(date)
+		let expectedDate = new Date(date).toLocaleDateString()
+		cy.get('.subtitle .date').contains(expectedDate)
 		cy.get('main header h1').contains(title)
 		if (otherLangs) {
 			cy.log(otherLangs)
@@ -33,7 +35,7 @@ describe('Post View', () => {
 		const inputs = {
 			'this-is-sapper': { 
 				titles: { en: 'This is Sapper!' }, 
-				date: '19/04/2020',
+				date: '2020-04-19',
 				otherLangs: {
 					'en': undefined,
 					'es': undefined
@@ -43,7 +45,7 @@ describe('Post View', () => {
 				titles: { 
 					es: 'Depurar librería generada con libtool' 
 				}, 
-				date: '01/02/2013',
+				date: '2013-02-01',
 				otherLangs: {
 					'es': undefined,
 					'en': undefined
@@ -54,7 +56,7 @@ describe('Post View', () => {
 					en: 'Create SPA: React + Typescript + Parcel',
 					es: 'SPA: React + Typescript + Parcel',
 				},
-				date: '01/01/2019',
+				date: '2019-01-01',
 				otherLangs: {
 					'en': 'es',
 					'es': 'en' 
