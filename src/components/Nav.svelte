@@ -66,7 +66,7 @@
 <nav>
 	<ul>
 		<NavEntry href='/' segment={segment}>
-			<img class='logo' src='/favicon.png' alt={siteName} />
+			<img class='logo' src='/favicon.png' alt="{siteName} logo" />
 		</NavEntry>
 	</ul>
 	<ul class={open ? 'open' : 'closed'}>
