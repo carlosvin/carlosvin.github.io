@@ -26,7 +26,7 @@
 {#if post}
   <Entry>
     <div class="container">
-      <a rel="prefetch" href={path(post.slug)} class="title">{post.title}</a>
+      <a rel="prefetch" href="{path(post.slug)}" class="title">{post.title}</a>
       {#if post.summary}
       <div class="description">
         <div class="content">

@@ -32,7 +32,7 @@
 
 <svelte:head>
     <title>{title}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content="{description}" />
     {@html jsonLdStr}
 </svelte:head>
 
@@ -40,7 +40,7 @@
 <Index>
   {#each categories as c}
     <Entry>
-      <a rel="prefetch" href={c.path}>{c.name}</a>
+      <a rel="prefetch" href="{c.path}">{c.name}</a>
     </Entry>
   {/each}
   <Entry>

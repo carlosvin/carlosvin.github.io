@@ -19,7 +19,7 @@
     Available in
     {#each post.otherLangs as lang}
     <span class="lang">
-        <a rel="prefetch" href={path(post.slug, lang)}>{lang}</a>
+        <a rel="alternate" hreflang="{lang}" href="{path(post.slug, lang)}">{lang}</a>
     </span>
     {/each}
 </span>

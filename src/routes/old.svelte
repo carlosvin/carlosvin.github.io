@@ -19,17 +19,17 @@
 
 <svelte:head>
   <title>{getSiteName()} - Old index</title>
-  <meta name="description" content={`Old index - ${getDescription()}`} />
+  <meta name="description" content="{`Old index - ${getDescription()}`}" />
 </svelte:head>
 
 {#if posts}
 <Index>
   {#each posts as post}
-      <Entry><a rel="prefetch" href={oldPath(post)} class="title">{post.title} - {post.lang}</a></Entry>
+      <Entry><a rel="prefetch" href="{oldPath(post)}" class="title">{post.title} - {post.lang}</a></Entry>
       {#if post.otherLangs}
         {#each post.otherLangs as lang}
           <Entry>
-            <a rel="prefetch" href={oldPath({...post, lang})} class="title">{post.title} - {lang}</a>
+            <a rel="alternate" hreflang="{lang}" href="{oldPath({...post, lang})}" class="title">{post.title} - {lang}</a>
           </Entry>
         {/each}
       {/if}
