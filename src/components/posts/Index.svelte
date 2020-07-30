@@ -5,7 +5,7 @@
   import Search from '../Search.svelte';
   import Header from './Header.svelte';
   export let posts;
-  export let title;
+  export let title = undefined;
 
   let founds;
 
