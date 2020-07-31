@@ -1,1 +1,0 @@
-import{S as s,i as t,s as e}from"./client.ad2606ec.js";async function r(){this.redirect(302,"/rss.xml")}export default class extends s{constructor(s){super(),t(this,s,null,null,e,{})}}export{r as preload};
