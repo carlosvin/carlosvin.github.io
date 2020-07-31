@@ -1,8 +1,9 @@
 <script context="module">
   export function preload() {
+    this.fetch('sitemap.xml');
     return this.fetch(`index.json`)
       .then(r => r.json())
-      .then(posts => ({ posts }));
+      .then(posts => ( {posts: posts.index}));
   }
 </script>
 
@@ -22,7 +23,6 @@
   <meta name="description" content="{`Old index - ${getDescription()}`}" />
 </svelte:head>
 
-{#if posts}
 <Index>
   {#each posts as post}
       <Entry><a rel="prefetch" href="{oldPath(post)}" class="title">{post.title} - {post.lang}</a></Entry>
@@ -35,4 +35,3 @@
       {/if}
   {/each}
 </Index>
-{/if}

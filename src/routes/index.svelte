@@ -1,7 +1,5 @@
 <script context="module">
   export function preload() {
-    this.fetch(`rss`);
-    this.fetch('sitemap.xml');
     return this.fetch(`index.json`)
       .then(r => r.json())
       .then(indexData => ({ ...indexData }));
