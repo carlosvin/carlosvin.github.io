@@ -4,8 +4,8 @@
   import Social from "../components/Social.svelte";
   import IconLink from "../components/IconLink.svelte";
   import { GA_ID } from "../conf";
-  import GoogleAnalytics from "sapper-google-analytics/GoogleAnalytics.svelte"
-  import { stores } from "@sapper/app"
+  import GoogleAnalytics from "../components/GoogleAnalytics.svelte";
+  import { stores } from "@sapper/app";
 
   export let segment;
 
