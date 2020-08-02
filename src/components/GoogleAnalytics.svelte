@@ -1,7 +1,5 @@
-<svelte:head>
-    <script src="https://www.google-analytics.com/analytics.js" async></script>
-</svelte:head>
 <script>
+    const url = 'https://www.google-analytics.com/analytics.js';
     export let stores;
     export let id;
 
@@ -22,3 +20,7 @@
         }
     }
 </script>
+<svelte:head>
+	<link href={url} rel="preload" as="script">
+    <script src={url} defer></script>
+</svelte:head>
