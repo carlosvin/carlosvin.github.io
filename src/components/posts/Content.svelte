@@ -210,8 +210,13 @@
   .content :global(.hljs-comment) {
     color: #777070 !important; 
   }
+  .content :global(.hljs-meta-string) {
+    color: #1f7199 !important; 
+  }
   .content :global(pre.highlight) {
     margin: 0.2em 0 0 0;
+    overflow: auto;
+    
   }
   .content :global(.colist p) {
     margin: 0;
