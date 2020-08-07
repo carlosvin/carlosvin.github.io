@@ -20,6 +20,10 @@ class Localization {
         this._translations = undefined;
     }
 
+    get lang() {
+        return this._lang;
+    }
+
     async init() {
         this._translations = (await langs[this._lang]).default;
         return this;

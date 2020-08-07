@@ -2,6 +2,7 @@
   export function preload() {
     this.fetch(`rss`);
     this.fetch('sitemap.xml');
+    // fetch old
     return this.fetch(`index.json`)
       .then(r => r.json())
       .then(indexData => ({ ...indexData }));

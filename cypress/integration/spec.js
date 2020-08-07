@@ -31,11 +31,24 @@ describe('Navigation bar', () => {
 		assertNav('About', '/about')
 		assertNav(getSiteName(), '/')
 		assertNav('Categories', '/categories')
-	});
+	})
 
 	it('navigates to categories > home > about', () => {
 		assertNav('Categories', '/categories')
 		assertNav(getSiteName(), '/')
 		assertNav('About', '/about')
-	});
-});
+	})
+})
+
+describe('RSS', () => {
+
+	it('has valid RSS index', () => {
+		let doc = document.open('/rss')
+		cy.log(doc.getRootNode())
+		cy.log(doc)
+		cy.request('/rss').then(r => {
+			cy.log(r.body)
+		})
+	})
+
+})

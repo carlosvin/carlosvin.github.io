@@ -1,6 +1,6 @@
 <script context="module">
   export function preload() {
-    return this.fetch(`index.json`)
+    return this.fetch('/index.json')
       .then(r => r.json())
       .then(posts => ({ posts }));
   }
