@@ -6,7 +6,7 @@
     const [slug, lang] = params.slug;
     const res = await this.fetch(`${path(slug, lang)  }.json`);
     const data = await res.json();
-    const {entry, html} = data;
+    const {entry} = data;
     if (res.status === 200) {
       if (lang) {
         return data;
@@ -16,7 +16,6 @@
     } else {
       return this.error(res.status, data.message);
     }
-    return false;
   }
 </script>
 
@@ -39,7 +38,7 @@
 
   $: post = new IndexEntry(entry);
   $: ldScript = post.ldScript;
-  
+
 </script>
 
 <style>
