@@ -6,10 +6,11 @@
     const [slug, lang] = params.slug;
     const res = await this.fetch(`${path(slug, lang)  }.json`);
     const data = await res.json();
-    const {entry} = data;
+    const {entry, html} = data;
     if (res.status === 200) {
       if (lang) {
-        return data;
+        const {jsonLdScript} = new IndexEntry(entry);
+        return {html, post: entry, jsonLdScript};
       } else {
         return this.redirect(302, path(slug, entry.lang));
       }
@@ -33,11 +34,9 @@
       x => (x.href = document.location + new URL(x.href).hash)
     );
   });
-  export let entry;
+  export let post;
   export let html;
-
-  $: post = new IndexEntry(entry);
-  $: ldScript = post.ldScript;
+  export let jsonLdScript;
 
 </script>
 
@@ -68,7 +67,7 @@
 
 <svelte:head>
   <title>{post.title}</title>
-  {@html ldScript}
+  {@html jsonLdScript}
   <meta name="date" content="{getIsoDateStr(post.date)}" scheme="YYYY-MM-DD" />
   <meta name="description" content="{post.summary}" />
   {#if post.otherLangs && post.otherLangs.length > 0}
