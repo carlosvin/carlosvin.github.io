@@ -9,12 +9,12 @@
     const {entry, html} = data;
     if (res.status === 200) {
       if (lang) {
-        return { post: new IndexEntry(entry), html };
+        return data;
       } else {
-        this.redirect(302, path(slug, entry.lang));
+        return this.redirect(302, path(slug, entry.lang));
       }
     } else {
-      this.error(res.status, data.message);
+      return this.error(res.status, data.message);
     }
     return false;
   }
@@ -34,10 +34,12 @@
       x => (x.href = document.location + new URL(x.href).hash)
     );
   });
-  export let post;
+  export let entry;
   export let html;
 
-  let ldScript = post.jsonLdScript;
+  $: post = new IndexEntry(entry);
+  $: ldScript = post.ldScript;
+  
 </script>
 
 <style>
