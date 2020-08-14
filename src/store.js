@@ -6,6 +6,7 @@ import { Post, Category } from './services/models';
 class BlogStore {
 
     constructor() {
+        this._langs = new Set();
         this._posts = new Map();
         this._categories = new Map();
         this._slugsByCategory = new Map();
@@ -17,6 +18,10 @@ class BlogStore {
         }
         this._addOtherLangs();
         this._generateIndex();
+    }
+
+    get langs () {
+        return Array.from(this._langs);
     }
 
     _addOtherLangs() {
@@ -36,6 +41,7 @@ class BlogStore {
 
     _add(post) {
         const { slug, lang } = post.entry;
+        this._langs.add(lang);
         let translatedPosts = this._posts.get(slug);
         if (translatedPosts) {
             translatedPosts = { ...translatedPosts, [lang]: post };

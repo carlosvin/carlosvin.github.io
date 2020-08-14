@@ -32,8 +32,8 @@ const render = (pages, posts) => `<?xml version="1.0" encoding="UTF-8"?>
 </urlset>`;
 
 export function get(req, res) {
-	res.setHeader("Cache-Control", `max-age=0, s-max-age=${1800}`); // 30 minutes
-	res.setHeader("Content-Type", "application/rss+xml");
+	res.setHeader("Cache-Control", 'max-age=0, s-max-age=3600'); // 30 minutes
+	res.setHeader("Content-Type", "application/xml");
 	const sitemap = render(pages, store.index);
 	res.end(sitemap);
 }

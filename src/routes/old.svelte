@@ -1,9 +1,14 @@
 <script context="module">
+  import {getFeedUrl} from "../services/lang";
+
   export function preload() {
     this.fetch('sitemap.xml');
     return this.fetch(`index.json`)
       .then(r => r.json())
-      .then(posts => ( {posts: posts.index}));
+      .then(posts => {
+        posts.langs.forEach(l => this.fetch(getFeedUrl(l)));
+        return {posts: posts.index};
+      });
   }
 </script>
 

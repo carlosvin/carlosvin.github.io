@@ -3,6 +3,6 @@
 
   export async function preload({ params }) {
     const {slug, lang} = params;
-    this.redirect(302, path(slug, lang));
+    this.redirect(301, path(slug, lang));
   }
 </script>

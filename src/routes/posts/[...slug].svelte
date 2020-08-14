@@ -12,7 +12,7 @@
         const {jsonLdScript} = new IndexEntry(entry);
         return {html, post: entry, jsonLdScript};
       } else {
-        return this.redirect(302, path(slug, entry.lang));
+        return this.redirect(301, path(slug, entry.lang));
       }
     } else {
       return this.error(res.status, data.message);

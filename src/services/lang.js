@@ -1,5 +1,5 @@
 
-import {DEFAULT_LANG, SITE_DESCRIPTION, SITE_NAME} from '../conf';
+import {DEFAULT_LANG, SITE_DESCRIPTION, SITE_NAME, FEED_URL} from '../conf';
 
 export function getLang() {
     return (typeof navigator !== 'undefined') ? navigator.language : DEFAULT_LANG;
@@ -15,6 +15,13 @@ export function getDescription(lang = undefined) {
 
 export function getSiteName(lang = undefined) {
     return getConfValue(SITE_NAME, lang);
+}
+
+export function getFeedUrl(lang){
+    if (!lang) {
+        lang = getLangSimplified();
+    }
+    return `${FEED_URL}/${lang}.xml`;
 }
 
 export function getConfValue(value, lang = undefined) {

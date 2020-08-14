@@ -1,6 +1,6 @@
 <script>
   import Nav from "../components/Nav.svelte";
-  import { getSiteName } from "../services/lang";
+  import { getSiteName, getFeedUrl} from "../services/lang";
   import Social from "../components/Social.svelte";
   import IconLink from "../components/IconLink.svelte";
   import { GA_ID } from "../conf";
@@ -10,8 +10,8 @@
   export let segment;
 
   const siteName = getSiteName();
-  const rssTitle = `Subscribe to ${siteName}`;
-  const rssUrl = `/rss`;
+  const feedUrl = getFeedUrl();
+  const feedTitle = `Subscribe to ${siteName}`;
 </script>
 
 <style>
@@ -34,13 +34,14 @@
 <svelte:head>
   <link
     rel="alternate"
-    type="application/rss+xml"
-    title="{rssTitle}"
-    href="{rssUrl}" />
+    type="application/atom+xml"
+    title="{feedTitle}"
+    href="{feedUrl}" />
+    
 </svelte:head>
 <Nav {segment} {siteName}>
   <Social>
-    <IconLink icon="rss" href="{rssUrl}" title="{rssTitle}" />
+    <IconLink icon="rss" href="{feedUrl}" title="{feedTitle}" />
   </Social>
 </Nav>
 

@@ -22,7 +22,8 @@ const indexData = JSON.stringify({
 	ldScript,
 	index: store.index,
 	name,
-	description
+	description,
+	langs: store.langs
 });
 
 export function get(req, res) {
