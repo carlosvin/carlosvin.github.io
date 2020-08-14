@@ -8,6 +8,8 @@ import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import glob from 'rollup-plugin-glob';
 import asciidoc from 'rollup-plugin-asciidoc';
+import autoPreprocess from "svelte-preprocess";
+import typescript from "rollup-plugin-typescript2";
 
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
@@ -20,7 +22,7 @@ const onwarn = (warning, onwarn) =>
 
 export default {
 	client: {
-		input: config.client.input(),
+        input: config.client.input().replace(/\.js$/, ".ts"),
 		output: config.client.output(),
 		plugins: [
 			replace({
@@ -28,6 +30,7 @@ export default {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 			svelte({
+				preprocess: autoPreprocess(),
 				dev,
 				hydratable: true,
 				emitCss: true
@@ -37,6 +40,7 @@ export default {
 				dedupe: ['svelte']
 			}),
 			commonjs(),
+			typescript(),
 
 			legacy && babel({
 				extensions: ['.js', '.mjs', '.html', '.svelte'],
@@ -65,7 +69,7 @@ export default {
 	},
 
 	server: {
-		input: config.server.input(),
+        input: config.server.input().server.replace(/\.js$/, ".ts"),
 		output: config.server.output(),
 		plugins: [
             glob(),
@@ -74,6 +78,7 @@ export default {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 			svelte({
+				preprocess: autoPreprocess(),
 				generate: 'ssr',
 				dev,
 				hydratable: true
@@ -82,6 +87,7 @@ export default {
 				dedupe: ['svelte']
 			}),
 			commonjs(),
+			typescript(),
 			asciidoc(),
 		],
 		external: Object.keys(pkg.dependencies).concat(
