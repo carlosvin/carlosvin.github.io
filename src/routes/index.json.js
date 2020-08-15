@@ -1,5 +1,5 @@
-import {store} from '../store';
-import { getSiteName, getDescription } from "../services/lang";
+import {store} from '../store.ts';
+import { getSiteName, getDescription } from "../services/lang.ts";
 
 const name = getSiteName();
 const description = getDescription();

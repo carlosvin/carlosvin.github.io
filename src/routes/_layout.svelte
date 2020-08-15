@@ -1,9 +1,9 @@
 <script>
   import Nav from "../components/Nav.svelte";
-  import { getSiteName, getFeedUrl} from "../services/lang";
+  import { getSiteName, getFeedUrl} from "../services/lang.ts";
   import Social from "../components/Social.svelte";
   import IconLink from "../components/IconLink.svelte";
-  import { GA_ID } from "../conf";
+  import { GA_ID } from "../conf.ts";
   import GoogleAnalytics from "../components/GoogleAnalytics.svelte";
   import { stores } from "@sapper/app";
 

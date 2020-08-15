@@ -1,7 +1,7 @@
-import { url } from '../services/url';
-import { getIsoDate } from '../services/dates';
-import { store } from '../store';
-import { BASE_URL } from '../conf';
+import { url } from '../services/url.ts';
+import { getIsoDate } from '../services/dates.ts';
+import { store } from '../store.ts';
+import { BASE_URL } from '../conf.ts';
 import fs from 'fs';
 
 const pages = [""];
