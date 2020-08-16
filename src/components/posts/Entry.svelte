@@ -1,5 +1,5 @@
 <script>
-  import { path } from "../../services/url";
+  import { path } from "../../services/url.ts";
   import Entry from "../Entry.svelte";
   import Details from "./Details.svelte";
   export let post;

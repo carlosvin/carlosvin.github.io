@@ -1,5 +1,5 @@
 
-import { IndexEntry, Post } from './interfaces';
+import type { IndexEntry, Post } from './interfaces';
 import {url} from './url'
 
 class AtomItem {

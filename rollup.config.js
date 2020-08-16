@@ -87,8 +87,9 @@ export default {
 				dedupe: ['svelte']
 			}),
 			commonjs(),
-			asciidoc(),
 			typescript(),
+			asciidoc(),
+
 		],
 		external: Object.keys(pkg.dependencies).concat(
 			require('module').builtinModules || Object.keys(process.binding('natives'))

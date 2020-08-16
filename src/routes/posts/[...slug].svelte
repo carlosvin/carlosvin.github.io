@@ -1,6 +1,5 @@
-<script context="module">
-  import { path } from "../../services/url";
-  import { IndexEntry } from "../../services/models";
+<script context="module" lang="ts">
+  import type { IndexEntry } from "../../services/interfaces";
 
   export async function preload({ params }) {
     const [slug, lang] = params.slug;
@@ -9,8 +8,8 @@
     const {entry, html} = data;
     if (res.status === 200) {
       if (lang) {
-        const {jsonLdScript} = new IndexEntry(entry);
-        return {html, post: entry, jsonLdScript};
+        // TODO implement jsonLd.convert(entry)
+        return {html, post: entry, jsonLdScript: ''};
       } else {
         return this.redirect(301, path(slug, entry.lang));
       }
@@ -20,23 +19,24 @@
   }
 </script>
 
-<script>
-  import { onMount } from "svelte";
-  import { url } from "../../services/url";
+<script lang="ts">
+  import { path, url} from "../../services/url";
   import { getIsoDateStr } from "../../services/dates";
+
+  import { onMount } from "svelte";
   import Share from "../../components/Share.svelte";
   import Details from "../../components/posts/Details.svelte";
   import Content from "../../components/posts/Content.svelte";
 
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
-    [...document.querySelectorAll('a[href^="#"]')].map(
-      x => (x.href = document.location + new URL(x.href).hash)
-    );
+    const anchors = document.querySelectorAll<HTMLLinkElement>('a[href^="#"]');
+    anchors.forEach(x => x.href = document.location + new URL(x.href).hash);
   });
-  export let post;
-  export let html;
-  export let jsonLdScript;
+  
+  export let post: IndexEntry;
+  export let html: string;
+  export let jsonLdScript: string;
 
 </script>
 
@@ -68,7 +68,8 @@
 <svelte:head>
   <title>{post.title}</title>
   {@html jsonLdScript}
-  <meta name="date" content="{getIsoDateStr(post.date)}" scheme="YYYY-MM-DD" />
+  <meta name="date.created" content="{getIsoDateStr(post.created)}">
+  <meta name="date.updated" content="{getIsoDateStr(post.modified)}">
   <meta name="description" content="{post.summary}" />
   {#if post.otherLangs && post.otherLangs.length > 0}
       {#each post.otherLangs as lang}
@@ -78,12 +79,12 @@
   <link
     rel="preload"
     href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css"
-    as="style"
-    onload="this.onload=null;this.rel='stylesheet'" />
+    crossorigin="true"> 
   <noscript>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css" />
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css" 
+      crossorigin="true"/>
   </noscript>
 </svelte:head>
 

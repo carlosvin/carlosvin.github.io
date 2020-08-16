@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
     import IconLink from './IconLink.svelte';
     import {toHashtags} from '../services/slug';
-    export let title;
-    export let text;
-    export let url;
+    export let title: string;
+    export let text: string;
+    export let url: string;
     export let keywords = [];
 
     const canShare = typeof navigator !== 'undefined' && navigator.share;

@@ -1,8 +1,8 @@
 
 <script>
 import Badge from './Badge.svelte'
-import {toSlug} from '../services/slug';
-import {categoryPath} from '../services/url';
+import {toSlug} from '../services/slug.ts';
+import {categoryPath} from '../services/url.ts';
 
 export let title;
 </script>

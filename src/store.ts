@@ -1,9 +1,10 @@
 import allAdoc from '../posts/**/*.adoc';
 import { toSlug, toCapitalize } from './services/slug';
 import { getLangSimplified } from './services/lang';
-import { Post, Category, InputMetadata, IndexEntry } from './services/interfaces';
+//import { Post, Category, InputMetadata, IndexEntry } from './services/interfaces';
 import { AUTHOR } from './conf';
 import { path, url } from './services/url';
+import type { Category, IndexEntry, InputMetadata, Post } from './services/interfaces';
 
 
 class BlogStore {

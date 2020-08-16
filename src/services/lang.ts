@@ -17,7 +17,7 @@ export function getSiteName(lang = undefined): string {
     return getConfValue(SITE_NAME, lang);
 }
 
-export function getFeedUrl(lang: string): string {
+export function getFeedUrl(lang?: string): string {
     if (!lang) {
         lang = getLangSimplified();
     }

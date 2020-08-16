@@ -1,5 +1,5 @@
 <script context="module">
-  import { path } from "../../../services/url";
+  import { path } from "../../../services/url.ts";
 
   export async function preload({ params }) {
     const {slug, lang} = params;

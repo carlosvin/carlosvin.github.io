@@ -1,5 +1,5 @@
-<script>
-    export let href;
+<script lang="ts">
+    export let href: string;
     export let target="_blank";
     export let icon = "github";
     export let title = `Find me at ${icon}`;

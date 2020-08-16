@@ -1,6 +1,8 @@
-<script context="module">
+<script context="module" lang="ts">
     import {getFeedUrl} from '../../services/lang';
+
     export async function preload() {
-        this.redirect(301, getFeedUrl());
+        return this.redirect(301, getFeedUrl())
     }
+
 </script>

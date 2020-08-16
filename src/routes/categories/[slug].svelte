@@ -1,5 +1,5 @@
 <script context="module">
-  import { categoryPath } from "../../services/url";
+  import { categoryPath } from "../../services/url.ts";
 
   export async function preload({ params }) {
     const res = await this.fetch(`${categoryPath(params.slug)}.json`);
