@@ -1,6 +1,6 @@
 import { BLOG_BASE_PATH, BASE_URL, CATEGORIES_BASE_PATH } from '../conf';
 
-export function path(slug, lang = '') {
+export function path(slug: string, lang = ''): string {
     if (lang) {
         return `/${BLOG_BASE_PATH}/${slug}/${lang}`;    
     } else {
@@ -8,10 +8,10 @@ export function path(slug, lang = '') {
     }
 }
 
-export function url(slug, lang = ''){
+export function url(slug: string, lang = ''): string{
     return `${BASE_URL}${path(slug, lang)}`;
 }
 
-export function categoryPath(slug){
+export function categoryPath(slug: string): string{
     return `/${CATEGORIES_BASE_PATH}/${slug}`;
 }

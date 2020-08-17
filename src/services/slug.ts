@@ -1,4 +1,4 @@
-export function toSlug (str) {
+export function toSlug(str: string): string {
     return str
         .trim()
         .toLowerCase()
@@ -7,10 +7,10 @@ export function toSlug (str) {
         .replace(/-+/g, '-');
 }
 
-export function toCapitalize (str) {
+export function toCapitalize(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function toHashtags(list, sep=' '){
+export function toHashtags(list: string[], sep = ' '): string {
     return [...list.map(k => `#${k}`)].join(sep);
 }

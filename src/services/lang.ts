@@ -1,7 +1,7 @@
 
 import {DEFAULT_LANG, SITE_DESCRIPTION, SITE_NAME, FEED_URL} from '../conf';
 
-export function getLang() {
+export function getLang(): string {
     return (typeof navigator !== 'undefined') ? navigator.language : DEFAULT_LANG;
 }
 

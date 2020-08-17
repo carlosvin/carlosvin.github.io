@@ -1,7 +1,7 @@
-import { url } from '../services/url.ts';
-import { getIsoDate } from '../services/dates.ts';
-import { store } from '../store.ts';
-import { BASE_URL } from '../conf.ts';
+import { url } from '../services/url';
+import { getIsoDate } from '../services/dates';
+import { store } from '../store';
+import { BASE_URL } from '../conf';
 import fs from 'fs';
 
 const pages = [""];
@@ -31,7 +31,8 @@ const render = (pages, posts) => `<?xml version="1.0" encoding="UTF-8"?>
 		</url>`).join("\r\n")}
 </urlset>`;
 
-export function get(req, res) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function get(req, res): void {
 	res.setHeader("Cache-Control", 'max-age=0, s-max-age=3600'); // 30 minutes
 	res.setHeader("Content-Type", "application/xml");
 	const sitemap = render(pages, store.index);

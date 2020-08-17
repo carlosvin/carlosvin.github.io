@@ -1,5 +1,5 @@
-<script context="module">
-  import { categoryPath } from "../../services/url.ts";
+<script context="module" lang="ts">
+  import { categoryPath } from "../../services/url";
 
   export async function preload({ params }) {
     const res = await this.fetch(`${categoryPath(params.slug)}.json`);
@@ -8,11 +8,12 @@
   }
 </script>
 
-<script>
+<script lang="ts">
   import Index from "../../components/posts/Index.svelte";
+  import type{ IndexEntry, Category } from "../../services/interfaces";
 
-  export let category;
-  export let posts;
+  export let category: Category;
+  export let posts: IndexEntry[];
 
   let title = `Posts related with ${category.name}`;
 </script>

@@ -34,7 +34,7 @@
 <Index>
   {#each categories as c}
     <Entry>
-      <a rel="prefetch" href={categoryPath(c)}>{c.name}</a>
+      <a rel="prefetch" href={categoryPath(c.slug)}>{c.name}</a>
     </Entry>
   {/each}
   <Entry>

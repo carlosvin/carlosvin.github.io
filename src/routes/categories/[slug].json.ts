@@ -1,7 +1,8 @@
 import {store} from '../../store';
 import {reply} from '../../services/http';
 
-export function get(req, res) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function get(req, res): void {
 	const {slug}  = req.params;
 	const category = store.categories.get(slug);	
 	const posts = [...store.getByCategory(slug)];

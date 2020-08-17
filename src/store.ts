@@ -38,7 +38,7 @@ class BlogStore {
         };
     }
 
-    private static newEntry ({title, doctitle, author,date,description,keywords,lang,modified,otherLangs,previewimage,slug,summary,updated}: Partial<InputMetadata>, filename: string): IndexEntry {
+    private static newEntry ({title, doctitle, author,date,description,keywords,lang,modified,previewimage,slug,summary,updated}: Partial<InputMetadata>, filename: string): IndexEntry {
         const pSlug = slug || toSlug(filename.split('.')[0]);
         const pModified = updated || modified || date;
         const pDate = date || updated || modified;

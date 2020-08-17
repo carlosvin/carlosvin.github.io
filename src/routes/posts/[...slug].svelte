@@ -1,6 +1,8 @@
 <script context="module" lang="ts">
   import type { IndexEntry } from "../../services/interfaces";
+  import { path, url} from "../../services/url";
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   export async function preload({ params }) {
     const [slug, lang] = params.slug;
     const res = await this.fetch(`${path(slug, lang)  }.json`);
@@ -8,8 +10,7 @@
     const {entry, html} = data;
     if (res.status === 200) {
       if (lang) {
-        // TODO implement jsonLd.convert(entry)
-        return {html, post: entry, jsonLdScript: ''};
+        return {html, post: entry, jsonLdScript: jsonLdPost(entry)};
       } else {
         return this.redirect(301, path(slug, entry.lang));
       }
@@ -20,13 +21,13 @@
 </script>
 
 <script lang="ts">
-  import { path, url} from "../../services/url";
-  import { getIsoDateStr } from "../../services/dates";
+  import { getIsoDate } from "../../services/dates";
 
   import { onMount } from "svelte";
   import Share from "../../components/Share.svelte";
   import Details from "../../components/posts/Details.svelte";
   import Content from "../../components/posts/Content.svelte";
+import { jsonLdPost } from "../../services/jsonld";
 
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
@@ -68,8 +69,8 @@
 <svelte:head>
   <title>{post.title}</title>
   {@html jsonLdScript}
-  <meta name="date.created" content="{getIsoDateStr(post.created)}">
-  <meta name="date.updated" content="{getIsoDateStr(post.modified)}">
+  <meta name="date.created" content="{getIsoDate(post.created)}">
+  <meta name="date.updated" content="{getIsoDate(post.modified)}">
   <meta name="description" content="{post.summary}" />
   {#if post.otherLangs && post.otherLangs.length > 0}
       {#each post.otherLangs as lang}
