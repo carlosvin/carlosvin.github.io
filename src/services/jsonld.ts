@@ -1,4 +1,3 @@
-import { jsonLdScript } from "./html";
 import type { Category, IndexEntry } from "./interfaces";
 import { categoryPath } from "./url";
 
