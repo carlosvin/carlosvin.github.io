@@ -1,5 +1,5 @@
 <script context="module" lang='ts'>
-  export const preload: typeof SapperPreload = async function ({ path }) {
+  async function preload ({ path }) {
     const res = await this.fetch(`categories.json`);
     const categories = await res.json();
     return { categories, path };

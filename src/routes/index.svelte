@@ -1,4 +1,4 @@
-<script context="module">
+<script context="module" lang="ts">
   export async function preload() {
     return await (await this.fetch('index.json')).json();
   }
