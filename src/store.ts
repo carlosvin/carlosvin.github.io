@@ -134,7 +134,7 @@ class BlogStore {
     }
 
     getByLang(lang): Post[] {
-        return [...this.posts.values()].map(byLang => byLang[lang] || Object.values(byLang)[0]);
+        return [...this.posts.values()].map(byLang => byLang[lang] || Object.values(byLang)[0]).filter(p => p !== undefined);
     }
 }
 
