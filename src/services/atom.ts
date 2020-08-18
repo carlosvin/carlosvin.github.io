@@ -35,7 +35,7 @@ class AtomItem {
     }
 
     get modified(): string {
-        return this.entry.modified.toISOString();
+        return new Date(this.entry.modified).toISOString();
     }
 
     get otherLangsLinks() {

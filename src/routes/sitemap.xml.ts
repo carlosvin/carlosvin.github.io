@@ -24,7 +24,7 @@ const render = (pages: string[], posts: IndexEntry[]) => `<?xml version="1.0" en
 		<url>
 		<loc>${url(slug, lang)}</loc>
 		<priority>0.69</priority>
-		<lastmod>${getIsoDate(modified)}</lastmod>
+		<lastmod>${getIsoDate(new Date(modified))}</lastmod>
 		${otherLangs ? otherLangs.map(l => `<xhtml:link 
 				rel="alternate"
 				hreflang="${l}"

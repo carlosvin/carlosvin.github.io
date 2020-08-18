@@ -6,8 +6,8 @@ export interface IndexEntry {
     readonly slug: string;
     readonly keywords: string[];
     readonly filename: string;
-    readonly created: Date;
-    readonly modified: Date;
+    readonly created: number;
+    readonly modified: number;
     readonly otherLangs: string[];
     readonly author?: string;
     readonly previewimage?: string;

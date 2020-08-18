@@ -17,7 +17,7 @@
 </style>
 
 <div class='subtitle'>
-    <span class="date">{post.modified.toLocaleDateString()}</span>
+    <span class="date">{new Date(post.modified).toLocaleDateString()}</span>
     <OtherLangs {post}/>
     <Tags tagList={post.keywords}/>
 </div>

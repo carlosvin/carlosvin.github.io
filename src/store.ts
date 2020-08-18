@@ -49,8 +49,8 @@ class BlogStore {
             slug: pSlug,
             keywords: keywords ? keywords.split(',').map(k => k.trim()) : [],
             filename,
-            modified: new Date(pModified),
-            created: new Date(pDate),
+            modified: new Date(pModified).getTime(),
+            created: new Date(pDate).getTime(),
             author: author || AUTHOR,
             previewimage: previewimage || 'icons/icon-192x192.png',
             otherLangs: [],
@@ -79,7 +79,7 @@ class BlogStore {
 
     _generateIndex(): IndexEntry[] {
         return this.getByLang(this.lang).map(c => c.entry)
-            .sort((a, b) => b.modified.getTime() - a.modified.getTime());
+            .sort((a, b) => b.modified - a.modified);
     }
 
     _add(post: Post): Post {
