@@ -1,12 +1,11 @@
 import {store} from '../../store';
 import {reply} from '../../services/http';
+import type { ServerResponse } from 'http';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function get(req, res): void {
+export function get(req: {params:{slug: string}}, res: ServerResponse): void {
 	const {slug}  = req.params;
 	const category = store.categories.get(slug);	
 	const posts = [...store.getByCategory(slug)];
 	const obj = category ? {category, posts} : undefined;
-	// TODO consider adding lang for categories
 	reply(res, obj);
 }

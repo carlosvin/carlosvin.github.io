@@ -31,16 +31,16 @@ export interface Category {
 
 export interface InputMetadata {
     readonly title: string;
-    readonly doctitle: string;
+    readonly doctitle?: string;
     readonly summary: string;
     readonly description: string;
-    readonly slug: string;
-    readonly keywords: string;
+    readonly slug?: string;
+    readonly keywords?: string;
     readonly lang: string;
     readonly date: string;
     readonly updated: string;
     readonly modified: string;
-    readonly previewimage: string;
+    readonly previewimage?: string;
     readonly author: string;
     readonly otherLangs: string;
 }

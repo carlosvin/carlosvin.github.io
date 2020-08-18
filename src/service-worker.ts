@@ -7,31 +7,31 @@ const ASSETS = `cache${timestamp}`;
 const to_cache = shell.concat(files);
 const cached = new Set(to_cache);
 
-self.addEventListener('install', event => {
-	event.waitUntil(
+self.addEventListener("install", <EventType extends ExtendableEvent>(event: EventType) => {
+		event.waitUntil(
 		caches
 			.open(ASSETS)
 			.then(cache => cache.addAll(to_cache))
 			.then(() => {
-				self.skipWaiting();
+				(self as any as ServiceWorkerGlobalScope).skipWaiting();
 			})
 	);
 });
 
-self.addEventListener('activate', event => {
-	event.waitUntil(
+self.addEventListener("activate", <EventType extends ExtendableEvent>(event: EventType) => {
+		event.waitUntil(
 		caches.keys().then(async keys => {
 			// delete old caches
 			for (const key of keys) {
 				if (key !== ASSETS) await caches.delete(key);
 			}
 
-			self.clients.claim();
+			(self as any as {clients: Clients}).clients.claim();
 		})
 	);
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch',<EventType extends FetchEvent>(event: EventType) => {
 	if (event.request.method !== 'GET' || event.request.headers.has('range')) return;
 
 	const url = new URL(event.request.url);
@@ -44,7 +44,9 @@ self.addEventListener('fetch', event => {
 
 	// always serve static files and bundler-generated assets from cache
 	if (url.host === self.location.host && cached.has(url.pathname)) {
-		event.respondWith(caches.match(event.request));
+		caches.match(event.request).then((match): void => {
+			if (match) event.respondWith(match);
+		});
 		return;
 	}
 

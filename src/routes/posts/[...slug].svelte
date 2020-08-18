@@ -27,7 +27,7 @@
   import Share from "../../components/Share.svelte";
   import Details from "../../components/posts/Details.svelte";
   import Content from "../../components/posts/Content.svelte";
-import { jsonLdPost } from "../../services/jsonld";
+  import { jsonLdPost } from "../../services/jsonld";
 
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
@@ -79,12 +79,12 @@ import { jsonLdPost } from "../../services/jsonld";
   {/if}
   <link
     rel="preload"
-    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css"
     crossorigin="true"> 
   <noscript>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css" 
       crossorigin="true"/>
   </noscript>
 </svelte:head>

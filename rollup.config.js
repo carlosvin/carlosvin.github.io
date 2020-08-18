@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import commonjs from '@rollup/plugin-commonjs';
@@ -8,12 +10,21 @@ import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import glob from 'rollup-plugin-glob';
 import asciidoc from 'rollup-plugin-asciidoc';
-import autoPreprocess from "svelte-preprocess";
-import typescript from "rollup-plugin-typescript2";
-
+import sveltePreprocess from "svelte-preprocess";
+import json from "@rollup/plugin-json";
+import typescript from "@rollup/plugin-typescript";
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = Boolean(process.env.SAPPER_LEGACY_BUILD);
+
+const { defaults } = require("./svelte.config.js");
+
+const preprocess = [
+	sveltePreprocess({ defaults }),
+	// You could have more preprocessors, like MDsveX
+];
+
+const sourcemap = dev ? "inline" : false;
 
 const onwarn = (warning, onwarn) =>
 	(warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
@@ -22,7 +33,7 @@ const onwarn = (warning, onwarn) =>
 
 export default {
 	client: {
-        input: config.client.input().replace(/\.js$/, ".ts"),
+		input: config.client.input().replace(/\.js$/, ".ts"),
 		output: config.client.output(),
 		plugins: [
 			replace({
@@ -30,10 +41,10 @@ export default {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 			svelte({
-				preprocess: autoPreprocess(),
 				dev,
 				hydratable: true,
-				emitCss: true
+				emitCss: true,
+				preprocess,
 			}),
 			resolve({
 				browser: true,
@@ -41,6 +52,7 @@ export default {
 			}),
 			commonjs(),
 			typescript(),
+			json(),
 
 			legacy && babel({
 				extensions: ['.js', '.mjs', '.html', '.svelte'],
@@ -69,38 +81,37 @@ export default {
 	},
 
 	server: {
-        input: config.server.input().server.replace(/\.js$/, ".ts"),
-		output: config.server.output(),
+		input: { server: config.server.input().server.replace(/\.js$/, ".ts") },
+		output: { ...config.server.output(), sourcemap },
 		plugins: [
-            glob(),
 			replace({
-				'process.browser': false,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				"process.browser": false,
+				"process.env.NODE_ENV": JSON.stringify(mode),
+				"module.require": "require",
 			}),
 			svelte({
-				preprocess: autoPreprocess(),
-				generate: 'ssr',
+				generate: "ssr",
 				dev,
-				hydratable: true
+				preprocess,
 			}),
 			resolve({
-				dedupe: ['svelte']
+				dedupe: ["svelte"],
 			}),
 			commonjs(),
-			typescript(),
+			typescript({ sourceMap: !!sourcemap }),
+			json(),
+			glob(),
 			asciidoc(),
-
 		],
 		external: Object.keys(pkg.dependencies).concat(
 			require('module').builtinModules || Object.keys(process.binding('natives'))
 		),
-
+		preserveEntrySignatures: 'strict',
 		onwarn,
-		preserveEntrySignatures: 'strict'
 	},
 	
 	serviceworker: {
-		input: config.serviceworker.input(),
+		input: config.serviceworker.input().replace(/\.js$/, ".ts"),
 		output: config.serviceworker.output(),
 		plugins: [
 			resolve(),
@@ -109,6 +120,7 @@ export default {
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
 			commonjs(),
+			typescript({ sourceMap: !!sourcemap }),
 			!dev && terser()
 		],
 		onwarn,

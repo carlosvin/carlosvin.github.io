@@ -9,11 +9,11 @@ export function getLangSimplified(): string {
     return getLang().slice(0, 2).toLowerCase();
 }
 
-export function getDescription(lang = undefined): string {
+export function getDescription(lang?: string): string {
     return getConfValue(SITE_DESCRIPTION, lang);
 }
 
-export function getSiteName(lang = undefined): string {
+export function getSiteName(lang?: string): string {
     return getConfValue(SITE_NAME, lang);
 }
 
@@ -24,8 +24,8 @@ export function getFeedUrl(lang?: string): string {
     return `${FEED_URL}/${lang}.xml`;
 }
 
-export function getConfValue(value: {[k: string]: string}, lang = undefined): string {
-    if (lang in value) {
+export function getConfValue(value: {[k: string]: string}, lang?: string): string {
+    if (lang && lang in value) {
         return value[lang];
     } else {
         lang = getLangSimplified();

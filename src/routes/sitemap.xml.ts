@@ -3,6 +3,8 @@ import { getIsoDate } from '../services/dates';
 import { store } from '../store';
 import { BASE_URL } from '../conf';
 import fs from 'fs';
+import type { ServerResponse } from 'http';
+import type { IndexEntry } from '../services/interfaces';
 
 const pages = [""];
 
@@ -13,16 +15,16 @@ fs.readdirSync("./src/routes").forEach(file => {
 	}
 });
 
-const render = (pages, posts) => `<?xml version="1.0" encoding="UTF-8"?>
+const render = (pages: string[], posts: IndexEntry[]) => `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	${pages
 		.map(page => `<url><loc>${BASE_URL}/${page}</loc><priority>0.85</priority></url>`)
 		.join("\r\n")}
-  	${posts.map(({ slug, lang, date, otherLangs}) => `
+  	${posts.map(({ slug, lang, modified, otherLangs}) => `
 		<url>
 		<loc>${url(slug, lang)}</loc>
 		<priority>0.69</priority>
-		<lastmod>${getIsoDate(new Date(date))}</lastmod>
+		<lastmod>${getIsoDate(modified)}</lastmod>
 		${otherLangs ? otherLangs.map(l => `<xhtml:link 
 				rel="alternate"
 				hreflang="${l}"
@@ -32,7 +34,7 @@ const render = (pages, posts) => `<?xml version="1.0" encoding="UTF-8"?>
 </urlset>`;
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function get(req, res): void {
+export function get(req: unknown, res: ServerResponse): void {
 	res.setHeader("Cache-Control", 'max-age=0, s-max-age=3600'); // 30 minutes
 	res.setHeader("Content-Type", "application/xml");
 	const sitemap = render(pages, store.index);
