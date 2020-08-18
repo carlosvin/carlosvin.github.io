@@ -69,8 +69,8 @@
 <svelte:head>
   <title>{post.title}</title>
   {@html jsonLdScript}
-  <meta name="date.created" content="{getIsoDate(post.created)}">
-  <meta name="date.updated" content="{getIsoDate(post.modified)}">
+  <meta name="date.created" content="{getIsoDate(new Date(post.created))}">
+  <meta name="date.updated" content="{getIsoDate(new Date(post.modified))}">
   <meta name="description" content="{post.summary}" />
   {#if post.otherLangs && post.otherLangs.length > 0}
       {#each post.otherLangs as lang}

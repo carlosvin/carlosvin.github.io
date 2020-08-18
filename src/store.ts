@@ -3,7 +3,7 @@ import { toSlug, toCapitalize } from './services/slug';
 import { getLangSimplified } from './services/lang';
 //import { Post, Category, InputMetadata, IndexEntry } from './services/interfaces';
 import { AUTHOR } from './conf';
-import { categoryPath, path, url } from './services/url';
+import { path, url } from './services/url';
 import type { Category, IndexEntry, InputMetadata, Post } from './services/interfaces';
 
 
@@ -65,8 +65,8 @@ class BlogStore {
 
     _addOtherLangs() {
         for (const byLang of this._posts.values()) {
-            const langs = Object.keys(byLang);
-            for (const lang in byLang) {
+            const langs = [...byLang.keys()];
+            for (const lang of langs) {
                 const p = byLang.get(lang);
                 if (p) {
                     langs
@@ -145,7 +145,7 @@ class BlogStore {
             }
             return post;
         } else {
-            return Object.values(byLang)[0];
+            return byLang.values().next().value;
         }
     }
 

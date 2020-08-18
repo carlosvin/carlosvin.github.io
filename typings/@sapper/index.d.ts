@@ -71,12 +71,12 @@ interface ExtendableEvent extends Event {
   
   // Client API
   
-  declare class Client {
+  /*declare class Client {
 	frameType: ClientFrameType;
 	id: string;
 	url: string;
 	postMessage(message: any): void;
-  }
+  }*/
   
   interface Clients {
 	claim(): Promise<any>;

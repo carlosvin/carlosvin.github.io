@@ -1,8 +1,11 @@
-<script context="module" lang='ts'>
-  async function preload ({ path }) {
-    const res = await this.fetch(`categories.json`);
+<script context="module" lang="ts">
+  export async function preload (request: {path: string}) {
+    const res = await this.fetch('/categories.json');
     const categories = await res.json();
-    return { categories, path };
+    const title = `${getSiteName()} - Categories`;
+    const description = "Index of blog categories";
+    const jsonLdStr = jsonLdCategories(categories, title, description, request.path);
+    return { categories, jsonLdStr, title, description };
   };
 </script>
 
@@ -13,15 +16,12 @@
 
   import Index from "../../components/Index.svelte";
   import Entry from "../../components/Entry.svelte";
-  import type { Category } from "../../services/interfaces";
-
-// TODO move to external module in charge of jsonld. It should be executed in server side.
+  import type { Category } from "../../services/interfaces";  
   
-  const title = `${getSiteName()} - Categories`;
-  const description = "Index of blog posts categories";
   export let categories: Category[];
-  export let path: string;
-  export let jsonLdStr = jsonLdCategories(categories, title, description, path);
+  export let title: string;
+  export let description: string;
+  export let jsonLdStr: string;
 </script>
 
 <svelte:head>
@@ -31,6 +31,7 @@
 </svelte:head>
 
 <h1>Categories</h1>
+{#if categories}
 <Index>
   {#each categories as c}
     <Entry>
@@ -44,3 +45,6 @@
     <a href="/old">Old urls</a>
   </Entry>
 </Index>
+{:else}
+<p>Loading...</p>
+{/if}
