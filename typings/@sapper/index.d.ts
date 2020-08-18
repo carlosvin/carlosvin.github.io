@@ -6,6 +6,8 @@ declare module '*.adoc';
 declare module 'sirv';
 declare module 'polka';
 declare module 'compression';
+declare interface Window { ga: any; };
+declare type ga = any;
 
 declare module "@sapper/app" {
 	export interface Redirect {
@@ -17,7 +19,7 @@ declare module "@sapper/app" {
 	export function prefetch(href: string): Promise<{ redirect?: Redirect; data?: unknown }>;
 	export function prefetchRoutes(pathnames: string[]): Promise<void>;
 	export function start(opts: { target: Node }): Promise<void>;
-	export const stores: () => unknown;
+	export const stores: () => any;
 }
 
 declare module "@sapper/server" {

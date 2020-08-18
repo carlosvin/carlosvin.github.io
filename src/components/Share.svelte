@@ -4,7 +4,7 @@
     export let title: string;
     export let text: string;
     export let url: string;
-    export let keywords = [];
+    export let keywords: string[] = [];
 
     const canShare = typeof navigator !== 'undefined' && navigator.share;
 

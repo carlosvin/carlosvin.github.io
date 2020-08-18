@@ -10,7 +10,7 @@
         }
     }
 
-    export let segment: string;
+    export let segment: string|undefined;
     export let href: string;
 
 

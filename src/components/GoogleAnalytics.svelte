@@ -1,7 +1,7 @@
 <script>
     const url = 'https://www.google-analytics.com/analytics.js';
-    export let stores;
-    export let id;
+    export let stores: () => any;
+    export let id: string;
 
     if (typeof window !== "undefined") {
         window.ga=window.ga||function(){
@@ -21,6 +21,6 @@
     }
 </script>
 <svelte:head>
-	<link href={url} rel="preload" as="script">
+	<link href={url} rel="preload">
     <script src={url} async></script>
 </svelte:head>

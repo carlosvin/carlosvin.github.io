@@ -3,7 +3,7 @@
   import { path, url} from "../../services/url";
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  export async function preload({ params }) {
+  export async function preload({ params }: { params: {slug: string[]}}) {
     const [slug, lang] = params.slug;
     const res = await this.fetch(`${path(slug, lang)  }.json`);
     const data = await res.json();

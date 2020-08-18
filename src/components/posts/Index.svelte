@@ -7,7 +7,7 @@
   import Header from './Header.svelte';
 
   export let posts: IndexEntry[];
-  export let title: string = undefined;
+  export let title: string|undefined = undefined;
 
   let founds: IndexEntry[];
   let index: IndexEntry[];
