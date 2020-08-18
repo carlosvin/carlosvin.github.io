@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   export async function preload (request: {path: string}) {
-    const res = await this.fetch('/categories.json');
+    const res = await fetch('/categories.json');
     const categories = await res.json();
     const title = `${getSiteName()} - Categories`;
     const description = "Index of blog categories";
