@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Nav from "../components/Nav.svelte";
   import { getSiteName, getFeedUrl} from "../services/lang";
   import Social from "../components/Social.svelte";
