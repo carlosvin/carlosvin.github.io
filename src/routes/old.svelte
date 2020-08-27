@@ -1,24 +1,24 @@
-<script context="module">
-  import { getFeedUrl } from "../services/lang.ts";
+<script context="module" lang="ts">
+  import { getFeedUrl } from "../services/lang";
+  interface IndexResponse {
+    index: IndexEntry[];
+    langs: string[];
+  }
 
   export async function preload() {
-    this.fetch("sitemap.xml");
-    return this.fetch('index.json')
-      .then((r) => r.json())
-      .then((posts) => {
-        posts.langs.forEach((l) => this.fetch(getFeedUrl(l)));
-        return { posts: posts.index };
-      });
+    const r: IndexResponse = await (await this.fetch('index.json')).json();
+    r.langs.forEach((l) => this.fetch(getFeedUrl(l)));
+    return {posts: r.index};
   }
 </script>
 
 <script lang="ts">
   import Entry from "../components/Entry.svelte";
   import Index from "../components/Index.svelte";
-  import type { IndexEntry } from "../services/interfaces.ts";
+  import type { IndexEntry } from "../services/interfaces";
   import { getSiteName, getDescription } from "../services/lang";
 
-  function oldPath({ slug, lang }) {
+  function oldPath({lang, slug}: Partial<IndexEntry>) {
     return `${lang}/posts/${slug}`;
   }
   export let posts: IndexEntry[];

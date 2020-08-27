@@ -4,3 +4,4 @@ sapper.start({
 	target: document.querySelector('#sapper')
 });
 sapper.prefetchRoutes(['/sitemap.xml']);
+sapper.prefetchRoutes(['/old']);

@@ -41,9 +41,6 @@
   <Entry>
     <a href="/posts">All posts</a>
   </Entry>
-  <Entry>
-    <a href="/old">Old urls</a>
-  </Entry>
 </Index>
 {:else}
 <p>Loading...</p>
