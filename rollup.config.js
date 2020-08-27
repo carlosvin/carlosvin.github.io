@@ -34,7 +34,7 @@ const onwarn = (warning, onwarn) =>
 export default {
 	client: {
 		input: config.client.input().replace(/\.js$/, ".ts"),
-		output: config.client.output(),
+		output: { ...config.client.output(), sourcemap },
 		plugins: [
 			replace({
 				'process.browser': true,
@@ -50,8 +50,13 @@ export default {
 				browser: true,
 				dedupe: ['svelte']
 			}),
-			commonjs(),
-			typescript(),
+			commonjs({
+				sourceMap: !!sourcemap,
+			}),
+			typescript({
+				noEmitOnError: !dev,
+				sourceMap: !!sourcemap,
+			}),
 			json(),
 
 			legacy && babel({
@@ -97,8 +102,13 @@ export default {
 			resolve({
 				dedupe: ["svelte"],
 			}),
-			commonjs(),
-			typescript({ sourceMap: !!sourcemap }),
+			commonjs({
+				sourceMap: !!sourcemap,
+			}),
+			typescript({
+				noEmitOnError: !dev,
+				sourceMap: !!sourcemap,
+			}),
 			json(),
 			glob(),
 			asciidoc(),
@@ -112,15 +122,20 @@ export default {
 	
 	serviceworker: {
 		input: config.serviceworker.input().replace(/\.js$/, ".ts"),
-		output: config.serviceworker.output(),
+		output: { ...config.serviceworker.output(), sourcemap },
 		plugins: [
 			resolve(),
 			replace({
 				'process.browser': true,
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
-			commonjs(),
-			typescript({ sourceMap: !!sourcemap }),
+			commonjs({
+				sourceMap: !!sourcemap,
+			}),
+			typescript({
+				noEmitOnError: !dev,
+				sourceMap: !!sourcemap,
+			}),
 			!dev && terser()
 		],
 		onwarn,
