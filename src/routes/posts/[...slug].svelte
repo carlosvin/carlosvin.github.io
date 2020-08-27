@@ -80,7 +80,8 @@
   <link
     rel="preload"
     href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css"
-    crossorigin="true"> 
+    crossorigin="true"
+    as="style"> 
   <noscript>
     <link
       rel="stylesheet"

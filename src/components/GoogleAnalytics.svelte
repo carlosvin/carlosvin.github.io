@@ -21,6 +21,6 @@
     }
 </script>
 <svelte:head>
-	<link href={url} rel="preload">
+	<link href={url} rel="preload" as="script">
     <script src={url} async></script>
 </svelte:head>
