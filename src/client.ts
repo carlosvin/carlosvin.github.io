@@ -3,5 +3,4 @@ import * as sapper from '@sapper/app';
 sapper.start({
 	target: document.querySelector('#sapper')
 });
-sapper.prefetchRoutes(['/sitemap.xml']);
-sapper.prefetchRoutes(['/old']);
+sapper.prefetchRoutes(['/sitemap.xml', '/old']);
