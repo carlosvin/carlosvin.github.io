@@ -3,7 +3,7 @@
   import { getSiteName, getFeedUrl} from "../services/lang";
   import Social from "../components/Social.svelte";
   import IconLink from "../components/IconLink.svelte";
-  import { GA_ID } from "../conf";  
+  import { FEED_URL, GA_ID } from "../conf";  
   import GoogleAnalytics from "../components/GoogleAnalytics.svelte";
   import { stores } from "@sapper/app";
 
@@ -41,7 +41,7 @@
 </svelte:head>
 <Nav {segment} {siteName}>
   <Social>
-    <IconLink icon="rss" href="{feedUrl}" title="{feedTitle}" />
+    <IconLink icon="rss" href="{FEED_URL}" title="{feedTitle}" />
   </Social>
 </Nav>
 
