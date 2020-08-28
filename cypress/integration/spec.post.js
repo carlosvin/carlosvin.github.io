@@ -17,7 +17,7 @@ describe('Post View', () => {
 
 	it('Header', () => {
 		cy.visit('/posts/this-is-sapper/en')
-		let expectedDate = new Date('2020-04-19').toLocaleDateString()
+		let expectedDate = new Date('2020-08-28').toLocaleDateString()
 		cy.get('.subtitle .date').contains(expectedDate)
 	});
 
@@ -36,7 +36,7 @@ describe('Post View', () => {
 		const inputs = {
 			'this-is-sapper': { 
 				titles: { en: 'This is Sapper!' }, 
-				date: '2020-04-19',
+				date: '2020-08-28',
 				otherLangs: {
 					'en': undefined,
 					'es': undefined
