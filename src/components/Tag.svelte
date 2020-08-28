@@ -4,7 +4,7 @@ import Badge from './Badge.svelte'
 import {toSlug} from '../services/slug';
 import {categoryPath} from '../services/url';
 
-export let title;
+export let title: string;
 </script>
 
 <style>

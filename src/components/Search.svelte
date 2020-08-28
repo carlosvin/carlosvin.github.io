@@ -1,36 +1,35 @@
+<script lang="ts">
+  import { filter } from "fuzzy";
+  import type { IndexEntry } from "../services/interfaces";
 
-<script>
-    import fuzzy from "fuzzy";
+  export let index: IndexEntry[];
+  export let founds: IndexEntry[];
 
-    export let index;
-    export let founds;
+  let search: string|undefined;
 
-    let search;
-
-    $: {
-        if (search) {
-            founds = fuzzy.filter(
-                search, 
-                [...index.map(s => JSON.stringify(s))]
-            ).map(f => f.string).map(fs => JSON.parse(fs));
-        } else {
-            founds = index;
-        }
+  $: {
+    if (search) {
+      founds = filter(search, [...index.map((s) => JSON.stringify(s))])
+        .map((f) => f.string)
+        .map((fs) => JSON.parse(fs));
+    } else {
+      founds = index;
     }
+  }
 </script>
 
 <style>
-label {
+  label {
     font-size: smaller;
     color: #644d4d;
-}
+  }
 
-span {
+  span {
     display: flex;
     flex-flow: column;
-}
+  }
 
- @media screen and (max-width: 640px) {
+  @media screen and (max-width: 640px) {
     span {
       flex-flow: row;
       justify-content: space-between;
@@ -39,8 +38,12 @@ span {
 </style>
 
 <span>
-<input type="search" placeholder="Search" bind:value={search} id='search-posts'/>
-{#if founds}
-<label for='search-posts'>{`Found ${founds.length}`}</label>
-{/if}
+  <input
+    type="search"
+    placeholder="Search"
+    bind:value={search}
+    id="search-posts" />
+  {#if founds}
+    <label for="search-posts">{`Found ${founds.length}`}</label>
+  {/if}
 </span>

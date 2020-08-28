@@ -1,32 +1,49 @@
 
-import {url} from '../url'
+import type { IndexEntry, Post } from './interfaces';
+import {url} from './url'
 
 class AtomItem {
-    constructor(post, baseUrl){
+    private readonly entry: IndexEntry;
+    private readonly html: string;
+    private readonly baseUrl: string;
+
+    constructor(post: Post, baseUrl: string) {
+        this.entry = post.entry;
+        this.html = post.html;
         this.baseUrl = baseUrl;
-        const {entry, html} = post;
-        this.title = entry.title;
-        this.summary = entry.summary;
-        this.html = html;
-        this.modified = new Date(entry.modified).toISOString();
-        this.url = url(entry.slug, entry.lang);
-        this.categories = this.getCategories(post.entry);
-        this.otherLangsLinks = this.getHrefLangs(entry);
     }
 
-    getHrefLangs({otherLangs, slug}) {
-        return otherLangs ? otherLangs.map(l => `<link 
-				rel="alternate"
-				hreflang="${l}"
-				href="${url(slug, l )}"/>`).join("\r\n") : '';
-    }
-
-    getCategories({keywords}) {
+    get categories() {
+        const {keywords} = this.entry;
         if (keywords) {
             return [...keywords].map(
                 c => `<category term="${c}"/>`).join(`\n    `);
         }
         return '';
+    }
+
+    get title (): string {
+        return this.entry.title;
+    }
+
+    get url(): string {
+        return url(this.entry.slug, this.entry.lang);
+    }
+
+    get summary(): string {
+        return this.entry.summary;
+    }
+
+    get modified(): string {
+        return new Date(this.entry.modified).toISOString();
+    }
+
+    get otherLangsLinks() {
+        const {otherLangs, slug} = this.entry;
+        return otherLangs ? otherLangs.map(l => `<link 
+				rel="alternate"
+				hreflang="${l}"
+				href="${url(slug, l )}"/>`).join("\r\n") : '';
     }
 
     get xml(){
@@ -44,7 +61,13 @@ class AtomItem {
 }
 
 export class Atom {
-    constructor(title, description, posts, baseUrl, path) {
+    private readonly posts: Post[];
+    private readonly title: string;
+    private readonly description: string;
+    private readonly baseUrl: string;
+    private readonly url: string;
+    
+    constructor(title: string, description: string, posts: Post[], baseUrl: string, path: string) {
         this.posts = posts;
         this.url = baseUrl + path;
         this.baseUrl = baseUrl;
@@ -52,7 +75,7 @@ export class Atom {
         this.description = description;
     }
     
-    get xml () {
+    get xml (): string {
         return `<?xml version="1.0" encoding="UTF-8" ?>
         <feed xmlns="http://www.w3.org/2005/Atom">
             <title>${this.title}</title>

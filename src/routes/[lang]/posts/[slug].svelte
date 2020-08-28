@@ -1,8 +1,8 @@
-<script context="module">
+<script context="module" lang="ts">
   import { path } from "../../../services/url";
 
-  export async function preload({ params }) {
+  export function preload({ params }: {params: {lang: string, slug: string}}): Promise<void> {
     const {slug, lang} = params;
-    this.redirect(301, path(slug, lang));
+    return this.redirect(301, path(slug, lang));
   }
 </script>

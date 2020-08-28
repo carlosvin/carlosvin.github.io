@@ -1,7 +1,7 @@
 <script>
     const url = 'https://www.google-analytics.com/analytics.js';
-    export let stores;
-    export let id;
+    export let stores: () => any;
+    export let id: string;
 
     if (typeof window !== "undefined") {
         window.ga=window.ga||function(){

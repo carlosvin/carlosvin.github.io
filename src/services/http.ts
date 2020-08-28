@@ -1,8 +1,10 @@
+import type { ServerResponse } from "http";
 import { DEFAULT_LANG } from "../conf";
 
 const DEFAULT_HEADERS = {'Content-Type': 'application/json'};
 
-export function reply(res, obj, lang = DEFAULT_LANG) {
+// eslint-disable-next-line 
+export function reply(res: ServerResponse, obj: any, lang = DEFAULT_LANG): void {
 	if (obj) {
 		res.writeHead(200, {
 			...DEFAULT_HEADERS,

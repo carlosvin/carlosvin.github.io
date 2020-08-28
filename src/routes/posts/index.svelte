@@ -1,7 +1,6 @@
-<script context="module">
-  // eslint-disable-next-line require-await
+<script context="module" lang="ts">
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   export async function preload() {
-    // eslint-disable-next-line no-invalid-this
-    this.redirect(301, '/');
+    return this.redirect(301, '/');
   }
 </script>

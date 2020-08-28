@@ -1,6 +1,6 @@
 
-<script>
-  export let numPosts;
+<script lang="ts">
+  export let numPosts: number;
   export let title = numPosts > 0 ? 'Recent posts' : `There are no posts`;
 </script>
 

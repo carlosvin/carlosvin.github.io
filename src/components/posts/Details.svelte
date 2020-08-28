@@ -1,7 +1,9 @@
-<script>
+<script lang="ts">
   import OtherLangs from "./OtherLangs.svelte";
   import Tags from "../Tags.svelte";
-  export let post;
+  import type { IndexEntry } from "../../services/interfaces";
+  
+  export let post: IndexEntry;
 </script>
 
 <style>
@@ -15,7 +17,7 @@
 </style>
 
 <div class='subtitle'>
-    <span class="date">{new Date(post.date).toLocaleDateString()}</span>
+    <span class="date">{new Date(post.modified).toLocaleDateString()}</span>
     <OtherLangs {post}/>
     <Tags tagList={post.keywords}/>
 </div>

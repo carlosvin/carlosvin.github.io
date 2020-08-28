@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
     import { path } from "../../services/url";
-    export let post;
+    import type { IndexEntry } from "../../services/interfaces";
+
+    export let post: IndexEntry;
 </script>
 
 <style>

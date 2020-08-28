@@ -1,17 +1,17 @@
 
 <script>
-    function curr(segment, href) {
+    function curr(segment: string|undefined, href: string) {
         if (segment === undefined && href === '.') {
             return 'page';
-        } else if (href.startsWith(segment)) {
+        } else if (segment && href.startsWith(segment)) {
             return 'page';
         } else {
             return undefined;
         }
     }
 
-    export let segment;
-    export let href;
+    export let segment: string|undefined;
+    export let href: string;
 
 
     $: current = curr(segment, href);
@@ -46,7 +46,7 @@
 </style>
 
 <li>
-    <a aria-current='{current}' {href}>
+    <a aria-current='{current}' {href} rel="prefetch">
         <slot></slot>
     </a>
 </li>

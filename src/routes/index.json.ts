@@ -1,22 +1,11 @@
 import {store} from '../store';
 import { getSiteName, getDescription } from "../services/lang";
+import { jsonLdPage, jsonLdScript } from '../services/jsonld';
+import type { ServerResponse } from 'http';
 
 const name = getSiteName();
 const description = getDescription();
-const ld = {
-	"@context": "http://schema.org",
-	"@type": "WebPage",
-	"name": name,
-	"description": description,
-	"publisher": {
-		"@type": "ProfilePage",
-		"name": name
-	}
-};
-
-const ldScript = `<script type="application/ld+json">
-	${JSON.stringify(ld)}
-</script>`;
+const ldScript = jsonLdScript(jsonLdPage(name, description));
 
 const indexData = JSON.stringify({
 	ldScript,
@@ -26,7 +15,7 @@ const indexData = JSON.stringify({
 	langs: store.langs
 });
 
-export function get(req, res) {
+export function get(req: Request, res: ServerResponse): void {
 	res.writeHead(200, {'Content-Type': 'application/json'});
 	res.end(indexData);
 }

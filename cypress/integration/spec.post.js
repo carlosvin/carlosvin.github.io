@@ -6,9 +6,10 @@ describe('Metadata', () => {
 		cy.visit('/posts/gradle-cpp')
 		cy.get('head meta[name="description"]')
 			.should('have.attr', 'content', 'How to build a C++ project using Gradle')
-		cy.get('head meta[name="date"]')
+		cy.get('head meta[name="date.updated"]')
 			.should('have.attr', 'content', '2014-09-27')
-			.should('have.attr', 'scheme', 'YYYY-MM-DD')
+		cy.get('head meta[name="date.created"]')
+			.should('have.attr', 'content', '2014-09-27')
 	});
 });
 
@@ -56,7 +57,7 @@ describe('Post View', () => {
 					en: 'Create SPA: React + Typescript + Parcel',
 					es: 'SPA: React + Typescript + Parcel',
 				},
-				date: '2019-01-01',
+				date: '2019-07-10',
 				otherLangs: {
 					'en': 'es',
 					'es': 'en' 

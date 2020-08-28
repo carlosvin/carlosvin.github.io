@@ -1,7 +1,7 @@
 <script>
 	import NavEntry from './NavEntry.svelte';
-	export let segment;
-	export let siteName;
+	export let segment: string|undefined;
+	export let siteName: string;
 
 	function toggle(){
 		open = !open;

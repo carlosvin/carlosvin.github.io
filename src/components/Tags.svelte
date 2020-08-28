@@ -1,7 +1,7 @@
 <script>
     import Tag from './Tag.svelte';
     
-    export let tagList = [];
+    export let tagList: string[] = [];
 </script>
 
 <style>

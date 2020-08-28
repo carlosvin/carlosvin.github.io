@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
   import { path } from "../../services/url";
+  import type { IndexEntry } from "../../services/interfaces";
   import Entry from "../Entry.svelte";
   import Details from "./Details.svelte";
-  export let post;
+  export let post: IndexEntry;
 </script>
 
 <style>

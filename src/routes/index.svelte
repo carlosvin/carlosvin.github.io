@@ -1,18 +1,17 @@
-<script context="module">
-  export function preload() {
-    return this.fetch(`index.json`)
-      .then(r => r.json())
-      .then(indexData => ({ ...indexData }));
+<script context="module" lang="ts">
+  export async function preload() {
+    return await (await this.fetch('index.json')).json();
   }
 </script>
 
-<script>
+<script lang="ts">
   import Index from "../components/posts/Index.svelte";
+  import type {IndexEntry} from "../services/interfaces";
 
-  export let index;
-  export let name;
-  export let description;
-  export let ldScript;
+  export let index: IndexEntry[];
+  export let name: string;
+  export let description: string;
+  export let ldScript: string;
 </script>
 
 <svelte:head>
