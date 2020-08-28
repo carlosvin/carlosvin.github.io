@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
-  import type { IndexEntry } from "../../services/interfaces";
   import { path, url} from "../../services/url";
+  import { jsonLdPost, jsonLdScript } from "../../services/jsonld";
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   export async function preload({ params }: { params: {slug: string[]}}) {
@@ -10,7 +10,7 @@
     const {entry, html} = data;
     if (res.status === 200) {
       if (lang) {
-        return {html, post: entry, jsonLdScript: jsonLdPost(entry)};
+        return {html, post: entry, jsonLdScript: jsonLdScript(jsonLdPost(entry))};
       } else {
         return this.redirect(301, path(slug, entry.lang));
       }
@@ -22,12 +22,12 @@
 
 <script lang="ts">
   import { getIsoDate } from "../../services/dates";
+  import type { IndexEntry } from "../../services/interfaces";
 
   import { onMount } from "svelte";
   import Share from "../../components/Share.svelte";
   import Details from "../../components/posts/Details.svelte";
   import Content from "../../components/posts/Content.svelte";
-  import { jsonLdPost } from "../../services/jsonld";
 
   // TODO remove workaround for this issue https://github.com/sveltejs/sapper/issues/904
   onMount(async () => {
