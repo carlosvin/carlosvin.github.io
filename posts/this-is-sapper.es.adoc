@@ -24,6 +24,8 @@
 :cypress: https://www.cypress.io/[Cypress,window=_blank]
 :selenium: https://www.selenium.dev/[Selenium,window=_blank]
 :previewImage: https://sapper.svelte.dev/sapper-logo-horizontal.svg
+:eslint: https://eslint.org/[eslint,window=_blank]
+:svelte-check: https://github.com/sveltejs/language-tools[svelte-check,window=_blank]
 
 He migrado el stack the tecnologías utilizado en mi blog de {nikola} + {rst} a {sapper} + {asciidoc}.
 
@@ -135,35 +137,35 @@ La generación del resaltado de sintáxis en la construcción del sitio web tien
 - Mejora de rendimiento: el análisis del código fuente se hace solo una vez, mientras se construye el sitio web.
 
 == Resultado
-I still have some https://github.com/carlosvin/carlosvin.github.io/issues[work to do,window=_blank], but so far I have a blog with following features:
+Todavía hay https://github.com/carlosvin/carlosvin.github.io/issues[algunos problemas o mejoras que hacer=_blank], pero hasta ahora tenemos un blog con las siguientes características:
 
-- Automated generation of link:/sitemap.xml[Sitemap] and link:/rss[RSS feed].
-- Multi-language support (I still have to translate some texts).
-- Syntax highlighting.
-- 100 score in {lighthouse}.
+- Generación automática de link:/sitemap.xml[Sitemap] and link:/feeds[Atom feeds].
+- Soporte multi-idioma (todavía faltan muchas traducciones).
+- Resaltado de código.
+- Puntuación de 100 en {lighthouse}, aunque todavía hay algunas páginas con menos de 100.
   
 image::/images/lighthouse-results.webp[alt=lighthouse score,width=95%]
 
-== Testing
-I am a big fan of automated testing, I don't love writing them, but I think they are the best way to know if your software is behaving as expected.
+== Pruebas
+Soy un ferviente defensor de las pruebas automáticas, no me gusta escribirlas, pero creo que es la mejor forma de saber que todo funciona como se espera.
 
-{sapper} template brings a pre-configured simple end to end test. It is using {cypress}, a E2E footnote:[End to end] testing framework which has a nicer developer experience than {selenium}, although I think it is still far of being https://blog.logrocket.com/cypress-io-the-selenium-killer/[the Selenium Killer,window=_blank]. 
+El template de {sapper} trae preconfigurado un test de integración muy simple. Utiliza {cypress}, un framework de pruebas E2E footnote:[End to end], más sencillo que {selenium}, aunque creo que todavía no podemos hablar de https://blog.logrocket.com/cypress-io-the-selenium-killer/[the Selenium Killer,window=_blank].
 
-NOTE: Not yet a {selenium} killer: The main reason is that {cypress} lacks of some features you might need, depending on the project, like cross-browser and cross-platform testing offered by https://www.selenium.dev/documentation/en/grid/components_of_a_grid/[Selenium grid,window=_blank].
+NOTE: En muchos casos no puede reemplazar a {selenium}: La principal razón es que {cypress} por diseño no tiene algunas funcionalidades que podrías necesitar, depende del proyecto, como por ejemplo soporte para pruebas en casi cualquier navegador y plataforma, como el proporcionado por https://www.selenium.dev/documentation/en/grid/components_of_a_grid/[Selenium grid,window=_blank].
 
-I've added some tests for this blog (and I plan to add more), I've tested that post header information is correct, that redirection logic is working, main navigation works and metadata is correct, in a couple of hour and including bugfixes! That's why I love writing tests with {cypress}, the productivity.
+He añadido algunas pruebas para este blog (y añadiré más), como verificar que la información del header es correcta, que funcionan las redirecciones, que los principales flujos de navegación funcionan... Todo ello en un par de hoars, incluyendo correcciones de errores encontrados. Por esto me encanta escribir pruebas con {cypress}, por su productividad.
 
-=== Writing a test
+=== Escribiendo una prueba
 
-It works pretty much as Selenium.
-. Opens a page
-. Access to an element using https://developer.mozilla.org/en-US/docs/Web/API/Element/id[HTML identifier,window=_blank] (`#element-id`), https://en.wikipedia.org/wiki/XPath[XPath,window=_blank] (`/a[@title='link title']`) or https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors[CSS selector,window=_blank] (`div > a.cssClass`).
-. Interact with selected element on the page.
-. Validate expectations.
+Funciona de forma similar a Selenium:
+. Abre una página.
+. Accede a un elemento utilizando https://developer.mozilla.org/en-US/docs/Web/API/Element/id[HTML identifier,window=_blank] (`#element-id`), https://en.wikipedia.org/wiki/XPath[XPath,window=_blank] (`/a[@title='link title']`) or https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors[CSS selector,window=_blank] (`div > a.cssClass`).
+. Interactuar con el elemento seleccionado.
+. Validar que todo se comporta de forma esperada.
 
-You can find this blog tests at https://github.com/carlosvin/carlosvin.github.io/tree/site/cypress/integration[cypress/integration] folder.
+Puedes encontrar ejemplos de pruebas en la carpeta https://github.com/carlosvin/carlosvin.github.io/tree/site/cypress/integration[cypress/integration].
 
-.Simple test example
+.Ejemplo simple
 [source,javascript]
 ----
 it('Header', () => {
@@ -171,8 +173,9 @@ it('Header', () => {
   cy.get('.subtitle .date').contains('28/08/2020') <2>
 });
 ----
-<1> It navigates to the post absolute path
-<2> It checks that date is correct in subtitle
+<1> Navega al path de un post.
+<2> Comprueba que la fecha que aparece en el subtítulo es correcta.
 
 == Typescript
-Finally https://svelte.dev/blog/svelte-and-typescript[Svelte support for Typescript is completed] and after quite few some work, I've migrated https://github.com/carlosvin/carlosvin.github.io[this Blog supported by Sapper to Typescript also]. Feel free to use it as template or example, there are still some caveats, like clarify wether keep using eslint or svelte-check or both. 
+Finalmente https://svelte.dev/blog/svelte-and-typescript[el soporte de Svelte para Typescript está terminado] y después de más trabajo del esperado, he migrado https://github.com/carlosvin/carlosvin.github.io[este blog utlizando Sapper con Javascript a Sapper con Typescript]. 
+Te animo a que utilices este proyecto como ejemplo o template para tu blog, si encuentras algún problema, el feedback es bienvenido. Hay todavía https://github.com/carlosvin/carlosvin.github.io/issues[algunos problemas], como averiguar que si utilizar {eslint} o {svelte-check} o ambos. 
