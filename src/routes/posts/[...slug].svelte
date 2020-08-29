@@ -21,6 +21,8 @@
 </script>
 
 <script lang="ts">
+  import 'highlight.js/styles/default.css';
+
   import { getIsoDate } from "../../services/dates";
   import type { IndexEntry } from "../../services/interfaces";
 
@@ -77,17 +79,6 @@
           <link rel="alternate" hreflang="{lang}" href="{path(post.slug, lang)}" />
       {/each}
   {/if}
-  <link
-    rel="preload"
-    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css"
-    crossorigin="true"
-    as="style"> 
-  <noscript>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css" 
-      crossorigin="true"/>
-  </noscript>
 </svelte:head>
 
 <header>
