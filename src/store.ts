@@ -38,7 +38,7 @@ class BlogStore {
         };
     }
 
-    private static newEntry({ title, doctitle, author, date, description, keywords, lang, modified, previewimage, slug, summary, updated }: InputMetadata, filename: string): IndexEntry {
+    private static newEntry({ title, doctitle, author, date, description, keywords, lang, modified, previewimage, previewImage, slug, summary, updated }: InputMetadata, filename: string): IndexEntry {
         const pSlug = slug || toSlug(filename.split('.')[0]);
         const pModified = updated || modified || date;
         const pDate = date || updated || modified;
@@ -52,7 +52,7 @@ class BlogStore {
             modified: new Date(pModified).getTime(),
             created: new Date(pDate).getTime(),
             author: author || AUTHOR,
-            previewimage: previewimage || 'icons/icon-192x192.png',
+            previewimage: previewimage || previewImage || 'icons/icon-192x192.png',
             otherLangs: [],
             path: path(pSlug, lang),
             url: url(pSlug, lang)

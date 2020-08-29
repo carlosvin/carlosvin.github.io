@@ -41,6 +41,7 @@ export interface InputMetadata {
     readonly updated: string;
     readonly modified: string;
     readonly previewimage?: string;
+    readonly previewImage?: string;
     readonly author: string;
     readonly otherLangs: string;
 }
