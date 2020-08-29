@@ -26,8 +26,9 @@ export function jsonLdCategory(category: Category): string {
     });
 }
 
-export function jsonLdPost({title, summary, previewimage, created,modified, keywords, author}: IndexEntry): string {
+export function jsonLdPost({ title, summary, previewimage, created, modified, keywords, author }: IndexEntry): string {
     // "wordcount": "1120", articleBody
+    const person = author ? jsonLdPerson(author) : undefined;
     return JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Article",
@@ -39,18 +40,19 @@ export function jsonLdPost({title, summary, previewimage, created,modified, keyw
         "alternativeHeadline": summary,
         "description": summary,
         "image": previewimage,
-        "datePublished": created,
-        "dateModified": modified,
+        "datePublished": new Date(created).toISOString(),
+        "dateModified": new Date(modified).toISOString(),
         "keywords": keywords,
-        "author": {
-            "@type": "Person",
-            "name": author
-        },
-        "publisher": author
+        "author": person,
+        "publisher": person
     });
 }
 
-export function jsonLdPage (name: string, description: string): string {
+export function jsonLdPerson(name: string): { "@type": string, name: string } {
+    return { "@type": "Person", name };
+}
+
+export function jsonLdPage(name: string, description: string): string {
     return JSON.stringify(
         {
             "@context": "http://schema.org",
@@ -61,5 +63,5 @@ export function jsonLdPage (name: string, description: string): string {
                 "@type": "ProfilePage",
                 "name": name
             }
-    });
+        });
 }
