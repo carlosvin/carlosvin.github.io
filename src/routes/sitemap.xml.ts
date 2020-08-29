@@ -15,6 +15,13 @@ fs.readdirSync("./src/routes").forEach(file => {
 	}
 });
 
+function linkLang (slug: string, lang: string): string {
+	return `<xhtml:link 
+				rel="alternate"
+				hreflang="${lang}"
+				href="${url(slug, lang )}"/>`;
+}
+
 const render = (pages: string[], posts: IndexEntry[]) => `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	${pages
@@ -22,14 +29,11 @@ const render = (pages: string[], posts: IndexEntry[]) => `<?xml version="1.0" en
 		.join("\r\n")}
   	${posts.map(({ slug, lang, modified, otherLangs}) => `
 		<url>
-		<loc>${url(slug, lang)}</loc>
+		<loc>${url(slug)}</loc>
 		<priority>0.69</priority>
 		<lastmod>${getIsoDate(new Date(modified))}</lastmod>
-		${otherLangs ? otherLangs.map(l => `<xhtml:link 
-				rel="alternate"
-				hreflang="${l}"
-				href="${url(slug, l )}"/>`) : ''
-			}
+		${linkLang(slug, lang)}
+		${otherLangs ? otherLangs.map(l => linkLang(slug, l)) : '' }
 		</url>`).join("\r\n")}
 </urlset>`;
 
