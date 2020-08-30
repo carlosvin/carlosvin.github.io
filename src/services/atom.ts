@@ -79,6 +79,7 @@ export class Atom {
     }
 
     get xml(): string {
+        const latest = Math.max(...this.posts.map( p => p.entry.modified));
         return `<?xml version="1.0" encoding="UTF-8" ?>
         <feed xmlns="http://www.w3.org/2005/Atom">
             <title>${this.title}</title>
@@ -86,7 +87,7 @@ export class Atom {
             <link rel="self" href="${this.url}" />
             <link href="${this.baseUrl}" />
             <id>${this.baseUrl}/</id>
-            <updated>${new Date().toISOString()}</updated>
+            <updated>${new Date(latest).toISOString()}</updated>
             ${this.posts.map(post => new AtomItem(post, this.auth).xml).join('\n  ')}
         </feed>`;
     }
