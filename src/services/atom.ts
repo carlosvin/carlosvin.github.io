@@ -22,10 +22,6 @@ class AtomItem {
         return '';
     }
 
-    get icon() {
-        return this.entry.previewimage ? `<icon>${this.entry.previewimage}</icon>` : '';
-    }
-
     get title(): string {
         return this.entry.title;
     }
@@ -60,7 +56,6 @@ class AtomItem {
             <summary>${this.summary}</summary>
             <content type="html"><![CDATA[${this.html}]]></content>
             ${this.categories}
-            ${this.icon}
             <author><name>${this.auth}</name></author>
         </entry>`;
     }
