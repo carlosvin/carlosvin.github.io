@@ -1,6 +1,6 @@
 
 import type { IndexEntry, Post } from './interfaces';
-import {url} from './url'
+import { url } from './url'
 
 class AtomItem {
     private readonly entry: IndexEntry;
@@ -14,7 +14,7 @@ class AtomItem {
     }
 
     get categories() {
-        const {keywords} = this.entry;
+        const { keywords } = this.entry;
         if (keywords) {
             return [...keywords].map(
                 c => `<category term="${c}"/>`).join(`\n    `);
@@ -22,7 +22,11 @@ class AtomItem {
         return '';
     }
 
-    get title (): string {
+    get icon() {
+        return this.entry.previewimage ? `<icon>${this.entry.previewimage}</icon>` : '';
+    }
+
+    get title(): string {
         return this.entry.title;
     }
 
@@ -39,14 +43,14 @@ class AtomItem {
     }
 
     get otherLangsLinks() {
-        const {otherLangs, slug} = this.entry;
+        const { otherLangs, slug } = this.entry;
         return otherLangs ? otherLangs.map(l => `<link 
 				rel="alternate"
 				hreflang="${l}"
-				href="${url(slug, l )}"/>`).join("\r\n") : '';
+				href="${url(slug, l)}"/>`).join("\r\n") : '';
     }
 
-    get xml(){
+    get xml() {
         return `<entry>
             <title>${this.title}</title>
             <link href="${this.url}" />
@@ -56,6 +60,7 @@ class AtomItem {
             <summary>${this.summary}</summary>
             <content type="html"><![CDATA[${this.html}]]></content>
             ${this.categories}
+            ${this.icon}
         </entry>`;
     }
 }
@@ -66,16 +71,18 @@ export class Atom {
     private readonly description: string;
     private readonly baseUrl: string;
     private readonly url: string;
-    
-    constructor(title: string, description: string, posts: Post[], baseUrl: string, path: string) {
+    private readonly auth: string;
+
+    constructor(title: string, description: string, posts: Post[], baseUrl: string, path: string, auth: string) {
         this.posts = posts;
         this.url = baseUrl + path;
         this.baseUrl = baseUrl;
         this.title = title;
         this.description = description;
+        this.auth = auth;
     }
-    
-    get xml (): string {
+
+    get xml(): string {
         return `<?xml version="1.0" encoding="UTF-8" ?>
         <feed xmlns="http://www.w3.org/2005/Atom">
             <title>${this.title}</title>
@@ -85,6 +92,9 @@ export class Atom {
             <id>${this.baseUrl}/</id>
             <updated>${new Date().toISOString()}</updated>
             ${this.posts.map(post => new AtomItem(post, this.baseUrl).xml).join('\n  ')}
+            <author>
+            <name>${this.auth}</name>
+            </author>
         </feed>`;
     }
 }

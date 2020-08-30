@@ -2,7 +2,7 @@
 import { store } from '../../store';
 import { Atom } from '../../services/atom';
 import { getDescription, getSiteName } from '../../services/lang';
-import { BASE_URL } from '../../conf';
+import { AUTHOR, BASE_URL } from '../../conf';
 import type { ServerResponse } from 'http';
 
 interface Req { 
@@ -21,6 +21,7 @@ export function get(req: Req, res: ServerResponse): void {
     getDescription(lang),
     store.getByLang(lang),
     BASE_URL,
-    req.originalUrl
+    req.originalUrl,
+    AUTHOR
   ).xml);
 }
