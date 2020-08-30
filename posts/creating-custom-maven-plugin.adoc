@@ -61,8 +61,8 @@ Maven has finally chosen {jsr330} as https://javax-inject.github.io/javax-inject
 
 To use dependency injection with Maven we have to:
 
-. Add `javax.inject` dependency to `pom.xml`, so we can use `@Inject`, `@Named`, and `@Singleton` annotations in plugin implementation Java code.
-+
+Add `javax.inject` dependency to `pom.xml`, so we can use `@Inject`, `@Named`, and `@Singleton` annotations in plugin implementation Java code.
+
 .pom.xml
 [source,xml]
 ----
@@ -72,9 +72,9 @@ To use dependency injection with Maven we have to:
     <version>1</version>
 </dependency>
 ----
-+
-. Set up the `sisu-maven-plugin` to index the {jsr330} components you want made available to Maven.
-+
+
+Set up the `sisu-maven-plugin` to index the {jsr330} components you want made available to Maven.
+
 .pom.xml
 [source,xml]
 ----
@@ -92,8 +92,8 @@ To use dependency injection with Maven we have to:
     </executions>
 </plugin>
 ----
-+
-. Add annotations to your Mojo, e.g:
+
+Add annotations to your Mojo, e.g:
 
 .BuildMojo.java
 [source,java]
@@ -109,6 +109,9 @@ public class BuildMojo extends AbstractMojo {
     public BuildMojo(FileSetManager fileSetManager, MdToHtml mdToHtml) {
         this.fileSetManager = fileSetManager;
         this.mdToHtml = mdToHtml;
+        //
+    }
+}
 ----
 <1> This annotation is not a dependency injection one, we will explain later what it is for.
 <2> It will inject an instance of FileSetManager and MdToHtml.
@@ -121,7 +124,9 @@ Your {mojo} class has to implement `org.apache.maven.plugin.Mojo`, although it i
 
 [source,java]
 ----
-public class BuildMojo extends AbstractMojo {
+public class BuildMojo extends AbstractMojo { 
+    // ...
+}
 ----
 
 ==== 2. Configure Mojo with Java 5 annotations
@@ -151,13 +156,15 @@ public class BuildMojo extends AbstractMojo {
     */
     @Parameter
     private FileSet inputFiles;
+    // 
+}
 ----
 <1> Configures Mojo name and default life-cycle phase. To execute the Mojo in this example we will use `mvn site:build`: _site_ is the plugin name and _build_ is `name` parameter.
 <2> We use `@Parameter` annotation to pass configuration parameters to Mojo. 
 <3> You can use properties placeholder or any String. If the parameter type is not a String, then Maven will try to cast it.
 <4> It allows configuration of the Mojo parameter from the command line by referencing a system property that the user sets via the -D option. E.g: `mvn site:build -DsiteOutputDirectory=/var/www/html` will set siteOutputDirectory attribute to `/var/www/html`.
 
-HINT: More info in https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters[Maven Plugin development guide in Parametera section].
+TIP: More info in https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters[Maven Plugin development guide in Parametera section].
 
 ==== 3. Implement _execute_ method
 
@@ -165,17 +172,17 @@ As I have explained before at <<1. Implement Mojo interface>>, our {mojo} class 
 
 {mojo} class instance is called from {maven} execution life-cycle by invoking `execute()` method. Before calling `execute()`, {maven} has performed some other tasks related with the Mojo:
 
-. {maven} instantiates Mojo and injects dependencies (link:#dependency-injection[Dependency Injection]).
-+
+.{maven} instantiates Mojo and injects dependencies (link:#dependency-injection[Dependency Injection]).
 [source,java]
 ----
 Mojo mojo = new BuildMojo(fileSetManager, mdToHtml);
 ----
-+
-. {maven} configures the {mojo} by assigning values to parameters.
-. {maven} calls execute method: `mojo.execute()`.
+
+{maven} configures the {mojo} by assigning values to parameters.
 
 I will simplify `execute` method implementation in the https://github.com/carlosvin/blog-maven-plugin[sample project in github], because it is more complicated and this complexity is not relevant for learning purposes.
+
+{maven} calls execute method: `mojo.execute()`.
 
 .BuildMojo.java
 [source,java]
