@@ -47,16 +47,16 @@ class AtomItem {
     }
 
     get xml(){
-        return `<item>
+        return `<entry>
             <title>${this.title}</title>
             <link href="${this.url}" />
             ${this.otherLangsLinks}   
             <id>${this.url}</id>
             <updated>${this.modified}</updated>
             <summary>${this.summary}</summary>
-            <content type="xhtml"><![CDATA[${this.html}]]></content>
+            <content type="html"><![CDATA[${this.html}]]></content>
             ${this.categories}
-        </item>`;
+        </entry>`;
     }
 }
 
@@ -82,7 +82,7 @@ export class Atom {
             <subtitle>${this.description}</subtitle>
             <link rel="self" href="${this.url}" />
             <link href="${this.baseUrl}" />
-            <id>${this.baseUrl}</id>
+            <id>${this.baseUrl}/</id>
             <updated>${new Date().toISOString()}</updated>
             ${this.posts.map(post => new AtomItem(post, this.baseUrl).xml).join('\n  ')}
         </feed>`;
