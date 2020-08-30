@@ -5,7 +5,7 @@
             <link rel="self" href="https://carlosvin.github.io/feeds/en.xml" />
             <link href="https://carlosvin.github.io" />
             <id>https://carlosvin.github.io/</id>
-            <updated>2020-08-30T00:21:52.167Z</updated>
+            <updated>2020-08-30T00:46:15.693Z</updated>
             <entry>
             <title>Android Studio Portable Download</title>
             <link href="https://carlosvin.github.io/posts/android-studio-portable-download/en" />
@@ -1345,10 +1345,9 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
 <div class="paragraph">
 <p>To use dependency injection with Maven we have to:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
+<div class="paragraph">
 <p>Add <code>javax.inject</code> dependency to <code>pom.xml</code>, so we can use <code>@Inject</code>, <code>@Named</code>, and <code>@Singleton</code> annotations in plugin implementation Java code.</p>
+</div>
 <div class="listingblock">
 <div class="title">pom.xml</div>
 <div class="content">
@@ -1359,9 +1358,9 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
 <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 </div>
 </div>
-</li>
-<li>
+<div class="paragraph">
 <p>Set up the <code>sisu-maven-plugin</code> to index the <a href="https://maven.apache.org/maven-jsr330.html" target="_blank" rel="noopener">JSR-330</a> components you want made available to Maven.</p>
+</div>
 <div class="listingblock">
 <div class="title">pom.xml</div>
 <div class="content">
@@ -1380,11 +1379,8 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
 <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span></code></pre>
 </div>
 </div>
-</li>
-<li>
+<div class="paragraph">
 <p>Add annotations to your Mojo, e.g:</p>
-</li>
-</ol>
 </div>
 <div class="listingblock">
 <div class="title">BuildMojo.java</div>
@@ -1399,7 +1395,10 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
     <span class="hljs-meta">@Inject</span> <b class="conum">(2)</b>
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BuildMojo</span><span class="hljs-params">(FileSetManager fileSetManager, MdToHtml mdToHtml)</span> </span>{
         <span class="hljs-keyword">this</span>.fileSetManager = fileSetManager;
-        <span class="hljs-keyword">this</span>.mdToHtml = mdToHtml;</code></pre>
+        <span class="hljs-keyword">this</span>.mdToHtml = mdToHtml;
+        <span class="hljs-comment">//</span>
+    }
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1425,7 +1424,9 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
 </div>
 <div class="listingblock">
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BuildMojo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMojo</span> </span>{</code></pre>
+<pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BuildMojo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMojo</span> </span>{
+    <span class="hljs-comment">// ...</span>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -1456,7 +1457,9 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
     * Fileset spec: https://maven.apache.org/shared/file-management/fileset.html
     */</span>
     <span class="hljs-meta">@Parameter</span>
-    <span class="hljs-keyword">private</span> FileSet inputFiles;</code></pre>
+    <span class="hljs-keyword">private</span> FileSet inputFiles;
+    <span class="hljs-comment">//</span>
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1475,8 +1478,17 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p>HINT: More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters">Maven Plugin development guide in Parametera section</a>.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters">Maven Plugin development guide in Parametera section</a>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -1487,26 +1499,20 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
 <div class="paragraph">
 <p><a href="https://maven.apache.org/plugin-developers/index.html" target="_blank" rel="noopener">Mojo</a> class instance is called from <a href="https://maven.apache.org" target="_blank" rel="noopener">Maven</a> execution life-cycle by invoking <code>execute()</code> method. Before calling <code>execute()</code>, <a href="https://maven.apache.org" target="_blank" rel="noopener">Maven</a> has performed some other tasks related with the Mojo:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><a href="https://maven.apache.org" target="_blank" rel="noopener">Maven</a> instantiates Mojo and injects dependencies (<a href="#dependency-injection">Dependency Injection</a>).</p>
 <div class="listingblock">
+<div class="title"><a href="https://maven.apache.org" target="_blank" rel="noopener">Maven</a> instantiates Mojo and injects dependencies (<a href="#dependency-injection">Dependency Injection</a>).</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-java" data-lang="java">Mojo mojo = <span class="hljs-keyword">new</span> BuildMojo(fileSetManager, mdToHtml);</code></pre>
 </div>
 </div>
-</li>
-<li>
+<div class="paragraph">
 <p><a href="https://maven.apache.org" target="_blank" rel="noopener">Maven</a> configures the <a href="https://maven.apache.org/plugin-developers/index.html" target="_blank" rel="noopener">Mojo</a> by assigning values to parameters.</p>
-</li>
-<li>
-<p><a href="https://maven.apache.org" target="_blank" rel="noopener">Maven</a> calls execute method: <code>mojo.execute()</code>.</p>
-</li>
-</ol>
 </div>
 <div class="paragraph">
 <p>I will simplify <code>execute</code> method implementation in the <a href="https://github.com/carlosvin/blog-maven-plugin">sample project in github</a>, because it is more complicated and this complexity is not relevant for learning purposes.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://maven.apache.org" target="_blank" rel="noopener">Maven</a> calls execute method: <code>mojo.execute()</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">BuildMojo.java</div>
