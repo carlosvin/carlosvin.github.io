@@ -36,7 +36,7 @@ button::after {
     <button on:click={share} title="{title}"/>
 {:else}
     <IconLink 
-        href="{`https://twitter.com/intent/tweet?url=${url}&text=${title}: ${text}&hashtags=${keywords.join(',')}`}" 
+        href="{`https://twitter.com/intent/tweet?url=${url}&text=${title}:&nbsp;${text}&hashtags=${keywords.join(',')}`}" 
         title="{`Share "${title}"`}"
         icon="twitter"/>
 {/if}
