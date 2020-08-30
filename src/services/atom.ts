@@ -5,12 +5,12 @@ import { url } from './url'
 class AtomItem {
     private readonly entry: IndexEntry;
     private readonly html: string;
-    private readonly baseUrl: string;
+    private readonly auth: string;
 
-    constructor(post: Post, baseUrl: string) {
+    constructor(post: Post, auth: string) {
         this.entry = post.entry;
         this.html = post.html;
-        this.baseUrl = baseUrl;
+        this.auth = auth;
     }
 
     get categories() {
@@ -61,6 +61,7 @@ class AtomItem {
             <content type="html"><![CDATA[${this.html}]]></content>
             ${this.categories}
             ${this.icon}
+            <author><name>${this.auth}</name></author>
         </entry>`;
     }
 }
@@ -91,10 +92,7 @@ export class Atom {
             <link href="${this.baseUrl}" />
             <id>${this.baseUrl}/</id>
             <updated>${new Date().toISOString()}</updated>
-            ${this.posts.map(post => new AtomItem(post, this.baseUrl).xml).join('\n  ')}
-            <author>
-            <name>${this.auth}</name>
-            </author>
+            ${this.posts.map(post => new AtomItem(post, this.auth).xml).join('\n  ')}
         </feed>`;
     }
 }
