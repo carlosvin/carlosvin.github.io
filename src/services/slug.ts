@@ -12,5 +12,5 @@ export function toCapitalize(str: string): string {
 }
 
 export function toHashtags(list: string[], sep = ' '): string {
-    return [...list.map(k => `#${k}`)].join(sep);
+    return list.map(k => k.replace(' ', '')).map(k => `#${k}`).join(sep);
 }
