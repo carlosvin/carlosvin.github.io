@@ -25,14 +25,13 @@ function linkLang (slug: string, lang: string): string {
 const render = (pages: string[], posts: IndexEntry[]) => `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	${pages
-		.map(page => `<url><loc>${BASE_URL}/${page}</loc><priority>0.85</priority></url>`)
+		.map(page => `<url><loc>${BASE_URL}/${page}</loc><priority>0.6</priority></url>`)
 		.join("\r\n")}
   	${posts.map(({ slug, lang, modified, otherLangs}) => `
 		<url>
-		<loc>${url(slug)}</loc>
-		<priority>0.69</priority>
+		<loc>${url(slug, lang)}</loc>
+		<priority>0.9</priority>
 		<lastmod>${getIsoDate(new Date(modified))}</lastmod>
-		${linkLang(slug, lang)}
 		${otherLangs ? otherLangs.map(l => linkLang(slug, l)) : '' }
 		</url>`).join("\r\n")}
 </urlset>`;
