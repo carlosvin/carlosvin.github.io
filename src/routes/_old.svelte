@@ -17,6 +17,7 @@
   import Index from "../components/Index.svelte";
   import type { IndexEntry } from "../services/interfaces";
   import { getSiteName, getDescription } from "../services/lang";
+  import { path } from "../services/url";
 
   function oldPath({lang, slug}: Partial<IndexEntry>) {
     return `${lang}/posts/${slug}`;
@@ -34,6 +35,11 @@
     <Entry>
       <a rel="prefetch" href={oldPath(post)} class="title">
         {post.title} - {post.lang}
+      </a>
+    </Entry>
+    <Entry>
+      <a rel="prefetch" href={path(post.slug, post.path)} class="title">
+        {post.title} - Redirection
       </a>
     </Entry>
     {#if post.otherLangs}
