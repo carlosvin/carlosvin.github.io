@@ -6,24 +6,22 @@ export function jsonLdScript(str: string): string {
 }
 
 export function jsonLdCategories(categories: Category[], title: string, description: string, path: string): string {
-    return jsonLdScript(
-        JSON.stringify({
-            "@context": "https://www.schema.org",
-            type: "Itemlist",
-            name: title,
-            description: description,
-            url: path,
-            itemlistElement: categories.map((c) => jsonLdCategory(c)),
-        })
-    );
+    return JSON.stringify({
+        "@context": "https://www.schema.org",
+        type: "Itemlist",
+        name: title,
+        description: description,
+        url: path,
+        itemlistElement: categories.map((c) => jsonLdCategory(c)),
+    });
 }
 
-export function jsonLdCategory(category: Category): string {
-    return JSON.stringify({
+function jsonLdCategory(category: Category) {
+    return {
         "@type": "ListItem",
         "name": category.name,
         "url": categoryPath(category.slug)
-    });
+    };
 }
 
 export function jsonLdPost({ title, summary, previewimage, created, modified, keywords, author }: IndexEntry): string {
@@ -48,7 +46,7 @@ export function jsonLdPost({ title, summary, previewimage, created, modified, ke
     });
 }
 
-export function jsonLdPerson(name: string): { "@type": string, name: string } {
+function jsonLdPerson(name: string): { "@type": string, name: string } {
     return { "@type": "Person", name };
 }
 

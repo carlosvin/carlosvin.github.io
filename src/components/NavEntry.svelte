@@ -1,5 +1,5 @@
 
-<script>
+<script lang="ts">
     function curr(segment: string|undefined, href: string) {
         if (segment === undefined && href === '.') {
             return 'page';

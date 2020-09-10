@@ -1,5 +1,5 @@
 
-<script>
+<script lang="ts">
 import Badge from './Badge.svelte'
 import {toSlug} from '../services/slug';
 import {categoryPath} from '../services/url';

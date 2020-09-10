@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import NavEntry from './NavEntry.svelte';
 	export let segment: string|undefined;
 	export let siteName: string;

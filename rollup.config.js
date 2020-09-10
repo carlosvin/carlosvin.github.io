@@ -20,7 +20,10 @@ const legacy = Boolean(process.env.SAPPER_LEGACY_BUILD);
 const { defaults } = require("./svelte.config.js");
 
 const preprocess = [
-	sveltePreprocess({ defaults }),
+	sveltePreprocess({ 
+		...defaults, 
+		preserve: ['ld+json'],
+	}),
 	// You could have more preprocessors, like MDsveX
 ];
 
