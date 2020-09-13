@@ -1,16 +1,16 @@
 <script context="module" lang="ts">
   import { path, url} from "../../services/url";
-  import { jsonLdPost, jsonLdScript } from "../../services/jsonld";
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   export async function preload({ params }: { params: {slug: string[]}}) {
     const [slug, lang] = params.slug;
-    const res = await this.fetch(`${path(slug, lang)  }.json`);
+    const postPath = path(slug, lang);
+    const res = await this.fetch(`${postPath}.json`);
     const data = await res.json();
     const {entry, html} = data;
     if (res.status === 200) {
       if (lang) {
-        return {html, post: entry, jsonLdScript: jsonLdScript(jsonLdPost(entry))};
+        return {html, post: entry, postPath};
       } else {
         return this.redirect(301, path(slug, entry.lang));
       }
@@ -39,7 +39,7 @@
   
   export let post: IndexEntry;
   export let html: string;
-  export let jsonLdScript: string;
+  export let postPath: string;
 
 </script>
 
@@ -70,7 +70,6 @@
 
 <svelte:head>
   <title>{post.title}</title>
-  {@html jsonLdScript}
   <meta name="date.created" content="{getIsoDate(new Date(post.created))}">
   <meta name="date.updated" content="{getIsoDate(new Date(post.modified))}">
   <meta name="description" content="{post.summary}" />
@@ -79,6 +78,7 @@
           <link rel="alternate" hreflang="{lang}" href="{path(post.slug, lang)}" />
       {/each}
   {/if}
+  <link rel="alternate" href="{postPath}.jsonld" type="application/ld+json" />
 </svelte:head>
 
 <header>
