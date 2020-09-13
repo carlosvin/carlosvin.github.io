@@ -1,0 +1,1 @@
+import{S as s,i as r,s as t}from"./client.45215d68.js";import{p as e}from"./url.840225ae.js";function a({params:s}){const{slug:r,lang:t}=s;return this.redirect(301,e(r,t))}export default class extends s{constructor(s){super(),r(this,s,null,null,t,{})}}export{a as preload};
