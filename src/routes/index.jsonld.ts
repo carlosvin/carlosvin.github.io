@@ -1,18 +1,13 @@
-import {store} from '../store';
 import { getSiteName, getDescription } from "../services/lang";
+import { jsonLdPage } from '../services/jsonld';
 import type { ServerResponse } from 'http';
+import { replyStr } from '../services/http';
 
 const name = getSiteName();
 const description = getDescription();
 
-const indexData = JSON.stringify({
-	index: store.index,
-	name,
-	description,
-	langs: store.langs
-});
+const jsonLd = jsonLdPage(name, description);
 
 export function get(req: Request, res: ServerResponse): void {
-	res.writeHead(200, {'Content-Type': 'application/json'});
-	res.end(indexData);
+	replyStr(res, jsonLd);
 }

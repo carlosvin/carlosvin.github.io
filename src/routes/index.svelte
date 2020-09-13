@@ -11,13 +11,12 @@
   export let index: IndexEntry[];
   export let name: string;
   export let description: string;
-  export let ldScript: string;
 </script>
 
 <svelte:head>
   <title>{name}</title>
   <meta name="description" content="{description}" />
-  {@html ldScript}
+  <link rel="alternate" href="index.jsonld" type="application/ld+json" />
 </svelte:head>
 
 <Index posts={index} />
