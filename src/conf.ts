@@ -18,6 +18,4 @@ export const BASE_URL = 'https://carlosvin.github.io';
 
 export const DEFAULT_LANG = 'en';
 
-export const GA_ID = 'UA-1328360-10';
-
 export const FEED_URL = '/feeds';

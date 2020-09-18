@@ -3,7 +3,7 @@
   import { getSiteName, getFeedUrl} from "../services/lang";
   import Social from "../components/Social.svelte";
   import IconLink from "../components/IconLink.svelte";
-  import { FEED_URL, GA_ID } from "../conf";  
+  import { FEED_URL } from "../conf";  
   import GoogleAnalytics from "../components/GoogleAnalytics.svelte";
   import { stores } from "@sapper/app";
 
@@ -48,4 +48,4 @@
 <main>
   <slot />
 </main>
-<GoogleAnalytics {stores} id={GA_ID}/>
+<GoogleAnalytics {stores} />
