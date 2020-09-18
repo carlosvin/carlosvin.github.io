@@ -79,5 +79,5 @@
 	{#if !open}
 		<slot></slot>
 	{/if} 
-	<button on:click={toggle}>≡</button>
+	<button on:click={toggle} type="button">≡</button>
 </nav>

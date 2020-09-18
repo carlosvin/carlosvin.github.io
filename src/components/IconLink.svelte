@@ -34,6 +34,6 @@ a:focus {
 }
 </style>
 
-<a {href} {target} class='icon {icon}' {title} {rel}>
+<a {href} {target} class='icon {icon}' {title} {rel} aria-label="{title}">
     <slot></slot>
 </a>
