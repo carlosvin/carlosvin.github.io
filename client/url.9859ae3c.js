@@ -1,0 +1,1 @@
+import{I as n,J as r,K as t}from"./client.3cc994e0.js";function $(n,t=""){return t?`/${r}/${n}/${t}`:`/${r}/${n}`}function c(n,r=""){return`${t}${$(n,r)}`}function s(r){return`/${n}/${r}`}export{s as c,$ as p,c as u};
