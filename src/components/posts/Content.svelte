@@ -173,11 +173,15 @@
     content: "\e902";
     color: rgb(26, 180, 218);
   }
-
+  .content :global(.stretch) {
+    width: 100%;
+  }
   .content :global(.center) {
     text-align: center;
   }
-
+  .content :global(.caption) {
+    color: gray;
+  }
   .content :global(.hdlist td, .hdlist p) {
     vertical-align: top;
   }
@@ -187,15 +191,12 @@
   .content :global(.hdlist .hdlist1) {
     font-weight: bold;
   }
-
   .content :global(.toc) {
     font-size: 1.2em;
   }
-
   .content :global(.toc li) {
     font-size: smaller;
   }
-
   .content :global(.listingblock) {
     line-height: 1.2em;
     margin-bottom: 0.8em;
@@ -223,6 +224,10 @@
   }
   .content :global(.colist li) {
     margin: 0;
+  }
+  .content :global(.tableblock) {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
   }
   .content :global(.colist ol) {  
     margin: 0.1em 0.6em;
