@@ -1,0 +1,137 @@
+= Golang over Java for REST services
+:date: 2020-10-09
+:keywords: REST, API, Web Services, Java, Golang, Gingonic, Spring,
+:lang: en
+:description: Why I'd pick Golang over Java to create any new distributed system
+:toc:
+
+:api: https://en.wikipedia.org/wiki/Application_programming_interface[API,window=_blank]
+:rest: https://en.wikipedia.org/wiki/Representational_state_transfer[REST,window=_blank]
+:HTTP: https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol[HTTP,window=_blank]
+:JSON: https://en.wikipedia.org/wiki/JSON[JSON,window=_blank]
+:gin: https://github.com/gin-gonic/gin[Gin framework,window=_blank]
+:gomux: https://github.com/gorilla/mux[Gorilla Mux,window=_blank]
+:go: https://golang.org[Go,window=_blank]
+:java: https://www.java.com[Java,window=_blank]
+:pwa: https://web.dev/progressive-web-apps[PWA,window=_blank]
+:covid19app: https://covid-stats-pwa.netlify.app[COVID19-Stats App,window=_blank]
+:svelte: https://svelte.dev[Svelte,window=_blank]
+:spring-rest: https://spring.io/guides/gs/rest-service[Spring Boot (REST),window=_blank]
+
+
+Lately I've been working with two different technology stacks almost in parallel, in both cases we were using them to develop {rest} services.
+
+During this time I've come up with some conclusions and opinions I'd like to share.
+
+A disclaimer, few months ago, I had several years of experience with Java and 0 days of professional experience with Golang.
+
+== Actual project examples
+
+Few months ago I created https://covid-rest.appspot.com/docs[an API to extract and structure COVID-19 data,window=_blank] from https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide[ECDC website,window=_blank]. I developed it in {spring-rest}.
+
+Few months later I had the luck of work on my first professional project in {go} and I decided to create a port of https://covid-rest.appspot.com/docs[the API to extract COVID-19 data,window=_blank] in {go}, just for learning and for fun. 
+
+So, now we have two REST services, almost functionally identical, but developed in two different tech stacks.
+
+.Source code for the 2 REST services implementations
+|===
+|{java} + {spring-rest} | {go} + {gin} 
+
+|https://github.com/carlosvin/covid-rest
+|https://github.com/carlosvin/covid-rest-go
+|===
+
+NOTE: I actually created that https://covid-rest.appspot.com/docs[COVID-19 data REST API] to be the data source for the {covid19app}, a {pwa} built with {svelte}, but that's another topic.
+
+
+== The Ecosystems
+
+If you want to create a {rest} service just in plain Java you will have extra work to do, in Golang a little bit less. That's why we use framework, because they've already solved many common problems for us. 
+
+For this comparison I am going to use Spring for Java and GinGonic for Golang.
+
+== Routing
+
+=== Go - No framework
+Go uses the concept of {http} multiplexer or router. You can specify routes using patterns and link those routes to handlers. The router will decide which handler has to execute the request based on the path received.
+
+.router.go
+[source,go]
+----
+package main
+
+import (
+	"log"
+	"net/http"
+)
+
+func main() {
+	router := http.NewServeMux()
+	router.Handle("/redirect", http.RedirectHandler("https://carlosvin.github.io/", 307))
+	router.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello world!"))
+	})
+	log.Println("Listening...")
+	http.ListenAndServe(":3000", router)
+}
+----
+
+Source code is already quite simple, but there might more complex routing use cases.
+
+=== Go - Gin Framework
+
+Happily there are frameworks that help us to keep our base code simple, for example when we need to extract path parameters, which is quite common use case in {rest} {api}s, we can use a routing library, I've used {gomux} and {gin} and I liked more {gin}.
+
+.https://github.com/carlosvin/covid-rest-go/blob/master/main.go[Full example]
+[source,go]
+----
+import (
+	"github.com/carlosvin/covid-rest-go/handlers"
+	"github.com/carlosvin/covid-rest-go/readers"
+	"github.com/gin-gonic/gin"
+)
+
+func main() {
+	
+	// ...
+
+	r := gin.Default()
+	r.GET("/countries", router.Countries)
+	r.GET("/countries/:code", router.Country)
+	r.GET("/countries/:code/dates", router.CountryDates)
+	r.GET("/countries/:code/dates/:date", router.CountryDate)
+	r.Run()
+}
+----
+
+.https://github.com/carlosvin/covid-rest-go/blob/master/handlers/countries.go[And this is a handler example], the router.Countries one
+[source,go]
+----
+func (r *routerImpl) Countries(c *gin.Context) {
+	c.JSON(200, r.countries())
+}
+----
+
+=== Java + Spring.io
+
+Controller and annotation pretty clear.
+
+=== Filtering and Middleware
+Different approaches, pretty much the same end result. 
+
+== Dependency injection
+For free with Spring. Manual in go, but still dependency injection.
+
+== Testing
+=== Unit tests
+Not big differences, it comes with golang, Junit in Java.
+
+=== Integration tests
+Support out of the box in Spring. 
+In go, you have to implement it yourself.
+
+== Performance
+Besides the languages specific differences, the main difference is the performance. The CPU consumption in go is smaller, but about the memory the difference is really significant, the order of 30 times smaller fingerprint.
+
+=== Mem
+=== CPU
