@@ -48,11 +48,11 @@ NOTE: I actually created that https://covid-rest.appspot.com/docs[COVID-19 data 
 
 If you want to create a {rest} service just in plain Java you will have extra work to do, in Golang a little bit less. That's why we use framework, because they've already solved many common problems for us. 
 
-For this comparison I am going to use Spring for Java and GinGonic for Golang.
+For this comparison I am going to use {spring-rest} for {java} and {gin} for {go}, but in both languages there are a lot of production ready nice options.
 
 == Routing
 
-=== Go - No framework
+=== Go - Without framework
 Go uses the concept of {http} multiplexer or router. You can specify routes using patterns and link those routes to handlers. The router will decide which handler has to execute the request based on the path received.
 
 .router.go
@@ -114,7 +114,73 @@ func (r *routerImpl) Countries(c *gin.Context) {
 
 === Java + Spring.io
 
-Controller and annotation pretty clear.
+The {spring-rest} is based on the concept of Controller, it is implemented using annotations on the class and methods.
+
+.https://github.com/carlosvin/covid-rest/blob/master/src/main/java/com/carlosvin/covid/controllers/CountriesController.java[CountriesController.java,window=_blank]
+[source,java]
+----
+@Validated
+@RestController <1>
+@RequestMapping("/countries") <2>
+public class CountriesController {
+	
+	// Some source code is not shown, you can find the complete example in the repository 
+
+	@GetMapping("/{country}/dates/{isoDateStr}")  <3>
+	public DateStatsDto getDateByCountry(@Size(min = 2, max = 2) @PathVariable String country, @Size(min = 10, max = 20) @PathVariable String isoDateStr) throws NotFoundException {
+		return new DateStatsDto(service.getDate(country, DateUtils.convert(isoDateStr)));
+	}
+}
+----
+<1> Declare the class as Controller so it is registered in {spring-rest}
+<2> Controller base path definition
+<3> Handler definition for a nested path under the main controller path. {spring-rest} makes easy to extract path variables defined in the route, you can directly use them as method arguments.
+
+== Validations
+
+=== Go - Gin Framework
+{gin} uses an external validation package https://godoc.org/github.com/go-playground/validator[validator], besides that it is fully integrated with {gin}.
+
+[source,go]
+----
+type User struct {
+	Name  string `validate:"required"` <1>
+	Email string `validate:"required,email"`
+}
+
+err := validate.Struct(user) <2>
+validationErrors := err.(validator.ValidationErrors) <3>
+----
+<1> The validation system uses {go} tags, it is not the same as {java} annotations, but in the validation case, it works in pretty same way as annotations.
+<2> Executes the validation explicitly
+<3> Extracts validation errors
+
+=== Java + Spring.io
+You can enable the validation in the controller, then in the handlers you can specify the type of validation. Let's explain it using the previous example:
+
+.https://github.com/carlosvin/covid-rest/blob/master/src/main/java/com/carlosvin/covid/controllers/CountriesController.java[CountriesController.java,window=_blank]
+[source,java]
+----
+@Validated <1>
+@RestController
+@RequestMapping("/countries")
+public class CountriesController {
+	
+	// Some source code is not shown, you can find the complete example in the repository 
+
+	@GetMapping("/{country}/dates/{isoDateStr}")
+	public DateStatsDto getDateByCountry(
+		@Size(min = 2, max = 2) @PathVariable String country, <2>
+		@Size(min = 10, max = 20) @PathVariable String isoDateStr) throws NotFoundException {
+		return new DateStatsDto(service.getDate(country, DateUtils.convert(isoDateStr)));
+	}
+}
+----
+<1> Declare the class as Controller so it is registered in {spring-rest}
+<2> `@Size` validates that the input argument country has 2 characters
+
+The validation system is more powerful than you can see in this code snippet, for example adding `@Valid` annotation opens the door to complex types validation.
+
 
 === Filtering and Middleware
 Different approaches, pretty much the same end result. 
