@@ -222,11 +222,50 @@ As soon as you use {di}, I don't have any strong opinion about using {ioc} syste
 Work in progress...
 
 === Unit tests
-Not big differences, it comes with golang, Junit in Java.
+For unit tets there are no big differences. 
+
+{go} comes with a standard https://golang.org/pkg/testing/[library for testing and benchmarking,window=_blank].
+
+For {java} there are many well-known unit testing frameworks, but Spring already has quite big support for https://docs.spring.io/spring-batch/docs/current/reference/html/testing.html[unit testing,window=_blank].
+
 
 === Integration tests
-Support out of the box in Spring. 
-In go, you have to implement it yourself.
+
+==== Go
+
+There are no support for Integration Tests in {go}, you will have to implement everything by yourself, although it is not difficult, https://kpat.io/2019/06/testing-with-gin/[here you can find a simple example,window=_blank].
+
+==== Spring
+
+On the other hand, https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html[Spring has a great testing support,window=_bank]. 
+
+To write integration tests for {rest} services, https://spring.io/guides/gs/testing-web/[MockMvc,window=_blank] is really convenient.
+
+I've used https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/carlosvin/covid/CountriesControllerTest.java[MockMvc in the covid-rest project,window=_blank].
+
+.MockMvc code snippet from https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/carlosvin/covid/CountriesControllerTest.java[CountriesControllerTest.java,window=_blank]
+[source,java]
+----
+	@Autowired
+	private MockMvc mockMvc; <1>
+	
+	@Test
+	void getCountries() throws Exception {
+		this.mockMvc.perform(get("/countries")) <2>
+				.andDo(print()).andExpect(status().isOk()) <3>
+				.andExpect(jsonPath("$.*", hasSize(144)))
+				.andExpect(jsonPath("$.ES.confirmedCases",comparesEqualTo(9191)))
+				.andExpect(jsonPath("$.ES.deathsNumber", comparesEqualTo(309)))
+				.andExpect(jsonPath("$.ES.countryCode", comparesEqualTo("ES")))
+				.andExpect(jsonPath("$.ES.countryName", comparesEqualTo("Spain")))
+				.andExpect(jsonPath("$.ES.path", comparesEqualTo("/countries/ES")))
+				.andExpect(jsonPath("$.VC.countryName", comparesEqualTo("Saint Vincent and the Grenadines")))
+				.andDo(document("countries/list", preprocessResponse(prettyPrint(), new CropPreprocessor())));
+	}
+----
+<1> The Spring test runner injects the MockMvc object.
+<2> We use MockMvc to call to the endpoint we have created.
+<3> Then we validate the endpoint's response, status code and body.
 
 == Performance
 
