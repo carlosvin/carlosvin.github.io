@@ -1,4 +1,4 @@
-import allAdoc from '../posts/**/*.adoc';
+import allAdoc from '../static/posts/**/*.adoc';
 import { toSlug, toCapitalize } from './services/slug';
 import { getLangSimplified } from './services/lang';
 //import { Post, Category, InputMetadata, IndexEntry } from './services/interfaces';
