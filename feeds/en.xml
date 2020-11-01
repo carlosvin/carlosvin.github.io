@@ -5,7 +5,7 @@
             <link rel="self" href="https://carlosvin.github.io/feeds/en.xml" />
             <link href="https://carlosvin.github.io" />
             <id>https://carlosvin.github.io/</id>
-            <updated>2020-10-25T00:00:00.000Z</updated>
+            <updated>2020-11-01T00:00:00.000Z</updated>
             <entry>
             <title>Android Studio Portable Download</title>
             <link href="https://carlosvin.github.io/posts/android-studio-portable-download/en" />
@@ -4396,6 +4396,584 @@ filtered files:
 </div>]]></content>
             <category term="Python"/>
     <category term="Tips and Tricks"/>
+            <author><name>Carlos Martin Sanchez</name></author>
+        </entry>
+  <entry>
+            <title>Golang over Java for REST services</title>
+            <link href="https://carlosvin.github.io/posts/rest-service-go-vs-java/en" />
+               
+            <id>https://carlosvin.github.io/posts/rest-service-go-vs-java/en</id>
+            <updated>2020-11-01T00:00:00.000Z</updated>
+            <summary>Why I'd pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang</summary>
+            <content type="html"><![CDATA[<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_actual_project_examples">Actual project examples</a></li>
+<li><a href="#_the_ecosystems">The Ecosystems</a></li>
+<li><a href="#_routing">Routing</a>
+<ul class="sectlevel2">
+<li><a href="#_go_without_framework">Go - Without framework</a></li>
+<li><a href="#_go_gin_framework">Go - Gin Framework</a></li>
+<li><a href="#_java_spring_io">Java + Spring.io</a></li>
+</ul>
+</li>
+<li><a href="#_validations">Validations</a>
+<ul class="sectlevel2">
+<li><a href="#_go_gin_framework_2">Go - Gin Framework</a></li>
+<li><a href="#_java_spring_io_2">Java + Spring.io</a></li>
+<li><a href="#_filtering_and_middleware">Filtering and Middleware</a></li>
+</ul>
+</li>
+<li><a href="#_dependency_injection_ioc">Dependency injection / IoC</a>
+<ul class="sectlevel2">
+<li><a href="#_spring_ioc">Spring IoC</a></li>
+<li><a href="#_go">Go</a></li>
+</ul>
+</li>
+<li><a href="#_testing">Testing</a>
+<ul class="sectlevel2">
+<li><a href="#_unit_tests">Unit tests</a></li>
+<li><a href="#_integration_tests">Integration tests</a></li>
+</ul>
+</li>
+<li><a href="#_performance">Performance</a>
+<ul class="sectlevel2">
+<li><a href="#_memory">Memory</a></li>
+<li><a href="#_speed">Speed</a></li>
+</ul>
+</li>
+<li><a href="#_conclusions">Conclusions</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Lately I&#8217;ve been working with two different technology stacks almost in parallel, in both cases we were using them to develop <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="noopener">REST</a> services.</p>
+</div>
+<div class="paragraph">
+<p>During this time I&#8217;ve come up with some conclusions and opinions I&#8217;d like to share.</p>
+</div>
+<div class="paragraph">
+<p>A disclaimer, few months ago, I had several years of experience with Java and 0 days of professional experience with Golang.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_actual_project_examples">Actual project examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Few months ago I created <a href="https://covid-rest.appspot.com/docs" target="_blank" rel="noopener">an API to extract and structure COVID-19 data</a> from <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide" target="_blank" rel="noopener">ECDC website</a>. I developed it in <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a>.</p>
+</div>
+<div class="paragraph">
+<p>Few months later I had the luck of work on my first professional project in <a href="https://golang.org" target="_blank" rel="noopener">Go</a> and I decided to create a port of <a href="https://covid-rest.appspot.com/docs" target="_blank" rel="noopener">the API to extract COVID-19 data</a> in <a href="https://golang.org" target="_blank" rel="noopener">Go</a>, just for learning and for fun.</p>
+</div>
+<div class="paragraph">
+<p>Now we have two REST services, almost functionally identical, but developed in two different tech stacks, so we can easily compare some relevant aspects of both.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Source code for the 2 REST services implementations</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><a href="https://www.java.com" target="_blank" rel="noopener">Java</a> + <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a></th>
+<th class="tableblock halign-left valign-top"><a href="https://golang.org" target="_blank" rel="noopener">Go</a> + <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/carlosvin/covid-rest" class="bare">https://github.com/carlosvin/covid-rest</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/carlosvin/covid-rest-go" class="bare">https://github.com/carlosvin/covid-rest-go</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+I actually created that <a href="https://covid-rest.appspot.com/docs">COVID-19 data REST API</a> to be the data source for the <a href="https://covid-stats-pwa.netlify.app" target="_blank" rel="noopener">COVID19-Stats App</a>, a <a href="https://web.dev/progressive-web-apps" target="_blank" rel="noopener">PWA</a> built with <a href="https://svelte.dev" target="_blank" rel="noopener">Svelte</a>, but that&#8217;s another topic.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_ecosystems">The Ecosystems</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you want to create a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="noopener">REST</a> service just in plain Java you will have extra work to do, in Golang a little bit less. That&#8217;s why we use framework, because they&#8217;ve already solved many common problems for us.</p>
+</div>
+<div class="paragraph">
+<p>For this comparison I am going to use <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> for <a href="https://www.java.com" target="_blank" rel="noopener">Java</a> and <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> for <a href="https://golang.org" target="_blank" rel="noopener">Go</a>, but in both languages there are a lot of production ready nice options.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_routing">Routing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_go_without_framework">Go - Without framework</h3>
+<div class="paragraph">
+<p>Go uses the concept of <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank" rel="noopener">HTTP</a> multiplexer or router. You can specify routes using patterns and link those routes to handlers. The router will decide which handler has to execute the request based on the path received.</p>
+</div>
+<div class="listingblock">
+<div class="title">router.go file</div>
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">"log"</span>
+	<span class="hljs-string">"net/http"</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	router := http.NewServeMux()
+	router.Handle(<span class="hljs-string">"/redirect"</span>, http.RedirectHandler(<span class="hljs-string">"https://carlosvin.github.io/"</span>, <span class="hljs-number">307</span>))
+	router.HandleFunc(<span class="hljs-string">"/hello"</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(w http.ResponseWriter, r *http.Request)</span></span> {
+		w.Write([]<span class="hljs-keyword">byte</span>(<span class="hljs-string">"Hello world!"</span>))
+	})
+	log.Println(<span class="hljs-string">"Listening..."</span>)
+	http.ListenAndServe(<span class="hljs-string">":3000"</span>, router)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Source code is already quite simple, but there might more complex routing use cases.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_go_gin_framework">Go - Gin Framework</h3>
+<div class="paragraph">
+<p>Happily there are frameworks that help us to keep our base code simple, for example when we need to extract path parameters, which is quite common use case in <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="noopener">REST</a> <a href="https://en.wikipedia.org/wiki/Application_programming_interface" target="_blank" rel="noopener">API</a>s, we can use a routing library, I&#8217;ve used <a href="https://github.com/gorilla/mux" target="_blank" rel="noopener">Gorilla Mux</a> and <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> and I liked more <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/carlosvin/covid-rest-go/blob/master/main.go">Full example</a></div>
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">import</span> (
+	<span class="hljs-string">"github.com/carlosvin/covid-rest-go/handlers"</span>
+	<span class="hljs-string">"github.com/carlosvin/covid-rest-go/readers"</span>
+	<span class="hljs-string">"github.com/gin-gonic/gin"</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+
+	<span class="hljs-comment">// ...</span>
+
+	r := gin.Default()
+	r.GET(<span class="hljs-string">"/countries"</span>, router.Countries)
+	r.GET(<span class="hljs-string">"/countries/:code"</span>, router.Country)
+	r.GET(<span class="hljs-string">"/countries/:code/dates"</span>, router.CountryDates)
+	r.GET(<span class="hljs-string">"/countries/:code/dates/:date"</span>, router.CountryDate)
+	r.Run()
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/carlosvin/covid-rest-go/blob/master/handlers/countries.go">And this is a handler example</a>, the router.Countries one</div>
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *routerImpl)</span> <span class="hljs-title">Countries</span><span class="hljs-params">(c *gin.Context)</span></span> {
+	c.JSON(<span class="hljs-number">200</span>, r.countries())
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_spring_io">Java + Spring.io</h3>
+<div class="paragraph">
+<p>The <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> is based on the concept of Controller, it is implemented using annotations on the class and methods.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/carlosvin/covid-rest/blob/master/src/main/java/com/carlosvin/covid/controllers/CountriesController.java" target="_blank" rel="noopener">CountriesController.java</a></div>
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Validated</span>
+<span class="hljs-meta">@RestController</span> <b class="conum">(1)</b>
+<span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/countries"</span>) <b class="conum">(2)</b>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountriesController</span> </span>{
+
+	<span class="hljs-comment">// Some source code is not shown, you can find the complete example in the repository</span>
+
+	<span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/{country}/dates/{isoDateStr}"</span>)  <b class="conum">(3)</b>
+	<span class="hljs-function"><span class="hljs-keyword">public</span> DateStatsDto <span class="hljs-title">getDateByCountry</span><span class="hljs-params">(@Size(min = <span class="hljs-number">2</span>, max = <span class="hljs-number">2</span>)</span> @PathVariable String country, @<span class="hljs-title">Size</span><span class="hljs-params">(min = <span class="hljs-number">10</span>, max = <span class="hljs-number">20</span>)</span> @PathVariable String isoDateStr) <span class="hljs-keyword">throws</span> NotFoundException </span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DateStatsDto(service.getDate(country, DateUtils.convert(isoDateStr)));
+	}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Declare the class as Controller so it is registered in <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a></p>
+</li>
+<li>
+<p>Controller base path definition</p>
+</li>
+<li>
+<p>Handler definition for a nested path under the main controller path. <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> makes easy to extract path variables defined in the route, you can directly use them as method arguments.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_validations">Validations</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_go_gin_framework_2">Go - Gin Framework</h3>
+<div class="paragraph">
+<p><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> uses an external validation package <a href="https://godoc.org/github.com/go-playground/validator">validator</a>, besides that it is fully integrated with <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">type</span> User <span class="hljs-keyword">struct</span> {
+	Name  <span class="hljs-keyword">string</span> <span class="hljs-string">`validate:"required"`</span> <b class="conum">(1)</b>
+	Email <span class="hljs-keyword">string</span> <span class="hljs-string">`validate:"required,email"`</span>
+}
+
+err := validate.Struct(user) <b class="conum">(2)</b>
+validationErrors := err.(validator.ValidationErrors) <b class="conum">(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>The validation system uses <a href="https://golang.org" target="_blank" rel="noopener">Go</a> tags, it is not the same as <a href="https://www.java.com" target="_blank" rel="noopener">Java</a> annotations, but in the validation case, it works in pretty same way as annotations.</p>
+</li>
+<li>
+<p>Executes the validation explicitly</p>
+</li>
+<li>
+<p>Extracts validation errors</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_spring_io_2">Java + Spring.io</h3>
+<div class="paragraph">
+<p>You can enable the validation in the controller level, then in the handlers you can also specify the type of validation. Let&#8217;s explain it using the previous example:</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/carlosvin/covid-rest/blob/master/src/main/java/com/carlosvin/covid/controllers/CountriesController.java" target="_blank" rel="noopener">CountriesController.java</a></div>
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Validated</span> <b class="conum">(1)</b>
+<span class="hljs-meta">@RestController</span>
+<span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/countries"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountriesController</span> </span>{
+
+	<span class="hljs-comment">// Some source code is not shown, you can find the complete example in the repository</span>
+
+	<span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/{country}/dates/{isoDateStr}"</span>)
+	<span class="hljs-function"><span class="hljs-keyword">public</span> DateStatsDto <span class="hljs-title">getDateByCountry</span><span class="hljs-params">(
+		@Size(min = <span class="hljs-number">2</span>, max = <span class="hljs-number">2</span>)</span> @PathVariable String country, <b class="conum">(2)</b>
+		@<span class="hljs-title">Size</span><span class="hljs-params">(min = <span class="hljs-number">10</span>, max = <span class="hljs-number">20</span>)</span> @PathVariable String isoDateStr) <span class="hljs-keyword">throws</span> NotFoundException </span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DateStatsDto(service.getDate(country, DateUtils.convert(isoDateStr)));
+	}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Declare the class as Controller so it is registered in <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a></p>
+</li>
+<li>
+<p><code>@Size</code> validates that the input argument country has 2 characters</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The validation system is more powerful than you can see in this code snippet, for example adding <code>@Valid</code> annotation opens the door to complex types validation.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_filtering_and_middleware">Filtering and Middleware</h3>
+<div class="paragraph">
+<p>Different approaches, pretty much the same end result.</p>
+</div>
+<div class="paragraph">
+<p>I will elaborate this topic in following days.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dependency_injection_ioc">Dependency injection / IoC</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_spring_ioc"><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a></h3>
+<div class="paragraph">
+<p><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a> is the most complete and powerful systems I&#8217;ve ever used for <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="noopener">IoC</a>, actually, the first time I used Spring professionally was just to deal with <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="noopener">IoC</a>. It supports XML configuration files or <a href="https://www.java.com" target="_blank" rel="noopener">Java</a> annotations, I like annotations more, here a simple example from <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a> documentation:</p>
+</div>
+<div class="listingblock">
+<div class="title">Spring IoC example</div>
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JpaMovieFinder</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MovieFinder</span> </span>{ <b class="conum">(1)</b>
+    <span class="hljs-comment">// implementation elided for clarity</span>
+}
+
+<span class="hljs-comment">//</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimpleMovieLister</span> </span>{
+
+    <span class="hljs-keyword">private</span> MovieFinder movieFinder;
+
+    <span class="hljs-meta">@Autowired</span> <b class="conum">(2)</b>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setMovieFinder</span><span class="hljs-params">(MovieFinder movieFinder)</span> </span>{
+        <span class="hljs-keyword">this</span>.movieFinder = movieFinder;
+    }
+
+    <span class="hljs-comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p><code>JpaMovieFinder</code> is instantiated by <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a></p>
+</li>
+<li>
+<p>With <code>@Autowired</code> annotation <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a> knows that has to inject <code>movieFinder</code> argument. It should be a class implementing <code>MovieFinder</code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_go">Go</h3>
+<div class="paragraph">
+<p>Neither <a href="https://golang.org" target="_blank" rel="noopener">Go</a> nor <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> has any <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="noopener">IoC</a> solution, but you can still apply <a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="noopener">Dependency Injection</a> technique to decouple your components and improve the testability of your system.</p>
+</div>
+<div class="listingblock">
+<div class="title">Dependency injection simple example in <a href="https://golang.org" target="_blank" rel="noopener">Go</a></div>
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">"fmt"</span>
+
+<span class="hljs-comment">// Greeter interface to greet the caller</span>
+<span class="hljs-keyword">type</span> Greeter <span class="hljs-keyword">interface</span> {
+	greet()
+}
+
+<span class="hljs-keyword">type</span> greeterHello <span class="hljs-keyword">struct</span>{}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *greeterHello)</span> <span class="hljs-title">greet</span><span class="hljs-params">()</span></span> { <b class="conum">(3)</b>
+	fmt.Println(<span class="hljs-string">"Hello!"</span>)
+}
+
+<span class="hljs-keyword">type</span> greeterHi <span class="hljs-keyword">struct</span>{}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *greeterHi)</span> <span class="hljs-title">greet</span><span class="hljs-params">()</span></span> { <b class="conum">(4)</b>
+	fmt.Println(<span class="hljs-string">"Hi!"</span>)
+}
+
+<span class="hljs-comment">// App Application representation</span>
+<span class="hljs-keyword">type</span> App <span class="hljs-keyword">struct</span> {
+	greeters []Greeter <b class="conum">(1)</b>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(app *App)</span> <span class="hljs-title">startup</span><span class="hljs-params">()</span></span> {
+	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> app.greeters {
+		v.greet()
+	}
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	greeters := []Greeter{ <b class="conum">(2)</b>
+		&amp;greeterHello{},
+		&amp;greeterHi{},
+		&amp;greeterHello{}}
+
+	app := &amp;App{greeters}
+
+	app.startup()
+}
+
+<span class="hljs-comment">/*
+&lt;1&gt; `App` accepts an array of `Greeter`
+&lt;2&gt; During `App` instantiation we pass different implementations of `Greeter`
+&lt;3&gt; Greeter implementation that prints *Hello!*
+&lt;4&gt; Greeter implementation that prints *Hi!*
+*/</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is more verbose, but there is an advantage, there is nothing hidden, everything is explicit and you have full control of instantiation order.</p>
+</div>
+<div class="paragraph">
+<p>As soon as you use <a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="noopener">Dependency Injection</a>, I don&#8217;t have any strong opinion about using <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="noopener">IoC</a> system or doing <a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="noopener">Dependency Injection</a> manually.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing">Testing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_unit_tests">Unit tests</h3>
+<div class="paragraph">
+<p>For unit tests there are no big differences.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://golang.org" target="_blank" rel="noopener">Go</a> comes with a standard <a href="https://golang.org/pkg/testing/" target="_blank" rel="noopener">library for testing and benchmarking</a>.</p>
+</div>
+<div class="paragraph">
+<p>For <a href="https://www.java.com" target="_blank" rel="noopener">Java</a> there are many well-known unit testing frameworks, but Spring already has quite big support for <a href="https://docs.spring.io/spring-batch/docs/current/reference/html/testing.html" target="_blank" rel="noopener">unit testing</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_integration_tests">Integration tests</h3>
+<div class="sect3">
+<h4 id="_go_2">Go</h4>
+<div class="paragraph">
+<p>There are no support for Integration Tests in <a href="https://golang.org" target="_blank" rel="noopener">Go</a>, you will have to implement everything by yourself, although it is not difficult, <a href="https://kpat.io/2019/06/testing-with-gin/" target="_blank" rel="noopener">here you can find a simple example</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_spring">Spring</h4>
+<div class="paragraph">
+<p>On the other hand, <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html" target="_bank">Spring has a great testing support</a>.</p>
+</div>
+<div class="paragraph">
+<p>To write integration tests for <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="noopener">REST</a> services, <a href="https://spring.io/guides/gs/testing-web/" target="_blank" rel="noopener">MockMvc</a> is really convenient.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve used <a href="https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/carlosvin/covid/CountriesControllerTest.java" target="_blank" rel="noopener">MockMvc in the covid-rest project</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title">MockMvc code snippet from <a href="https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/carlosvin/covid/CountriesControllerTest.java" target="_blank" rel="noopener">CountriesControllerTest.java</a></div>
+<div class="content">
+<pre tabindex="0" class="highlight"><code class="language-java" data-lang="java">	<span class="hljs-meta">@Autowired</span>
+	<span class="hljs-keyword">private</span> MockMvc mockMvc; <b class="conum">(1)</b>
+
+	<span class="hljs-meta">@Test</span>
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">getCountries</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>{
+		<span class="hljs-keyword">this</span>.mockMvc.perform(get(<span class="hljs-string">"/countries"</span>)) <b class="conum">(2)</b>
+				.andDo(print()).andExpect(status().isOk()) <b class="conum">(3)</b>
+				.andExpect(jsonPath(<span class="hljs-string">"$.*"</span>, hasSize(<span class="hljs-number">144</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">"$.ES.confirmedCases"</span>,comparesEqualTo(<span class="hljs-number">9191</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">"$.ES.deathsNumber"</span>, comparesEqualTo(<span class="hljs-number">309</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">"$.ES.countryCode"</span>, comparesEqualTo(<span class="hljs-string">"ES"</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">"$.ES.countryName"</span>, comparesEqualTo(<span class="hljs-string">"Spain"</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">"$.ES.path"</span>, comparesEqualTo(<span class="hljs-string">"/countries/ES"</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">"$.VC.countryName"</span>, comparesEqualTo(<span class="hljs-string">"Saint Vincent and the Grenadines"</span>)))
+				.andDo(document(<span class="hljs-string">"countries/list"</span>, preprocessResponse(prettyPrint(), <span class="hljs-keyword">new</span> CropPreprocessor())));
+	}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>The Spring test runner injects the MockMvc object.</p>
+</li>
+<li>
+<p>We use MockMvc to call to the endpoint we have created.</p>
+</li>
+<li>
+<p>Then we validate the endpoint response: status code and body.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_performance">Performance</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Besides the languages specific differences, the main difference is the performance. The CPU consumption in <a href="https://golang.org" target="_blank" rel="noopener">Go</a> is smaller, but about the memory the difference is really significant, <strong>the order of 30 times smaller fingerprint</strong>.</p>
+</div>
+<div class="sect2">
+<h3 id="_memory">Memory</h3>
+<div class="paragraph">
+<p>Here I&#8217;ve found a surprising difference, just by checking the memory consumption in my laptop.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> <code>15.6MB</code></p>
+</li>
+<li>
+<p><a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> <code>465.9MB</code></p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/posts/rest-service-go-vs-java/memory-consumption-go-java.png" alt="Memory consumption">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_speed">Speed</h3>
+<div class="paragraph">
+<p>Following the <a href="https://www.techempower.com/benchmarks/" target="_blank" rel="noopener">TechEmpower benchmarks</a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> is in 193 position, 9.9%.</p>
+</li>
+<li>
+<p><a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> is in 284 position, 4%.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Following the <a href="https://github.com/the-benchmarker/web-frameworks" target="_blank" rel="noopener">The Benchmarker results</a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a>: position 33.</p>
+</li>
+<li>
+<p><a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a>: position 68.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusions">Conclusions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If I were you, I&#8217;d choose <a href="https://golang.org" target="_blank" rel="noopener">Go</a> if:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you value the explicit over implicit, keep in mind that there is a cost, you will most likely have to write more lines of code.</p>
+</li>
+<li>
+<p>If you value the simplicity, <a href="https://golang.org" target="_blank" rel="noopener">Go</a> has a quite reduced set of keywords, which reduces the learning curve and simplifies the code reviews.</p>
+</li>
+<li>
+<p>If RAM memory usage is critical for your project, actually I&#8217;d just keep away from <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a>.</p>
+</li>
+<li>
+<p>If the project you are going to work on is a distributed system, specially if it is based on <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank" rel="noopener">HTTP</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>]]></content>
+            <category term="REST"/>
+    <category term="API"/>
+    <category term="Web Services"/>
+    <category term="Java"/>
+    <category term="Golang"/>
+    <category term="Gingonic"/>
+    <category term="Spring"/>
             <author><name>Carlos Martin Sanchez</name></author>
         </entry>
   <entry>

@@ -1,0 +1,108 @@
+= Svelte, a bright future with Snowpack
+:date: 2020-10-25
+:keywords: Svelte, Sapper, Snowpack
+:lang: en
+:description: Echoing Richard Harris announcements in Svelte Summit 2020: Sapper 1.0 never gonna happen, the new Svelte Kit, Snowpack as build tool, Javascript Module System.
+:toc:
+:link: https://www.youtube.com/watch?v=qSfdtmcZ4d0
+
+:svelte-summit: https://sveltesummit.com/[Svelte Summit 2020,window=_blank]
+:sapper: https://sapper.svelte.dev[Sapper,window=_blank]
+:svelte: https://svelte.dev/[Svelte,window=_blank]
+:snowpack: https://www.snowpack.dev[Snowpack,window=_blank]
+:js-modules: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import[Javascript modules,window=_blank]
+:webpack: https://webpack.js.org[Webpack,window=_blank]
+:rollup: https://rollupjs.org/[Rollup,window=_blank]
+:video: https://www.youtube.com/watch?v=qSfdtmcZ4d0[Rich Harris: Futuristic Web Development,window=_blank]
+
+Today I finally got some time to watch the video {video} recorded at {svelte-summit}. If you have 20 minutes, just stop reading and https://www.youtube.com/watch?v=qSfdtmcZ4d0[watch it,window=_blank].
+
+TIP: If you have 20 minutes, just stop reading and watch {video} video.
+
+== Sapper 1.0 is not going to happen
+As you might know, this blog is powered by {sapper}. I am already quite happy with it, so when I hear this announcement, I felt like when they cancel a TV Series that I am enjoying.
+
+Happily, there is a good reason, there is going to be a better {sapper}, I think they will call it svelte-kit, it is solving some issues and improving some aspects of {sapper}, but the main benefit, in my opinion, is that you won't have to choose between {sapper} or {svelte} when you start a new application, everything will be supported by the {svelte} ecosystem.
+
+== Snowpack
+
+{snowpack} will become the default {svelte} builder. It is not a regular bundler like {webpack} or {rollup}. It relies on {js-modules} so your application delegate the modules loading on the web browser; traditionally the chunks are loaded by the bundler (or by source code injected by the bundler).
+
+== Example
+
+NOTE: This example is just a copy from the {video} video.
+
+.How to create the sample project
+[source,bash]
+----
+mkdir svelte-next-sample
+cd svelte-next-sample
+npm init svelte@next
+npm install
+----
+
+.Start development server
+[source,bash]
+----
+npm run dev
+
+[snowpack] > Listening on http://localhost:3000
+----
+
+You will find many similarities with {sapper}, like the `routes` and `components` folders.
+
+=== Build
+
+.Build the project for production
+[source,bash]
+----
+npm run build
+----
+
+==== SSR
+By default the project is configured with SSR rendering enabled.
+
+.SSR with nodejs server and client
+[source,bash]
+----
+npm run build
+...
+
+> Optimizing...
+  ✔ server
+  ✔ client
+
+> Generating app...
+  Using @sveltejs/adapter-node <1>
+  Prerendering static pages...
+  ✔ done
+----
+<1> This is the default adapter to generate SSR application with a nodejs server and a client.
+
+==== Pure static site
+This blog is a pure static website, it doesn't require a server. With {sapper} we have the option to execute `sapper export` and it generates the app with no server required.
+
+With this new approach, to generate a static site, we just have to use a different adapter:
+
+[source,bash]
+----
+npm i -D @sveltejs/adapter-static
+----
+
+.svelte.config.js
+[source,javascript]
+----
+module.exports = {
+	adapter: '@sveltejs/adapter-static'
+};
+----
+
+[source,bash]
+----
+npm run build
+
+> Generating app...
+  Using @sveltejs/adapter-static <1>
+  ✔ done
+----
+<1> The static adapter is selected
