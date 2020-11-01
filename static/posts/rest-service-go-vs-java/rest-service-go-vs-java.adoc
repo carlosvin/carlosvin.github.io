@@ -33,7 +33,7 @@ Few months ago I created https://covid-rest.appspot.com/docs[an API to extract a
 
 Few months later I had the luck of work on my first professional project in {go} and I decided to create a port of https://covid-rest.appspot.com/docs[the API to extract COVID-19 data,window=_blank] in {go}, just for learning and for fun. 
 
-So, now we have two REST services, almost functionally identical, but developed in two different tech stacks.
+Now we have two REST services, almost functionally identical, but developed in two different tech stacks, so we can easily compare some relevant aspects of both.
 
 .Source code for the 2 REST services implementations
 |===
@@ -143,7 +143,7 @@ validationErrors := err.(validator.ValidationErrors) <3>
 <3> Extracts validation errors
 
 === Java + Spring.io
-You can enable the validation in the controller, then in the handlers you can specify the type of validation. Let's explain it using the previous example:
+You can enable the validation in the controller level, then in the handlers you can also specify the type of validation. Let's explain it using the previous example:
 
 .https://github.com/carlosvin/covid-rest/blob/master/src/main/java/com/carlosvin/covid/controllers/CountriesController.java[CountriesController.java,window=_blank]
 [source,java]
@@ -171,6 +171,8 @@ The validation system is more powerful than you can see in this code snippet, fo
 
 === Filtering and Middleware
 Different approaches, pretty much the same end result. 
+
+I will elaborate this topic in following days.
 
 == Dependency injection / IoC
 
@@ -220,7 +222,7 @@ As soon as you use {di}, I don't have any strong opinion about using {ioc} syste
 == Testing
 
 === Unit tests
-For unit tets there are no big differences. 
+For unit tests there are no big differences. 
 
 {go} comes with a standard https://golang.org/pkg/testing/[library for testing and benchmarking,window=_blank].
 
@@ -263,13 +265,14 @@ I've used https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/
 ----
 <1> The Spring test runner injects the MockMvc object.
 <2> We use MockMvc to call to the endpoint we have created.
-<3> Then we validate the endpoint's response, status code and body.
+<3> Then we validate the endpoint response: status code and body.
 
 == Performance
 
-Besides the languages specific differences, the main difference is the performance. The CPU consumption in go is smaller, but about the memory the difference is really significant, the order of 30 times smaller fingerprint.
+Besides the languages specific differences, the main difference is the performance. The CPU consumption in {go} is smaller, but about the memory the difference is really significant, *the order of 30 times smaller fingerprint*.
 
-=== Mem
+=== Memory
+
 Here I've found a surprising difference, just by checking the memory consumption in my laptop.
 
 - {gin} `15.6MB` 
@@ -289,3 +292,11 @@ Following the https://github.com/the-benchmarker/web-frameworks[The Benchmarker 
 
 - {gin}: position 33.
 - {spring-rest}: position 68.
+
+== Conclusions
+If I were you, I'd choose {go} if:
+
+- If you value the explicit over implicit, keep in mind that there is a cost, you will most likely have to write more lines of code.
+- If you value the simplicity, {go} has a quite reduced set of keywords, which reduces the learning curve and simplifies the code reviews.
+- If RAM memory usage is critical for your project, actually I'd just keep away from {spring-rest}.
+- If the project you are going to work on is a distributed system, specially if it is based on {http}.
