@@ -1,8 +1,8 @@
 = Golang over Java for REST services
-:date: 2020-10-09
+:date: 2020-11-01
 :keywords: REST, API, Web Services, Java, Golang, Gingonic, Spring,
 :lang: en
-:description: Why I'd pick Golang over Java to create any new distributed system
+:description: Why I'd pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang
 :toc:
 
 :api: https://en.wikipedia.org/wiki/Application_programming_interface[API,window=_blank]
@@ -17,7 +17,9 @@
 :covid19app: https://covid-stats-pwa.netlify.app[COVID19-Stats App,window=_blank]
 :svelte: https://svelte.dev[Svelte,window=_blank]
 :spring-rest: https://spring.io/guides/gs/rest-service[Spring Boot (REST),window=_blank]
-
+:spring-ioc: https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators[Spring IoC,window=_blank]
+:ioc: https://en.wikipedia.org/wiki/Inversion_of_control[IoC,window=_blank]
+:di: https://en.wikipedia.org/wiki/Dependency_injection[Dependency Injection,window=_blank]
 
 Lately I've been working with two different technology stacks almost in parallel, in both cases we were using them to develop {rest} services.
 
@@ -185,10 +187,100 @@ The validation system is more powerful than you can see in this code snippet, fo
 === Filtering and Middleware
 Different approaches, pretty much the same end result. 
 
-== Dependency injection
-For free with Spring. Manual in go, but still dependency injection.
+== Dependency injection / IoC
+
+=== {spring-ioc}
+
+{spring-ioc} is the most complete and powerful systems I've ever used for {ioc}, actually, the first time I used Spring professionally was just to deal with {ioc}. It supports XML configuration files or {java} annotations, I like annotations more, here a simple example from {spring-ioc} documentation:
+
+.Spring IoC example
+[source,java]
+----
+@Repository
+public class JpaMovieFinder implements MovieFinder { <1>
+    // implementation elided for clarity 
+}
+
+//
+
+public class SimpleMovieLister {
+
+    private MovieFinder movieFinder;
+
+    @Autowired <2>
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+
+    // ...
+}
+----
+<1> `JpaMovieFinder` is instantiated by {spring-ioc}
+<2> With `@Autowired` annotation {spring-ioc} knows that has to inject `movieFinder` argument. It should be a class implementing `MovieFinder`
+
+=== Go
+
+Neither {go} nor {gin} has any {ioc} solution, but you can still apply {di} technique to decouple your components and improve the testability of your system.
+
+.Dependency injection simple example in {go}
+[source,go]
+----
+package main
+
+import "fmt"
+
+// Greeter interface to greet the caller
+type Greeter interface {
+	greet()
+}
+
+type greeterHello struct{}
+
+func (g *greeterHello) greet() { <3>
+	fmt.Println("Hello!")
+}
+
+type greeterHi struct{}
+
+func (g *greeterHi) greet() {
+	fmt.Println("Hi!") <4>
+}
+
+// App Application representation
+type App struct {
+	greeters []Greeter <1>
+}
+
+func (app *App) startup() {
+	for _, v := range app.greeters {
+		v.greet()
+	}
+}
+
+func main() {
+	greeters := []Greeter{ <2>
+		&greeterHello{},
+		&greeterHi{},
+		&greeterHello{}}
+
+	app := &App{greeters}
+
+	app.startup()
+}
+----
+<1> `App` accepts an array of `Greeter`
+<2> During `App` instantiation we pass different implementations of `Greeter`
+<3> Greeter implementation that prints *Hello!*
+<4> Greeter implementation that prints *Hi!*
+
+It is more verbose, but there is an advantage, there is nothing hidden, everything is explicit and you have full control of instantiation order.
+
+As soon as you use {di}, I don't have any strong opinion about using {ioc} system or doing {di} manually.
 
 == Testing
+
+Work in progress...
+
 === Unit tests
 Not big differences, it comes with golang, Junit in Java.
 
@@ -197,7 +289,26 @@ Support out of the box in Spring.
 In go, you have to implement it yourself.
 
 == Performance
+
 Besides the languages specific differences, the main difference is the performance. The CPU consumption in go is smaller, but about the memory the difference is really significant, the order of 30 times smaller fingerprint.
 
 === Mem
-=== CPU
+Here I've found a surprising difference, just by checking the memory consumption in my laptop.
+
+- {gin} `15.6MB` 
+- {spring-rest} `465.9MB` 
+
+image::/images/java-go-rest-service/memory-consumption-go-java.png[Memory consumption]
+
+
+=== Speed
+
+Following the https://www.techempower.com/benchmarks/[TechEmpower benchmarks,window=_blank]:
+
+- {gin} is in 193 position, 9.9%.
+- {spring-rest} is in 284 position, 4%.
+
+Following the https://github.com/the-benchmarker/web-frameworks[The Benchmarker results,window=_blank]:
+
+- {gin}: position 33.
+- {spring-rest}: position 68.
