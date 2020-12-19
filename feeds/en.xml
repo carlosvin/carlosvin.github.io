@@ -284,27 +284,27 @@ $ ninja <span class="hljs-built_in">test</span>     <b class="conum">(3)</b></co
 <span class="hljs-deletion">-#define CATCH_CONFIG_MAIN // It tells Catch to provide a main() - only do this in one cpp file</span>
 <span class="hljs-addition">+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN</span>
 
-<span class="hljs-deletion">-#include "catch.hpp"</span>
-<span class="hljs-addition">+#include "doctest.h"</span>
-#include "Uuid.h"
+<span class="hljs-deletion">-#include &quot;catch.hpp&quot;</span>
+<span class="hljs-addition">+#include &quot;doctest.h&quot;</span>
+#include &quot;Uuid.h&quot;
 #include &lt;string&gt;
 
 constexpr int MAX_ITERS = 100;
 
-<span class="hljs-deletion">-TEST_CASE("Uuid", "[uuid]")</span>
-<span class="hljs-addition">+TEST_CASE("Uuid")</span>
+<span class="hljs-deletion">-TEST_CASE(&quot;Uuid&quot;, &quot;[uuid]&quot;)</span>
+<span class="hljs-addition">+TEST_CASE(&quot;Uuid&quot;)</span>
 {
 for (int i = 0; i &lt; MAX_ITERS; i++)
 {
-@@ -26,7 +26,7 @@ TEST_CASE("Uuid", "[uuid]")
+<span class="hljs-meta">@@ -26,7 +26,7 @@</span> TEST_CASE(&quot;Uuid&quot;, &quot;[uuid]&quot;)
 
 // BDD style
 
-<span class="hljs-deletion">-SCENARIO("UUID creation", "[Uuid]")</span>
-<span class="hljs-addition">+SCENARIO("UUID creation")</span>
+<span class="hljs-deletion">-SCENARIO(&quot;UUID creation&quot;, &quot;[Uuid]&quot;)</span>
+<span class="hljs-addition">+SCENARIO(&quot;UUID creation&quot;)</span>
 {
 
-GIVEN("A random UUID ")</code></pre>
+GIVEN(&quot;A random UUID &quot;)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -380,19 +380,19 @@ I&#8217;ve created project using both frameworks you can find them in correspond
 <div class="title">meson.build</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python">project(
-    <span class="hljs-string">'cpp-meson-example'</span>, <span class="hljs-comment"># project name</span>
-    <span class="hljs-string">'cpp'</span>, <span class="hljs-comment"># C++ project, e.g: for C project</span>
-    version : <span class="hljs-string">'1.0.0'</span>,
-    license : <span class="hljs-string">'MIT'</span>,
-    default_options : [<span class="hljs-string">'cpp_std=c++11'</span>]) <span class="hljs-comment"># compile for C++</span>
+    <span class="hljs-string">&#x27;cpp-meson-example&#x27;</span>, <span class="hljs-comment"># project name</span>
+    <span class="hljs-string">&#x27;cpp&#x27;</span>, <span class="hljs-comment"># C++ project, e.g: for C project</span>
+    version : <span class="hljs-string">&#x27;1.0.0&#x27;</span>,
+    license : <span class="hljs-string">&#x27;MIT&#x27;</span>,
+    default_options : [<span class="hljs-string">&#x27;cpp_std=c++11&#x27;</span>]) <span class="hljs-comment"># compile for C++</span>
 
 <span class="hljs-comment"># it will be referred from subdir projects</span>
-inc = include_directories(<span class="hljs-string">'include'</span>)
+inc = include_directories(<span class="hljs-string">&#x27;include&#x27;</span>)
 
 <span class="hljs-comment"># meson will try to find a meson.build file inside following directories</span>
-subdir(<span class="hljs-string">'include'</span>)
-subdir(<span class="hljs-string">'src'</span>)
-subdir(<span class="hljs-string">'test'</span>)</code></pre>
+subdir(<span class="hljs-string">&#x27;include&#x27;</span>)
+subdir(<span class="hljs-string">&#x27;src&#x27;</span>)
+subdir(<span class="hljs-string">&#x27;test&#x27;</span>)</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -414,7 +414,7 @@ subdir(<span class="hljs-string">'test'</span>)</code></pre>
 <div class="title">include/meson.build</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-comment"># Select header files to be installed</span>
-install_headers(<span class="hljs-string">'Uuid.h'</span>)</code></pre>
+install_headers(<span class="hljs-string">&#x27;Uuid.h&#x27;</span>)</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -454,14 +454,14 @@ install_headers(<span class="hljs-string">'Uuid.h'</span>)</code></pre>
 <div class="title">src/meson.build</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python">libuuid = shared_library(
-    <span class="hljs-string">'uuid'</span>, <b class="conum">(1)</b>
-    <span class="hljs-string">'Uuid.cpp'</span>, <b class="conum">(2)</b>
+    <span class="hljs-string">&#x27;uuid&#x27;</span>, <b class="conum">(1)</b>
+    <span class="hljs-string">&#x27;Uuid.cpp&#x27;</span>, <b class="conum">(2)</b>
     include_directories : inc, <b class="conum">(3)</b>
     install : true) <b class="conum">(4)</b>
 
 uuidgen = executable(
-    <span class="hljs-string">'uuidgen'</span>, <b class="conum">(5)</b>
-    <span class="hljs-string">'main.cpp'</span>, <b class="conum">(6)</b>
+    <span class="hljs-string">&#x27;uuidgen&#x27;</span>, <b class="conum">(5)</b>
+    <span class="hljs-string">&#x27;main.cpp&#x27;</span>, <b class="conum">(6)</b>
     include_directories : inc, <b class="conum">(7)</b>
     link_with : libuuid, <b class="conum">(8)</b>
     install : true) <b class="conum">(9)</b></code></pre>
@@ -509,7 +509,7 @@ uuidgen = executable(
 <div class="listingblock">
 <div class="title">src/main.cpp</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-cpp" data-lang="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"Uuid.h"</span></span>
+<pre tabindex="0" class="highlight"><code class="language-cpp" data-lang="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;Uuid.h&quot;</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
@@ -531,7 +531,7 @@ uuidgen = executable(
 <div class="listingblock">
 <div class="title">src/Uuid.cpp</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-cpp" data-lang="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"Uuid.h"</span></span>
+<pre tabindex="0" class="highlight"><code class="language-cpp" data-lang="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;Uuid.h&quot;</span></span>
 
 Uuid::Uuid()
 { <span class="hljs-comment">// ...</span></code></pre>
@@ -556,14 +556,14 @@ Uuid::Uuid()
 <div class="title">test/meson.build</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python">testexe = executable(
-    <span class="hljs-string">'testexe'</span>, <b class="conum">(1)</b>
-    <span class="hljs-string">'uuid_test.cpp'</span>, <b class="conum">(2)</b>
+    <span class="hljs-string">&#x27;testexe&#x27;</span>, <b class="conum">(1)</b>
+    <span class="hljs-string">&#x27;uuid_test.cpp&#x27;</span>, <b class="conum">(2)</b>
     include_directories : inc, <b class="conum">(3)</b>
     link_with : libuuid) <b class="conum">(4)</b>
 
-test(<span class="hljs-string">'Uuid test'</span>, testexe) <b class="conum">(5)</b>
+test(<span class="hljs-string">&#x27;Uuid test&#x27;</span>, testexe) <b class="conum">(5)</b>
 
-test(<span class="hljs-string">'Uuid test with args and env'</span>, testexe, args : [<span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>], env : [<span class="hljs-string">'FOO=bar'</span>]) <b class="conum">(6)</b></code></pre>
+test(<span class="hljs-string">&#x27;Uuid test with args and env&#x27;</span>, testexe, args : [<span class="hljs-string">&#x27;arg1&#x27;</span>, <span class="hljs-string">&#x27;arg2&#x27;</span>], env : [<span class="hljs-string">&#x27;FOO=bar&#x27;</span>]) <b class="conum">(6)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -616,13 +616,13 @@ wget https://raw.githubusercontent.com/onqtam/doctest/master/doctest/doctest.h</
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-cpp" data-lang="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN</span>
 
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"doctest.h"</span></span>
-<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"Uuid.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;doctest.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;Uuid.h&quot;</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span>
 
 <span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> MAX_ITERS = <span class="hljs-number">100</span>;
 
-TEST_CASE(<span class="hljs-string">"Uuid"</span>)
+TEST_CASE(<span class="hljs-string">&quot;Uuid&quot;</span>)
 {
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; MAX_ITERS; i++)
     {
@@ -642,10 +642,10 @@ TEST_CASE(<span class="hljs-string">"Uuid"</span>)
 
 <span class="hljs-comment">// BDD style</span>
 
-SCENARIO(<span class="hljs-string">"UUID creation"</span>)
+SCENARIO(<span class="hljs-string">&quot;UUID creation&quot;</span>)
 {
 
-    GIVEN(<span class="hljs-string">"A random UUID "</span>)
+    GIVEN(<span class="hljs-string">&quot;A random UUID &quot;</span>)
     {
 
         ids::Uuid uuid;
@@ -653,9 +653,9 @@ SCENARIO(<span class="hljs-string">"UUID creation"</span>)
 
         REQUIRE(uuid_str.size() == <span class="hljs-number">36</span>);
 
-        WHEN(<span class="hljs-string">"get the most and least"</span>)
+        WHEN(<span class="hljs-string">&quot;get the most and least&quot;</span>)
         {
-            THEN(<span class="hljs-string">"should be more than 0"</span>)
+            THEN(<span class="hljs-string">&quot;should be more than 0&quot;</span>)
             {
                 CHECK(uuid.most &gt; <span class="hljs-number">0</span>);
                 CHECK(uuid.least &gt; <span class="hljs-number">0</span>);
@@ -819,19 +819,19 @@ If you still have to stick to <a href="https://clang.llvm.org/cxx_status.html" t
 
 <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">print</span> <span class="hljs-params">(<span class="hljs-keyword">size_t</span> sz, <span class="hljs-keyword">size_t</span> sz_flag, <span class="hljs-keyword">size_t</span> sz_timeout)</span>
 </span>{
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\tflag: "</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">" Bytes"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\t+"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\ttimeout: "</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">" Bytes"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\t="</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\t"</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">" Bytes"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt;<span class="hljs-string">"sizeof struct:  "</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">" Bytes"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;\tflag: &quot;</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;\t+&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;\ttimeout: &quot;</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;\t=&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;\t&quot;</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt;<span class="hljs-string">&quot;sizeof struct:  &quot;</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
 }
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span>
 </span>{
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"SampleStruct"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">print</span> (<span class="hljs-keyword">sizeof</span>(SampleStruct), <span class="hljs-keyword">sizeof</span>(SampleStruct::flag), <span class="hljs-keyword">sizeof</span>(SampleStruct::timeout));
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" -- "</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;SampleStruct&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    print (<span class="hljs-keyword">sizeof</span>(SampleStruct), <span class="hljs-keyword">sizeof</span>(SampleStruct::flag), <span class="hljs-keyword">sizeof</span>(SampleStruct::timeout));
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
@@ -879,12 +879,12 @@ If we want to know the exact structure size we have to specify compiler how to a
 
 <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">print</span> <span class="hljs-params">(<span class="hljs-keyword">size_t</span> sz, <span class="hljs-keyword">size_t</span> sz_flag, <span class="hljs-keyword">size_t</span> sz_timeout)</span>
 </span>{
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" flag: "</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">" Bytes"</span>&lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" +"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" timeout: "</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">"Bytes"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" ="</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">"Bytes"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" sizeof struct:  "</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">" Bytes"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; flag: &quot;</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span>&lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; +&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; timeout: &quot;</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">&quot;Bytes&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; =&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">&quot;Bytes&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; sizeof struct:  &quot;</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
 }
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (1)</span>
@@ -922,19 +922,19 @@ If we want to know the exact structure size we have to specify compiler how to a
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span>
 </span>{
 
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"SampleStructPack1"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">print</span> (<span class="hljs-keyword">sizeof</span>(SampleStructPack1), <span class="hljs-keyword">sizeof</span>(SampleStructPack1::flag), <span class="hljs-keyword">sizeof</span>(SampleStructPack1::timeout));
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" -- "</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;SampleStructPack1&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    print (<span class="hljs-keyword">sizeof</span>(SampleStructPack1), <span class="hljs-keyword">sizeof</span>(SampleStructPack1::flag), <span class="hljs-keyword">sizeof</span>(SampleStructPack1::timeout));
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
 
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"SampleStructPack2"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">print</span> (<span class="hljs-keyword">sizeof</span>(SampleStructPack2), <span class="hljs-keyword">sizeof</span>(SampleStructPack2::flag), <span class="hljs-keyword">sizeof</span>(SampleStructPack2::timeout));
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;SampleStructPack2&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    print (<span class="hljs-keyword">sizeof</span>(SampleStructPack2), <span class="hljs-keyword">sizeof</span>(SampleStructPack2::flag), <span class="hljs-keyword">sizeof</span>(SampleStructPack2::timeout));
 
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"SampleStructPack4"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">print</span> (<span class="hljs-keyword">sizeof</span>(SampleStructPack4), <span class="hljs-keyword">sizeof</span>(SampleStructPack4::flag), <span class="hljs-keyword">sizeof</span>(SampleStructPack4::timeout));
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;SampleStructPack4&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    print (<span class="hljs-keyword">sizeof</span>(SampleStructPack4), <span class="hljs-keyword">sizeof</span>(SampleStructPack4::flag), <span class="hljs-keyword">sizeof</span>(SampleStructPack4::timeout));
 
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"SampleStruct"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">print</span> (<span class="hljs-keyword">sizeof</span>(SampleStruct), <span class="hljs-keyword">sizeof</span>(SampleStruct::flag), <span class="hljs-keyword">sizeof</span>(SampleStruct::timeout));
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" -- "</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;SampleStruct&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    print (<span class="hljs-keyword">sizeof</span>(SampleStruct), <span class="hljs-keyword">sizeof</span>(SampleStruct::flag), <span class="hljs-keyword">sizeof</span>(SampleStruct::timeout));
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
@@ -1080,40 +1080,40 @@ SampleStructPack4: 800000000000000000 bytes allocated <span class="hljs-keyword"
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">allocate1</span><span class="hljs-params">()</span>
 </span>{
     SampleStructPack1 elements [MAX_ELEMENTS];
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"SampleStructPack1: "</span> &lt;&lt; <span class="hljs-keyword">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">" bytes allocated"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;SampleStructPack1: &quot;</span> &lt;&lt; <span class="hljs-keyword">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
 }
 
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">allocate2</span><span class="hljs-params">()</span>
 </span>{
     SampleStructPack2 elements [MAX_ELEMENTS];
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"SampleStructPack2: "</span> &lt;&lt; <span class="hljs-keyword">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">" bytes allocated"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;SampleStructPack2: &quot;</span> &lt;&lt; <span class="hljs-keyword">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
 }
 
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">allocate4</span><span class="hljs-params">()</span>
 </span>{
     SampleStructPack4 elements [MAX_ELEMENTS];
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"SampleStructPack4: "</span> &lt;&lt; <span class="hljs-keyword">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">" bytes allocated"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;SampleStructPack4: &quot;</span> &lt;&lt; <span class="hljs-keyword">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
 }
 
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">chrono1</span><span class="hljs-params">()</span>
 </span>{
-    <span class="hljs-keyword">auto</span> <span class="hljs-built_in">begin</span> = high_resolution_clock::now() ;
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::now() ;
     allocate1();
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" in "</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::now() - <span class="hljs-built_in">begin</span>).count() &lt;&lt; <span class="hljs-string">" nanoseconds"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::now() - begin).count() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
 }
 
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">chrono2</span><span class="hljs-params">()</span>
 </span>{
-    <span class="hljs-keyword">auto</span> <span class="hljs-built_in">begin</span> = high_resolution_clock::now() ;
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::now() ;
     allocate2();
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" in "</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::now() - <span class="hljs-built_in">begin</span>).count() &lt;&lt; <span class="hljs-string">" nanoseconds"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::now() - begin).count() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
 }
 
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">chrono4</span><span class="hljs-params">()</span>
 </span>{
-    <span class="hljs-keyword">auto</span> <span class="hljs-built_in">begin</span> = high_resolution_clock::now() ;
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::now() ;
     allocate4();
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" in "</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::now() - <span class="hljs-built_in">begin</span>).count() &lt;&lt; <span class="hljs-string">" nanoseconds"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::now() - begin).count() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
 }
 
 
@@ -1392,7 +1392,7 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
 <div class="listingblock">
 <div class="title">BuildMojo.java</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Mojo</span>(name = <span class="hljs-string">"build"</span>, defaultPhase = LifecyclePhase.COMPILE) <b class="conum">(1)</b>
+<pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Mojo(name = &quot;build&quot;, defaultPhase = LifecyclePhase.COMPILE)</span> <b class="conum">(1)</b>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BuildMojo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMojo</span> </span>{
 
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> FileSetManager fileSetManager;
@@ -1447,16 +1447,16 @@ You can find an introduction to Maven life-cycles at <a href="https://maven.apac
 <pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-comment">/**
 * Generate HTML files from Markdown files
 */</span>
-<span class="hljs-meta">@Mojo</span>(name = <span class="hljs-string">"build"</span>, defaultPhase = LifecyclePhase.COMPILE) <b class="conum">(1)</b>
+<span class="hljs-meta">@Mojo(name = &quot;build&quot;, defaultPhase = LifecyclePhase.COMPILE)</span> <b class="conum">(1)</b>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BuildMojo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMojo</span> </span>{
 
     <span class="hljs-comment">/**
     * Output directory path where HTML files are generated
     */</span>
-    <span class="hljs-meta">@Parameter</span>( <b class="conum">(2)</b>
-      defaultValue = <span class="hljs-string">"${project.reporting.outputDirectory}"</span>, <b class="conum">(3)</b>
-      property = <span class="hljs-string">"siteOutputDirectory"</span>, <b class="conum">(4)</b>
-      required = <span class="hljs-keyword">true</span>)
+    <span class="hljs-meta">@Parameter( <b class="conum">(2)</b>
+      defaultValue = &quot;${project.reporting.outputDirectory}&quot;, <b class="conum">(3)</b>
+      property = &quot;siteOutputDirectory&quot;, <b class="conum">(4)</b>
+      required = true)</span>
     <span class="hljs-keyword">private</span> File outputDirectory;
 
     <span class="hljs-comment">/**
@@ -1534,7 +1534,7 @@ More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-d
 
     outputDirPath = outputDirectory.toPath();
     <span class="hljs-keyword">if</span> (includedFiles == <span class="hljs-keyword">null</span> || includedFiles.length == <span class="hljs-number">0</span>) {
-        getLog().warn(<span class="hljs-string">"SKIP: There are no input files. "</span> + getInputFilesToString()); <b class="conum">(3)</b>
+        getLog().warn(<span class="hljs-string">&quot;SKIP: There are no input files. &quot;</span> + getInputFilesToString()); <b class="conum">(3)</b>
     } <span class="hljs-keyword">else</span> {
         <span class="hljs-keyword">if</span> (!outputDirectory.exists()) { <b class="conum">(4)</b>
             outputDirectory.mkdirs();
@@ -1693,9 +1693,9 @@ More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-d
 </div>
 <div class="listingblock">
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">project</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://maven.apache.org/POM/4.0.0"</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
-<span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span>
+<pre tabindex="0" class="highlight"><code class="language-xml" data-lang="xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">project</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+<span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">modelVersion</span>&gt;</span>4.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">modelVersion</span>&gt;</span>
 
     <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.maven.plugins.it<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
@@ -1743,7 +1743,7 @@ More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-d
 </div>
 </div>
 <div class="paragraph">
-<p>It will execute <code>mvn blog:build</code>, a goal defined in our custom plugin under example or what is the same, it will execute <a href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/main/java/com/maven/plugins/blog/BuildMojo.java" target="_blank" rel="noopener">Build Mojo</a> described in section <a href="#_write_a_custom_mojo">Write a custom <a href="https://maven.apache.org/plugin-developers/index.html" target="_blank" rel="noopener">Mojo</a></a>.</p>
+<p>It will execute <code>mvn blog:build</code>, a goal defined in our custom plugin under example or what is the same, it will execute <a href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/main/java/com/maven/plugins/blog/BuildMojo.java" target="_blank" rel="noopener">Build Mojo</a> described in section <a href="#_write_a_custom_mojo">Write a custom Mojo</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1757,7 +1757,7 @@ More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-d
 <div class="listingblock">
 <div class="title"><a href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/verify.groovy">src/it/md-html/verify.groovy</a></div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">File generated = <span class="hljs-keyword">new</span> File( basedir, <span class="hljs-string">"target/site/README.html"</span> );
+<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">File generated = <span class="hljs-keyword">new</span> File( basedir, <span class="hljs-string">&quot;target/site/README.html&quot;</span> );
 
 <span class="hljs-keyword">assert</span> generated.isFile()</code></pre>
 </div>
@@ -1786,7 +1786,7 @@ More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-d
 <div class="listingblock">
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-bash" data-lang="bash">$ gdb ./tests-mylib
-<span class="hljs-string">"tests-mylib"</span>: not <span class="hljs-keyword">in</span> executable format: File format not recognized</code></pre>
+<span class="hljs-string">&quot;tests-mylib&quot;</span>: not <span class="hljs-keyword">in</span> executable format: File format not recognized</code></pre>
 </div>
 </div>
 <div class="dlist">
@@ -1860,8 +1860,8 @@ More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-d
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-keyword">import</span> re
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">strip_tags</span><span class="hljs-params">(value)</span>:</span>
-    <span class="hljs-keyword">return</span> re.sub(<span class="hljs-string">r'&lt;[^&gt;]*?&gt;'</span>, <span class="hljs-string">''</span>, value)</code></pre>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">strip_tags</span>(<span class="hljs-params">value</span>):</span>
+    <span class="hljs-keyword">return</span> re.sub(<span class="hljs-string">r&#x27;&lt;[^&gt;]*?&gt;&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, value)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1872,10 +1872,10 @@ More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-d
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-keyword">import</span> re
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">strip_tags</span><span class="hljs-params">(value)</span>:</span>
-    <span class="hljs-keyword">return</span> re.sub(<span class="hljs-string">r'&lt;[^&gt;]*?&gt;'</span>, <span class="hljs-string">''</span>, value)
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">strip_tags</span>(<span class="hljs-params">value</span>):</span>
+    <span class="hljs-keyword">return</span> re.sub(<span class="hljs-string">r&#x27;&lt;[^&gt;]*?&gt;&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, value)
 
-html_text = <span class="hljs-string">"""
+html_text = <span class="hljs-string">&quot;&quot;&quot;
     &lt;!DOCTYPE HTML&gt;
     &lt;html&gt;
         &lt;head&gt;
@@ -1884,7 +1884,7 @@ html_text = <span class="hljs-string">"""
         &lt;body&gt;
             &lt;p&gt;Paragraph&lt;/p&gt;
         &lt;/body&gt;
-    &lt;/html&gt;"""</span>
+    &lt;/html&gt;&quot;&quot;&quot;</span>
 
 print(strip_tags(html_text))</code></pre>
 </div>
@@ -1918,7 +1918,7 @@ Paragraph</code></pre>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-keyword">from</span> django.utils.html <span class="hljs-keyword">import</span> strip_tags
 
-html_text = <span class="hljs-string">"""
+html_text = <span class="hljs-string">&quot;&quot;&quot;
     &lt;!DOCTYPE HTML&gt;
     &lt;html&gt;
         &lt;head&gt;
@@ -1927,9 +1927,9 @@ html_text = <span class="hljs-string">"""
         &lt;body&gt;
             &lt;p&gt;Paragraph&lt;/p&gt;
         &lt;/body&gt;
-    &lt;/html&gt;"""</span>
+    &lt;/html&gt;&quot;&quot;&quot;</span>
 
-<span class="hljs-keyword">print</span> (strip_tags(html_text))</code></pre>
+<span class="hljs-built_in">print</span> (strip_tags(html_text))</code></pre>
 </div>
 </div>
 </div>
@@ -2170,10 +2170,10 @@ html_text = <span class="hljs-string">"""
 <div class="listingblock">
 <div class="title">main.cpp</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-cpp" data-lang="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"Hello.h"</span></span>
+<pre tabindex="0" class="highlight"><code class="language-cpp" data-lang="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;Hello.h&quot;</span></span>
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> ** argv)</span>
 </span>{
-    <span class="hljs-function">Hello <span class="hljs-title">hello</span> <span class="hljs-params">(<span class="hljs-string">"Pepito"</span>)</span></span>;
+    <span class="hljs-function">Hello <span class="hljs-title">hello</span> <span class="hljs-params">(<span class="hljs-string">&quot;Pepito&quot;</span>)</span></span>;
     hello.sayHello(<span class="hljs-number">10</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
@@ -2206,14 +2206,14 @@ html_text = <span class="hljs-string">"""
 <div class="listingblock">
 <div class="title">build.gradle</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">apply <span class="hljs-string">plugin:</span> <span class="hljs-string">'cpp'</span>
+<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;cpp&#x27;</span>
 
 model {
   components {
     hello(NativeLibrarySpec) {}
     main(NativeExecutableSpec) {
       binaries.all {
-        lib <span class="hljs-string">library:</span> <span class="hljs-string">"hello"</span>
+        lib <span class="hljs-attr">library:</span> <span class="hljs-string">&quot;hello&quot;</span>
       }
     }
   }
@@ -2257,7 +2257,7 @@ model {
 <div class="listingblock">
 <div class="title">build.gradle</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">apply <span class="hljs-string">plugin:</span> <span class="hljs-string">'cpp'</span>
+<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;cpp&#x27;</span>
 
 model {
   flavors {
@@ -2269,13 +2269,13 @@ model {
     hello(NativeLibrarySpec) {
       binaries.all {
         <span class="hljs-keyword">if</span> (flavor == flavors.enterprise) {
-          cppCompiler.define <span class="hljs-string">"ENTERPRISE"</span>
+          cppCompiler.define <span class="hljs-string">&quot;ENTERPRISE&quot;</span>
         }
       }
     }
     main(NativeExecutableSpec) {
       binaries.all {
-        lib <span class="hljs-string">library:</span> <span class="hljs-string">"hello"</span>
+        lib <span class="hljs-attr">library:</span> <span class="hljs-string">&quot;hello&quot;</span>
         }
     }
   }
@@ -2289,10 +2289,10 @@ model {
 <div class="title">Msg.h</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-cpp" data-lang="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> ENTERPRISE</span>
-<span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * EDITION = <span class="hljs-string">"Enterprise"</span>;
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * EDITION = <span class="hljs-string">&quot;Enterprise&quot;</span>;
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">else</span></span>
-<span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * EDITION = <span class="hljs-string">"Community"</span>;
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> * EDITION = <span class="hljs-string">&quot;Community&quot;</span>;
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span></code></pre>
 </div>
@@ -2373,13 +2373,13 @@ Total time: 9.414 secs</code></pre>
 <div class="listingblock">
 <div class="title">build.gradle</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">apply <span class="hljs-string">plugin:</span> <span class="hljs-string">'cpp'</span>
+<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;cpp&#x27;</span>
 model {
     buildTypes {
         debug
         release
     }
-<span class="hljs-comment">// ... the rest of file below doesn't change</span>
+<span class="hljs-comment">// ... the rest of file below doesn&#x27;t change</span>
 }</code></pre>
 </div>
 </div>
@@ -2398,7 +2398,7 @@ model {
 <div class="listingblock">
 <div class="title">build.gradle</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">apply <span class="hljs-string">plugin:</span> <span class="hljs-string">'cpp'</span>
+<pre tabindex="0" class="highlight"><code class="language-groovy" data-lang="groovy">apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;cpp&#x27;</span>
 
 model {
   buildTypes {
@@ -2408,13 +2408,13 @@ model {
 
   platforms {
     x86 {
-      architecture <span class="hljs-string">"x86"</span>
+      architecture <span class="hljs-string">&quot;x86&quot;</span>
     }
     x64 {
-      architecture <span class="hljs-string">"x86_64"</span>
+      architecture <span class="hljs-string">&quot;x86_64&quot;</span>
     }
     itanium {
-      architecture <span class="hljs-string">"ia-64"</span>
+      architecture <span class="hljs-string">&quot;ia-64&quot;</span>
     }
   }
 
@@ -2427,13 +2427,13 @@ model {
     hello(NativeLibrarySpec) {
       binaries.all {
         <span class="hljs-keyword">if</span> (flavor == flavors.enterprise) {
-          cppCompiler.define <span class="hljs-string">"ENTERPRISE"</span>
+          cppCompiler.define <span class="hljs-string">&quot;ENTERPRISE&quot;</span>
         }
       }
     }
     main(NativeExecutableSpec) {
       binaries.all {
-        lib <span class="hljs-string">library:</span> <span class="hljs-string">"hello"</span>
+        lib <span class="hljs-attr">library:</span> <span class="hljs-string">&quot;hello&quot;</span>
       }
     }
   }
@@ -2635,16 +2635,16 @@ If you find any issue in this example, please write a comment, open a defect or 
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JdbcDb</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">DB</span> </span>{
 
-    <span class="hljs-keyword">enum</span> Column {
+    <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Column</span> </span>{
         INSTRUMENT,
         MARKET,
         PRICE,
         DATE;
     }
 
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TABLE_NAME = <span class="hljs-string">"PRICES"</span>;
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String SQL_INSERT = <span class="hljs-string">"INSERT INTO "</span> + TABLE_NAME
-            + <span class="hljs-string">" (INSTRUMENT, MARKET, PRICE, DATE) VALUES (?,?,?,?)"</span>;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TABLE_NAME = <span class="hljs-string">&quot;PRICES&quot;</span>;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String SQL_INSERT = <span class="hljs-string">&quot;INSERT INTO &quot;</span> + TABLE_NAME
+            + <span class="hljs-string">&quot; (INSTRUMENT, MARKET, PRICE, DATE) VALUES (?,?,?,?)&quot;</span>;
 
     <span class="hljs-comment">// ...</span>
 
@@ -2896,9 +2896,9 @@ db.DbTest &gt; testDerbyDB STANDARD_OUT
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-comment"># -*- coding: utf-8 -*-</span>
 <span class="hljs-keyword">from</span> unicodedata <span class="hljs-keyword">import</span> normalize
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">normalize_text</span> <span class="hljs-params">( text )</span>:</span>
-  <span class="hljs-keyword">return</span> normalize(<span class="hljs-string">'NFKD'</span>, text) <b class="conum">(1)</b>
-    .encode(<span class="hljs-string">'ASCII'</span>, <span class="hljs-string">'ignore'</span>) <b class="conum">(2)</b></code></pre>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">normalize_text</span> (<span class="hljs-params"> text </span>):</span>
+  <span class="hljs-keyword">return</span> normalize(<span class="hljs-string">&#x27;NFKD&#x27;</span>, text) <b class="conum">(1)</b>
+    .encode(<span class="hljs-string">&#x27;ASCII&#x27;</span>, <span class="hljs-string">&#x27;ignore&#x27;</span>) <b class="conum">(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -2914,8 +2914,8 @@ db.DbTest &gt; testDerbyDB STANDARD_OUT
 <div class="listingblock">
 <div class="title">Ejecutando la función</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-meta">&gt;&gt;&gt; </span>normalize_text ( <span class="hljs-string">'aáaá eéeé iíií oóoó ñnñn AÀAÀ'</span> )
-<span class="hljs-string">b'aaaa eeee iiii oooo nnnn AAAA'</span></code></pre>
+<pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-meta">&gt;&gt;&gt; </span>normalize_text ( <span class="hljs-string">&#x27;aáaá eéeé iíií oóoó ñnñn AÀAÀ&#x27;</span> )
+<span class="hljs-string">b&#x27;aaaa eeee iiii oooo nnnn AAAA&#x27;</span></code></pre>
 </div>
 </div>]]></content>
             <category term="Python"/>
@@ -3353,7 +3353,7 @@ React components for faster and easier web development. Build your own design sy
 <div class="title">Tip</div>
 </td>
 <td class="content">
-Just check what are your requirements, if you are not sure about them, <a href="#_chosen_technology_stack_for_budget_tracker">Chosen Technology Stack for <a href="https://btapp.netlify.com" target="_blank" rel="noopener">Budget Tracker</a></a> consists of awesome products which most likely will fit your use case.
+Just check what are your requirements, if you are not sure about them, <a href="#_chosen_technology_stack_for_budget_tracker">Chosen Technology Stack for Budget Tracker</a> consists of awesome products which most likely will fit your use case.
 </td>
 </tr>
 </table>
@@ -3528,15 +3528,15 @@ Each time you save a file, you will see automatically the result at <code><a hre
 <div class="listingblock">
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">{
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"project_name"</span>,
-  <span class="hljs-attr">"version"</span>: <span class="hljs-string">"1.0.0"</span>,
-  <span class="hljs-attr">"main"</span>: <span class="hljs-string">"index.js"</span>,
-  <span class="hljs-attr">"license"</span>: <span class="hljs-string">"MIT"</span>,
-  <span class="hljs-attr">"dependencies"</span>: {
-    <span class="hljs-attr">"@types/react"</span>: <span class="hljs-string">"^16.7.18"</span>,
-    <span class="hljs-attr">"@types/react-dom"</span>: <span class="hljs-string">"^16.0.11"</span>,
-    <span class="hljs-attr">"react"</span>: <span class="hljs-string">"^16.7.0"</span>,
-    <span class="hljs-attr">"react-dom"</span>: <span class="hljs-string">"^16.7.0"</span>
+  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;project_name&quot;</span>,
+  <span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
+  <span class="hljs-attr">&quot;main&quot;</span>: <span class="hljs-string">&quot;index.js&quot;</span>,
+  <span class="hljs-attr">&quot;license&quot;</span>: <span class="hljs-string">&quot;MIT&quot;</span>,
+  <span class="hljs-attr">&quot;dependencies&quot;</span>: {
+    <span class="hljs-attr">&quot;@types/react&quot;</span>: <span class="hljs-string">&quot;^16.7.18&quot;</span>,
+    <span class="hljs-attr">&quot;@types/react-dom&quot;</span>: <span class="hljs-string">&quot;^16.0.11&quot;</span>,
+    <span class="hljs-attr">&quot;react&quot;</span>: <span class="hljs-string">&quot;^16.7.0&quot;</span>,
+    <span class="hljs-attr">&quot;react-dom&quot;</span>: <span class="hljs-string">&quot;^16.7.0&quot;</span>
   }
 }</code></pre>
 </div>
@@ -3573,18 +3573,18 @@ Each time you save a file, you will see automatically the result at <code><a hre
 </div>
 <div class="listingblock">
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-jsx" data-lang="jsx"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">"react-dom"</span>;
+<pre tabindex="0" class="highlight"><code class="language-jsx" data-lang="jsx"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react-dom&quot;</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">PureComponent</span> </span>{
-    render() {
+    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> {
         <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Hello world!<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>;
     }
 }
 
 ReactDOM.render(
     <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>,
-    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"app"</span>)
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;app&quot;</span>)
 );</code></pre>
 </div>
 </div>
@@ -3595,8 +3595,8 @@ ReactDOM.render(
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-html" data-lang="html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"app"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"./index.tsx"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;app&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./index.tsx&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
 </div>
@@ -3622,9 +3622,9 @@ ReactDOM.render(
 </div>
 <div class="listingblock">
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">    <span class="hljs-string">"scripts"</span>: {
-        <span class="hljs-attr">"start"</span>: <span class="hljs-string">"parcel src/index.html"</span>,
-        <span class="hljs-attr">"build"</span>: <span class="hljs-string">"parcel build src/index.html"</span>
+<pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">    <span class="hljs-string">&quot;scripts&quot;</span>: {
+        <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-string">&quot;parcel src/index.html&quot;</span>,
+        <span class="hljs-attr">&quot;build&quot;</span>: <span class="hljs-string">&quot;parcel build src/index.html&quot;</span>
     }</code></pre>
 </div>
 </div>
@@ -3660,13 +3660,13 @@ ReactDOM.render(
 <div class="title">Create a <code>tsconfig.json</code> file</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">{
-    <span class="hljs-attr">"compilerOptions"</span>: {
-        <span class="hljs-attr">"outDir"</span>: <span class="hljs-string">"./dist/"</span>,
-        <span class="hljs-attr">"sourceMap"</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">"noImplicitAny"</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">"module"</span>: <span class="hljs-string">"commonjs"</span>,
-        <span class="hljs-attr">"target"</span>: <span class="hljs-string">"es5"</span>,
-        <span class="hljs-attr">"jsx"</span>: <span class="hljs-string">"react"</span>
+    <span class="hljs-attr">&quot;compilerOptions&quot;</span>: {
+        <span class="hljs-attr">&quot;outDir&quot;</span>: <span class="hljs-string">&quot;./dist/&quot;</span>,
+        <span class="hljs-attr">&quot;sourceMap&quot;</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">&quot;noImplicitAny&quot;</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">&quot;module&quot;</span>: <span class="hljs-string">&quot;commonjs&quot;</span>,
+        <span class="hljs-attr">&quot;target&quot;</span>: <span class="hljs-string">&quot;es5&quot;</span>,
+        <span class="hljs-attr">&quot;jsx&quot;</span>: <span class="hljs-string">&quot;react&quot;</span>
     }
 }</code></pre>
 </div>
@@ -3799,11 +3799,11 @@ ReactDOM.render(
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
 </span>{
-    fs::path aPath {<span class="hljs-string">"./path/to/file.txt"</span>};
+    fs::path aPath {<span class="hljs-string">&quot;./path/to/file.txt&quot;</span>};
 
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Parent path: "</span> &lt;&lt; aPath.parent_path() &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Filename: "</span> &lt;&lt; aPath.filename() &lt;&lt; <span class="hljs-built_in">endl</span>;
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Extension: "</span> &lt;&lt; aPath.extension() &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Parent path: &quot;</span> &lt;&lt; aPath.parent_path() &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Filename: &quot;</span> &lt;&lt; aPath.filename() &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Extension: &quot;</span> &lt;&lt; aPath.extension() &lt;&lt; <span class="hljs-built_in">endl</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
@@ -3815,9 +3815,9 @@ ReactDOM.render(
 <pre tabindex="0" class="highlight"><code class="language-bash" data-lang="bash">$ g++ -std=c++1z main.cpp -lstdc++fs &amp;&amp; ./a.out
 $ ./a.out
 
-Parent path: <span class="hljs-string">"./path/to"</span>
-Filename: <span class="hljs-string">"file.txt"</span>
-Extension: <span class="hljs-string">".txt"</span></code></pre>
+Parent path: <span class="hljs-string">&quot;./path/to&quot;</span>
+Filename: <span class="hljs-string">&quot;file.txt&quot;</span>
+Extension: <span class="hljs-string">&quot;.txt&quot;</span></code></pre>
 </div>
 </div>
 </div>
@@ -3847,14 +3847,14 @@ Extension: <span class="hljs-string">".txt"</span></code></pre>
 <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> _WIN32</span>
-<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">"\\"</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">&quot;\\&quot;</span>;
 <span class="hljs-meta">#<span class="hljs-meta-keyword">else</span></span>
-<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">"/"</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">&quot;/&quot;</span>;
 <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
 </span>{
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Separator in my system "</span> &lt;&lt; SEP &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Separator in my system &quot;</span> &lt;&lt; SEP &lt;&lt; <span class="hljs-built_in">endl</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
 </div>
@@ -3873,7 +3873,7 @@ Extension: <span class="hljs-string">".txt"</span></code></pre>
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
 </span>{
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Separator in my system "</span> &lt;&lt; fs::path::preferred_separator &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Separator in my system &quot;</span> &lt;&lt; fs::path::preferred_separator &lt;&lt; <span class="hljs-built_in">endl</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
 </div>
@@ -3898,16 +3898,16 @@ Extension: <span class="hljs-string">".txt"</span></code></pre>
 <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
 
 <span class="hljs-meta">#<span class="hljs-meta-keyword">ifdef</span> _WIN32</span>
-<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">"\\"</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">&quot;\\&quot;</span>;
 <span class="hljs-meta">#<span class="hljs-meta-keyword">else</span></span>
-<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">"/"</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">&quot;/&quot;</span>;
 <span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
 </span>{
-    <span class="hljs-built_in">string</span> root {<span class="hljs-string">"/"</span>};
-    <span class="hljs-built_in">string</span> dir {<span class="hljs-string">"var/www/"</span>};
-    <span class="hljs-built_in">string</span> index {<span class="hljs-string">"index.html"</span>};
+    <span class="hljs-built_in">string</span> root {<span class="hljs-string">&quot;/&quot;</span>};
+    <span class="hljs-built_in">string</span> dir {<span class="hljs-string">&quot;var/www/&quot;</span>};
+    <span class="hljs-built_in">string</span> index {<span class="hljs-string">&quot;index.html&quot;</span>};
 
     <span class="hljs-built_in">string</span> pathToIndex{};
     pathToIndex.append(root).append(SEP).append(dir).append(SEP).append(index);
@@ -3937,9 +3937,9 @@ Extension: <span class="hljs-string">".txt"</span></code></pre>
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
 </span>{
-    fs::path root {<span class="hljs-string">"/"</span>};
-    fs::path dir {<span class="hljs-string">"var/www/"</span>};
-    fs::path index {<span class="hljs-string">"index.html"</span>};
+    fs::path root {<span class="hljs-string">&quot;/&quot;</span>};
+    fs::path dir {<span class="hljs-string">&quot;var/www/&quot;</span>};
+    fs::path index {<span class="hljs-string">&quot;index.html&quot;</span>};
 
     fs::path pathToIndex = root / dir / index;
 
@@ -3951,7 +3951,7 @@ Extension: <span class="hljs-string">".txt"</span></code></pre>
 <div class="listingblock">
 <div class="title"><a href="https://coliru.stacked-crooked.com/a/a24d50875b4daad1">Compile and run: Concatenate paths in C&#43;&#43;17</a>.</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-string">"/var/www/index.html"</span></code></pre>
+<pre tabindex="0" class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-string">&quot;/var/www/index.html&quot;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3975,21 +3975,21 @@ Extension: <span class="hljs-string">".txt"</span></code></pre>
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
 </span>{
     <span class="hljs-keyword">auto</span> opts = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
-    mkdir(<span class="hljs-string">"sandbox"</span>, opts);
-    mkdir(<span class="hljs-string">"sandbox/a"</span>, opts);
-    mkdir(<span class="hljs-string">"sandbox/a/b"</span>, opts);
-    mkdir(<span class="hljs-string">"sandbox/c"</span>, opts);
-    mkdir(<span class="hljs-string">"sandbox/c/d"</span>, opts);
+    mkdir(<span class="hljs-string">&quot;sandbox&quot;</span>, opts);
+    mkdir(<span class="hljs-string">&quot;sandbox/a&quot;</span>, opts);
+    mkdir(<span class="hljs-string">&quot;sandbox/a/b&quot;</span>, opts);
+    mkdir(<span class="hljs-string">&quot;sandbox/c&quot;</span>, opts);
+    mkdir(<span class="hljs-string">&quot;sandbox/c/d&quot;</span>, opts);
 
-    system(<span class="hljs-string">"ls -la sandbox/*"</span>);
+    system(<span class="hljs-string">&quot;ls -la sandbox/*&quot;</span>);
 
-    remove(<span class="hljs-string">"sandbox/c/d"</span>);
-    remove(<span class="hljs-string">"sandbox/a/b"</span>);
-    remove(<span class="hljs-string">"sandbox/c"</span>);
-    remove(<span class="hljs-string">"sandbox/a"</span>);
-    remove(<span class="hljs-string">"sandbox"</span>);
+    remove(<span class="hljs-string">&quot;sandbox/c/d&quot;</span>);
+    remove(<span class="hljs-string">&quot;sandbox/a/b&quot;</span>);
+    remove(<span class="hljs-string">&quot;sandbox/c&quot;</span>);
+    remove(<span class="hljs-string">&quot;sandbox/a&quot;</span>);
+    remove(<span class="hljs-string">&quot;sandbox&quot;</span>);
 
-    system(<span class="hljs-string">"ls -la"</span>);
+    system(<span class="hljs-string">&quot;ls -la&quot;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
@@ -4034,12 +4034,12 @@ drwxrwxrwx 3 2002 2000 8175616 May 28 12:27 ..
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
 </span>{
-    fs::create_directories(<span class="hljs-string">"sandbox/a/b"</span>);
-    fs::create_directories(<span class="hljs-string">"sandbox/c/d"</span>);
-    system(<span class="hljs-string">"ls -la sandbox/*"</span>);
+    fs::create_directories(<span class="hljs-string">&quot;sandbox/a/b&quot;</span>);
+    fs::create_directories(<span class="hljs-string">&quot;sandbox/c/d&quot;</span>);
+    system(<span class="hljs-string">&quot;ls -la sandbox/*&quot;</span>);
 
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Were directories removed? "</span> &lt;&lt; fs::remove_all(<span class="hljs-string">"sandbox"</span>) &lt;&lt; <span class="hljs-built_in">endl</span>;
-    system(<span class="hljs-string">"ls -la"</span>);
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;Were directories removed? &quot;</span> &lt;&lt; fs::remove_all(<span class="hljs-string">&quot;sandbox&quot;</span>) &lt;&lt; <span class="hljs-built_in">endl</span>;
+    system(<span class="hljs-string">&quot;ls -la&quot;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
@@ -4096,15 +4096,15 @@ drwxrwxrwx 3 2002 2000 8175616 May 28 16:45 ..
 
 <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
 
-<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> UP_DIR = <span class="hljs-string">".."</span>;
-<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> CURRENT_DIR = <span class="hljs-string">"."</span>;
-<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">"/"</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> UP_DIR = <span class="hljs-string">&quot;..&quot;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> CURRENT_DIR = <span class="hljs-string">&quot;.&quot;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> SEP = <span class="hljs-string">&quot;/&quot;</span>;
 
 
 <span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">path</span><span class="hljs-params">(<span class="hljs-built_in">initializer_list</span>&lt;<span class="hljs-built_in">string</span>&gt; parts)</span>
 </span>{
     <span class="hljs-built_in">string</span> pathTmp {};
-    <span class="hljs-built_in">string</span> separator = <span class="hljs-string">""</span>;
+    <span class="hljs-built_in">string</span> separator = <span class="hljs-string">&quot;&quot;</span>;
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> &amp; part: parts)
     {
         pathTmp.append(separator).append(part);
@@ -4119,7 +4119,7 @@ drwxrwxrwx 3 2002 2000 8175616 May 28 16:45 ..
     <span class="hljs-function"><span class="hljs-built_in">shared_ptr</span>&lt;DIR&gt; <span class="hljs-title">directory_ptr</span><span class="hljs-params">(opendir(dir.c_str()), [](DIR* dir){ dir &amp;&amp; closedir(dir); })</span></span>;
     <span class="hljs-keyword">if</span> (!directory_ptr)
     {
-        <span class="hljs-keyword">throw</span> system_error(error_code(errno, system_category()), <span class="hljs-string">"Error opening : "</span> + dir);
+        <span class="hljs-keyword">throw</span> system_error(error_code(errno, system_category()), <span class="hljs-string">&quot;Error opening : &quot;</span> + dir);
     }
 
     <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dirent</span> *<span class="hljs-title">dirent_ptr</span>;</span>
@@ -4146,28 +4146,28 @@ drwxrwxrwx 3 2002 2000 8175616 May 28 16:45 ..
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span> <span class="hljs-params">()</span>
 </span>{
     <span class="hljs-keyword">auto</span> opt = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
-    mkdir(<span class="hljs-string">"sandbox"</span>, opt);
-    mkdir(<span class="hljs-string">"sandbox/a"</span>, opt);
-    mkdir(<span class="hljs-string">"sandbox/a/b"</span>, opt);
+    mkdir(<span class="hljs-string">&quot;sandbox&quot;</span>, opt);
+    mkdir(<span class="hljs-string">&quot;sandbox/a&quot;</span>, opt);
+    mkdir(<span class="hljs-string">&quot;sandbox/a/b&quot;</span>, opt);
 
 	<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt; e_files = {
-	    <span class="hljs-string">"./sandbox/a/b/file1.rst"</span>,
-	    <span class="hljs-string">"./sandbox/a/b/file1.txt"</span>,
-	    <span class="hljs-string">"./sandbox/a/file2.RST"</span>,
-	    <span class="hljs-string">"./sandbox/file3.md"</span>,
-	    <span class="hljs-string">"./sandbox/will_be.ignored"</span>
+	    <span class="hljs-string">&quot;./sandbox/a/b/file1.rst&quot;</span>,
+	    <span class="hljs-string">&quot;./sandbox/a/b/file1.txt&quot;</span>,
+	    <span class="hljs-string">&quot;./sandbox/a/file2.RST&quot;</span>,
+	    <span class="hljs-string">&quot;./sandbox/file3.md&quot;</span>,
+	    <span class="hljs-string">&quot;./sandbox/will_be.ignored&quot;</span>
 	};
 
 	<span class="hljs-comment">// create files</span>
 	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> &amp;f: e_files)
 	{
 		<span class="hljs-function">ofstream <span class="hljs-title">of</span><span class="hljs-params">(f, ofstream::out)</span></span>;
-		of &lt;&lt; <span class="hljs-string">"test"</span>;
+		of &lt;&lt; <span class="hljs-string">&quot;test&quot;</span>;
 	}
 
-    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"filtered files: "</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
-	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> &amp;f: getDirectoryFiles(<span class="hljs-string">"."</span>, {<span class="hljs-string">".rst"</span>, <span class="hljs-string">".RST"</span>, <span class="hljs-string">".md"</span>})){
-	    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\t"</span> &lt;&lt; f &lt;&lt; <span class="hljs-built_in">endl</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;filtered files: &quot;</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> &amp;f: getDirectoryFiles(<span class="hljs-string">&quot;.&quot;</span>, {<span class="hljs-string">&quot;.rst&quot;</span>, <span class="hljs-string">&quot;.RST&quot;</span>, <span class="hljs-string">&quot;.md&quot;</span>})){
+	    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;\t&quot;</span> &lt;&lt; f &lt;&lt; <span class="hljs-built_in">endl</span>;
 	}
 
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
@@ -4208,15 +4208,15 @@ filtered files:
 
 using namespace std;
 
-const string UP_DIR = <span class="hljs-string">".."</span>;
-const string CURRENT_DIR = <span class="hljs-string">"."</span>;
-const string SEP = <span class="hljs-string">"/"</span>;
+const string UP_DIR = <span class="hljs-string">&quot;..&quot;</span>;
+const string CURRENT_DIR = <span class="hljs-string">&quot;.&quot;</span>;
+const string SEP = <span class="hljs-string">&quot;/&quot;</span>;
 
 
 string path(initializer_list&lt;string&gt; parts)
 {
     string pathTmp {};
-    string separator = <span class="hljs-string">""</span>;
+    string separator = <span class="hljs-string">&quot;&quot;</span>;
     <span class="hljs-keyword">for</span> (auto &amp; part: parts)
     {
         pathTmp.append(separator).append(part);
@@ -4231,7 +4231,7 @@ vector&lt;string&gt; getDirectoryFiles(const string&amp; dir, const vector&lt;st
     shared_ptr&lt;DIR&gt; directory_ptr(opendir(dir.c_str()), [](DIR* dir){ dir &amp;&amp; closedir(dir); });
     <span class="hljs-keyword">if</span> (!directory_ptr)
     {
-        throw system_error(error_code(errno, system_category()), <span class="hljs-string">"Error opening : "</span> + dir);
+        throw system_error(error_code(errno, system_category()), <span class="hljs-string">&quot;Error opening : &quot;</span> + dir);
     }
 
     struct dirent *dirent_ptr;
@@ -4258,28 +4258,28 @@ vector&lt;string&gt; getDirectoryFiles(const string&amp; dir, const vector&lt;st
 int <span class="hljs-function"><span class="hljs-title">main</span></span> ()
 {
     auto opt = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
-    mkdir(<span class="hljs-string">"sandbox"</span>, opt);
-    mkdir(<span class="hljs-string">"sandbox/a"</span>, opt);
-    mkdir(<span class="hljs-string">"sandbox/a/b"</span>, opt);
+    mkdir(<span class="hljs-string">&quot;sandbox&quot;</span>, opt);
+    mkdir(<span class="hljs-string">&quot;sandbox/a&quot;</span>, opt);
+    mkdir(<span class="hljs-string">&quot;sandbox/a/b&quot;</span>, opt);
 
 	vector&lt;string&gt; e_files = {
-	    <span class="hljs-string">"./sandbox/a/b/file1.rst"</span>,
-	    <span class="hljs-string">"./sandbox/a/b/file1.txt"</span>,
-	    <span class="hljs-string">"./sandbox/a/file2.RST"</span>,
-	    <span class="hljs-string">"./sandbox/file3.md"</span>,
-	    <span class="hljs-string">"./sandbox/will_be.ignored"</span>
+	    <span class="hljs-string">&quot;./sandbox/a/b/file1.rst&quot;</span>,
+	    <span class="hljs-string">&quot;./sandbox/a/b/file1.txt&quot;</span>,
+	    <span class="hljs-string">&quot;./sandbox/a/file2.RST&quot;</span>,
+	    <span class="hljs-string">&quot;./sandbox/file3.md&quot;</span>,
+	    <span class="hljs-string">&quot;./sandbox/will_be.ignored&quot;</span>
 	};
 
 	// create files
 	<span class="hljs-keyword">for</span> (auto &amp;f: e_files)
 	{
 		ofstream of(f, ofstream::out);
-		of &lt;&lt; <span class="hljs-string">"test"</span>;
+		of &lt;&lt; <span class="hljs-string">&quot;test&quot;</span>;
 	}
 
-    cout &lt;&lt; <span class="hljs-string">"filtered files: "</span> &lt;&lt; endl;
-	<span class="hljs-keyword">for</span> (auto &amp;f: getDirectoryFiles(<span class="hljs-string">"."</span>, {<span class="hljs-string">".rst"</span>, <span class="hljs-string">".RST"</span>, <span class="hljs-string">".md"</span>})){
-	    cout &lt;&lt; <span class="hljs-string">"\t"</span> &lt;&lt; f &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;filtered files: &quot;</span> &lt;&lt; <span class="hljs-string">endl;
+	for (auto &amp;f: getDirectoryFiles(&quot;.&quot;, {&quot;.rst&quot;, &quot;.RST&quot;, &quot;.md&quot;})){
+	    cout &lt;&lt; &quot;\t&quot; &lt;&lt; f &lt;&lt; endl</span>;
 	}
 
     <span class="hljs-built_in">return</span> 0;
@@ -4356,20 +4356,20 @@ filtered files:
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-keyword">import</span> re, string
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">remove_punctuation</span> <span class="hljs-params">( text )</span>:</span>
-  <span class="hljs-keyword">return</span> re.sub(<span class="hljs-string">'[%s]'</span> % re.escape(string.punctuation), <span class="hljs-string">' '</span>, text)</code></pre>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">remove_punctuation</span> (<span class="hljs-params"> text </span>):</span>
+  <span class="hljs-keyword">return</span> re.sub(<span class="hljs-string">&#x27;[%s]&#x27;</span> % re.escape(string.punctuation), <span class="hljs-string">&#x27; &#x27;</span>, text)</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Calling to previous function</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-bash" data-lang="bash">&gt;&gt;&gt; remove_punctuation (<span class="hljs-string">"El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido."</span>)</code></pre>
+<pre tabindex="0" class="highlight"><code class="language-bash" data-lang="bash">&gt;&gt;&gt; remove_punctuation (<span class="hljs-string">&quot;El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido.&quot;</span>)</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">We will get this output</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-string">'El perro  de San Roque  no tiene rabo  ni nunca lo ha tenido '</span></code></pre>
+<pre tabindex="0" class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-string">&#x27;El perro  de San Roque  no tiene rabo  ni nunca lo ha tenido &#x27;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4379,19 +4379,19 @@ filtered files:
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-keyword">import</span> re, string
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">replace_punctuation</span><span class="hljs-params">(text, replace)</span>:</span>
-  <span class="hljs-keyword">return</span> re.sub(<span class="hljs-string">'[%s]'</span> % re.escape(string.punctuation), replace, text)</code></pre>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">replace_punctuation</span>(<span class="hljs-params">text, replace</span>):</span>
+  <span class="hljs-keyword">return</span> re.sub(<span class="hljs-string">&#x27;[%s]&#x27;</span> % re.escape(string.punctuation), replace, text)</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Calling the function to replace punctuation symbols by "[stop]"</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-python" data-lang="python"><span class="hljs-meta">&gt;&gt;&gt; </span>replace_punctuation(
-  <span class="hljs-string">"El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido."</span>,
-  <span class="hljs-string">'[stop]'</span>)
+  <span class="hljs-string">&quot;El perro, de San Roque, no tiene rabo; ni nunca lo ha tenido.&quot;</span>,
+  <span class="hljs-string">&#x27;[stop]&#x27;</span>)
 
 <span class="hljs-comment"># output</span>
-<span class="hljs-string">'El perro[stop] de San Roque[stop] no tiene rabo[stop] ni nunca lo ha tenido[stop]'</span></code></pre>
+<span class="hljs-string">&#x27;El perro[stop] de San Roque[stop] no tiene rabo[stop] ni nunca lo ha tenido[stop]&#x27;</span></code></pre>
 </div>
 </div>]]></content>
             <category term="Python"/>
@@ -4528,18 +4528,18 @@ I actually created that <a href="https://covid-rest.appspot.com/docs">COVID-19 d
 <pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">package</span> main
 
 <span class="hljs-keyword">import</span> (
-	<span class="hljs-string">"log"</span>
-	<span class="hljs-string">"net/http"</span>
+	<span class="hljs-string">&quot;log&quot;</span>
+	<span class="hljs-string">&quot;net/http&quot;</span>
 )
 
 <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
 	router := http.NewServeMux()
-	router.Handle(<span class="hljs-string">"/redirect"</span>, http.RedirectHandler(<span class="hljs-string">"https://carlosvin.github.io/"</span>, <span class="hljs-number">307</span>))
-	router.HandleFunc(<span class="hljs-string">"/hello"</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(w http.ResponseWriter, r *http.Request)</span></span> {
-		w.Write([]<span class="hljs-keyword">byte</span>(<span class="hljs-string">"Hello world!"</span>))
+	router.Handle(<span class="hljs-string">&quot;/redirect&quot;</span>, http.RedirectHandler(<span class="hljs-string">&quot;https://carlosvin.github.io/&quot;</span>, <span class="hljs-number">307</span>))
+	router.HandleFunc(<span class="hljs-string">&quot;/hello&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(w http.ResponseWriter, r *http.Request)</span></span> {
+		w.Write([]<span class="hljs-keyword">byte</span>(<span class="hljs-string">&quot;Hello world!&quot;</span>))
 	})
-	log.Println(<span class="hljs-string">"Listening..."</span>)
-	http.ListenAndServe(<span class="hljs-string">":3000"</span>, router)
+	log.Println(<span class="hljs-string">&quot;Listening...&quot;</span>)
+	http.ListenAndServe(<span class="hljs-string">&quot;:3000&quot;</span>, router)
 }</code></pre>
 </div>
 </div>
@@ -4556,9 +4556,9 @@ I actually created that <a href="https://covid-rest.appspot.com/docs">COVID-19 d
 <div class="title"><a href="https://github.com/carlosvin/covid-rest-go/blob/master/main.go">Full example</a></div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">import</span> (
-	<span class="hljs-string">"github.com/carlosvin/covid-rest-go/handlers"</span>
-	<span class="hljs-string">"github.com/carlosvin/covid-rest-go/readers"</span>
-	<span class="hljs-string">"github.com/gin-gonic/gin"</span>
+	<span class="hljs-string">&quot;github.com/carlosvin/covid-rest-go/handlers&quot;</span>
+	<span class="hljs-string">&quot;github.com/carlosvin/covid-rest-go/readers&quot;</span>
+	<span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span>
 )
 
 <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
@@ -4566,10 +4566,10 @@ I actually created that <a href="https://covid-rest.appspot.com/docs">COVID-19 d
 	<span class="hljs-comment">// ...</span>
 
 	r := gin.Default()
-	r.GET(<span class="hljs-string">"/countries"</span>, router.Countries)
-	r.GET(<span class="hljs-string">"/countries/:code"</span>, router.Country)
-	r.GET(<span class="hljs-string">"/countries/:code/dates"</span>, router.CountryDates)
-	r.GET(<span class="hljs-string">"/countries/:code/dates/:date"</span>, router.CountryDate)
+	r.GET(<span class="hljs-string">&quot;/countries&quot;</span>, router.Countries)
+	r.GET(<span class="hljs-string">&quot;/countries/:code&quot;</span>, router.Country)
+	r.GET(<span class="hljs-string">&quot;/countries/:code/dates&quot;</span>, router.CountryDates)
+	r.GET(<span class="hljs-string">&quot;/countries/:code/dates/:date&quot;</span>, router.CountryDate)
 	r.Run()
 }</code></pre>
 </div>
@@ -4593,13 +4593,13 @@ I actually created that <a href="https://covid-rest.appspot.com/docs">COVID-19 d
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Validated</span>
 <span class="hljs-meta">@RestController</span> <b class="conum">(1)</b>
-<span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/countries"</span>) <b class="conum">(2)</b>
+<span class="hljs-meta">@RequestMapping(&quot;/countries&quot;)</span> <b class="conum">(2)</b>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountriesController</span> </span>{
 
 	<span class="hljs-comment">// Some source code is not shown, you can find the complete example in the repository</span>
 
-	<span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/{country}/dates/{isoDateStr}"</span>)  <b class="conum">(3)</b>
-	<span class="hljs-function"><span class="hljs-keyword">public</span> DateStatsDto <span class="hljs-title">getDateByCountry</span><span class="hljs-params">(@Size(min = <span class="hljs-number">2</span>, max = <span class="hljs-number">2</span>)</span> @PathVariable String country, @<span class="hljs-title">Size</span><span class="hljs-params">(min = <span class="hljs-number">10</span>, max = <span class="hljs-number">20</span>)</span> @PathVariable String isoDateStr) <span class="hljs-keyword">throws</span> NotFoundException </span>{
+	<span class="hljs-meta">@GetMapping(&quot;/{country}/dates/{isoDateStr}&quot;)</span>  <b class="conum">(3)</b>
+	<span class="hljs-function"><span class="hljs-keyword">public</span> DateStatsDto <span class="hljs-title">getDateByCountry</span><span class="hljs-params">(<span class="hljs-meta">@Size(min = 2, max = 2)</span> <span class="hljs-meta">@PathVariable</span> String country, <span class="hljs-meta">@Size(min = 10, max = 20)</span> <span class="hljs-meta">@PathVariable</span> String isoDateStr)</span> <span class="hljs-keyword">throws</span> NotFoundException </span>{
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DateStatsDto(service.getDate(country, DateUtils.convert(isoDateStr)));
 	}
 }</code></pre>
@@ -4632,8 +4632,8 @@ I actually created that <a href="https://covid-rest.appspot.com/docs">COVID-19 d
 <div class="listingblock">
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">type</span> User <span class="hljs-keyword">struct</span> {
-	Name  <span class="hljs-keyword">string</span> <span class="hljs-string">`validate:"required"`</span> <b class="conum">(1)</b>
-	Email <span class="hljs-keyword">string</span> <span class="hljs-string">`validate:"required,email"`</span>
+	Name  <span class="hljs-keyword">string</span> <span class="hljs-string">`validate:&quot;required&quot;`</span> <b class="conum">(1)</b>
+	Email <span class="hljs-keyword">string</span> <span class="hljs-string">`validate:&quot;required,email&quot;`</span>
 }
 
 err := validate.Struct(user) <b class="conum">(2)</b>
@@ -4664,15 +4664,15 @@ validationErrors := err.(validator.ValidationErrors) <b class="conum">(3)</b></c
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Validated</span> <b class="conum">(1)</b>
 <span class="hljs-meta">@RestController</span>
-<span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/countries"</span>)
+<span class="hljs-meta">@RequestMapping(&quot;/countries&quot;)</span>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountriesController</span> </span>{
 
 	<span class="hljs-comment">// Some source code is not shown, you can find the complete example in the repository</span>
 
-	<span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/{country}/dates/{isoDateStr}"</span>)
+	<span class="hljs-meta">@GetMapping(&quot;/{country}/dates/{isoDateStr}&quot;)</span>
 	<span class="hljs-function"><span class="hljs-keyword">public</span> DateStatsDto <span class="hljs-title">getDateByCountry</span><span class="hljs-params">(
-		@Size(min = <span class="hljs-number">2</span>, max = <span class="hljs-number">2</span>)</span> @PathVariable String country, <b class="conum">(2)</b>
-		@<span class="hljs-title">Size</span><span class="hljs-params">(min = <span class="hljs-number">10</span>, max = <span class="hljs-number">20</span>)</span> @PathVariable String isoDateStr) <span class="hljs-keyword">throws</span> NotFoundException </span>{
+		<span class="hljs-meta">@Size(min = 2, max = 2)</span> <span class="hljs-meta">@PathVariable</span> String country, <b class="conum">(2)</b>
+		<span class="hljs-meta">@Size(min = 10, max = 20)</span> <span class="hljs-meta">@PathVariable</span> String isoDateStr)</span> <span class="hljs-keyword">throws</span> NotFoundException </span>{
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DateStatsDto(service.getDate(country, DateUtils.convert(isoDateStr)));
 	}
 }</code></pre>
@@ -4755,7 +4755,7 @@ validationErrors := err.(validator.ValidationErrors) <b class="conum">(3)</b></c
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">package</span> main
 
-<span class="hljs-keyword">import</span> <span class="hljs-string">"fmt"</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
 
 <span class="hljs-comment">// Greeter interface to greet the caller</span>
 <span class="hljs-keyword">type</span> Greeter <span class="hljs-keyword">interface</span> {
@@ -4765,13 +4765,13 @@ validationErrors := err.(validator.ValidationErrors) <b class="conum">(3)</b></c
 <span class="hljs-keyword">type</span> greeterHello <span class="hljs-keyword">struct</span>{}
 
 <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *greeterHello)</span> <span class="hljs-title">greet</span><span class="hljs-params">()</span></span> { <b class="conum">(3)</b>
-	fmt.Println(<span class="hljs-string">"Hello!"</span>)
+	fmt.Println(<span class="hljs-string">&quot;Hello!&quot;</span>)
 }
 
 <span class="hljs-keyword">type</span> greeterHi <span class="hljs-keyword">struct</span>{}
 
 <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *greeterHi)</span> <span class="hljs-title">greet</span><span class="hljs-params">()</span></span> { <b class="conum">(4)</b>
-	fmt.Println(<span class="hljs-string">"Hi!"</span>)
+	fmt.Println(<span class="hljs-string">&quot;Hi!&quot;</span>)
 }
 
 <span class="hljs-comment">// App Application representation</span>
@@ -4855,16 +4855,16 @@ validationErrors := err.(validator.ValidationErrors) <b class="conum">(3)</b></c
 
 	<span class="hljs-meta">@Test</span>
 	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">getCountries</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>{
-		<span class="hljs-keyword">this</span>.mockMvc.perform(get(<span class="hljs-string">"/countries"</span>)) <b class="conum">(2)</b>
+		<span class="hljs-keyword">this</span>.mockMvc.perform(get(<span class="hljs-string">&quot;/countries&quot;</span>)) <b class="conum">(2)</b>
 				.andDo(print()).andExpect(status().isOk()) <b class="conum">(3)</b>
-				.andExpect(jsonPath(<span class="hljs-string">"$.*"</span>, hasSize(<span class="hljs-number">144</span>)))
-				.andExpect(jsonPath(<span class="hljs-string">"$.ES.confirmedCases"</span>,comparesEqualTo(<span class="hljs-number">9191</span>)))
-				.andExpect(jsonPath(<span class="hljs-string">"$.ES.deathsNumber"</span>, comparesEqualTo(<span class="hljs-number">309</span>)))
-				.andExpect(jsonPath(<span class="hljs-string">"$.ES.countryCode"</span>, comparesEqualTo(<span class="hljs-string">"ES"</span>)))
-				.andExpect(jsonPath(<span class="hljs-string">"$.ES.countryName"</span>, comparesEqualTo(<span class="hljs-string">"Spain"</span>)))
-				.andExpect(jsonPath(<span class="hljs-string">"$.ES.path"</span>, comparesEqualTo(<span class="hljs-string">"/countries/ES"</span>)))
-				.andExpect(jsonPath(<span class="hljs-string">"$.VC.countryName"</span>, comparesEqualTo(<span class="hljs-string">"Saint Vincent and the Grenadines"</span>)))
-				.andDo(document(<span class="hljs-string">"countries/list"</span>, preprocessResponse(prettyPrint(), <span class="hljs-keyword">new</span> CropPreprocessor())));
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.*&quot;</span>, hasSize(<span class="hljs-number">144</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.confirmedCases&quot;</span>,comparesEqualTo(<span class="hljs-number">9191</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.deathsNumber&quot;</span>, comparesEqualTo(<span class="hljs-number">309</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.countryCode&quot;</span>, comparesEqualTo(<span class="hljs-string">&quot;ES&quot;</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.countryName&quot;</span>, comparesEqualTo(<span class="hljs-string">&quot;Spain&quot;</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.path&quot;</span>, comparesEqualTo(<span class="hljs-string">&quot;/countries/ES&quot;</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.VC.countryName&quot;</span>, comparesEqualTo(<span class="hljs-string">&quot;Saint Vincent and the Grenadines&quot;</span>)))
+				.andDo(document(<span class="hljs-string">&quot;countries/list&quot;</span>, preprocessResponse(prettyPrint(), <span class="hljs-keyword">new</span> CropPreprocessor())));
 	}</code></pre>
 </div>
 </div>
@@ -5250,15 +5250,15 @@ Designing a <a href="https://en.wikipedia.org/wiki/Representational_state_transf
 <div class="title"><a href="https://en.wikipedia.org/wiki/JSON" target="_blank" rel="noopener">JSON</a> example</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">{
-<span class="hljs-attr">"brand"</span>: <span class="hljs-string">"Fiat"</span>,
-<span class="hljs-attr">"model"</span>: <span class="hljs-string">"Bravo"</span>
-<span class="hljs-string">"year"</span>: <span class="hljs-number">2010</span>
-<span class="hljs-string">"doors"</span>: <span class="hljs-number">5</span>,
-<span class="hljs-attr">"enginePower"</span>: <span class="hljs-number">120</span>,
-<span class="hljs-attr">"version"</span>: <span class="hljs-string">"Emotion"</span>,
-<span class="hljs-attr">"clima"</span>: <span class="hljs-literal">true</span>,
-<span class="hljs-attr">"ac"</span>: <span class="hljs-literal">false</span>,
-<span class="hljs-attr">"fuel"</span>: <span class="hljs-string">"Diesel"</span>
+<span class="hljs-attr">&quot;brand&quot;</span>: <span class="hljs-string">&quot;Fiat&quot;</span>,
+<span class="hljs-attr">&quot;model&quot;</span>: <span class="hljs-string">&quot;Bravo&quot;</span>
+<span class="hljs-string">&quot;year&quot;</span>: <span class="hljs-number">2010</span>
+<span class="hljs-string">&quot;doors&quot;</span>: <span class="hljs-number">5</span>,
+<span class="hljs-attr">&quot;enginePower&quot;</span>: <span class="hljs-number">120</span>,
+<span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-string">&quot;Emotion&quot;</span>,
+<span class="hljs-attr">&quot;clima&quot;</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-attr">&quot;ac&quot;</span>: <span class="hljs-literal">false</span>,
+<span class="hljs-attr">&quot;fuel&quot;</span>: <span class="hljs-string">&quot;Diesel&quot;</span>
 }</code></pre>
 </div>
 </div>
@@ -5268,16 +5268,16 @@ Designing a <a href="https://en.wikipedia.org/wiki/Representational_state_transf
 <div class="listingblock">
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">{
-  <span class="hljs-attr">"identifier"</span>: <span class="hljs-string">"cce05bee-386b-11e5-a151-feff819cdc9f"</span>
-  <span class="hljs-string">"brand"</span>: <span class="hljs-string">"Fiat"</span>,
-  <span class="hljs-attr">"model"</span>: <span class="hljs-string">"Bravo"</span>
-  <span class="hljs-string">"year"</span>: <span class="hljs-number">2010</span>
-  <span class="hljs-string">"doors"</span>: <span class="hljs-number">5</span>,
-  <span class="hljs-attr">"enginePower"</span>: <span class="hljs-number">120</span>,
-  <span class="hljs-attr">"version"</span>: <span class="hljs-string">"Emotion"</span>,
-  <span class="hljs-attr">"clima"</span>: <span class="hljs-literal">true</span>,
-  <span class="hljs-attr">"ac"</span>: <span class="hljs-literal">false</span>,
-  <span class="hljs-attr">"fuel"</span>: <span class="hljs-string">"Diesel"</span>
+  <span class="hljs-attr">&quot;identifier&quot;</span>: <span class="hljs-string">&quot;cce05bee-386b-11e5-a151-feff819cdc9f&quot;</span>
+  <span class="hljs-string">&quot;brand&quot;</span>: <span class="hljs-string">&quot;Fiat&quot;</span>,
+  <span class="hljs-attr">&quot;model&quot;</span>: <span class="hljs-string">&quot;Bravo&quot;</span>
+  <span class="hljs-string">&quot;year&quot;</span>: <span class="hljs-number">2010</span>
+  <span class="hljs-string">&quot;doors&quot;</span>: <span class="hljs-number">5</span>,
+  <span class="hljs-attr">&quot;enginePower&quot;</span>: <span class="hljs-number">120</span>,
+  <span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-string">&quot;Emotion&quot;</span>,
+  <span class="hljs-attr">&quot;clima&quot;</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">&quot;ac&quot;</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">&quot;fuel&quot;</span>: <span class="hljs-string">&quot;Diesel&quot;</span>
 }</code></pre>
 </div>
 </div>
@@ -5323,8 +5323,8 @@ For the example we will assume that <em>the oil identifier</em> is the attribute
 <div class="title">Response</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">{
-  <span class="hljs-attr">"type"</span>: <span class="hljs-string">"5W30"</span>,
-  <span class="hljs-attr">"otherInfo"</span>: <span class="hljs-string">"This is the best oil for this car"</span>
+  <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;5W30&quot;</span>,
+  <span class="hljs-attr">&quot;otherInfo&quot;</span>: <span class="hljs-string">&quot;This is the best oil for this car&quot;</span>
 }</code></pre>
 </div>
 </div>
@@ -5341,8 +5341,8 @@ For the example we will assume that <em>the oil identifier</em> is the attribute
 <div class="title">Response</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">{
-  <span class="hljs-attr">"type"</span>: <span class="hljs-string">"10W30"</span>,
-  <span class="hljs-attr">"otherInfo"</span>: <span class="hljs-string">"This is very good for cold weather"</span>
+  <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;10W30&quot;</span>,
+  <span class="hljs-attr">&quot;otherInfo&quot;</span>: <span class="hljs-string">&quot;This is very good for cold weather&quot;</span>
 }</code></pre>
 </div>
 </div>
@@ -5362,8 +5362,8 @@ For the example we will assume that <em>the oil identifier</em> is the attribute
 <div class="title">Response</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-json" data-lang="json">{
-  <span class="hljs-attr">"type"</span>: <span class="hljs-string">"5W30"</span>,
-  <span class="hljs-attr">"otherInfo"</span>: <span class="hljs-string">"This is no longer the best oil for this car"</span>
+  <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;5W30&quot;</span>,
+  <span class="hljs-attr">&quot;otherInfo&quot;</span>: <span class="hljs-string">&quot;This is no longer the best oil for this car&quot;</span>
 }</code></pre>
 </div>
 </div>
@@ -5654,8 +5654,8 @@ You can download the full example at <a href="https://github.com/carlosvin/docke
 <span class="hljs-attr">nginx-proxy:</span> <b class="conum">(3)</b>
   <span class="hljs-attr">image:</span> <span class="hljs-string">jwilder/nginx-proxy</span>
   <span class="hljs-attr">ports:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-string">"80:80"</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-string">"443:443"</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;80:80&quot;</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;443:443&quot;</span>
   <span class="hljs-attr">volumes:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-string">/var/run/docker.sock:/tmp/docker.sock:ro</span>
 
@@ -5689,7 +5689,7 @@ You can download the full example at <a href="https://github.com/carlosvin/docke
 <div class="title">a/Dockerfile</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-docker" data-lang="docker"><span class="hljs-keyword">FROM</span> httpd:<span class="hljs-number">2.4</span> <b class="conum">(1)</b>
-<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/<span class="hljs-built_in">local</span>/apache2/htdocs/index.html </span><b class="conum">(2)</b></code></pre>
+<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;&quot;</span> &gt; /usr/<span class="hljs-built_in">local</span>/apache2/htdocs/index.html </span><b class="conum">(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -5709,7 +5709,7 @@ You can download the full example at <a href="https://github.com/carlosvin/docke
 <div class="title">b/Dockerfile</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-docker" data-lang="docker"><span class="hljs-keyword">FROM</span> httpd:<span class="hljs-number">2.4</span>
-<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">"&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;"</span> &gt; /usr/<span class="hljs-built_in">local</span>/apache2/htdocs/index.html</span></code></pre>
+<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;&quot;</span> &gt; /usr/<span class="hljs-built_in">local</span>/apache2/htdocs/index.html</span></code></pre>
 </div>
 </div>
 </div>
@@ -6176,7 +6176,7 @@ npm install</code></pre>
 <div class="title">svelte.config.js</div>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-built_in">module</span>.exports = {
-	<span class="hljs-attr">adapter</span>: <span class="hljs-string">'@sveltejs/adapter-static'</span>
+	<span class="hljs-attr">adapter</span>: <span class="hljs-string">&#x27;@sveltejs/adapter-static&#x27;</span>
 };</code></pre>
 </div>
 </div>
@@ -6366,7 +6366,7 @@ Such a post!</code></pre>
 <div class="listingblock">
 <div class="title">With <a href="https://github.com/carlosvin/rollup-plugin-asciidoc" target="_blank" rel="noopener">rollup-plugin-asciidoc</a> we can import <a href="https://asciidoctor.org/" target="_blank" rel="noopener">Asciidoctor</a> files one by one.</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">import</span> doc <span class="hljs-keyword">from</span> <span class="hljs-string">'./a-blog-post.adoc'</span>;
+<pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">import</span> doc <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./a-blog-post.adoc&#x27;</span>;
 
 <span class="hljs-built_in">console</span>.log(doc);</code></pre>
 </div>
@@ -6376,10 +6376,10 @@ Such a post!</code></pre>
 <div class="content">
 <pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript">{
   <span class="hljs-attr">meta</span>: {
-    <span class="hljs-attr">title</span>: <span class="hljs-string">"Post title"</span>,
-    <span class="hljs-attr">date</span>: <span class="hljs-string">"2019-11-11"</span>
+    <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;Post title&quot;</span>,
+    <span class="hljs-attr">date</span>: <span class="hljs-string">&quot;2019-11-11&quot;</span>
   },
-  <span class="hljs-attr">html</span>: <span class="hljs-string">"&lt;p&gt;Such a post!&lt;/p&gt;"</span>
+  <span class="hljs-attr">html</span>: <span class="hljs-string">&quot;&lt;p&gt;Such a post!&lt;/p&gt;&quot;</span>
 }</code></pre>
 </div>
 </div>
@@ -6395,7 +6395,7 @@ Such a post!</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">import</span> allAdoc <span class="hljs-keyword">from</span> <span class="hljs-string">'../posts/**/*.adoc'</span>;
+<pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">import</span> allAdoc <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../posts/**/*.adoc&#x27;</span>;
 
 allAdoc.forEach(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(post));</code></pre>
 </div>
@@ -6403,11 +6403,11 @@ allAdoc.forEach(<span class="hljs-function"><span class="hljs-params">post</span
 <div class="listingblock">
 <div class="title">Output: List of posts already converted to HTML</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript">{ <span class="hljs-attr">meta</span>: { <span class="hljs-attr">title</span>: <span class="hljs-string">"Post title"</span>, <span class="hljs-attr">date</span>: <span class="hljs-string">"2019-11-11"</span> },
-  <span class="hljs-attr">html</span>: <span class="hljs-string">"&lt;p&gt;Post 1.&lt;/p&gt;"</span>
+<pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript">{ <span class="hljs-attr">meta</span>: { <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;Post title&quot;</span>, <span class="hljs-attr">date</span>: <span class="hljs-string">&quot;2019-11-11&quot;</span> },
+  <span class="hljs-attr">html</span>: <span class="hljs-string">&quot;&lt;p&gt;Post 1.&lt;/p&gt;&quot;</span>
 }
-{ <span class="hljs-attr">meta</span>: { <span class="hljs-attr">title</span>: <span class="hljs-string">"Post title"</span>, <span class="hljs-attr">date</span>: <span class="hljs-string">"2020-02-22"</span> },
-  <span class="hljs-attr">html</span>: <span class="hljs-string">"&lt;h2&gt;Title post&lt;/h2&gt;&lt;p&gt;This is a sample post...&lt;/p&gt;"</span>
+{ <span class="hljs-attr">meta</span>: { <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;Post title&quot;</span>, <span class="hljs-attr">date</span>: <span class="hljs-string">&quot;2020-02-22&quot;</span> },
+  <span class="hljs-attr">html</span>: <span class="hljs-string">&quot;&lt;h2&gt;Title post&lt;/h2&gt;&lt;p&gt;This is a sample post...&lt;/p&gt;&quot;</span>
 }
 <span class="hljs-comment">// ...</span></code></pre>
 </div>
@@ -6522,9 +6522,9 @@ Not yet a <a href="https://www.selenium.dev/" target="_blank" rel="noopener">Sel
 <div class="listingblock">
 <div class="title">Simple test example</div>
 <div class="content">
-<pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript">it(<span class="hljs-string">'Header'</span>, () =&gt; {
-  cy.visit(<span class="hljs-string">'/posts/this-is-sapper/en'</span>) <b class="conum">(1)</b>
-  cy.get(<span class="hljs-string">'.subtitle .date'</span>).contains(<span class="hljs-string">'28/08/2020'</span>) <b class="conum">(2)</b>
+<pre tabindex="0" class="highlight"><code class="language-javascript" data-lang="javascript">it(<span class="hljs-string">&#x27;Header&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+  cy.visit(<span class="hljs-string">&#x27;/posts/this-is-sapper/en&#x27;</span>) <b class="conum">(1)</b>
+  cy.get(<span class="hljs-string">&#x27;.subtitle .date&#x27;</span>).contains(<span class="hljs-string">&#x27;28/08/2020&#x27;</span>) <b class="conum">(2)</b>
 });</code></pre>
 </div>
 </div>
