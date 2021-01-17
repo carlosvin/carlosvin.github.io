@@ -28,6 +28,6 @@ module.exports = (on) => {
     }
   };
   /* plugin options */
-  const options = { exclude: [], include: [], };
+  const options = { exclude: ["iframe"], include: [], };
   htmlvalidate.install(on, config, options);
 };
