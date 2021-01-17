@@ -97,4 +97,11 @@
 
 <Content>
   {@html html}
+  <script src="https://utteranc.es/client.js"
+        repo="carlosvin/carlosvin.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+  </script>
 </Content>
