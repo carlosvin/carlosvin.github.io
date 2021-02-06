@@ -106,3 +106,32 @@ npm run build
   ✔ done
 ----
 <1> The static adapter is selected
+
+But we are not yet done, because the build step is not generating the html file that we can use as entry point. We have to execute one command more: `svelte-kit adapt`, https://github.com/carlosvin/carlosvin.github.io/issues/39#issuecomment-774200641[thanks Joshua for pointing this out,window=_blank].
+
+.We can add it to the package.json scripts section
+[source,diff]
+----
+	"scripts": {
+		"dev": "svelte-kit dev",
+		"build": "svelte-kit build",
+		"start": "svelte-kit start",
++		"adapt": "svelte-kit adapt"
+	},
+----
+
+[source,bash]
+----
+npm run adapt <1>
+> svelte-kit adapt
+
+
+> Using @sveltejs/adapter-static
+  ✔ done
+
+ls build <2>
+_app  favicon.ico  index.html  robots.txt
+----
+
+<1> It generates the static entry point, index.html in build directory.
+<2> Listing the content of build directory
