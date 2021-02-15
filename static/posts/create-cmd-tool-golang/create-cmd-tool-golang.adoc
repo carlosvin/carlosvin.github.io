@@ -1,6 +1,6 @@
 = Easily creating a golang command line tool
 :date: 2021-02-14
-:keywords: golang, cmd, tools
+:keywords: Golang, cmd, tools
 :description: Let's see how to easily and quickly create a command line tool in golang
 :lang: en
 :previewImage: https://golang.org/lib/godoc/images/go-logo-blue.svg
@@ -10,7 +10,7 @@
 :viper: https://github.com/spf13/viper[Viper,window=_blank]
 :meta-viper: https://github.com/carlosvin/meta-viper[Meta-Viper,window=_blank]
 
-{go} is the one of the most useful technologies I've recently learned. {go} has a pretty nice support for networking, command line, logging out of the box, you don't need any dependency. But there are libraries making developers life even easier. 
+{go} is the one of the most useful technologies I've recently learned. {go} has a pretty nice support for networking, command line or logging out of the box, you don't need any dependency. But there are libraries making developers' life even easier. 
 
 I've already talked about link:/posts/rest-service-go-vs-java/[creating REST service in go,window=blank_], today I'd like to focus on creating a command line tool.
 
@@ -22,12 +22,13 @@ I've already talked about link:/posts/rest-service-go-vs-java/[creating REST ser
 include::flags.go[]
 ----
 
-With previous simple code we have already some nice capabilities
+With previous simple code we have already some useful capabilities
 
-.Print usage (help)
+.Print help menu
 [source,bash]
 ----
 $ cmd --help
+
 > Usage of cmd:
     -lines int
         number of lines (default 1234)
@@ -37,6 +38,7 @@ $ cmd --help
 [source,bash]
 ----
 $ cmd
+
 > Lines 1234
 ----
 
@@ -44,6 +46,7 @@ $ cmd
 [source,bash]
 ----
 $ cmd --lines=2
+
 > Lines 2
 ----
 
@@ -51,6 +54,7 @@ $ cmd --lines=2
 [source,bash]
 ----
 $ cmd --lines=asdf
+
 > invalid value "asdf" for flag -lines: parse error
 Usage of cmd:
     -lines int
@@ -87,4 +91,55 @@ Now let's create a program that is configurable from files, command line params 
 include::meta-viper/main.go[]
 ----
 
-Here you can find a https://github.com/carlosvin/meta-viper/tree/master/examples/multi-env[multi-environment example,window=_blank].
+Now let's see some examples how this command line tool is able to load configuration.
+
+.Print usage (help)
+[source,bash]
+----
+$ cmd --help
+
+Usage of flagsConfig:
+    --apis.search string    Search API endpoint (default "google")
+    --config string         Configuration name
+    --config-dirs strings   Configuration directories search paths (default [.,config,configs,cfg])
+    --host string           Server host (default "localhost")
+    --port int              Server port (default 6000)
+pflag: help requested
+exit status 2
+----
+
+.Run with default values
+[source,bash]
+----
+$ cmd
+
+2021/02/15 23:12:48 No configuration name has been specified, so no configuration file will be loaded. Using flags and environment variables.
+2021/02/15 23:12:48 Loaded Configuration &{localhost 6000 google}...
+----
+
+.Read the port from environment variable and host from input param
+[source,bash]
+----
+$ PORT=9999 cmd --host=myhost
+
+2021/02/15 23:15:47 No configuration name has been specified, so no configuration file will be loaded. Using flags and environment variables.
+2021/02/15 23:15:47 Loaded Configuration &{myhost 9999 google}...
+----
+
+The last example will aggregate all the possible sources of configuration, it will extend the previous one adding configuration from a file. So let's create a configuration file:
+
+.the-config.json
+[source,json]
+----
+include::meta-viper/the-config.json[]
+----
+
+.Read configuration from the-config.json file, from environment and from input params
+[source,bash]
+----
+$ PORT=9999 cmd --host=myhost --config=the-config
+
+2021/02/15 23:22:17 Loaded Configuration &{myhost 9999 duckduckgo}...
+----
+
+TIP: Here you can find a https://github.com/carlosvin/meta-viper/tree/master/examples/multi-env[multi-environment example,window=_blank] a little bit more complete.
