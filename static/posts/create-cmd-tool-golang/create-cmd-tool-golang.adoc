@@ -1,0 +1,90 @@
+= Easily creating a golang command line tool
+:date: 2021-02-14
+:keywords: golang, cmd, tools
+:description: Let's see how to easily and quickly create a command line tool in golang
+:lang: en
+:previewImage: https://golang.org/lib/godoc/images/go-logo-blue.svg
+:toc:
+
+:go: https://golang.org/[Golang, window=_blank]
+:viper: https://github.com/spf13/viper[Viper,window=_blank]
+:meta-viper: https://github.com/carlosvin/meta-viper[Meta-Viper,window=_blank]
+
+{go} is the one of the most useful technologies I've recently learned. {go} has a pretty nice support for networking, command line, logging out of the box, you don't need any dependency. But there are libraries making developers life even easier. 
+
+I've already talked about link:/posts/rest-service-go-vs-java/[creating REST service in go,window=blank_], today I'd like to focus on creating a command line tool.
+
+== Flags
+
+.Command line tool to read number of lines as an input integer parameter {go}
+[source,go]
+----
+include::flags.go[]
+----
+
+With previous simple code we have already some nice capabilities
+
+.Print usage (help)
+[source,bash]
+----
+$ cmd --help
+> Usage of cmd:
+    -lines int
+        number of lines (default 1234)
+----
+
+.Use default value
+[source,bash]
+----
+$ cmd
+> Lines 1234
+----
+
+.Pass a value to the command tool
+[source,bash]
+----
+$ cmd --lines=2
+> Lines 2
+----
+
+.Pass an invalid value
+[source,bash]
+----
+$ cmd --lines=asdf
+> invalid value "asdf" for flag -lines: parse error
+Usage of cmd:
+    -lines int
+        number of lines (default 1234)
+exit status 2
+----
+
+For a simple command line tool, in most of the cases, we will have enough with the default language support. But if we want to bring more features to the combo like reading configuration from environment variables or from files, then a library like the awesome {viper} will come really handy.
+
+== Viper
+
+{viper} is very powerful and well documented library widely used from many projects, I will not get into the details or how to use it, because I've created an abstraction to simplify its usage, I named it {meta-viper}.
+
+== Meta-Viper
+{meta-viper} abstracts you of the details of reading configuration from files, environment or flags. This extra simplicity comes with a tradeoff, we are missing some flexibility.
+
+Let's see some features with an example. 
+
+.Firstly we have to create a go modules project with the meta-viper dependency
+[source,bash]
+----
+go mod init example.com/meta-viper <1>
+
+go get github.com/carlosvin/meta-viper <2>
+----
+<1> Create a go modules project
+<2> Install the meta-viper dependency
+
+Now let's create a program that is configurable from files, command line params and environment variables.
+
+.main.go
+[source,go]
+----
+include::meta-viper/main.go[]
+----
+
+Here you can find a https://github.com/carlosvin/meta-viper/tree/master/examples/multi-env[multi-environment example,window=_blank].
