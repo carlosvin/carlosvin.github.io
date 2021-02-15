@@ -1,0 +1,101 @@
+= Configure Viper using Struct
+Carlos Martin Sanchez
+v0.0.1
+
+:viper: https://github.com/spf13/viper[viper,window=_blank]
+:go: https://golang.org/[golang,window=_blank]
+:go-tagged-struct: https://golang.org/ref/spec#Tag[Go tagged struct,window=_blank]
+
+Meta-Viper is a wrapper over {viper}, it uses a {go-tagged-struct} to: 
+
+1. Initialize {viper}'s configuration.
+2. Load application configuration on that same struct.
+
+You can find examples at link:./examples[./examples].
+
+image:https://pkg.go.dev/badge/github.com/carlosvin/meta-viper[link="https://pkg.go.dev/github.com/carlosvin/meta-viper"]
+
+
+== Usage
+
+=== Define the struct holding your application config
+
+Meta-Viper will try to load the configuration in that struct from configuration files, environment variables or flags.
+
+.Example
+[source,go]
+----
+package main
+
+import (
+	"fmt"
+	"os"
+
+	config "github.com/carlosvin/meta-viper/pkg"
+)
+
+type appConfig struct {
+	Host      string `cfg_name:"host" cfg_desc:"Server host"`
+	Port      int    `cfg_name:"port" cfg_desc:"Server port"`
+	SearchAPI string `cfg_name:"apis.search" cfg_desc:"Search API endpoint"`
+}
+
+func main() {
+    cfg := &appConfig{ // <1>
+        Host: "localhost", 
+        Port: 6000, 
+        SearchAPI: "https://google.es",
+    } 
+    
+    _, err := config.New(cfg, os.Args) // <2>
+	if err != nil {
+        panic(err)
+    }
+    log.Printf("Loaded Configuration %v...", cfg)
+}
+----
+<1> We instantiate the declared struct. As you can see you can optionally specify default values.
+<2> It loads the configuration in the passed struct `cfg`. The `os.Args` are required to parse the application flags.
+
+Let's focus on one application configuration attribute to explain the example. Meta-Viper will allow you to load the config into `Host` structure attribute in 3 different ways:
+
+.Using flags
+[source,bash]
+----
+./your-program --host=my.host
+----
+
+.Using environment variables
+[source,bash]
+----
+HOST=my.host ./your-program
+----
+
+.Loading the data from a file in json, yaml or toml format
+[source,bash]
+----
+./your-program --config=qa <1>
+----
+<1> Following the qa configuration file content
+
+.qa.json
+[source,json]
+----
+{
+    "host": "qa.host",
+    "port": 8000,
+    "apis": {
+        "search": "https://search.api/"
+    }
+}
+----
+
+NOTE: You can combine flags, environment variables and configuration files.
+
+=== Tags
+
+==== cfg_name
+Required tag to specify the configuration parameter name. 
+
+==== cfg_description
+Optional tag to describe how to use the configuration parameter. 
