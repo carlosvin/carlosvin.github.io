@@ -35,7 +35,12 @@ class AtomItem {
     }
 
     get modified(): string {
-        return new Date(this.entry.modified).toISOString();
+        try {
+            return new Date(this.entry.modified||this.entry.created).toISOString();
+        } catch (e) {
+            console.error("Error generating rss", this.entry);
+            return '?';
+        }
     }
 
     get otherLangsLinks() {
@@ -79,7 +84,9 @@ export class Atom {
     }
 
     get xml(): string {
-        const latest = Math.max(...this.posts.map( p => p.entry.modified));
+        const latest = Math.max(...this.posts
+            .filter(({entry}) => entry.modified && !isNaN(entry.modified))
+            .map( p => p.entry.modified));
         return `<?xml version="1.0" encoding="UTF-8" ?>
         <feed xmlns="http://www.w3.org/2005/Atom">
             <title>${this.title}</title>
