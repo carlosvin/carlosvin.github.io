@@ -27,7 +27,9 @@ const render = (pages: string[], posts: IndexEntry[]) => `<?xml version="1.0" en
 	${pages
 		.map(page => `<url><loc>${BASE_URL}/${page}</loc><priority>0.6</priority></url>`)
 		.join("\r\n")}
-  	${posts.map(({ slug, lang, modified, otherLangs}) => `
+  	${posts
+		.filter(({modified}) => modified && !isNaN(modified))
+		.map(({ slug, lang, modified, otherLangs}) => `
 		<url>
 		<loc>${url(slug, lang)}</loc>
 		<priority>0.9</priority>
