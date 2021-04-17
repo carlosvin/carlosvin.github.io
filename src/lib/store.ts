@@ -1,31 +1,27 @@
 
-import type { Category, IndexEntry, InputMetadata, Post } from "$lib/models/interfaces";
+import type { Category, IndexEntry, Post } from "$lib/models/interfaces";
 import fs from "fs";
 import path from "path";
-import Processor, { Asciidoctor } from 'asciidoctor';
+import Processor from 'asciidoctor';
+import { toPost } from "./models/mappers";
 
-class BlogStore {
+export class BlogStore {
 
     private readonly _langs: Set<string>;
     private readonly _posts: Map<string, Map<string, Post>>;
     private readonly _categories: Map<string, Category>;
     private readonly _slugsByCategory: Map<string, Set<string>>;
-    private readonly _index: IndexEntry[] = [];
     private readonly _processor = Processor();
-    public readonly lang: string;
 
-    constructor() {
+    constructor(baseDir: string) {
         this._langs = new Set();
         this._posts = new Map();
         this._categories = new Map();
         this._slugsByCategory = new Map();
-        this.lang = "en"; // getLangSimplified();
-        const baseDir = "/home/carlos/workspace/carlosvin.github.io/static/posts";
         fs.readdirSync(baseDir)
             .filter(fileName => path.extname(fileName) === ".adoc")
             .forEach(fileName => {
                 const filePath = path.join(baseDir, fileName);
-                console.info("loading ", filePath);
                 const doc = this._processor.loadFile(filePath, 
                     {
                       mkdirs: true,
@@ -37,40 +33,11 @@ class BlogStore {
                       }
                     });
               
-            const post = BlogStore.newPost(doc, filePath);
+            const post = toPost(doc);
             this._add(post);
             this._categorize(post.entry);
         });
         this._addOtherLangs();
-        this._index = this._generateIndex();
-    }
-
-    private static newPost(doc: Asciidoctor.Document, filePath: string): Post {
-        return {
-            entry: BlogStore.newEntry(doc.getAttributes(), path.basename(filePath)),
-            html: doc.convert(),
-        };
-    }
-
-    private static newEntry({ title, doctitle, author, date, description, keywords, lang, modified, previewimage, previewImage, slug, summary, updated }: InputMetadata, filename: string): IndexEntry {
-        const pSlug = slug; // || toSlug(filename.split('.')[0]);
-        const pModified = updated || modified || date;
-        const pDate = date || updated || modified;
-        return {
-            title: title || doctitle || '',
-            lang,
-            summary: summary || description,
-            slug: pSlug,
-            keywords: keywords ? keywords.split(',').map(k => k.trim()) : [],
-            filename,
-            modified: new Date(pModified).getTime(),
-            created: new Date(pDate).getTime(),
-            author: author, //|| AUTHOR,
-            previewimage: previewimage || previewImage || 'icons/icon-192x192.png',
-            otherLangs: [],
-            path: "", //path(pSlug, lang),
-            url: "", //url(pSlug, lang)
-        };
     }
 
     get langs() {
@@ -91,8 +58,8 @@ class BlogStore {
         }
     }
 
-    _generateIndex(): IndexEntry[] {
-        return this.getByLang(this.lang).map(c => c.entry)
+    getIndex(lang: string): IndexEntry[] {
+        return this.getByLang(lang).map(c => c.entry)
             .sort((a, b) => b.modified - a.modified);
     }
 
@@ -122,10 +89,6 @@ class BlogStore {
                     this._categories.set(slug, { slug, name });
                 });
         }
-    }
-
-    get index() {
-        return this._index;
     }
 
     get posts() {
@@ -169,5 +132,3 @@ class BlogStore {
         return Array.from(this.posts, (([_, byLang]) => byLang.get(lang) || byLang.values().next().value));
     }
 }
-
-export const store = new BlogStore();

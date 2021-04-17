@@ -5,14 +5,13 @@ export interface IndexEntry {
     readonly summary: string;
     readonly slug: string;
     readonly keywords: string[];
-    readonly filename: string;
+    readonly filepath: string;
+    readonly dirpath: string,
     readonly created: number;
     readonly modified: number;
     readonly otherLangs: string[];
     readonly author?: string;
     readonly previewimage?: string;
-    readonly path: string;
-    readonly url: string;
     // "wordcount": "1120",
     // articleBody
 }

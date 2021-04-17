@@ -1,13 +1,16 @@
 // import { getSiteName, getDescription } from "../services/lang";
-import { store } from "$lib/store";
+import { BlogStore } from "$lib/store";
 
 const name = "bla bla"; // TODO getSiteName();
 const description = "carlos says bla bla";// TODO getDescription();
 
-export async function get() {
+const store = new BlogStore("/home/carlos/workspace/carlosvin.github.io/static/posts");
+
+export async function get({params}) {
+	const {lang} = params;
 	return {
 		body: {
-			index: store.index,
+			index: store.getIndex(lang),
 			name,
 			description,
 			langs: store.langs

@@ -1,6 +1,13 @@
 <script context="module" lang="ts">
+	import { browser } from '$app/env';
+
 	export async function load({fetch}) {
-		return {props: await (await fetch('index.json')).json()};
+		if (browser) {
+			return {
+				props: await (await fetch(`indexes/${navigator.language.substring(0,2)}.json`)).json()
+			};
+		}
+		return {props: {index: []}};
 	}
 </script>
 
