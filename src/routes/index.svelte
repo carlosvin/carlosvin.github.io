@@ -5,7 +5,8 @@
 
 
 	onMount(async () => {
-		goto(navigator.language.substring(0,2), {replaceState: true});
+		const lang = navigator.language.substring(0,2);
+		goto(lang, {replaceState: true});
 	});
 
 

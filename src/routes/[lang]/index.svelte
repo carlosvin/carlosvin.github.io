@@ -2,7 +2,7 @@
 	export async function load({fetch, params}) {
 		const lang = {params};
 		return {
-			props: await (await fetch(`indexes/${lang}.json`)).json()
+			props: await (await fetch(`${lang}/json`)).json()
 		};
 	}
 </script>

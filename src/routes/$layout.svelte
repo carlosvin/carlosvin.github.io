@@ -10,7 +10,7 @@
 <script>
 	import '../app.css';
 	import Nav from '$lib/components/Nav.svelte';
-	import { lang, setLang } from '$lib/stores/lang';
+	import { setLang, lang } from '$lib/stores/lang';
 	import { onMount } from 'svelte';
 
 
@@ -21,6 +21,25 @@
 	export let path = '/';
 </script>
 
-<Nav segment={path} siteName={`Carlos says blabla ${$lang}`}/>
+<Nav segment={path} siteName={`Carlos says blabla`} lang={$lang} />
 
-<slot />
+<main>
+	<slot />
+</main>
+
+<style>
+	main {
+    position: relative;
+    max-width: 86%;
+    background-color: white;
+    padding: 2em;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 32em) {
+    main {
+      max-width: unset;
+    }
+  }
+</style>
