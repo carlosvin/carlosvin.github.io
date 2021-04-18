@@ -10,10 +10,17 @@
 <script>
 	import '../app.css';
 	import Nav from '$lib/components/Nav.svelte';
+	import { lang, setLang } from '$lib/stores/lang';
+	import { onMount } from 'svelte';
+
+
+	onMount(async () => {
+		setLang(navigator);
+	});
 	
 	export let path = '/';
 </script>
 
-<Nav segment={path} siteName={"Carlos says blabla"}/>
+<Nav segment={path} siteName={`Carlos says blabla ${$lang}`}/>
 
 <slot />

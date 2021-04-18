@@ -1,10 +1,11 @@
 // import { getSiteName, getDescription } from "../services/lang";
 import { BlogStore } from "$lib/store";
+import { BASE_DIR } from "../../config";
 
 const name = "bla bla"; // TODO getSiteName();
 const description = "carlos says bla bla";// TODO getDescription();
 
-const store = new BlogStore("/home/carlos/workspace/carlosvin.github.io/static/posts");
+const store = new BlogStore(BASE_DIR);
 
 export async function get({params}) {
 	const {lang} = params;

@@ -1,29 +1,13 @@
-<script context="module" lang="ts">
-	import { browser } from '$app/env';
-
-	export async function load({fetch}) {
-		if (browser) {
-			return {
-				props: await (await fetch(`indexes/${navigator.language.substring(0,2)}.json`)).json()
-			};
-		}
-		return {props: {index: []}};
-	}
-</script>
 
 <script lang="ts">
-	import Index from '$lib/components/posts/Index.svelte';
-	import type { IndexEntry } from '$lib/models/interfaces';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
-	export let index: IndexEntry[];
-	export let name: string;
-	export let description: string;
+
+	onMount(async () => {
+		goto(navigator.language.substring(0,2), {replaceState: true});
+	});
+
+
 </script>
-
-<svelte:head>
-	<title>{name}</title>
-	<meta name="description" content={description} />
-	<link rel="alternate" href="index.jsonld" type="application/ld+json" />
-</svelte:head>
-
-<Index posts={index} />
+<p>loading...</p>
