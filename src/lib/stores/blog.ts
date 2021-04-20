@@ -2,8 +2,8 @@
 import type { Category, IndexEntry, Post } from "$lib/models/interfaces";
 import fs from "fs";
 import path from "path";
-import Processor from 'asciidoctor';
-import { toPost } from "./models/mappers";
+import { toPost } from "$lib/models/mappers";
+import { Adoc } from "$lib/services/adoc";
 
 export class BlogStore {
 
@@ -11,29 +11,25 @@ export class BlogStore {
     private readonly _posts: Map<string, Map<string, Post>>;
     private readonly _categories: Map<string, Category>;
     private readonly _slugsByCategory: Map<string, Set<string>>;
-    private readonly _processor = Processor();
+    private readonly _processor: Adoc;
+    private readonly _baseDir: string;
 
     constructor(baseDir: string) {
         this._langs = new Set();
         this._posts = new Map();
         this._categories = new Map();
         this._slugsByCategory = new Map();
-        fs.readdirSync(baseDir)
-            .filter(fileName => path.extname(fileName) === ".adoc")
-            .forEach(fileName => {
-                const filePath = path.join(baseDir, fileName);
-                const doc = this._processor.loadFile(filePath, 
-                    {
-                      mkdirs: true,
-                      base_dir: path.dirname(filePath),
-                      safe: 'unsafe',
-                      catalog_assets: true,
-                      'attributes': {
-                        'source-highlighter': 'highlightjs-ext',
-                      }
-                    });
-              
-            const post = toPost(doc);
+        this._processor = new Adoc();
+        this._baseDir = baseDir;
+        this._init();
+    }
+
+    private _init(){
+        fs.readdirSync(this._baseDir)
+        .filter(fileName => path.extname(fileName) === ".adoc")
+        .map(fileName => path.join(this._baseDir, fileName))
+        .map(filePath => toPost(this._processor.load(filePath)))
+        .forEach(post => {
             this._add(post);
             this._categorize(post.entry);
         });
@@ -77,9 +73,9 @@ export class BlogStore {
     _categorize(meta: IndexEntry) {
         if (meta.keywords) {
             meta.keywords
-//            .map(k => [toSlug(k), toCapitalize(k)])
-            .map(k => [k, k])
-            .forEach(([slug, name]) => {
+                //            .map(k => [toSlug(k), toCapitalize(k)])
+                .map(k => [k, k])
+                .forEach(([slug, name]) => {
                     let posts = this._slugsByCategory.get(slug);
                     if (posts === undefined) {
                         posts = new Set();
@@ -108,7 +104,7 @@ export class BlogStore {
         }
         console.warn("Not found by category: ", categorySlug);
         return [];
-        
+
     }
 
     get(slug: string, lang?: string): Post {

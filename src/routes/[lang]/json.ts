@@ -1,5 +1,5 @@
 // import { getSiteName, getDescription } from "../services/lang";
-import { BlogStore } from "$lib/store";
+import { BlogStore } from "$lib/stores/blog";
 import { BASE_DIR } from "../../config";
 
 const name = "bla bla"; // TODO getSiteName();
