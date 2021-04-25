@@ -4,8 +4,9 @@ import fs from "fs";
 import path from "path";
 import { toPost } from "$lib/models/mappers";
 import { Adoc } from "$lib/services/adoc";
+import { toCapitalize, toSlug } from "$lib/services/slug";
 
-export class BlogStore {
+class BlogStore {
 
     private readonly _langs: Set<string>;
     private readonly _posts: Map<string, Map<string, Post>>;
@@ -72,8 +73,7 @@ export class BlogStore {
     _categorize(meta: IndexEntry) {
         if (meta.keywords) {
             meta.keywords
-                //            .map(k => [toSlug(k), toCapitalize(k)])
-                .map(k => [k, k])
+                .map(k => [toSlug(k), toCapitalize(k)])
                 .forEach(([slug, name]) => {
                     let posts = this._slugsByCategory.get(slug);
                     if (posts === undefined) {
@@ -128,3 +128,5 @@ export class BlogStore {
             this.posts, (([_, byLang]) => byLang.get(lang) || byLang.values().next().value));
     }
 }
+
+export const blogStore = new BlogStore(import.meta.env.VITE_POSTS_PATH);
