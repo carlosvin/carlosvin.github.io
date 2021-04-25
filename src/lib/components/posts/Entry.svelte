@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { path } from "../../services/url";
-  import type { IndexEntry } from "../../services/interfaces";
+import type { IndexEntry } from "$lib/models/interfaces";
+
   import Entry from "../Entry.svelte";
   import Details from "./Details.svelte";
   export let post: IndexEntry;
@@ -27,7 +27,7 @@
 {#if post}
   <Entry>
     <div class="container">
-      <a rel="prefetch" href="{path(post.slug)}" class="title">{post.title}</a>
+      <a rel="prefetch" href="{post.path}" class="title">{post.title}</a>
       {#if post.summary}
       <div class="description">
         <div class="content">

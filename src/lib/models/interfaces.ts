@@ -12,6 +12,7 @@ export interface IndexEntry {
     readonly otherLangs: string[];
     readonly author?: string;
     readonly previewimage?: string;
+    readonly path: string;
     // "wordcount": "1120",
     // articleBody
 }

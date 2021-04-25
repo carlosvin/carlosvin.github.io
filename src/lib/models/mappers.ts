@@ -1,6 +1,7 @@
 import type { IndexEntry, Post } from "./interfaces";
 import type { Asciidoctor } from 'asciidoctor';
 import { toSlug } from "$lib/services/slug";
+import { BLOG_BASE_PATH } from "$lib/conf";
 
 export function toPost(doc: Asciidoctor.Document) : Post {
     return {
@@ -12,7 +13,9 @@ export function toPost(doc: Asciidoctor.Document) : Post {
 export function toEntry(doc: Asciidoctor.Document) : IndexEntry {
     const {
         slug,
-        created, 
+        created,
+        date,
+        modified,
         docdate,
         docname,
         docfile,
@@ -22,19 +25,20 @@ export function toEntry(doc: Asciidoctor.Document) : IndexEntry {
         lang,
         previewimage,
     } = doc.getAttributes();
-
+    const finalSlug = slug || toSlug(docname.split('.')[0]);
     return {
         title: doc.getTitle(),
-        created: created || docdate,
-        modified: docdate,
+        created: Date.parse(created || date || docdate),
+        modified: Date.parse(modified || docdate),
         filepath: docfile,
         dirpath: docdir,
         keywords: keywords ? keywords.split(',').map(k => k.trim()) : [],
         lang: lang,
         otherLangs: [],
-        slug: slug || toSlug(docname),
+        slug: finalSlug,
         summary: description,
         author: doc.getAuthor(),
         previewimage: previewimage,
+        path: `/${lang}/${BLOG_BASE_PATH}/${finalSlug}`
     };
 }

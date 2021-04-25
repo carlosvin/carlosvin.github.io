@@ -11,7 +11,6 @@ export class BlogStore {
     private readonly _posts: Map<string, Map<string, Post>>;
     private readonly _categories: Map<string, Category>;
     private readonly _slugsByCategory: Map<string, Set<string>>;
-    private readonly _processor: Adoc;
     private readonly _baseDir: string;
 
     constructor(baseDir: string) {
@@ -19,20 +18,19 @@ export class BlogStore {
         this._posts = new Map();
         this._categories = new Map();
         this._slugsByCategory = new Map();
-        this._processor = new Adoc();
         this._baseDir = baseDir;
         this._init();
     }
 
-    private _init(){
+    private _init() {
         fs.readdirSync(this._baseDir)
-        .filter(fileName => path.extname(fileName) === ".adoc")
-        .map(fileName => path.join(this._baseDir, fileName))
-        .map(filePath => toPost(this._processor.load(filePath)))
-        .forEach(post => {
-            this._add(post);
-            this._categorize(post.entry);
-        });
+            .filter(fileName => path.extname(fileName) === ".adoc")
+            .map(fileName => path.join(this._baseDir, fileName))
+            .map(filePath => toPost(new Adoc().load(filePath)))
+            .forEach(post => {
+                this._add(post);
+                this._categorize(post.entry);
+            });
         this._addOtherLangs();
     }
 
@@ -55,8 +53,9 @@ export class BlogStore {
     }
 
     getIndex(lang: string): IndexEntry[] {
-        return this.getByLang(lang).map(c => c.entry)
-            .sort((a, b) => b.modified - a.modified);
+        return this.getByLang(lang)
+            .map(c => c.entry)
+            .sort((a, b) => b.created - a.created);
     }
 
     _add(post: Post): Post {
@@ -125,6 +124,7 @@ export class BlogStore {
 
     getByLang(lang: string): Post[] {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        return Array.from(this.posts, (([_, byLang]) => byLang.get(lang) || byLang.values().next().value));
+        return Array.from(
+            this.posts, (([_, byLang]) => byLang.get(lang) || byLang.values().next().value));
     }
 }
