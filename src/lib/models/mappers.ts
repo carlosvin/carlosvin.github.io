@@ -1,7 +1,7 @@
 import type { IndexEntry, Post } from "./interfaces";
 import type { Asciidoctor } from 'asciidoctor';
 import { toSlug } from "$lib/services/slug";
-import { BLOG_BASE_PATH } from "$lib/conf";
+import { postPath } from "$lib/services/url";
 
 export function toPost(doc: Asciidoctor.Document) : Post {
     return {
@@ -39,6 +39,6 @@ export function toEntry(doc: Asciidoctor.Document) : IndexEntry {
         summary: description,
         author: doc.getAuthor(),
         previewimage: previewimage,
-        path: `/${lang}/${BLOG_BASE_PATH}/${finalSlug}`
+        path: postPath(finalSlug, lang)
     };
 }

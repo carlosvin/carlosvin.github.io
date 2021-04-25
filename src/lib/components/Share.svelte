@@ -1,6 +1,6 @@
 <script lang="ts">
+    import { toHashtags } from '$lib/services/slug';
     import IconLink from './IconLink.svelte';
-    import {toHashtags} from '$lib/slug';
     export let title: string;
     export let text: string;
     export let url: string;
