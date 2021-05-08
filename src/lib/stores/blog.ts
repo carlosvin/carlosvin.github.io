@@ -13,6 +13,7 @@ class BlogStore {
     private readonly _categories: Map<string, Category>;
     private readonly _slugsByCategory: Map<string, Set<string>>;
     private readonly _baseDir: string;
+    private readonly _proc: Adoc;
 
     constructor(baseDir: string) {
         this._langs = new Set();
@@ -20,14 +21,16 @@ class BlogStore {
         this._categories = new Map();
         this._slugsByCategory = new Map();
         this._baseDir = baseDir;
+        this._proc = new Adoc();
         this._init();
+        console.info('index loaded');
     }
 
     private _init() {
         fs.readdirSync(this._baseDir)
             .filter(fileName => path.extname(fileName) === ".adoc")
             .map(fileName => path.join(this._baseDir, fileName))
-            .map(filePath => toPost(new Adoc().load(filePath)))
+            .map(filePath => toPost(this._proc.load(filePath)))
             .forEach(post => {
                 this._add(post);
                 this._categorize(post.entry);
