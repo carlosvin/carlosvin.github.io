@@ -1,6 +1,5 @@
 import Processor, { Asciidoctor } from 'asciidoctor';
 import path from "path";
-import {register as regExt} from 'asciidoctor-highlight.js';
 
 export class Adoc {
 
@@ -8,7 +7,13 @@ export class Adoc {
 
     constructor() {
         this._processor = Processor();
-        regExt(this._processor.Extensions);
+        this.reg();
+    }
+
+    // TODO we should wait for this to be registered
+    private async reg() {
+        const hlExt = await import('asciidoctor-highlight.js');
+        hlExt.default.register(this._processor.Extensions);
     }
 
     load(filePath: string): Asciidoctor.Document {
