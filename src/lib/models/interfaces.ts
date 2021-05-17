@@ -44,3 +44,10 @@ export interface InputMetadata {
     readonly author: string;
     readonly otherLangs: string;
 }
+
+export interface IndexResponse <T> {
+    index: T[];
+    title: string;
+    description: string;
+    langs: string[];
+}
