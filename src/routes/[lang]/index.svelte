@@ -1,18 +1,17 @@
 <script context="module" lang="ts">
 	export async function load({fetch, params}) {
 		const lang = {params};
-		return {
-			props: await (await fetch(`${lang}/json`)).json()
-		};
+		const props: PostProps = await (await fetch(`${lang}/json`)).json();
+		return { props };
 	}
 </script>
 
 <script lang="ts">
 
 	import Index from '$lib/components/posts/Index.svelte';
-	import type { IndexEntry } from '$lib/models/interfaces';
+	import type { PostProps } from '$lib/models/interfaces';
 
-	export let index: IndexEntry[];
+	export let index: PostProps[];
 	export let name: string;
 	export let description: string;
 </script>

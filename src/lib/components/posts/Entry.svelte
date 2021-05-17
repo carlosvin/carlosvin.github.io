@@ -1,9 +1,9 @@
 <script lang="ts">
-import type { IndexEntry } from "$lib/models/interfaces";
+import type { PostProps } from "$lib/models/interfaces";
 
   import Entry from "../Entry.svelte";
   import Details from "./Details.svelte";
-  export let post: IndexEntry;
+  export let post: PostProps;
 </script>
 
 <style>

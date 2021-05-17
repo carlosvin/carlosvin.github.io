@@ -1,8 +1,8 @@
 
-import type { Category, IndexEntry, Post } from "$lib/models/interfaces";
+import type { Category, Post, PostProps } from "$lib/models/interfaces";
 import fs from "fs";
 import path from "path";
-import { toPost } from "$lib/models/mappers";
+import { PostImpl } from "$lib/models/mappers";
 import { Adoc } from "$lib/services/adoc";
 import { toCapitalize, toSlug } from "$lib/services/slug";
 
@@ -23,17 +23,17 @@ class BlogStore {
         this._baseDir = baseDir;
         this._proc = new Adoc();
         this._init();
-        console.info('index loaded');
     }
 
-    private _init() {
+    private async _init() {
+        await this._proc.reg();
         fs.readdirSync(this._baseDir)
             .filter(fileName => path.extname(fileName) === ".adoc")
             .map(fileName => path.join(this._baseDir, fileName))
-            .map(filePath => toPost(this._proc.load(filePath)))
+            .map(filePath => new PostImpl(this._proc.load(filePath)))
             .forEach(post => {
                 this._add(post);
-                this._categorize(post.entry);
+                this._categorize(post.props);
             });
         this._addOtherLangs();
     }
@@ -49,31 +49,29 @@ class BlogStore {
                 const p = byLang.get(lang);
                 if (p) {
                     langs
-                        .filter(l => l !== p.entry.lang)
-                        .forEach(l => p.entry.otherLangs.push(l));
+                        .filter(l => l !== p.props.lang)
+                        .forEach(l => p.props.otherLangs.push(l));
                 }
             }
         }
     }
 
-    getIndex(lang: string): IndexEntry[] {
-        return this.getByLang(lang)
-            .map(c => c.entry)
-            .sort((a, b) => b.created - a.created);
+    getIndex(lang: string): PostProps[] {
+        return this.getByLang(lang).map(post => post.props).sort((a, b) => b.created - a.created);
     }
 
-    _add(post: Post): Post {
-        const { slug, lang } = post.entry;
+    _add(post: Post): PostProps {
+        const { slug, lang } = post.props;
         this._langs.add(lang);
         let translatedPosts = this._posts.get(slug);
         if (!translatedPosts) {
             translatedPosts = new Map();
         }
         this._posts.set(slug, translatedPosts.set(lang, post));
-        return post;
+        return post.props;
     }
 
-    _categorize(meta: IndexEntry) {
+    _categorize(meta: PostProps) {
         if (meta.keywords) {
             meta.keywords
                 .map(k => [toSlug(k), toCapitalize(k)])
@@ -97,19 +95,16 @@ class BlogStore {
         return this._categories;
     }
 
-    getByCategory(categorySlug: string): IndexEntry[] {
+    getByCategory(categorySlug: string): PostProps[] {
         const slugs = this._slugsByCategory.get(categorySlug);
         if (slugs) {
-            return [...[...slugs]
-                .map(s => this.get(s))
-                .map(s => s.entry)];
+            return [...[...slugs].map(s => this.get(s))];
         }
         console.warn("Not found by category: ", categorySlug);
         return [];
-
     }
 
-    get(slug: string, lang?: string): Post {
+    get(slug: string, lang?: string): PostProps {
         const byLang = this._posts.get(slug);
         if (!byLang) {
             throw new Error("Post not found: " + slug);
@@ -119,14 +114,13 @@ class BlogStore {
             if (!post) {
                 throw new Error("Post not found");
             }
-            return post;
+            return post.props;
         } else {
             return byLang.values().next().value;
         }
     }
 
     getByLang(lang: string): Post[] {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return Array.from(
             this.posts, (([_, byLang]) => byLang.get(lang) || byLang.values().next().value));
     }

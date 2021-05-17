@@ -1,14 +1,14 @@
 
-import type { IndexEntry, Post } from './interfaces';
-import { url } from './url'
+import type { PostProps, Post } from '$lib/models/interfaces';
+import { url } from '$lib/services/url'
 
 class AtomItem {
-    private readonly entry: IndexEntry;
+    private readonly entry: PostProps;
     private readonly html: string;
     private readonly auth: string;
 
     constructor(post: Post, auth: string) {
-        this.entry = post.entry;
+        this.entry = post.props;
         this.html = post.html;
         this.auth = auth;
     }

@@ -7,9 +7,10 @@ const description = "carlos says bla bla";// TODO getDescription();
 
 export async function get({params}) {
 	const {lang} = params;
+	const index = blogStore.getIndex(lang);
 	return {
 		body: {
-			index: blogStore.getIndex(lang),
+			index: index,
 			name,
 			description,
 			langs: blogStore.langs

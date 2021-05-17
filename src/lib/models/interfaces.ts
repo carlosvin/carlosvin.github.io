@@ -1,5 +1,5 @@
 
-export interface IndexEntry {
+export interface PostProps {
     readonly title: string;
     readonly lang: string;
     readonly summary: string;
@@ -17,10 +17,9 @@ export interface IndexEntry {
     // articleBody
 }
 
-
 export interface Post {
-    readonly entry: IndexEntry;
-    readonly html: string;
+    props: PostProps;
+    toHtml(): Promise<string>;
 }
 
 export interface Category {

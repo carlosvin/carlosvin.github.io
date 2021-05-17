@@ -7,11 +7,10 @@ export class Adoc {
 
     constructor() {
         this._processor = Processor();
-        this.reg();
     }
 
     // TODO we should wait for this to be registered
-    private async reg() {
+    async reg(): Promise<void> {
         const hlExt = await import('asciidoctor-highlight.js');
         hlExt.default.register(this._processor.Extensions);
     }

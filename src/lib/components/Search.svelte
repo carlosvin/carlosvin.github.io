@@ -1,10 +1,10 @@
 <script lang="ts">
-import type { IndexEntry } from "$lib/models/interfaces";
+import type { PostProps } from "$lib/models/interfaces";
 
   import { filter } from "fuzzy";
 
-  export let index: IndexEntry[];
-  export let founds: IndexEntry[];
+  export let index: PostProps[];
+  export let founds: PostProps[];
 
   let search: string|undefined;
 
