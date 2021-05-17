@@ -19,7 +19,7 @@ export interface PostProps {
 
 export interface Post {
     props: PostProps;
-    toHtml(): Promise<string>;
+    html: string;
 }
 
 export interface Category {

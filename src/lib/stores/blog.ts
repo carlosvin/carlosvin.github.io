@@ -98,13 +98,13 @@ class BlogStore {
     getByCategory(categorySlug: string): PostProps[] {
         const slugs = this._slugsByCategory.get(categorySlug);
         if (slugs) {
-            return [...[...slugs].map(s => this.get(s))];
+            return [...[...slugs].map(s => this.get(s).props)];
         }
         console.warn("Not found by category: ", categorySlug);
         return [];
     }
 
-    get(slug: string, lang?: string): PostProps {
+    get(slug: string, lang?: string): Post {
         const byLang = this._posts.get(slug);
         if (!byLang) {
             throw new Error("Post not found: " + slug);
@@ -114,7 +114,7 @@ class BlogStore {
             if (!post) {
                 throw new Error("Post not found");
             }
-            return post.props;
+            return post;
         } else {
             return byLang.values().next().value;
         }

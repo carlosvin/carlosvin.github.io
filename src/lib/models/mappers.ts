@@ -61,10 +61,10 @@ export class PostImpl implements Post {
         this.props = new PostPropsImpl(doc);
     }
 
-    toHtml(): Promise<string> {
+    get html(): string {
         if (!this._html) {
             this._html = this.doc.convert();
         }
-        return Promise.resolve(this._html);
+        return this._html;
     }
 } 
