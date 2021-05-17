@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
 	export async function load({fetch, params}) {
-		const lang = {params};
+		const {lang} = params;
 		const props: PostProps = await (await fetch(`${lang}/json`)).json();
 		return { props };
 	}
