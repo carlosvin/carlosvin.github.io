@@ -25,8 +25,7 @@ class BlogStore {
         this._init();
     }
 
-    private async _init() {
-        await this._proc.reg();
+    private _init() {
         fs.readdirSync(this._baseDir)
             .filter(fileName => path.extname(fileName) === ".adoc")
             .map(fileName => path.join(this._baseDir, fileName))
