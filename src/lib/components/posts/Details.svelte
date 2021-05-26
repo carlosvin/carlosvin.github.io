@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { PostProps } from '$lib/models/interfaces';
 
-	import Tags from '../Tags.svelte';
+	import Tags from '$lib/components/Tags.svelte';
 
 	export let post: PostProps;
 </script>
 
 <div class="subtitle">
 	<span class="date">{new Date(post.modified).toLocaleDateString()}</span>
-	<Tags tagList={post.keywords} />
+	<Tags tagList={post.keywords} lang={post.lang} />
 </div>
 
 <style>

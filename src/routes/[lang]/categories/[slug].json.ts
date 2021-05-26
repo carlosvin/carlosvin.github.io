@@ -15,7 +15,7 @@ export async function get({ params }): Promise<CategoryResponse> {
 				description: category.name, 
 				title: category.name, 
 				index: posts, 
-				langs: [...lang] 
+				langs: [lang] 
 			} 
 		};
 	}

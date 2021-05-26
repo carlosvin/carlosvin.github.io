@@ -2,15 +2,15 @@
     // import { jsonLdCategories, jsonLdScript} from "../../services/jsonld";
     import type { IndexResponse, Category } from "$lib/models/interfaces";
 
-    export async function load({fetch, params}) {
-		const lang = {params};
-        const resp: IndexResponse<Category> = await (await fetch(`/${lang}/categories/json`)).json();
-        // TODO const jsonLd = jsonLdScript(jsonLdCategories(categories, title, description, request.path));
-        resp.title = `${resp.title} - Categories`;
-        resp.description = "Index of blog categories";
+    export async function load({fetch, page}) {
+      const lang = page.params.lang;
+      const resp: IndexResponse<Category> = await (await fetch(`/${lang}/categories/json`)).json();
+      // TODO const jsonLd = jsonLdScript(jsonLdCategories(categories, title, description, request.path));
+      resp.title = `${resp.title} - Categories`;
+      resp.description = "Index of blog categories";
 
-		return { props: {...resp, lang} };
-	}
+      return { props: {...resp, lang} };
+	  }
   </script>
   
   <script lang="ts">
@@ -35,7 +35,7 @@
   <Index>
     {#each index as c}
       <Entry>
-        <a sveltekit:prefetch href={categoryPath(lang, c.slug)}>{c.name}</a>
+        <a sveltekit:prefetch href={categoryPath(c.slug, lang)}>{c.name}</a>
       </Entry>
     {/each}
     <Entry>

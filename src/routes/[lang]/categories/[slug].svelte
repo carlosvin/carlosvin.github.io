@@ -1,10 +1,10 @@
 <script context="module" lang="ts">
 	import { categoryPath } from "$lib/services/url";
   
-	export async function load({ params }) {
-		const { lang, slug } = params;
-		const resp: IndexResponse<PostProps> = await (await fetch(`${categoryPath(lang, slug)}.json`)).json();
-		return resp;
+	export async function load({ page }) {
+		const { lang, slug } = page.params;
+		const resp: IndexResponse<PostProps> = await (await fetch(`${categoryPath(slug, lang)}.json`)).json();
+		return {props: resp};
 	}
   </script>
   

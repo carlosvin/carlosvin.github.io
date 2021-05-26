@@ -1,10 +1,11 @@
 
 <script lang="ts">
-import Badge from './Badge.svelte'
-import {toSlug} from '../services/slug';
-import {categoryPath} from '../services/url';
+import Badge from '$lib/components/Badge.svelte'
+import {toSlug} from '$lib/services/slug';
+import {categoryPath} from '$lib/services/url';
 
 export let title: string;
+export let lang: string;
 </script>
 
 <style>
@@ -14,6 +15,6 @@ a {
 }
 </style>
 
-<a href="{categoryPath(toSlug(title))}" {title}>
+<a href="{categoryPath(toSlug(title), lang)}" {title}>
     <Badge>{title}</Badge>
 </a>

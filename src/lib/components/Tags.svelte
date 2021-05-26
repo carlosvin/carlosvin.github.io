@@ -1,7 +1,8 @@
 <script lang="ts">
-    import Tag from './Tag.svelte';
+    import Tag from '$lib/components/Tag.svelte';
     
     export let tagList: string[] = [];
+    export let lang: string;
 </script>
 
 <style>
@@ -16,7 +17,7 @@
 {#if tagList}
     <span class='tags'>
     {#each tagList as t}
-        <Tag title={t} />
+        <Tag title={t} lang={lang}/>
     {/each}
     </span>
 {/if}
