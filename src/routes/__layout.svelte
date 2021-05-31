@@ -10,18 +10,18 @@
 <script>
 	import '../app.css';
 	import Nav from '$lib/components/Nav.svelte';
-	import { setLang, lang } from '$lib/stores/lang';
+	import { lang, tr } from '$lib/stores/lang';
 	import { onMount } from 'svelte';
 
 
 	onMount(async () => {
-		setLang(navigator);
+		lang.change(navigator);
 	});
 	
 	export let path = '/';
 </script>
 
-<Nav segment={path} siteName={`Carlos says blabla`} lang={$lang} />
+<Nav segment={path} siteName={$tr.siteName} lang={$lang} />
 
 <main>
 	<slot />

@@ -1,5 +1,5 @@
 <script lang="ts">
-import NavEntry from "./NavEntry.svelte";
+	import NavEntry from "./NavEntry.svelte";
 
 
 	export let segment: string|undefined;

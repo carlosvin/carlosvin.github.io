@@ -12,12 +12,12 @@
 	import type { PostProps } from '$lib/models/interfaces';
 
 	export let index: PostProps[];
-	export let name: string;
+	export let title: string;
 	export let description: string;
 </script>
 
 <svelte:head>
-	<title>{name}</title>
+	<title>{title}</title>
 	<meta name="description" content={description} />
 	<link rel="alternate" href="index.jsonld" type="application/ld+json" />
 </svelte:head>

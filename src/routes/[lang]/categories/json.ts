@@ -1,19 +1,15 @@
-// import { getSiteName, getDescription } from "../services/lang";
 import type { Category, IndexResponse } from "$lib/models/interfaces";
 import { blogStore } from "$lib/stores/blog";
+import { siteDesc, siteName, tr } from "$lib/stores/lang";
 
-const title = "bla bla"; // TODO getSiteName();
-const description = "carlos says bla bla";// TODO getDescription();
 const categories = [...blogStore.categories.values()];
-
 	
-export async function get({params}): Promise<{body: IndexResponse<Category>}> {
-	// TODO const {lang} = params;
+export async function get(): Promise<{body: IndexResponse<Category>}> {
 	return {
 		body: {
 			index: categories,
-			title,
-			description,
+			title: siteName(tr),
+			description: siteDesc(tr),
 			langs: blogStore.langs
 		}
 	};
