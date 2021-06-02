@@ -18,7 +18,7 @@
 	export let path = '/';
 </script>
 
-<Nav segment={path} siteName={$tr.siteName} lang={$lang} />
+<Nav segment={path} siteName={tr.siteName()} lang={$lang} />
 
 <main>
 	<slot />
