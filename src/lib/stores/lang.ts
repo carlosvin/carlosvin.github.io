@@ -2,9 +2,7 @@ import { DEFAULT_LANG } from '$lib/conf';
 import { TranslationsLoader } from '$lib/services/translations';
 import { derived, writable, get } from 'svelte/store';
 
-const loader = new TranslationsLoader();
-
-export function getLang(navigator: Navigator) {
+export function getLang(navigator: Navigator): string {
 	return navigator.language.substring(0,2);
 }
 
@@ -27,7 +25,7 @@ export const lang = createLangStore();
 export const tr = derived(
 	lang,
 	$lang => {
-		const translations = loader.get($lang);
+		const translations = TranslationsLoader.get($lang);
 		return {
 			get: (key: string) => translations[key],
 			siteName: translations['siteName'],

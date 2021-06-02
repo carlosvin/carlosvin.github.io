@@ -2,7 +2,7 @@
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
-	export async function load({ page, fetch, session, context }) {
+	export async function load({ page }) {
 		return { props: { path: page.path }};
 	}
 </script>
@@ -13,10 +13,7 @@
 	import { lang, tr } from '$lib/stores/lang';
 	import { onMount } from 'svelte';
 
-
-	onMount(async () => {
-		lang.change(navigator);
-	});
+	onMount(async () => { lang.change(navigator) });
 	
 	export let path = '/';
 </script>

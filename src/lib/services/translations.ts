@@ -1,5 +1,4 @@
 
-import path from "path";
 
 interface Translations {
     [key: string]: string;
@@ -7,17 +6,25 @@ interface Translations {
 
 export class TranslationsLoader {
     private readonly _translations: Map<string, Translations>;
+    private static _instance: TranslationsLoader;
 
-    constructor() {
+    private constructor() {
         this._translations = new Map<string, Translations>();
         const files = import.meta.globEager('../../../locales/*.json');
         for (const f in files) {
-            const lang = path.basename(f, 'json').slice(0, -1);
-            this._translations.set(lang, files[f]);
+            const content = files[f];
+            this._translations.set(content.lang, content);
         }
     }
 
-    get (lang: string): Translations {
-        return this._translations.get(lang);
+    static get (lang: string): Translations {
+        return this.instance()._translations.get(lang);
+    }
+
+    static instance(): TranslationsLoader {
+        if (this._instance === undefined) {
+            this._instance = new TranslationsLoader();
+        }
+        return this._instance;
     }
 }
