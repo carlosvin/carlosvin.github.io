@@ -17,12 +17,33 @@ function createLangStore() {
                 set(newLang);
             }
         },
+		set
 	};
 }
 
+class Translator {
 
+	private readonly translations: Map<string, Translations>;
+
+	constructor() {
+		this.translations = new Map();
+	}
+
+	get(lng: string, key: string) {
+		let translation: Translations = this.translations.get(lng);
+		if (translation === undefined) {
+			translation =  TranslationsLoader.get(lng);
+			this.translations.set(lng, translation);
+		}
+		return translation[key];
+	}
+}
+
+export const lang = createLangStore();
+
+/* 
 function createTranslatorStore() {
-	let translations: Translations;
+	let translations: Translations = TranslationsLoader.get(DEFAULT_LANG);
 	const { subscribe } = derived(
 		lang,
 		$lang => translations = TranslationsLoader.get($lang)
@@ -35,7 +56,6 @@ function createTranslatorStore() {
 		siteDesc: () => translations && translations['siteDescription']
 	};
 }
+*/
 
-export const lang = createLangStore();
-
-export const tr = createTranslatorStore();
+export const tr = new Translator();

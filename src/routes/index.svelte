@@ -1,14 +1,13 @@
 
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { lang } from '$lib/stores/lang';
 	import { onMount } from 'svelte';
 
-
 	onMount(async () => {
-		const lang = navigator.language.substring(0,2);
-		goto(lang, {replaceState: true});
+		lang.change(navigator);
+		goto($lang, {replaceState: true});
+		console.log($lang);
 	});
-
-
 </script>
 <p>loading...</p>

@@ -4,12 +4,13 @@ import { tr } from "$lib/stores/lang";
 
 const categories = [...blogStore.categories.values()];
 	
-export async function get(): Promise<{body: IndexResponse<Category>}> {
+export async function get({params}): Promise<{body: IndexResponse<Category>}> {
+	const {lang} = params;
 	return {
 		body: {
 			index: categories,
-			title: tr.siteName(),
-			description: tr.siteDesc(),
+			title: tr.get(lang, 'siteName'),
+			description: tr.get(lang, 'siteDesc'),
 			langs: blogStore.langs
 		}
 	};

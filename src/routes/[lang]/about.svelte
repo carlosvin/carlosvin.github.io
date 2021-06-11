@@ -1,3 +1,7 @@
+<script context="module">
+	export const hydrate = false;
+</script>
+
 <svelte:head>
 	<title>About me</title>
 	<meta name="description" content="A little bit about me" />

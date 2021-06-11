@@ -9,8 +9,8 @@ export async function get({params}): Promise<{body: IndexResponse<PostProps>}> {
 	return {
 		body: {
 			index: index,
-			title: tr.siteName(),
-			description: tr.siteDesc(),
+			title: tr.get(lang, 'siteName'),
+			description: tr.get(lang, 'siteDesc'),
 			langs: blogStore.langs
 		}
 	};

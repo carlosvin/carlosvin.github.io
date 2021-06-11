@@ -3,7 +3,11 @@
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page }) {
-		return { props: { path: page.path }};
+		const lng = page.params.lang;
+		if (lng) {
+			lang.set(lng)
+		}
+		return { props: { path: page.path, lng }};
 	}
 </script>
 
@@ -11,14 +15,11 @@
 	import '../app.css';
 	import Nav from '$lib/components/Nav.svelte';
 	import { lang, tr } from '$lib/stores/lang';
-	import { onMount } from 'svelte';
-
-	onMount(async () => { lang.change(navigator) });
 	
 	export let path = '/';
 </script>
 
-<Nav segment={path} siteName={tr.siteName()} lang={$lang} />
+<Nav segment={path} siteName={tr.get($lang, 'siteName')} lang={$lang} />
 
 <main>
 	<slot />
