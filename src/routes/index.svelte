@@ -7,7 +7,6 @@
 	onMount(async () => {
 		lang.change(navigator);
 		goto($lang, {replaceState: true});
-		console.log($lang);
 	});
 </script>
 <p>loading...</p>

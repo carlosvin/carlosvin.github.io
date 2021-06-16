@@ -7,7 +7,7 @@
 		if (lng) {
 			lang.set(lng)
 		}
-		return { props: { path: page.path, lng }};
+		return { props: { path: page.path }};
 	}
 </script>
 

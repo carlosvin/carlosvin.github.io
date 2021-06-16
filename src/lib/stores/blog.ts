@@ -94,29 +94,26 @@ class BlogStore {
         return this._categories;
     }
 
-    getByCategory(categorySlug: string): PostProps[] {
+    getByCategory(categorySlug: string, lang: string): PostProps[] {
         const slugs = this._slugsByCategory.get(categorySlug);
         if (slugs) {
-            return [...[...slugs].map(s => this.get(s).props)];
+            return [...[...slugs].map(s => this.get(s, lang).props)];
         }
         console.warn("Not found by category: ", categorySlug);
         return [];
     }
 
-    get(slug: string, lang?: string): Post {
+    get(slug: string, lang: string): Post {
         const byLang = this._posts.get(slug);
         if (!byLang) {
-            throw new Error("Post not found: " + slug);
+            throw new Error(`Post not found: ${slug}`);
         }
-        if (lang) {
-            const post = byLang.get(lang);
-            if (!post) {
-                throw new Error("Post not found");
-            }
-            return post;
-        } else {
+        const post = byLang.get(lang);
+        if (!post) {
+            console.warn(`Post not found in ${lang}`);
             return byLang.values().next().value;
         }
+        return post;
     }
 
     getByLang(lang: string): Post[] {
