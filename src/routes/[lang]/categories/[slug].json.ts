@@ -8,7 +8,7 @@ interface CategoryResponse {
 export async function get({ params }): Promise<CategoryResponse> {
 	const { lang, slug } = params;
 	const category = blogStore.categories.get(slug);
-	const posts = [...blogStore.getByCategory(slug)];
+	const posts = [...blogStore.getByCategory(slug, lang)];
 	if (category) {
 		return { 
 			body: { 

@@ -35,7 +35,7 @@
 
 	import Index from '$lib/components/Index.svelte';
 	import Entry from '$lib/components/Entry.svelte';
-import { I18N } from '$lib/stores/lang';
+	import { I18N } from '$lib/stores/lang';
 
 	export let index: Category[];
 	export let title: string;
