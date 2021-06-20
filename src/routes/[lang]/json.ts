@@ -1,7 +1,7 @@
 // import { getSiteName, getDescription } from "../services/lang";
 import type { IndexResponse, PostProps } from "$lib/models/interfaces";
 import { blogStore } from "$lib/stores/blog";
-import { tr } from "$lib/stores/lang";
+import { I18N } from "$lib/stores/lang";
 
 export async function get({params}): Promise<{body: IndexResponse<PostProps>}> {
 	const {lang} = params;
@@ -9,8 +9,8 @@ export async function get({params}): Promise<{body: IndexResponse<PostProps>}> {
 	return {
 		body: {
 			index: index,
-			title: tr.get(lang, 'siteName'),
-			description: tr.get(lang, 'siteDesc'),
+			title: I18N.get(lang, 'siteName'),
+			description: I18N.get(lang, 'siteDescription'),
 			langs: blogStore.langs
 		}
 	};

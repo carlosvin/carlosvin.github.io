@@ -1,19 +1,20 @@
 <script context="module" lang="ts">
-	export async function load({fetch, page}) {
+	declare type Resp = IndexResponse<PostProps>;
+	export async function load({fetch, page}): Promise<{props: Resp}> {
 		const {lang} = page.params;
-		const props: PostProps = await (await fetch(`${lang}/json`)).json();
+		const props: Resp = await (await fetch(`${lang}/json`)).json();
 		return { props };
 	}
 </script>
 
 <script lang="ts">
-
 	import Index from '$lib/components/posts/Index.svelte';
-	import type { PostProps } from '$lib/models/interfaces';
+	import type { IndexResponse, PostProps } from '$lib/models/interfaces';
 
 	export let index: PostProps[];
 	export let title: string;
 	export let description: string;
+	export let langs: string[];
 </script>
 
 <svelte:head>
@@ -22,4 +23,5 @@
 	<link rel="alternate" href="index.jsonld" type="application/ld+json" />
 </svelte:head>
 
+<p>{langs}</p>
 <Index posts={index} />

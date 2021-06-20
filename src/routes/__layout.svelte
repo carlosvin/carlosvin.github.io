@@ -14,12 +14,12 @@
 <script>
 	import '../app.css';
 	import Nav from '$lib/components/Nav.svelte';
-	import { lang, tr } from '$lib/stores/lang';
+	import { lang, I18N } from '$lib/stores/lang';
 	
 	export let path = '/';
 </script>
 
-<Nav segment={path} siteName={tr.get($lang, 'siteName')} lang={$lang} />
+<Nav segment={path} siteName={I18N.get($lang, 'siteName')} lang={$lang} />
 
 <main>
 	<slot />
