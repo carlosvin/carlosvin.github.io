@@ -30,12 +30,12 @@ class Translator {
 	}
 
 	get(lng: string, key: string) {
-		let translation: Translations = this.translations.get(lng);
-		if (translation === undefined) {
-			translation =  TranslationsLoader.get(lng);
-			this.translations.set(lng, translation);
+		let translationMap: Translations = this.translations.get(lng);
+		if (translationMap === undefined) {
+			translationMap = TranslationsLoader.get(lng);
+			this.translations.set(lng, translationMap);
 		}
-		return translation[key];
+		return translationMap[key] || key;
 	}
 }
 

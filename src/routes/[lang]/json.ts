@@ -1,4 +1,3 @@
-// import { getSiteName, getDescription } from "../services/lang";
 import type { IndexResponse, PostProps } from "$lib/models/interfaces";
 import { blogStore } from "$lib/stores/blog";
 import { I18N } from "$lib/stores/lang";
