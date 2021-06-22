@@ -3,9 +3,14 @@ import { blogStore } from "$lib/stores/blog";
 import { I18N } from "$lib/stores/lang";
 
 const categories = [...blogStore.categories.values()];
-	
-export async function get({params}): Promise<{body: IndexResponse<Category>}> {
+
+declare type Resp = {body: IndexResponse<Category>} | {status: number};
+
+export function get({params}): Resp {
 	const {lang} = params;
+	if (lang === undefined) {
+		return {status: 400};
+	}
 	return {
 		body: {
 			index: categories,

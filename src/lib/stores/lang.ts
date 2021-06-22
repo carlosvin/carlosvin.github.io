@@ -33,6 +33,10 @@ class Translator {
 		let translationMap: Translations = this.translations.get(lng);
 		if (translationMap === undefined) {
 			translationMap = TranslationsLoader.get(lng);
+			if (translationMap === undefined) {
+				console.error(`There are no translations for ${lng}`);
+				return key;
+			}
 			this.translations.set(lng, translationMap);
 		}
 		return translationMap[key] || key;

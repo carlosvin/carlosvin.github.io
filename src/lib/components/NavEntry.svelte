@@ -1,6 +1,6 @@
 
 <script lang="ts">
-    function curr(segment: string|undefined, href: string) {
+    function curr(segment: string|undefined, href: string): 'page'|boolean {
         if (segment === undefined && href === '.') {
             return 'page';
         } else if (segment && href.endsWith(segment)) {

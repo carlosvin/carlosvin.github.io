@@ -23,5 +23,4 @@
 	<link rel="alternate" href="index.jsonld" type="application/ld+json" />
 </svelte:head>
 
-<p>{langs}</p>
 <Index posts={index} />

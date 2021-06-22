@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { I18N } from "$lib/stores/lang";
 
-	import NavEntry from "./NavEntry.svelte";
+	import NavEntry from "$lib/components/NavEntry.svelte";
 
 	export let segment: string|undefined;
 	export let siteName: string;
@@ -70,16 +70,16 @@
 
 <nav>
 	<ul>
-		<NavEntry href={`/${lang}`} segment={segment}>
+		<NavEntry href={`/langs/${lang}`} segment={segment}>
 			<img class='logo' src='/favicon.png' alt="{siteName} logo" />
 		</NavEntry>
 	</ul>
 	<ul class={open ? 'open' : 'closed'}>
-		<NavEntry href={`/${lang}`} segment={segment}>
+		<NavEntry href={`/langs/${lang}`} segment={segment}>
 			<span class='siteName'>{siteName}</span>
 		</NavEntry>
-		<NavEntry href={`/${lang}/categories`} segment={segment}>{I18N.get(lang, 'Categories')}</NavEntry>
-		<NavEntry href={`/${lang}/about`} segment={segment}>About</NavEntry>
+		<NavEntry href={`/langs/${lang}/categories`} segment={segment}>{I18N.get(lang, 'Categories')}</NavEntry>
+		<NavEntry href={`/langs/${lang}/about`} segment={segment}>About</NavEntry>
 	</ul>
 	{#if !open}
 		<slot></slot>

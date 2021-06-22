@@ -30,10 +30,12 @@ export class PostPropsImpl implements PostProps {
             docfile,
             docdir,
             description,
+            summary,
             keywords,
             lang,
             previewimage,
         } = doc.getAttributes();
+        
         const finalSlug = slug || toSlug(docname.split('.')[0]);
         this.title = doc.getTitle();
         this.created = Date.parse(created || date || docdate);
@@ -44,27 +46,31 @@ export class PostPropsImpl implements PostProps {
         this.lang = lang;
         this.otherLangs = [];
         this.slug = finalSlug;
-        this.summary = description;
+        this.summary = description || summary;
         this.author = doc.getAuthor();
         this.previewimage = previewimage;
         this.path = postPath(finalSlug, lang);
+        this.validate();
+    }
+
+    validate (): void {
+        if (!this.slug) {
+            throw TypeError(`"slug" should not be empty`);
+        }
+        if (!this.lang) {
+            throw TypeError(`"lang" should not be empty: ${this.slug}`);
+        }
     }
 }
 
 export class PostImpl implements Post {
     private readonly doc: Asciidoctor.Document;
     readonly props: PostProps;
-    private _html?: string;
+    public readonly html: string;
 
     constructor (doc: Asciidoctor.Document) {
         this.doc = doc;
+        this.html = this.doc.convert();
         this.props = new PostPropsImpl(doc);
-    }
-
-    get html(): string {
-        if (!this._html) {
-            this._html = this.doc.convert();
-        }
-        return this._html;
     }
 } 

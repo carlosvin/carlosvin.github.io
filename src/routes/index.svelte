@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
-		goto(getLang(navigator), {replaceState: true});
+		goto(`/langs/${getLang(navigator)}`, {replaceState: true});
 	});
 </script>
 <p>loading...</p>

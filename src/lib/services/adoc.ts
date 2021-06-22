@@ -20,7 +20,6 @@ export class Adoc {
                 catalog_assets: true,
                 'attributes': {
                     'source-highlighter': 'highlightjs-ext',
-                    //'highlightjsdir': '/node_modules/highlight.js'
                 }
             });
     }
