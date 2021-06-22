@@ -1,7 +1,11 @@
 
 <script lang="ts">
+  import { I18N } from "$lib/stores/lang";
+
   export let numPosts: number;
-  export let title = numPosts > 0 ? 'Recent posts' : `There are no posts`;
+  export let lang: string;
+  export let title = numPosts > 0 ? I18N.get(lang, 'RecentPosts') : I18N.get(lang, 'NoPosts');
+
 </script>
 
 <style>

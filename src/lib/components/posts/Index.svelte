@@ -8,6 +8,7 @@
 
   export let posts: PostProps[];
   export let title: string|undefined = undefined;
+  export let lang: string;
 
   let founds: PostProps[];
   let index: PostProps[];
@@ -17,7 +18,7 @@
   }
 </script>
 
-<Header numPosts={index ? index.length : 0} {title}>
+<Header numPosts={index ? index.length : 0} title={title} lang={lang}>
   <Search index={posts} bind:founds={founds} />
 </Header>
 
