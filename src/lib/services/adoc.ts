@@ -1,4 +1,4 @@
-import Processor, { Asciidoctor } from 'asciidoctor';
+import Processor, { Asciidoctor } from '@asciidoctor/core';
 import path from "path";
 import hlExt from 'asciidoctor-highlight.js';
 
