@@ -252,6 +252,23 @@
     font-weight: bold;
   }
 
+  .postContent .quoteblock {
+    font-size: large;
+    font-style: italic;
+    background-color: #eee;
+    border-left: 0.5em solid #CCC;
+  }
+
+  .postContent .quoteblock blockquote {
+    padding: 1em 1em 0.4em 1.5em;
+    margin: 0;
+  }
+
+  .postContent .quoteblock .attribution {
+    font-weight: bold;
+    padding: 0.4em;
+  }
+
 </style>
 
 <div class='postContent'>
