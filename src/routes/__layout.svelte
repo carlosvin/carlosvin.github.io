@@ -15,11 +15,16 @@
 	import '../app.css';
 	import Nav from '$lib/components/Nav.svelte';
 	import { lang, I18N } from '$lib/stores/lang';
+	import Social from '$lib/components/Social.svelte';
 	
 	export let path = '/';
 </script>
 
-<Nav segment={path} siteName={I18N.get($lang, 'siteName')} lang={$lang} />
+<Nav segment={path} siteName={I18N.get($lang, 'siteName')} lang={$lang} >
+	<Social>
+
+	</Social>
+</Nav>
 
 <main>
 	<slot />
