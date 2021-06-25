@@ -207,7 +207,8 @@
   
   .postContent .listingblock {
     line-height: 1.2em;
-    margin-bottom: 0.8em;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
     border: 1px #bbb dashed;
     background: rgba(0, 0, 0, 0.05);
   }
