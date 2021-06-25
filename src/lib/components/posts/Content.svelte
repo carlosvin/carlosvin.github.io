@@ -243,15 +243,15 @@
   .postContent .colist ol {  
     margin: 0.1em 0.6em;
     margin-inline-start: 0.6em;
-    padding-inline-start: 0.6em;    
+    padding-inline-start: 0.6em;
   }
 
-  .postContent .conum,
-  .postContent .colist li {
-    color: #669;
-    font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    font-weight: normal;
+  .postContent .colist li::marker,
+  .postContent .conum {
+    color: brown;
+    font-weight: bold;
   }
+
 </style>
 
 <div class='postContent'>
