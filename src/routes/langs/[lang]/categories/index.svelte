@@ -13,11 +13,10 @@
 
 	export async function load({ fetch, page }): Promise<Resp> {
 		const {lang} = page.params;
-		const resp: IndexResponse<Category> = await (await fetch(`/${lang}/categories/json`)).json();
+		const resp: IndexResponse<Category> = await (await fetch(`${page.path}/json`)).json();
 		// TODO const jsonLd = jsonLdScript(jsonLdCategories(categories, title, description, request.path));
 		resp.title = `${resp.title} - ${I18N.get(lang, 'Categories')}`;
 		resp.description = 'Index of blog categories';
-
 		return {
 			props: {
 				title: resp.title,
