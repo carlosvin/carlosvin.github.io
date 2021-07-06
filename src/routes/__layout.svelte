@@ -6,6 +6,10 @@
 		const lng = page.params.lang;
 		if (lng) {
 			lang.set(lng)
+			if (typeof document !== 'undefined' ) {
+				console.log(document.documentElement.lang );
+				document.documentElement.lang = lng;
+			}
 		}
 		return { props: { path: page.path }};
 	}
