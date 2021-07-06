@@ -35,11 +35,10 @@ export class PostPropsImpl implements PostProps {
             lang,
             previewimage,
         } = doc.getAttributes();
-        
         const finalSlug = slug || toSlug(docname.split('.')[0]);
         this.title = doc.getTitle();
         this.created = Date.parse(created || date || docdate);
-        this.modified = Date.parse(modified || docdate);
+        this.modified = Date.parse(modified || date || docdate);
         this.filepath = docfile;
         this.dirpath = docdir;
         this.keywords = keywords ? keywords.split(',').map(k => k.trim()) : [];
