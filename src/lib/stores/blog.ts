@@ -57,7 +57,7 @@ class BlogStore {
 
     _addOtherLangs() {
         for (const byLang of this._posts.values()) {
-            const langs = [...byLang.keys()];
+            const langs = this.langs;
             for (const lang of langs) {
                 const p = byLang.get(lang);
                 if (p) {
