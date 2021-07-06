@@ -26,15 +26,29 @@ class BlogStore {
     }
 
     private _init() {
-        fs.readdirSync(this._baseDir)
-            .filter(fileName => path.extname(fileName) === ".adoc")
-            .map(fileName => path.join(this._baseDir, fileName))
-            .map(filePath => new PostImpl(this._proc.load(filePath)))
-            .forEach(post => {
+        this._walk(this._baseDir);
+        this._addOtherLangs();
+    }
+
+    private _walk(baseDir: string) {
+        for (const f of fs.readdirSync(baseDir)) {
+            const filePath = path.join(baseDir, f);
+            if (this._isDir(filePath)) {
+                this._walk(filePath);
+            } else if (this._isPost(f)) {
+                const post = new PostImpl(this._proc.load(filePath));
                 this._add(post);
                 this._categorize(post.props);
-            });
-        this._addOtherLangs();
+            }
+        }
+    }
+
+    private _isDir(filePath: string): boolean {
+        return fs.statSync(filePath).isDirectory();
+    }
+
+    private _isPost (fileName: string) {
+        return path.extname(fileName) === ".adoc";
     }
 
     get langs() {
