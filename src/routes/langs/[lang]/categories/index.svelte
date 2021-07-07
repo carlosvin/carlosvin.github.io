@@ -56,7 +56,7 @@
 			</Entry>
 		{/each}
 		<Entry>
-			<a href="/posts">All posts</a>
+			<a href="/">All posts</a>
 		</Entry>
 	</Index>
 {:else}

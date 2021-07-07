@@ -27,7 +27,7 @@ import type { PostProps } from "$lib/models/interfaces";
 {#if post}
   <Entry>
     <div class="container">
-      <a rel="prefetch" href="{post.path}" class="title">{post.title}</a>
+      <a sveltekit:prefetch href="{post.path}" class="title">{post.title}</a>
       {#if post.summary}
       <div class="description">
         <div class="content">

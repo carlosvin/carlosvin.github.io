@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+	export const prerender = true;
 	export async function load({ page, fetch }) {
 		const { props, html } = await (await fetch(`${page.path}.json`)).json();
 		
