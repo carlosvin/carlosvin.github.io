@@ -1,44 +1,69 @@
 import { DEFAULT_LANG } from '$lib/conf';
-import type { PostProps } from '$lib/models/interfaces';
+import type { Category, PostProps } from '$lib/models/interfaces';
 import { getIsoDate } from '$lib/services/dates';
-import { postPath } from '$lib/services/url';
+import { categoryPath, postPath } from '$lib/services/url';
 import { blogStore } from '$lib/stores/blog';
 import { routes } from '$lib/stores/routes';
 
-function url(slug:string, lang:string) {
-    return import.meta.env.VITE_BASE_URL + postPath(slug, lang);
+function url(path:string) {
+    return import.meta.env.VITE_BASE_URL + path;
 }
 
-function linkLang(slug: string, lang: string): string {
+function urlPage(page: string) {
+    return `
+    <url>
+        <loc>${import.meta.env.VITE_BASE_URL}/${page}</loc>
+        <priority>0.6</priority>
+    </url>`;
+}
+function linkLang(path: string, lang: string): string {
     return `<xhtml:link 
 				rel="alternate"
 				hreflang="${lang}"
-				href="${url(slug, lang)}"/>`;
+				href="${url(path)}"/>`;
 }
 
-const render = (pages: string[], posts: PostProps[]) => `<?xml version="1.0" encoding="UTF-8"?>
+function urlPost({slug, lang, modified, otherLangs }: PostProps) {
+    return `
+		<url>
+            <loc>${url(postPath(slug, lang))}</loc>
+            <priority>0.9</priority>
+            <lastmod>${getIsoDate(new Date(modified))}</lastmod>
+            ${otherLangs ? otherLangs.map(l => linkLang(postPath(slug, l), l)) : ''}
+		</url>`;
+}
+
+function urlCategory(name: string, langs: string[]) {
+    return `
+		<url>
+            <loc>${url(categoryPath(name, langs.shift()))}</loc>
+            <priority>0.8</priority>
+            ${langs ? langs.map(l => linkLang(categoryPath(name, l), l)) : ''}
+		</url>`;
+}
+
+const render = (pages: string[], posts: PostProps[], categories: Category[]) => `
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	${pages
-        .map(page => `<url><loc>${import.meta.env.VITE_BASE_URL}/${page}</loc><priority>0.6</priority></url>`)
+        .map(page => urlPage(page))
         .join("\r\n")}
   	${posts
         .filter(({ modified }) => modified && !isNaN(modified))
-        .map(({ slug, lang, modified, otherLangs }) => `
-		<url>
-		<loc>${url(slug, lang)}</loc>
-		<priority>0.9</priority>
-		<lastmod>${getIsoDate(new Date(modified))}</lastmod>
-		${otherLangs ? otherLangs.map(l => linkLang(slug, l)) : ''}
-		</url>`).join("\r\n")}
+        .map((post) => urlPost(post)).join("\r\n")}
+    ${categories.map(category => urlCategory(category.slug, blogStore.langs)).join("\r\n")}
 </urlset>`;
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function get(): unknown {
     return {
         headers: {
             'Cache-Control': 'max-age=0, s-max-age=3600',
             'Content-Type': 'application/xml',
         },
-        body: render(routes, blogStore.getIndex(DEFAULT_LANG)),
+        body: render(
+            routes,
+            blogStore.getIndex(DEFAULT_LANG),
+            [...blogStore.categories.values()]
+        ),
     };
 }
