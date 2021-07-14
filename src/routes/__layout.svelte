@@ -19,13 +19,14 @@
 	import Nav from '$lib/components/Nav.svelte';
 	import { lang, I18N } from '$lib/stores/lang';
 	import Social from '$lib/components/Social.svelte';
+	import IconLink from '$lib/components/IconLink.svelte';
 	
 	export let path = '/';
 </script>
 
 <Nav segment={path} siteName={I18N.get($lang, 'siteName')} lang={$lang} >
 	<Social>
-
+		<IconLink icon='rss' href='/langs/en/rss'></IconLink>
 	</Social>
 </Nav>
 
