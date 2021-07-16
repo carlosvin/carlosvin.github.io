@@ -60,10 +60,6 @@
 			font-size: 2em;
 			height: 2em;
 		}
-
-		.siteName {
-			display: none;
-		}
 	}
 
 </style>
