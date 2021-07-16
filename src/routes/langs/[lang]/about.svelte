@@ -1,6 +1,13 @@
 <script context="module">
-	export const hydrate = false;
+	import Social from '$lib/components/Social.svelte';
 </script>
+
+<style>
+	.social {
+		display: flex;
+		justify-content: center;
+	}
+</style>
 
 <svelte:head>
 	<title>About me</title>
@@ -9,4 +16,10 @@
 
 <h1>About me</h1>
 
-<p>I am Software Engineer, my career has been mainly focused on developing distributed systems although it hasn't been focused in a specific technology, I think it is more important to choose the right technology for each use case.</p>
+<p>
+	I am Software Engineer, my career has been mainly focused on developing distributed systems, although it hasn't been focused in a specific technology, I think it is more important to choose the right technology for each use case.
+</p>
+
+<div class='social'>
+	<Social />
+</div>
