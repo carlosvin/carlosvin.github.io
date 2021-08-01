@@ -10,7 +10,7 @@ export class TranslationsLoader {
 
     private constructor() {
         this._translations = new Map<string, Translations>();
-        const files = import.meta.globEager('../../../locales/*.json');
+        const files = import.meta.globEager('/static/locales/*.json');
         for (const f in files) {
             const content = files[f];
             this._translations.set(content.lang, content);

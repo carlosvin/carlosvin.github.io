@@ -1,13 +1,9 @@
 import { DEFAULT_LANG } from '$lib/conf';
 import type { Category, PostProps } from '$lib/models/interfaces';
 import { getIsoDate } from '$lib/services/dates';
-import { categoryPath, postPath } from '$lib/services/url';
+import { categoryPath, postPath, url } from '$lib/services/url';
 import { blogStore } from '$lib/stores/blog';
 import { routes } from '$lib/stores/routes';
-
-function url(path:string) {
-    return import.meta.env.VITE_BASE_URL + path;
-}
 
 function urlPage(page: string) {
     return `

@@ -1,6 +1,6 @@
 
 import type { PostProps, Post } from '$lib/models/interfaces';
-import { url } from '$lib/services/url'
+import { postUrl } from '$lib/services/url'
 
 class AtomItem {
     private readonly entry: PostProps;
@@ -27,7 +27,7 @@ class AtomItem {
     }
 
     get url(): string {
-        return url(this.entry.slug, this.entry.lang);
+        return postUrl(this.entry.slug, this.entry.lang);
     }
 
     get summary(): string {
@@ -48,7 +48,7 @@ class AtomItem {
         return otherLangs ? otherLangs.map(l => `<link 
 				rel="alternate"
 				hreflang="${l}"
-				href="${url(slug, l)}"/>`).join("\r\n") : '';
+				href="${postUrl(slug, l)}"/>`).join("\r\n") : '';
     }
 
     get xml() {
@@ -85,8 +85,8 @@ export class Atom {
 
     get xml(): string {
         const latest = Math.max(...this.posts
-            .filter(({entry}) => entry.modified && !isNaN(entry.modified))
-            .map( p => p.entry.modified));
+            .filter(({props}) => props.modified && !isNaN(props.modified))
+            .map( p => p.props.modified));
         return `<?xml version="1.0" encoding="UTF-8" ?>
         <feed xmlns="http://www.w3.org/2005/Atom">
             <title>${this.title}</title>

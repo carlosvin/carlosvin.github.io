@@ -22,11 +22,12 @@
 	import IconLink from '$lib/components/IconLink.svelte';
 	
 	export let path = '/';
+	const siteName = I18N.get($lang, 'siteName');
 </script>
 
-<Nav segment={path} siteName={I18N.get($lang, 'siteName')} lang={$lang} >
+<Nav segment={path} siteName={siteName} lang={$lang} >
 	<Social>
-		<IconLink icon='rss' href='/langs/en/rss'></IconLink>
+		<IconLink icon='rss' href={`/langs/${$lang}/feed.xml`} title={`${I18N.get($lang, 'SubscribeTo')} ${siteName}`}/>
 	</Social>
 </Nav>
 
