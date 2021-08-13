@@ -3,7 +3,7 @@ import { Translations, TranslationsLoader } from '$lib/services/translations';
 import { writable } from 'svelte/store';
 
 export function getLang(navigator: Navigator): string {
-	return navigator.language.substring(0,2);
+	return navigator.language.substring(0, 2);
 }
 
 function createLangStore() {
@@ -12,17 +12,16 @@ function createLangStore() {
 	return {
 		subscribe,
 		change: (navigator: Navigator) => {
-            const newLang = getLang(navigator);
-            if (navigator && newLang.length >= 2) {
-                set(newLang);
-            }
-        },
+			const newLang = getLang(navigator);
+			if (navigator && newLang.length >= 2) {
+				set(newLang);
+			}
+		},
 		set
 	};
 }
 
 class Translator {
-
 	private readonly translations: Map<string, Translations>;
 
 	constructor() {

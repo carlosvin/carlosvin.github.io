@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
-	export async function load({fetch, page}): Promise<{props: {lang: string}}> {
-		const {lang} = page.params;
-		return { props: {lang} };
+	export async function load({ fetch, page }): Promise<{ props: { lang: string } }> {
+		const { lang } = page.params;
+		return { props: { lang } };
 	}
 </script>
 

@@ -1,22 +1,40 @@
 <script lang="ts">
-	import { I18N } from "$lib/stores/lang";
+	import { I18N } from '$lib/stores/lang';
 
-	import NavEntry from "$lib/components/NavEntry.svelte";
+	import NavEntry from '$lib/components/NavEntry.svelte';
 
-	export let segment: string|undefined;
+	export let segment: string | undefined;
 	export let siteName: string;
 	export let lang: string;
 
-	function toggle(){
+	function toggle() {
 		open = !open;
 	}
 	let open = false;
-
 </script>
+
+<nav>
+	<ul>
+		<NavEntry href={`/langs/${lang}`} {segment}>
+			<img class="logo" src="/favicon.png" alt="{siteName} logo" />
+		</NavEntry>
+	</ul>
+	<ul class={open ? 'open' : 'closed'}>
+		<NavEntry href={`/langs/${lang}`} {segment}>
+			<span class="siteName">{siteName}</span>
+		</NavEntry>
+		<NavEntry href={`/langs/${lang}/categories`} {segment}>{I18N.get(lang, 'Categories')}</NavEntry>
+		<NavEntry href={`/langs/${lang}/about`} {segment}>About</NavEntry>
+	</ul>
+	{#if !open}
+		<slot />
+	{/if}
+	<button on:click={toggle} type="button">≡</button>
+</nav>
 
 <style>
 	nav {
-		border-bottom: 1px solid rgba(255,62,0,0.1);
+		border-bottom: 1px solid rgba(255, 62, 0, 0.1);
 		font-weight: 300;
 		padding: 0 1em;
 		display: flex;
@@ -61,24 +79,4 @@
 			height: 2em;
 		}
 	}
-
 </style>
-
-<nav>
-	<ul>
-		<NavEntry href={`/langs/${lang}`} segment={segment}>
-			<img class='logo' src='/favicon.png' alt="{siteName} logo" />
-		</NavEntry>
-	</ul>
-	<ul class={open ? 'open' : 'closed'}>
-		<NavEntry href={`/langs/${lang}`} segment={segment}>
-			<span class='siteName'>{siteName}</span>
-		</NavEntry>
-		<NavEntry href={`/langs/${lang}/categories`} segment={segment}>{I18N.get(lang, 'Categories')}</NavEntry>
-		<NavEntry href={`/langs/${lang}/about`} segment={segment}>About</NavEntry>
-	</ul>
-	{#if !open}
-		<slot></slot>
-	{/if} 
-	<button on:click={toggle} type="button">≡</button>
-</nav>

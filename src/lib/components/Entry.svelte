@@ -1,5 +1,3 @@
-
 <li>
-  <slot>
-  </slot>
+	<slot />
 </li>

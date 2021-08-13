@@ -1,9 +1,9 @@
 <script context="module" lang="ts">
-	declare type Resp = IndexResponse<PostProps>&{lang: string};
-	export async function load({fetch, page}): Promise<{props: Resp}> {
-		const {lang} = page.params;
+	declare type Resp = IndexResponse<PostProps> & { lang: string };
+	export async function load({ fetch, page }): Promise<{ props: Resp }> {
+		const { lang } = page.params;
 		const props: Resp = await (await fetch(`${lang}/json`)).json();
-		return { props: {...props, lang} };
+		return { props: { ...props, lang } };
 	}
 </script>
 
@@ -22,4 +22,4 @@
 	<meta name="description" content={description} />
 </svelte:head>
 
-<Index posts={index} lang={lang} />
+<Index posts={index} {lang} />

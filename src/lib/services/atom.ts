@@ -1,58 +1,62 @@
-
 import type { PostProps, Post } from '$lib/models/interfaces';
-import { postUrl } from '$lib/services/url'
+import { postUrl } from '$lib/services/url';
 
 class AtomItem {
-    private readonly entry: PostProps;
-    private readonly html: string;
-    private readonly auth: string;
+	private readonly entry: PostProps;
+	private readonly html: string;
+	private readonly auth: string;
 
-    constructor(post: Post, auth: string) {
-        this.entry = post.props;
-        this.html = post.html;
-        this.auth = auth;
-    }
+	constructor(post: Post, auth: string) {
+		this.entry = post.props;
+		this.html = post.html;
+		this.auth = auth;
+	}
 
-    get categories() {
-        const { keywords } = this.entry;
-        if (keywords) {
-            return [...keywords].map(
-                c => `<category term="${c}"/>`).join(`\n    `);
-        }
-        return '';
-    }
+	get categories() {
+		const { keywords } = this.entry;
+		if (keywords) {
+			return [...keywords].map((c) => `<category term="${c}"/>`).join(`\n    `);
+		}
+		return '';
+	}
 
-    get title(): string {
-        return this.entry.title;
-    }
+	get title(): string {
+		return this.entry.title;
+	}
 
-    get url(): string {
-        return postUrl(this.entry.slug, this.entry.lang);
-    }
+	get url(): string {
+		return postUrl(this.entry.slug, this.entry.lang);
+	}
 
-    get summary(): string {
-        return this.entry.summary;
-    }
+	get summary(): string {
+		return this.entry.summary;
+	}
 
-    get modified(): string {
-        try {
-            return new Date(this.entry.modified||this.entry.created).toISOString();
-        } catch (e) {
-            console.error("Error generating rss", this.entry);
-            return '?';
-        }
-    }
+	get modified(): string {
+		try {
+			return new Date(this.entry.modified || this.entry.created).toISOString();
+		} catch (e) {
+			console.error('Error generating rss', this.entry);
+			return '?';
+		}
+	}
 
-    get otherLangsLinks() {
-        const { otherLangs, slug } = this.entry;
-        return otherLangs ? otherLangs.map(l => `<link 
+	get otherLangsLinks() {
+		const { otherLangs, slug } = this.entry;
+		return otherLangs
+			? otherLangs
+					.map(
+						(l) => `<link 
 				rel="alternate"
 				hreflang="${l}"
-				href="${postUrl(slug, l)}"/>`).join("\r\n") : '';
-    }
+				href="${postUrl(slug, l)}"/>`
+					)
+					.join('\r\n')
+			: '';
+	}
 
-    get xml() {
-        return `<entry>
+	get xml() {
+		return `<entry>
             <title>${this.title}</title>
             <link href="${this.url}" />
             ${this.otherLangsLinks}   
@@ -63,31 +67,40 @@ class AtomItem {
             ${this.categories}
             <author><name>${this.auth}</name></author>
         </entry>`;
-    }
+	}
 }
 
 export class Atom {
-    private readonly posts: Post[];
-    private readonly title: string;
-    private readonly description: string;
-    private readonly baseUrl: string;
-    private readonly url: string;
-    private readonly auth: string;
+	private readonly posts: Post[];
+	private readonly title: string;
+	private readonly description: string;
+	private readonly baseUrl: string;
+	private readonly url: string;
+	private readonly auth: string;
 
-    constructor(title: string, description: string, posts: Post[], baseUrl: string, path: string, auth: string) {
-        this.posts = posts;
-        this.url = baseUrl + path;
-        this.baseUrl = baseUrl;
-        this.title = title;
-        this.description = description;
-        this.auth = auth;
-    }
+	constructor(
+		title: string,
+		description: string,
+		posts: Post[],
+		baseUrl: string,
+		path: string,
+		auth: string
+	) {
+		this.posts = posts;
+		this.url = baseUrl + path;
+		this.baseUrl = baseUrl;
+		this.title = title;
+		this.description = description;
+		this.auth = auth;
+	}
 
-    get xml(): string {
-        const latest = Math.max(...this.posts
-            .filter(({props}) => props.modified && !isNaN(props.modified))
-            .map( p => p.props.modified));
-        return `<?xml version="1.0" encoding="UTF-8" ?>
+	get xml(): string {
+		const latest = Math.max(
+			...this.posts
+				.filter(({ props }) => props.modified && !isNaN(props.modified))
+				.map((p) => p.props.modified)
+		);
+		return `<?xml version="1.0" encoding="UTF-8" ?>
         <feed xmlns="http://www.w3.org/2005/Atom">
             <title>${this.title}</title>
             <subtitle>${this.description}</subtitle>
@@ -95,7 +108,7 @@ export class Atom {
             <link href="${this.baseUrl}" />
             <id>${this.baseUrl}/</id>
             <updated>${new Date(latest).toISOString()}</updated>
-            ${this.posts.map(post => new AtomItem(post, this.auth).xml).join('\n  ')}
+            ${this.posts.map((post) => new AtomItem(post, this.auth).xml).join('\n  ')}
         </feed>`;
-    }
+	}
 }

@@ -12,7 +12,7 @@
 	}
 
 	export async function load({ fetch, page }): Promise<Resp> {
-		const {lang} = page.params;
+		const { lang } = page.params;
 		const resp: IndexResponse<Category> = await (await fetch(`${page.path}/json`)).json();
 		// TODO const jsonLd = jsonLdScript(jsonLdCategories(categories, title, description, request.path));
 		resp.title = `${resp.title} - ${I18N.get(lang, 'Categories')}`;
@@ -26,7 +26,6 @@
 			}
 		};
 	}
-
 </script>
 
 <script lang="ts">

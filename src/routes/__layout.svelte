@@ -5,12 +5,12 @@
 	export async function load({ page }) {
 		const lng = page.params.lang;
 		if (lng) {
-			lang.set(lng)
-			if (typeof document !== 'undefined' ) {
+			lang.set(lng);
+			if (typeof document !== 'undefined') {
 				document.documentElement.lang = lng;
 			}
 		}
-		return { props: { path: page.path }};
+		return { props: { path: page.path } };
 	}
 </script>
 
@@ -20,14 +20,18 @@
 	import { lang, I18N } from '$lib/stores/lang';
 	import Social from '$lib/components/Social.svelte';
 	import IconLink from '$lib/components/IconLink.svelte';
-	
+
 	export let path = '/';
 	const siteName = I18N.get($lang, 'siteName');
 </script>
 
-<Nav segment={path} siteName={siteName} lang={$lang} >
+<Nav segment={path} {siteName} lang={$lang}>
 	<Social>
-		<IconLink icon='rss' href={`/langs/${$lang}/feed.xml`} title={`${I18N.get($lang, 'SubscribeTo')} ${siteName}`}/>
+		<IconLink
+			icon="rss"
+			href={`/langs/${$lang}/feed.xml`}
+			title={`${I18N.get($lang, 'SubscribeTo')} ${siteName}`}
+		/>
 	</Social>
 </Nav>
 
@@ -37,17 +41,17 @@
 
 <style>
 	main {
-    position: relative;
-    max-width: 86%;
-    background-color: white;
-    padding: 2em;
-    margin: 0 auto;
-    box-sizing: border-box;
-  }
+		position: relative;
+		max-width: 86%;
+		background-color: white;
+		padding: 2em;
+		margin: 0 auto;
+		box-sizing: border-box;
+	}
 
-  @media (max-width: 32em) {
-    main {
-      max-width: unset;
-    }
-  }
+	@media (max-width: 32em) {
+		main {
+			max-width: unset;
+		}
+	}
 </style>

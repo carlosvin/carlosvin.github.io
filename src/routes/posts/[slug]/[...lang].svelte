@@ -6,8 +6,8 @@
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page }) {
-		const {slug, lang} = page.params;
-		
+		const { slug, lang } = page.params;
+
 		return {
 			status: 301, //permanent redirect
 			redirect: postPath(slug, lang || DEFAULT_LANG)

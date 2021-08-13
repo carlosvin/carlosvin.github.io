@@ -2,9 +2,9 @@
 	import type { IndexResponse, PostProps } from '$lib/models/interfaces';
 
 	export async function load({ page, fetch }) {
-    const {lang} = page.params;
+		const { lang } = page.params;
 		const resp: IndexResponse<PostProps> = await (await fetch(`${page.path}.json`)).json();
-      return { props: {...resp, lang} };
+		return { props: { ...resp, lang } };
 	}
 </script>
 
@@ -14,7 +14,7 @@
 	export let index: PostProps[];
 	export let title: string;
 	export let description: string;
-  export let lang: string;
+	export let lang: string;
 </script>
 
 <svelte:head>
@@ -22,4 +22,4 @@
 	<meta name="description" content={description} />
 </svelte:head>
 
-<Index posts={index} title={title} lang={lang} />
+<Index posts={index} {title} {lang} />
