@@ -1,4 +1,3 @@
-import type { IndexResponse, PostProps } from "$lib/models/interfaces";
 import { Atom } from "$lib/services/atom";
 import { blogStore } from "$lib/stores/blog";
 import { I18N } from "$lib/stores/lang";

@@ -28,7 +28,7 @@
 			<link rel="alternate" hreflang={lang} href={postPath(props.slug, lang)} />
 		{/each}
 	{/if}
-	<link rel="alternate" href="{props.path}.jsonld" type="application/ld+json" />
+	<link rel="alternate" href="{props.path}.ld.json" type="application/ld+json" />
 </svelte:head>
 
 <header>
