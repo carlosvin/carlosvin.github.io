@@ -20,7 +20,6 @@
 <svelte:head>
 	<title>{title}</title>
 	<meta name="description" content={description} />
-	<link rel="alternate" href="index.jsonld" type="application/ld+json" />
 </svelte:head>
 
 <Index posts={index} lang={lang} />
