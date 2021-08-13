@@ -1,7 +1,8 @@
 <script context="module" lang="ts">
-	export async function load({ page, fetch }) {
-		const { props, html } = await (await fetch(`${page.path}.json`)).json();
+	import type { LoadInput, LoadOutput } from '@sveltejs/kit';
 
+	export async function load({ page, fetch }: LoadInput): Promise<LoadOutput> {
+		const { props, html } = await (await fetch(`${page.path}.json`)).json();
 		return { props: { props, html } };
 	}
 </script>

@@ -1,7 +1,8 @@
 <script context="module" lang="ts">
-	export async function load({ fetch, page }): Promise<{ props: { lang: string } }> {
-		const { lang } = page.params;
-		return { props: { lang } };
+	declare type Page = { params: { lang: string } };
+
+	export async function load({ params }: Page): Promise<{ props: { lang: string } }> {
+		return { props: params };
 	}
 </script>
 

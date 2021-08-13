@@ -1,6 +1,8 @@
 <script context="module" lang="ts">
 	declare type Resp = IndexResponse<PostProps> & { lang: string };
-	export async function load({ fetch, page }): Promise<{ props: Resp }> {
+
+	import type { LoadInput } from '@sveltejs/kit';
+	export async function load({ fetch, page }: LoadInput): Promise<{ props: Resp }> {
 		const { lang } = page.params;
 		const props: Resp = await (await fetch(`${lang}/json`)).json();
 		return { props: { ...props, lang } };

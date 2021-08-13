@@ -1,11 +1,9 @@
-<script context="module">
+<script context="module" lang="ts">
 	import { DEFAULT_LANG } from '$lib/conf';
 	import { postPath } from '$lib/services/url';
+	import type { LoadInput, LoadOutput } from '@sveltejs/kit';
 
-	/**
-	 * @type {import('@sveltejs/kit').Load}
-	 */
-	export async function load({ page }) {
+	export function load({ page }: LoadInput): LoadOutput {
 		const { slug, lang } = page.params;
 
 		return {
