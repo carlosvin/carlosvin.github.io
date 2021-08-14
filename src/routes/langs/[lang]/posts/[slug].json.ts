@@ -4,8 +4,7 @@ import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 
 export function get({ params }: ServerRequest): { body: Post } {
 	const { lang, slug } = params;
-	const post = blogStore.get(slug, lang);
-	if (post) {
-		return { body: post };
-	}
+	const { html, props } = blogStore.get(slug, lang);
+	
+	return { body: { html, props} };
 }
