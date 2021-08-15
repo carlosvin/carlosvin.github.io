@@ -1,4 +1,6 @@
 <script context="module">
+	import GoogleAnalytics from '$lib/components/analytics/GoogleAnalytics.svelte';
+
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
@@ -24,6 +26,11 @@
 	export let path = '/';
 	const siteName = I18N.get($lang, 'siteName');
 </script>
+
+
+{#if import.meta.env.PROD }
+	<GoogleAnalytics />
+{/if}
 
 <Nav segment={path} {siteName} lang={$lang}>
 	<Social>
