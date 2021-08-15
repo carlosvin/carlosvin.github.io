@@ -31,6 +31,10 @@
 	<GoogleAnalytics />
 {/if}
 
+<svelte:head>
+	<title>{siteName}</title>
+</svelte:head>
+
 <Nav segment={path} {siteName} lang={$lang}>
 	<Social>
 		<IconLink
