@@ -1,1 +1,0 @@
-import{S as s,i as r,s as a}from"../../../chunks/vendor-2fc700c3.js";import{p as n}from"../../../chunks/url-28a36952.js";import{D as t}from"../../../chunks/conf-318ca8e3.js";async function c({page:s}){const{slug:r,lang:a}=s.params;return{status:301,redirect:n(r,a||t)}}class o extends s{constructor(s){super(),r(this,s,null,null,a,{})}}export{o as default,c as load};
