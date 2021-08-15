@@ -27,8 +27,7 @@
 	const siteName = I18N.get($lang, 'siteName');
 </script>
 
-
-{#if import.meta.env.PROD }
+{#if import.meta.env.PROD}
 	<GoogleAnalytics />
 {/if}
 

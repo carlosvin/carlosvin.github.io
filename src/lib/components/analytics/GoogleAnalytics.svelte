@@ -1,6 +1,7 @@
-
 <script lang="ts">
 	import { page } from '$app/stores';
+
+	/* eslint-disable */
 	export const scriptGTag = `
 	\<script\>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -10,14 +11,14 @@
 		ga('create', '${import.meta.env.VITE_G_ANALYTICS}', 'auto');
 	\</script\>
 	`;
-	
+
 	$: {
-		if (typeof ga !== "undefined"){
+		if (typeof ga !== 'undefined') {
 			ga('send', 'pageview', $page.path);
 		}
-    }
+	}
 </script>
 
 <svelte:head>
-	{@html scriptGTag}	
+	{@html scriptGTag}
 </svelte:head>
