@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Depurar librería generada con libtool</title><!-- HTML_TAG_START -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-1328360-10', 'auto');
+	</script>
+	<!-- HTML_TAG_END --><meta name="date.created" content="2013-02-01T14:30:00.000Z" data-svelte="svelte-1lps7vh"><meta name="date.updated" content="2013-02-01T14:30:00.000Z" data-svelte="svelte-1lps7vh"><meta name="description" content="Cómo depurar un librería generada con libtool" data-svelte="svelte-1lps7vh"><link rel="alternate" hreflang="en" href="/langs/en/posts/debug-libtool-lib" data-svelte="svelte-1lps7vh"><link rel="alternate" href="/langs/es/posts/debug-libtool-lib.ld.json" type="application/ld+json" data-svelte="svelte-1lps7vh">
+
+		
+
+		<link rel="modulepreload" href="/./_app/start-906fc3d2.js">
+		<link rel="modulepreload" href="/./_app/chunks/vendor-cef66983.js">
+		<link rel="modulepreload" href="/./_app/chunks/singletons-12a22614.js">
+		<link rel="modulepreload" href="/./_app/pages/__layout.svelte-b0fa16be.js">
+		<link rel="modulepreload" href="/./_app/chunks/lang-00dd275a.js">
+		<link rel="modulepreload" href="/./_app/chunks/conf-318ca8e3.js">
+		<link rel="modulepreload" href="/./_app/chunks/Social-dc8c451a.js">
+		<link rel="modulepreload" href="/./_app/chunks/IconLink-348d6c10.js">
+		<link rel="modulepreload" href="/./_app/pages/langs/[lang]/posts/[slug].svelte-97f2061b.js">
+		<link rel="modulepreload" href="/./_app/chunks/url-28a36952.js">
+		<link rel="modulepreload" href="/./_app/chunks/Details-af27f537.js">
+		<link rel="stylesheet" href="/./_app/assets/start-a8cd1609.css">
+		<link rel="stylesheet" href="/./_app/assets/pages/__layout.svelte-371e20bd.css">
+		<link rel="stylesheet" href="/./_app/assets/Social-cc5c0bed.css">
+		<link rel="stylesheet" href="/./_app/assets/IconLink-5c07e51e.css">
+		<link rel="stylesheet" href="/./_app/assets/pages/langs/[lang]/posts/[slug].svelte-88707559.css">
+		<link rel="stylesheet" href="/./_app/assets/Details-e90b3cb2.css">
+
+		<script type="module">
+			import { start } from "/./_app/start-906fc3d2.js";
+			start({
+				target: document.querySelector("#svelte"),
+				paths: {"base":"","assets":"/."},
+				session: {},
+				host: location.host,
+				route: true,
+				spa: false,
+				trailing_slash: "never",
+				hydrate: {
+					status: 200,
+					error: null,
+					nodes: [
+						import("/./_app/pages/__layout.svelte-b0fa16be.js"),
+						import("/./_app/pages/langs/[lang]/posts/[slug].svelte-97f2061b.js")
+					],
+					page: {
+						host: location.host, // TODO this is redundant
+						path: "/langs/es/posts/debug-libtool-lib",
+						query: new URLSearchParams(""),
+						params: {"lang":"es","slug":"debug-libtool-lib"}
+					}
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div id="svelte">
+
+
+
+
+<nav class="svelte-17lil9l"><ul class="svelte-17lil9l"><li class="svelte-1nihsj5"><a href="/langs/es" rel="prefetch" class="svelte-1nihsj5"><img class="logo svelte-17lil9l" src="/favicon.png" alt="Carlos dice bla bla logo"></a>
+</li></ul>
+	<ul class="closed svelte-17lil9l"><li class="svelte-1nihsj5"><a href="/langs/es" rel="prefetch" class="svelte-1nihsj5"><span class="siteName">Carlos dice bla bla</span></a>
+</li>
+<li class="svelte-1nihsj5"><a href="/langs/es/categories" rel="prefetch" class="svelte-1nihsj5">Categorías</a>
+</li>
+<li class="svelte-1nihsj5"><a href="/langs/es/about" rel="prefetch" class="svelte-1nihsj5">About</a>
+</li></ul>
+	<div class="h svelte-geb0ta"><a href="/langs/es/feed.xml" target="_blank" class="icon rss svelte-blgowr" title="Suscríbete a Carlos dice bla bla" rel="noopener" aria-label="Suscríbete a Carlos dice bla bla">
+</a>
+	<a href="https://github.com/carlosvin" target="_blank" class="icon github svelte-blgowr" title="Find me at github" rel="noopener" aria-label="Find me at github">
+</a>
+	<a href="https://twitter.com/carlosvin" target="_blank" class="icon twitter svelte-blgowr" title="Find me at twitter" rel="noopener" aria-label="Find me at twitter">
+</a>
+	<a href="https://stackoverflow.com/story/carlosvin" target="_blank" class="icon stackoverflow svelte-blgowr" title="Find me at stackoverflow" rel="noopener" aria-label="Find me at stackoverflow">
+</a>
+</div>
+	<button type="button" class="svelte-17lil9l">≡</button>
+</nav>
+
+<main class="svelte-1m42syy">
+
+<header class="svelte-1ikjkmw"><h1 class="svelte-1ikjkmw">Depurar librería generada con libtool
+<span class="share svelte-1ikjkmw"><a href="https://twitter.com/intent/tweet?url=/langs/es/posts/debug-libtool-lib&amp;text=Depurar librería generada con libtool:&amp;nbsp;Cómo depurar un librería generada con libtool&amp;hashtags=C++,Autotools,GNU,Tips and Tricks" target="_blank" class="icon twitter svelte-blgowr" title="Share &quot;Depurar librería generada con libtool&quot;" rel="noopener" aria-label="Share &quot;Depurar librería generada con libtool&quot;">
+</a></span></h1>
+	<p class="summary svelte-1ikjkmw">Cómo depurar un librería generada con libtool</p>
+	<div class="subtitle svelte-1s3ascd"><span class="date">01/02/2013</span>
+	<span class="tags svelte-ym0wdt"><a href="/langs/es/categories/c" title="C++" class="svelte-dagte2"><span class="hover svelte-1kmrl92">C++
+</span>
+</a><a href="/langs/es/categories/autotools" title="Autotools" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Autotools
+</span>
+</a><a href="/langs/es/categories/gnu" title="GNU" class="svelte-dagte2"><span class="hover svelte-1kmrl92">GNU
+</span>
+</a><a href="/langs/es/categories/tips-and-tricks" title="Tips and Tricks" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Tips and Tricks
+</span>
+</a></span>
+</div></header>
+
+<div class="postContent"><!-- HTML_TAG_START --><div class="paragraph">
+<p>Cuando vamos a depurar un ejecutable que utiliza una librería generada con <a href="https://www.gnu.org/software/libtool/libtool.html" target="_blank" rel="noopener">libtool</a><sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>, es posible que nos encontremos con el siguiente error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ gdb ./tests-mylib
+<span class="hljs-string">&quot;tests-mylib&quot;</span>: not <span class="hljs-keyword">in</span> executable format: File format not recognized</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>libmylib.so</code></dt>
+<dd>
+<p>es una librería dinámica generada con <a href="https://www.gnu.org/software/libtool/libtool.html" target="_blank" rel="noopener">libtool</a>.</p>
+</dd>
+<dt class="hdlist1"><code>tests-mylib</code></dt>
+<dd>
+<p>es un ejecutable que utiliza la librería mylib.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Para los que estéis pensando que se me ha olvidado poner la opción de compilación <code>-g</code>, este error ocurre aunque utilicemos <code>-g</code>.</p>
+</div>
+<div class="paragraph">
+<p>El error es debido a que estamos intentando ejecutar un script generado por <a href="https://www.gnu.org/software/libtool/libtool.html" target="_blank" rel="noopener">libtool</a>, es una envoltura sobre el programa real, para facilitar la ejecución de éste <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Para poder depurar nuestro programa de prueba <code>tests-mylib</code></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">libtool --mode=execute gdb tests-mylib</code></pre>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. Herramienta que pertenece a la <a href="">Autotools</a> usada para crear bibliotecas de software portables.
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. Más información en <a href="https://www.gnu.org/software/libtool/manual/libtool.html#Debugging-executables">documentación de libtool</a>
+</div>
+</div><!-- HTML_TAG_END -->
+	<div class="comments"><script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async></script></div>
+</div>
+</main>
+
+
+
+	<script type="application/json" data-type="svelte-data" data-url="/langs/es/posts/debug-libtool-lib.json">{"status":200,"statusText":"","headers":{"content-type":"application/json; charset=utf-8"},"body":"{\"html\":\"\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003ECuando vamos a depurar un ejecutable que utiliza una librería generada con \u003Ca href=\\\"https:\u002F\u002Fwww.gnu.org\u002Fsoftware\u002Flibtool\u002Flibtool.html\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\"\u003Elibtool\u003C\u002Fa\u003E\u003Csup class=\\\"footnote\\\"\u003E[\u003Ca id=\\\"_footnoteref_1\\\" class=\\\"footnote\\\" href=\\\"#_footnotedef_1\\\" title=\\\"View footnote.\\\"\u003E1\u003C\u002Fa\u003E]\u003C\u002Fsup\u003E, es posible que nos encontremos con el siguiente error:\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-bash\\\" data-lang=\\\"bash\\\"\u003E$ gdb .\u002Ftests-mylib\\n\u003Cspan class=\\\"hljs-string\\\"\u003E&quot;tests-mylib&quot;\u003C\u002Fspan\u003E: not \u003Cspan class=\\\"hljs-keyword\\\"\u003Ein\u003C\u002Fspan\u003E executable format: File format not recognized\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"dlist\\\"\u003E\\n\u003Cdl\u003E\\n\u003Cdt class=\\\"hdlist1\\\"\u003E\u003Ccode\u003Elibmylib.so\u003C\u002Fcode\u003E\u003C\u002Fdt\u003E\\n\u003Cdd\u003E\\n\u003Cp\u003Ees una librería dinámica generada con \u003Ca href=\\\"https:\u002F\u002Fwww.gnu.org\u002Fsoftware\u002Flibtool\u002Flibtool.html\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\"\u003Elibtool\u003C\u002Fa\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdd\u003E\\n\u003Cdt class=\\\"hdlist1\\\"\u003E\u003Ccode\u003Etests-mylib\u003C\u002Fcode\u003E\u003C\u002Fdt\u003E\\n\u003Cdd\u003E\\n\u003Cp\u003Ees un ejecutable que utiliza la librería mylib.\u003C\u002Fp\u003E\\n\u003C\u002Fdd\u003E\\n\u003C\u002Fdl\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EPara los que estéis pensando que se me ha olvidado poner la opción de compilación \u003Ccode\u003E-g\u003C\u002Fcode\u003E, este error ocurre aunque utilicemos \u003Ccode\u003E-g\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EEl error es debido a que estamos intentando ejecutar un script generado por \u003Ca href=\\\"https:\u002F\u002Fwww.gnu.org\u002Fsoftware\u002Flibtool\u002Flibtool.html\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\"\u003Elibtool\u003C\u002Fa\u003E, es una envoltura sobre el programa real, para facilitar la ejecución de éste \u003Csup class=\\\"footnote\\\"\u003E[\u003Ca id=\\\"_footnoteref_2\\\" class=\\\"footnote\\\" href=\\\"#_footnotedef_2\\\" title=\\\"View footnote.\\\"\u003E2\u003C\u002Fa\u003E]\u003C\u002Fsup\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EPara poder depurar nuestro programa de prueba \u003Ccode\u003Etests-mylib\u003C\u002Fcode\u003E\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-bash\\\" data-lang=\\\"bash\\\"\u003Elibtool --mode=execute gdb tests-mylib\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv id=\\\"footnotes\\\"\u003E\\n\u003Chr\u003E\\n\u003Cdiv class=\\\"footnote\\\" id=\\\"_footnotedef_1\\\"\u003E\\n\u003Ca href=\\\"#_footnoteref_1\\\"\u003E1\u003C\u002Fa\u003E. Herramienta que pertenece a la \u003Ca href=\\\"\\\"\u003EAutotools\u003C\u002Fa\u003E usada para crear bibliotecas de software portables.\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"footnote\\\" id=\\\"_footnotedef_2\\\"\u003E\\n\u003Ca href=\\\"#_footnoteref_2\\\"\u003E2\u003C\u002Fa\u003E. Más información en \u003Ca href=\\\"https:\u002F\u002Fwww.gnu.org\u002Fsoftware\u002Flibtool\u002Fmanual\u002Flibtool.html#Debugging-executables\\\"\u003Edocumentación de libtool\u003C\u002Fa\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\",\"props\":{\"title\":\"Depurar librería generada con libtool\",\"created\":1359729000000,\"modified\":1359729000000,\"filepath\":\"\u002Fhome\u002Fcarlos\u002Fworkspace\u002Fcarlosvin.github.io\u002Fstatic\u002Fposts\u002Fdebug-libtool-lib.es.adoc\",\"dirpath\":\"\u002Fhome\u002Fcarlos\u002Fworkspace\u002Fcarlosvin.github.io\u002Fstatic\u002Fposts\",\"keywords\":[\"C++\",\"Autotools\",\"GNU\",\"Tips and Tricks\"],\"lang\":\"es\",\"otherLangs\":[\"en\"],\"slug\":\"debug-libtool-lib\",\"summary\":\"Cómo depurar un librería generada con libtool\",\"author\":\"Carlos Martin Sanchez\",\"path\":\"\u002Flangs\u002Fes\u002Fposts\u002Fdebug-libtool-lib\"}}"}</script>
+</div>
+	</body>
+</html>

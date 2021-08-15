@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Contenedores Docker multi-dominio</title><!-- HTML_TAG_START -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-1328360-10', 'auto');
+	</script>
+	<!-- HTML_TAG_END --><meta name="date.created" content="2016-11-23T20:00:00.000Z" data-svelte="svelte-1lps7vh"><meta name="date.updated" content="2016-11-23T20:00:00.000Z" data-svelte="svelte-1lps7vh"><meta name="description" content="Cómo crear varios contenedores Docker con diferentes dominios en la misma máquina." data-svelte="svelte-1lps7vh"><link rel="alternate" hreflang="en" href="/langs/en/posts/reverse-proxy-multidomain-docker" data-svelte="svelte-1lps7vh"><link rel="alternate" href="/langs/es/posts/reverse-proxy-multidomain-docker.ld.json" type="application/ld+json" data-svelte="svelte-1lps7vh">
+
+		
+
+		<link rel="modulepreload" href="/./_app/start-906fc3d2.js">
+		<link rel="modulepreload" href="/./_app/chunks/vendor-cef66983.js">
+		<link rel="modulepreload" href="/./_app/chunks/singletons-12a22614.js">
+		<link rel="modulepreload" href="/./_app/pages/__layout.svelte-b0fa16be.js">
+		<link rel="modulepreload" href="/./_app/chunks/lang-00dd275a.js">
+		<link rel="modulepreload" href="/./_app/chunks/conf-318ca8e3.js">
+		<link rel="modulepreload" href="/./_app/chunks/Social-dc8c451a.js">
+		<link rel="modulepreload" href="/./_app/chunks/IconLink-348d6c10.js">
+		<link rel="modulepreload" href="/./_app/pages/langs/[lang]/posts/[slug].svelte-97f2061b.js">
+		<link rel="modulepreload" href="/./_app/chunks/url-28a36952.js">
+		<link rel="modulepreload" href="/./_app/chunks/Details-af27f537.js">
+		<link rel="stylesheet" href="/./_app/assets/start-a8cd1609.css">
+		<link rel="stylesheet" href="/./_app/assets/pages/__layout.svelte-371e20bd.css">
+		<link rel="stylesheet" href="/./_app/assets/Social-cc5c0bed.css">
+		<link rel="stylesheet" href="/./_app/assets/IconLink-5c07e51e.css">
+		<link rel="stylesheet" href="/./_app/assets/pages/langs/[lang]/posts/[slug].svelte-88707559.css">
+		<link rel="stylesheet" href="/./_app/assets/Details-e90b3cb2.css">
+
+		<script type="module">
+			import { start } from "/./_app/start-906fc3d2.js";
+			start({
+				target: document.querySelector("#svelte"),
+				paths: {"base":"","assets":"/."},
+				session: {},
+				host: location.host,
+				route: true,
+				spa: false,
+				trailing_slash: "never",
+				hydrate: {
+					status: 200,
+					error: null,
+					nodes: [
+						import("/./_app/pages/__layout.svelte-b0fa16be.js"),
+						import("/./_app/pages/langs/[lang]/posts/[slug].svelte-97f2061b.js")
+					],
+					page: {
+						host: location.host, // TODO this is redundant
+						path: "/langs/es/posts/reverse-proxy-multidomain-docker",
+						query: new URLSearchParams(""),
+						params: {"lang":"es","slug":"reverse-proxy-multidomain-docker"}
+					}
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div id="svelte">
+
+
+
+
+<nav class="svelte-17lil9l"><ul class="svelte-17lil9l"><li class="svelte-1nihsj5"><a href="/langs/es" rel="prefetch" class="svelte-1nihsj5"><img class="logo svelte-17lil9l" src="/favicon.png" alt="Carlos dice bla bla logo"></a>
+</li></ul>
+	<ul class="closed svelte-17lil9l"><li class="svelte-1nihsj5"><a href="/langs/es" rel="prefetch" class="svelte-1nihsj5"><span class="siteName">Carlos dice bla bla</span></a>
+</li>
+<li class="svelte-1nihsj5"><a href="/langs/es/categories" rel="prefetch" class="svelte-1nihsj5">Categorías</a>
+</li>
+<li class="svelte-1nihsj5"><a href="/langs/es/about" rel="prefetch" class="svelte-1nihsj5">About</a>
+</li></ul>
+	<div class="h svelte-geb0ta"><a href="/langs/es/feed.xml" target="_blank" class="icon rss svelte-blgowr" title="Suscríbete a Carlos dice bla bla" rel="noopener" aria-label="Suscríbete a Carlos dice bla bla">
+</a>
+	<a href="https://github.com/carlosvin" target="_blank" class="icon github svelte-blgowr" title="Find me at github" rel="noopener" aria-label="Find me at github">
+</a>
+	<a href="https://twitter.com/carlosvin" target="_blank" class="icon twitter svelte-blgowr" title="Find me at twitter" rel="noopener" aria-label="Find me at twitter">
+</a>
+	<a href="https://stackoverflow.com/story/carlosvin" target="_blank" class="icon stackoverflow svelte-blgowr" title="Find me at stackoverflow" rel="noopener" aria-label="Find me at stackoverflow">
+</a>
+</div>
+	<button type="button" class="svelte-17lil9l">≡</button>
+</nav>
+
+<main class="svelte-1m42syy">
+
+<header class="svelte-1ikjkmw"><h1 class="svelte-1ikjkmw">Contenedores Docker multi-dominio
+<span class="share svelte-1ikjkmw"><a href="https://twitter.com/intent/tweet?url=/langs/es/posts/reverse-proxy-multidomain-docker&amp;text=Contenedores Docker multi-dominio:&amp;nbsp;Cómo crear varios contenedores Docker con diferentes dominios en la misma máquina.&amp;hashtags=Docker,Microservices" target="_blank" class="icon twitter svelte-blgowr" title="Share &quot;Contenedores Docker multi-dominio&quot;" rel="noopener" aria-label="Share &quot;Contenedores Docker multi-dominio&quot;">
+</a></span></h1>
+	<p class="summary svelte-1ikjkmw">Cómo crear varios contenedores Docker con diferentes dominios en la misma máquina.</p>
+	<div class="subtitle svelte-1s3ascd"><span class="date">23/11/2016</span>
+	<span class="tags svelte-ym0wdt"><a href="/langs/es/categories/docker" title="Docker" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Docker
+</span>
+</a><a href="/langs/es/categories/microservices" title="Microservices" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Microservices
+</span>
+</a></span>
+</div></header>
+
+<div class="postContent"><!-- HTML_TAG_START --><div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_caso_de_uso">Caso de Uso</a></li>
+<li><a href="#_cómo_configurar_un_proxy_inverso_multi_dominio">Cómo configurar un Proxy Inverso Multi-Dominio</a>
+<ul class="sectlevel2">
+<li><a href="#_estructura_del_proyecto_de_ejemplo">Estructura del proyecto de ejemplo</a></li>
+<li><a href="#_configuración_de_la_arquitectura_docker_compose">Configuración de la arquitectura (docker-compose)</a></li>
+<li><a href="#_configuración_de_la_imágen_de_la_aplicación">Configuración de la imágen de la aplicación</a></li>
+<li><a href="#_añadiendo_los_nombres_de_dominio_a_tu_configuración">Añadiendo los nombres de dominio a tu configuración</a></li>
+<li><a href="#_todo_listo">¡Todo listo!</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_caso_de_uso">Caso de Uso</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Tenemos varias aplicaciones servidoras a la vez en un mismo entorno de desarrollo, cada una encapsulada en un contenedor, llamémosles de ahora en adelante <strong>"Contenedor A"</strong> y <strong>"Contenedor B"</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Utilizando docker estas aplicaciones tienen la misma dirección IP en nuestra máquina, una forma de distinguirlas es cambiando el puerto que exponen.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/ip.png" alt="ip">
+</div>
+</div>
+<div class="paragraph">
+<p>Aplicaciones exponiendo la misma dirección IP utilizando diferentes puertos para diferenciar las aplicaciones.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si queremos llamar a la <strong>"aplicación A"</strong> haremos algo así: <code>GET <a href="http://10.20.30.40:8080/colors/red" class="bare">http://10.20.30.40:8080/colors/red</a></code>.</p>
+</li>
+<li>
+<p>Si queremos llamar a la <strong>"aplicación B"</strong> haremos algo así: <code>GET <a href="http://10.20.30.40:8081/fruits/tomato" class="bare">http://10.20.30.40:8081/fruits/tomato</a></code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Pero esto es un poco confuso, ¿8080 sigfica que accedemos a las "aplicación A" y 8081 significa "aplicación B"?</p>
+</div>
+<div class="paragraph">
+<p>Sería mucho más sencillo de recordar algo así:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si queremos llamar a la "aplicación A" haremos algo así: <code>GET <a href="http://a.domain.com/colors/red" class="bare">http://a.domain.com/colors/red</a></code>.</p>
+</li>
+<li>
+<p>Si queremos llamar a la "aplicación B" haremos algo así: <code>GET <a href="http://b.domain.com/fruits/tomato" class="bare">http://b.domain.com/fruits/tomato</a></code>.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/domain.png" alt="domain">
+</div>
+</div>
+<div class="paragraph">
+<p>Diferenciando aplicaciones por nombre de dominio</p>
+</div>
+<div class="paragraph">
+<p>Obtener este valor semántico extra es más sencillo de lo que parece.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cómo_configurar_un_proxy_inverso_multi_dominio">Cómo configurar un Proxy Inverso Multi-Dominio</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dije que era fácil porque no vamos a tener que hacer casi nada, ya que otro contenedor hará casi todo el trabajo por nosotros. Vamos a utilizar <a href="https://github.com/jwilder/nginx-proxy" target="_blank" rel="noopener">nginx-proxy</a>, que generará automáticamente las configuraciones necesarias para <a href="https://www.nginx.com" target="_blank" rel="noopener">NGINX</a>.</p>
+</div>
+<div class="paragraph">
+<p>Así que al final no tendremos 2 contenedores, sino también tendremos un tercero que hará las veces de proxy.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/proxy.png" alt="domain">
+</div>
+</div>
+<div class="paragraph">
+<p>Los 2 contenedores y el proxy.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Puedes descargar el ejemplo completo desde: <a href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain" class="bare">https://github.com/carlosvin/docker-reverse-proxy-multi-domain</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_estructura_del_proyecto_de_ejemplo">Estructura del proyecto de ejemplo</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">docker-compose.yaml</dt>
+<dd>
+<p>Archivo con la configuración descrita en la imágen previa.</p>
+</dd>
+<dt class="hdlist1">a</dt>
+<dd>
+<p>Directorio para la aplicación A.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Dockerfile</dt>
+<dd>
+<p>Archivo con la configuración del contenedor A.</p>
+</dd>
+</dl>
+</div>
+</dd>
+<dt class="hdlist1">b</dt>
+<dd>
+<p>Directorio para la aplicación B.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Dockerfile</dt>
+<dd>
+<p>Archivo con la configuración del contenedor B.</p>
+</dd>
+</dl>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain" target="_blank" rel="noopener">Ver proyecto</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuración_de_la_arquitectura_docker_compose">Configuración de la arquitectura (docker-compose)</h3>
+<div class="paragraph">
+<p>La parte más importante es la configuración de las relaciones entre los contenedores.</p>
+</div>
+<div class="listingblock">
+<div class="title">docker-reverse-proxy-multi-domain/docker-compose.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-attr">a:</span>
+  <span class="hljs-attr">build:</span> <span class="hljs-string">a</span> <b class="conum">(4)</b>
+  <span class="hljs-attr">environment:</span>
+    <span class="hljs-attr">VIRTUAL_HOST:</span> <span class="hljs-string">a.domain.com</span> <b class="conum">(1)</b>
+  <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span>
+
+<span class="hljs-attr">b:</span>
+  <span class="hljs-attr">build:</span> <span class="hljs-string">b</span> <b class="conum">(5)</b>
+  <span class="hljs-attr">environment:</span>
+    <span class="hljs-attr">VIRTUAL_HOST:</span>  <span class="hljs-string">b.domain.com</span> <b class="conum">(2)</b>
+  <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span>
+
+<span class="hljs-attr">nginx-proxy:</span> <b class="conum">(3)</b>
+  <span class="hljs-attr">image:</span> <span class="hljs-string">jwilder/nginx-proxy</span>
+  <span class="hljs-attr">ports:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;80:80&quot;</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;443:443&quot;</span>
+  <span class="hljs-attr">volumes:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">/var/run/docker.sock:/tmp/docker.sock:ro</span>
+
+  <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span>
+  <span class="hljs-attr">privileged:</span> <span class="hljs-literal">true</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Configuramos el nombre de dominio que queremos utilizar para la aplicación a.</p>
+</li>
+<li>
+<p>Lo mismo para la aplicación b.</p>
+</li>
+<li>
+<p>A partir de aquí configuramos el proxy (esta es la parte de copiar y pegar).</p>
+</li>
+<li>
+<p>Indicamos a docker-compose que tiene que construir las imágenes dentro del directorio indicado.</p>
+</li>
+<li>
+<p>Por ejemplo, aquí, estamos indicando que docker-compose tiene que construir la imágen docker utilizando ./b/Dockerfile.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuración_de_la_imágen_de_la_aplicación">Configuración de la imágen de la aplicación</h3>
+<div class="paragraph">
+<p>A continuación vamos a comentar la configuración de la imágen del contenedor para la aplicación A.</p>
+</div>
+<div class="listingblock">
+<div class="title">a/Dockerfile</div>
+<div class="content">
+<pre class="highlight"><code class="language-docker" data-lang="docker"><span class="hljs-keyword">FROM</span> httpd:<span class="hljs-number">2.4</span> <b class="conum">(1)</b>
+<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;&quot;</span> &gt; /usr/<span class="hljs-built_in">local</span>/apache2/htdocs/index.html </span><b class="conum">(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Importamos una imágen con un servidor apache.</p>
+</li>
+<li>
+<p>Servimos un archivo que muestra "Host A" como página por defecto.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>La configuración para la aplicación B, es prácticamente la misma:</p>
+</div>
+<div class="listingblock">
+<div class="title">b/Dockerfile</div>
+<div class="content">
+<pre class="highlight"><code class="language-docker" data-lang="docker"><span class="hljs-keyword">FROM</span> httpd:<span class="hljs-number">2.4</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;&quot;</span> &gt; /usr/<span class="hljs-built_in">local</span>/apache2/htdocs/index.html</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_añadiendo_los_nombres_de_dominio_a_tu_configuración">Añadiendo los nombres de dominio a tu configuración</h3>
+<div class="paragraph">
+<p>En Linux simplemente tenemos mapear la dirección local a los nombres de dominio que hayas elegido, en nuestro ejemplo es <code>a.domain.com</code> y <code>b.domain.com</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">/etc/hosts</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">127.0.0.1     localhost.localdomain localhost
+::1             localhost6.localdomain6 localhost6
+127.0.0.1   a.domain.com <b class="conum">(1)</b>
+127.0.0.1   b.domain.com</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Simplemente he añadido las líneas 4 y 5.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_todo_listo">¡Todo listo!</h3>
+<div class="paragraph">
+<p>Ya solo nos queda probar el ejemplo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">docker-compose build
+docker-compose up</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ya están las tres contenedores arrancados.</p>
+</div>
+<div class="paragraph">
+<p>Ahora podemos abrir nuestro navegador y escribir a.domain.com y nos mostrará el texto <em>App A works!</em>. Si escribimos b.domain.com entonces veremos <em>App B works!</em>.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/a.screenshot.png" alt="App A works!">
+</div>
+<div class="title">Figure 1. a.domain.com</div>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/b.screenshot.png" alt="App B works!">
+</div>
+<div class="title">Figure 2. b.domain.com</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+En la mayoría de distribuciones Linux necesitarás privilegios para ejecutar los comandos docker (<code>sudo</code>).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div><!-- HTML_TAG_END -->
+	<div class="comments"><script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async></script></div>
+</div>
+</main>
+
+
+
+	<script type="application/json" data-type="svelte-data" data-url="/langs/es/posts/reverse-proxy-multidomain-docker.json">{"status":200,"statusText":"","headers":{"content-type":"application/json; charset=utf-8"},"body":"{\"html\":\"\u003Cdiv id=\\\"toc\\\" class=\\\"toc\\\"\u003E\\n\u003Cdiv id=\\\"toctitle\\\"\u003ETable of Contents\u003C\u002Fdiv\u003E\\n\u003Cul class=\\\"sectlevel1\\\"\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_caso_de_uso\\\"\u003ECaso de Uso\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_cómo_configurar_un_proxy_inverso_multi_dominio\\\"\u003ECómo configurar un Proxy Inverso Multi-Dominio\u003C\u002Fa\u003E\\n\u003Cul class=\\\"sectlevel2\\\"\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_estructura_del_proyecto_de_ejemplo\\\"\u003EEstructura del proyecto de ejemplo\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_configuración_de_la_arquitectura_docker_compose\\\"\u003EConfiguración de la arquitectura (docker-compose)\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_configuración_de_la_imágen_de_la_aplicación\\\"\u003EConfiguración de la imágen de la aplicación\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_añadiendo_los_nombres_de_dominio_a_tu_configuración\\\"\u003EAñadiendo los nombres de dominio a tu configuración\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_todo_listo\\\"\u003E¡Todo listo!\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003C\u002Ful\u003E\\n\u003C\u002Fli\u003E\\n\u003C\u002Ful\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect1\\\"\u003E\\n\u003Ch2 id=\\\"_caso_de_uso\\\"\u003ECaso de Uso\u003C\u002Fh2\u003E\\n\u003Cdiv class=\\\"sectionbody\\\"\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003ETenemos varias aplicaciones servidoras a la vez en un mismo entorno de desarrollo, cada una encapsulada en un contenedor, llamémosles de ahora en adelante \u003Cstrong\u003E\\\"Contenedor A\\\"\u003C\u002Fstrong\u003E y \u003Cstrong\u003E\\\"Contenedor B\\\"\u003C\u002Fstrong\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EUtilizando docker estas aplicaciones tienen la misma dirección IP en nuestra máquina, una forma de distinguirlas es cambiando el puerto que exponen.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"imageblock center\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cimg src=\\\"\u002Fposts\u002Freverse-proxy-multidomain-docker\u002Fip.png\\\" alt=\\\"ip\\\"\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EAplicaciones exponiendo la misma dirección IP utilizando diferentes puertos para diferenciar las aplicaciones.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"ulist\\\"\u003E\\n\u003Cul\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESi queremos llamar a la \u003Cstrong\u003E\\\"aplicación A\\\"\u003C\u002Fstrong\u003E haremos algo así: \u003Ccode\u003EGET \u003Ca href=\\\"http:\u002F\u002F10.20.30.40:8080\u002Fcolors\u002Fred\\\" class=\\\"bare\\\"\u003Ehttp:\u002F\u002F10.20.30.40:8080\u002Fcolors\u002Fred\u003C\u002Fa\u003E\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESi queremos llamar a la \u003Cstrong\u003E\\\"aplicación B\\\"\u003C\u002Fstrong\u003E haremos algo así: \u003Ccode\u003EGET \u003Ca href=\\\"http:\u002F\u002F10.20.30.40:8081\u002Ffruits\u002Ftomato\\\" class=\\\"bare\\\"\u003Ehttp:\u002F\u002F10.20.30.40:8081\u002Ffruits\u002Ftomato\u003C\u002Fa\u003E\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003C\u002Ful\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EPero esto es un poco confuso, ¿8080 sigfica que accedemos a las \\\"aplicación A\\\" y 8081 significa \\\"aplicación B\\\"?\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003ESería mucho más sencillo de recordar algo así:\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"ulist\\\"\u003E\\n\u003Cul\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESi queremos llamar a la \\\"aplicación A\\\" haremos algo así: \u003Ccode\u003EGET \u003Ca href=\\\"http:\u002F\u002Fa.domain.com\u002Fcolors\u002Fred\\\" class=\\\"bare\\\"\u003Ehttp:\u002F\u002Fa.domain.com\u002Fcolors\u002Fred\u003C\u002Fa\u003E\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESi queremos llamar a la \\\"aplicación B\\\" haremos algo así: \u003Ccode\u003EGET \u003Ca href=\\\"http:\u002F\u002Fb.domain.com\u002Ffruits\u002Ftomato\\\" class=\\\"bare\\\"\u003Ehttp:\u002F\u002Fb.domain.com\u002Ffruits\u002Ftomato\u003C\u002Fa\u003E\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003C\u002Ful\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"imageblock center\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cimg src=\\\"\u002Fposts\u002Freverse-proxy-multidomain-docker\u002Fdomain.png\\\" alt=\\\"domain\\\"\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EDiferenciando aplicaciones por nombre de dominio\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EObtener este valor semántico extra es más sencillo de lo que parece.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect1\\\"\u003E\\n\u003Ch2 id=\\\"_cómo_configurar_un_proxy_inverso_multi_dominio\\\"\u003ECómo configurar un Proxy Inverso Multi-Dominio\u003C\u002Fh2\u003E\\n\u003Cdiv class=\\\"sectionbody\\\"\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EDije que era fácil porque no vamos a tener que hacer casi nada, ya que otro contenedor hará casi todo el trabajo por nosotros. Vamos a utilizar \u003Ca href=\\\"https:\u002F\u002Fgithub.com\u002Fjwilder\u002Fnginx-proxy\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\"\u003Enginx-proxy\u003C\u002Fa\u003E, que generará automáticamente las configuraciones necesarias para \u003Ca href=\\\"https:\u002F\u002Fwww.nginx.com\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\"\u003ENGINX\u003C\u002Fa\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EAsí que al final no tendremos 2 contenedores, sino también tendremos un tercero que hará las veces de proxy.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"imageblock center\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cimg src=\\\"\u002Fposts\u002Freverse-proxy-multidomain-docker\u002Fproxy.png\\\" alt=\\\"domain\\\"\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003ELos 2 contenedores y el proxy.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"admonitionblock note\\\"\u003E\\n\u003Ctable\u003E\\n\u003Ctr\u003E\\n\u003Ctd class=\\\"icon\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003ENote\u003C\u002Fdiv\u003E\\n\u003C\u002Ftd\u003E\\n\u003Ctd class=\\\"content\\\"\u003E\\nPuedes descargar el ejemplo completo desde: \u003Ca href=\\\"https:\u002F\u002Fgithub.com\u002Fcarlosvin\u002Fdocker-reverse-proxy-multi-domain\\\" class=\\\"bare\\\"\u003Ehttps:\u002F\u002Fgithub.com\u002Fcarlosvin\u002Fdocker-reverse-proxy-multi-domain\u003C\u002Fa\u003E.\\n\u003C\u002Ftd\u003E\\n\u003C\u002Ftr\u003E\\n\u003C\u002Ftable\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect2\\\"\u003E\\n\u003Ch3 id=\\\"_estructura_del_proyecto_de_ejemplo\\\"\u003EEstructura del proyecto de ejemplo\u003C\u002Fh3\u003E\\n\u003Cdiv class=\\\"dlist\\\"\u003E\\n\u003Cdl\u003E\\n\u003Cdt class=\\\"hdlist1\\\"\u003Edocker-compose.yaml\u003C\u002Fdt\u003E\\n\u003Cdd\u003E\\n\u003Cp\u003EArchivo con la configuración descrita en la imágen previa.\u003C\u002Fp\u003E\\n\u003C\u002Fdd\u003E\\n\u003Cdt class=\\\"hdlist1\\\"\u003Ea\u003C\u002Fdt\u003E\\n\u003Cdd\u003E\\n\u003Cp\u003EDirectorio para la aplicación A.\u003C\u002Fp\u003E\\n\u003Cdiv class=\\\"dlist\\\"\u003E\\n\u003Cdl\u003E\\n\u003Cdt class=\\\"hdlist1\\\"\u003EDockerfile\u003C\u002Fdt\u003E\\n\u003Cdd\u003E\\n\u003Cp\u003EArchivo con la configuración del contenedor A.\u003C\u002Fp\u003E\\n\u003C\u002Fdd\u003E\\n\u003C\u002Fdl\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdd\u003E\\n\u003Cdt class=\\\"hdlist1\\\"\u003Eb\u003C\u002Fdt\u003E\\n\u003Cdd\u003E\\n\u003Cp\u003EDirectorio para la aplicación B.\u003C\u002Fp\u003E\\n\u003Cdiv class=\\\"dlist\\\"\u003E\\n\u003Cdl\u003E\\n\u003Cdt class=\\\"hdlist1\\\"\u003EDockerfile\u003C\u002Fdt\u003E\\n\u003Cdd\u003E\\n\u003Cp\u003EArchivo con la configuración del contenedor B.\u003C\u002Fp\u003E\\n\u003C\u002Fdd\u003E\\n\u003C\u002Fdl\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdd\u003E\\n\u003C\u002Fdl\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003E\u003Ca href=\\\"https:\u002F\u002Fgithub.com\u002Fcarlosvin\u002Fdocker-reverse-proxy-multi-domain\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\"\u003EVer proyecto\u003C\u002Fa\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect2\\\"\u003E\\n\u003Ch3 id=\\\"_configuración_de_la_arquitectura_docker_compose\\\"\u003EConfiguración de la arquitectura (docker-compose)\u003C\u002Fh3\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003ELa parte más importante es la configuración de las relaciones entre los contenedores.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003Edocker-reverse-proxy-multi-domain\u002Fdocker-compose.yaml\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-yaml\\\" data-lang=\\\"yaml\\\"\u003E\u003Cspan class=\\\"hljs-attr\\\"\u003Ea:\u003C\u002Fspan\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Ebuild:\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003Ea\u003C\u002Fspan\u003E \u003Cb class=\\\"conum\\\"\u003E(4)\u003C\u002Fb\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Eenvironment:\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-attr\\\"\u003EVIRTUAL_HOST:\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003Ea.domain.com\u003C\u002Fspan\u003E \u003Cb class=\\\"conum\\\"\u003E(1)\u003C\u002Fb\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Erestart:\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003Ealways\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-attr\\\"\u003Eb:\u003C\u002Fspan\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Ebuild:\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003Eb\u003C\u002Fspan\u003E \u003Cb class=\\\"conum\\\"\u003E(5)\u003C\u002Fb\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Eenvironment:\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-attr\\\"\u003EVIRTUAL_HOST:\u003C\u002Fspan\u003E  \u003Cspan class=\\\"hljs-string\\\"\u003Eb.domain.com\u003C\u002Fspan\u003E \u003Cb class=\\\"conum\\\"\u003E(2)\u003C\u002Fb\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Erestart:\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003Ealways\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-attr\\\"\u003Enginx-proxy:\u003C\u002Fspan\u003E \u003Cb class=\\\"conum\\\"\u003E(3)\u003C\u002Fb\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Eimage:\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003Ejwilder\u002Fnginx-proxy\u003C\u002Fspan\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Eports:\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-bullet\\\"\u003E-\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;80:80&quot;\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-bullet\\\"\u003E-\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;443:443&quot;\u003C\u002Fspan\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Evolumes:\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-bullet\\\"\u003E-\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003E\u002Fvar\u002Frun\u002Fdocker.sock:\u002Ftmp\u002Fdocker.sock:ro\u003C\u002Fspan\u003E\\n\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Erestart:\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003Ealways\u003C\u002Fspan\u003E\\n  \u003Cspan class=\\\"hljs-attr\\\"\u003Eprivileged:\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-literal\\\"\u003Etrue\u003C\u002Fspan\u003E\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"colist arabic\\\"\u003E\\n\u003Col\u003E\\n\u003Cli\u003E\\n\u003Cp\u003EConfiguramos el nombre de dominio que queremos utilizar para la aplicación a.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ELo mismo para la aplicación b.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003EA partir de aquí configuramos el proxy (esta es la parte de copiar y pegar).\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003EIndicamos a docker-compose que tiene que construir las imágenes dentro del directorio indicado.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003EPor ejemplo, aquí, estamos indicando que docker-compose tiene que construir la imágen docker utilizando .\u002Fb\u002FDockerfile.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003C\u002Fol\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect2\\\"\u003E\\n\u003Ch3 id=\\\"_configuración_de_la_imágen_de_la_aplicación\\\"\u003EConfiguración de la imágen de la aplicación\u003C\u002Fh3\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EA continuación vamos a comentar la configuración de la imágen del contenedor para la aplicación A.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003Ea\u002FDockerfile\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-docker\\\" data-lang=\\\"docker\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003EFROM\u003C\u002Fspan\u003E httpd:\u003Cspan class=\\\"hljs-number\\\"\u003E2.4\u003C\u002Fspan\u003E \u003Cb class=\\\"conum\\\"\u003E(1)\u003C\u002Fb\u003E\\n\u003Cspan class=\\\"hljs-keyword\\\"\u003ERUN\u003C\u002Fspan\u003E\u003Cspan class=\\\"bash\\\"\u003E \u003Cspan class=\\\"hljs-built_in\\\"\u003Eecho\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;\u002Fh1&gt;App A works!&lt;\u002Fbody&gt;&lt;\u002Fhtml&gt;&quot;\u003C\u002Fspan\u003E &gt; \u002Fusr\u002F\u003Cspan class=\\\"hljs-built_in\\\"\u003Elocal\u003C\u002Fspan\u003E\u002Fapache2\u002Fhtdocs\u002Findex.html \u003C\u002Fspan\u003E\u003Cb class=\\\"conum\\\"\u003E(2)\u003C\u002Fb\u003E\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"colist arabic\\\"\u003E\\n\u003Col\u003E\\n\u003Cli\u003E\\n\u003Cp\u003EImportamos una imágen con un servidor apache.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003EServimos un archivo que muestra \\\"Host A\\\" como página por defecto.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003C\u002Fol\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003ELa configuración para la aplicación B, es prácticamente la misma:\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003Eb\u002FDockerfile\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-docker\\\" data-lang=\\\"docker\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003EFROM\u003C\u002Fspan\u003E httpd:\u003Cspan class=\\\"hljs-number\\\"\u003E2.4\u003C\u002Fspan\u003E\\n\u003Cspan class=\\\"hljs-keyword\\\"\u003ERUN\u003C\u002Fspan\u003E\u003Cspan class=\\\"bash\\\"\u003E \u003Cspan class=\\\"hljs-built_in\\\"\u003Eecho\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;\u002Fh1&gt;App B works!&lt;\u002Fbody&gt;&lt;\u002Fhtml&gt;&quot;\u003C\u002Fspan\u003E &gt; \u002Fusr\u002F\u003Cspan class=\\\"hljs-built_in\\\"\u003Elocal\u003C\u002Fspan\u003E\u002Fapache2\u002Fhtdocs\u002Findex.html\u003C\u002Fspan\u003E\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect2\\\"\u003E\\n\u003Ch3 id=\\\"_añadiendo_los_nombres_de_dominio_a_tu_configuración\\\"\u003EAñadiendo los nombres de dominio a tu configuración\u003C\u002Fh3\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EEn Linux simplemente tenemos mapear la dirección local a los nombres de dominio que hayas elegido, en nuestro ejemplo es \u003Ccode\u003Ea.domain.com\u003C\u002Fcode\u003E y \u003Ccode\u003Eb.domain.com\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003E\u002Fetc\u002Fhosts\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-bash\\\" data-lang=\\\"bash\\\"\u003E127.0.0.1     localhost.localdomain localhost\\n::1             localhost6.localdomain6 localhost6\\n127.0.0.1   a.domain.com \u003Cb class=\\\"conum\\\"\u003E(1)\u003C\u002Fb\u003E\\n127.0.0.1   b.domain.com\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"colist arabic\\\"\u003E\\n\u003Col\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESimplemente he añadido las líneas 4 y 5.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003C\u002Fol\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect2\\\"\u003E\\n\u003Ch3 id=\\\"_todo_listo\\\"\u003E¡Todo listo!\u003C\u002Fh3\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EYa solo nos queda probar el ejemplo.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-bash\\\" data-lang=\\\"bash\\\"\u003Edocker-compose build\\ndocker-compose up\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EYa están las tres contenedores arrancados.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EAhora podemos abrir nuestro navegador y escribir a.domain.com y nos mostrará el texto \u003Cem\u003EApp A works!\u003C\u002Fem\u003E. Si escribimos b.domain.com entonces veremos \u003Cem\u003EApp B works!\u003C\u002Fem\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"imageblock center\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cimg src=\\\"\u002Fposts\u002Freverse-proxy-multidomain-docker\u002Fa.screenshot.png\\\" alt=\\\"App A works!\\\"\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EFigure 1. a.domain.com\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"imageblock center\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cimg src=\\\"\u002Fposts\u002Freverse-proxy-multidomain-docker\u002Fb.screenshot.png\\\" alt=\\\"App B works!\\\"\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EFigure 2. b.domain.com\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"admonitionblock note\\\"\u003E\\n\u003Ctable\u003E\\n\u003Ctr\u003E\\n\u003Ctd class=\\\"icon\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003ENote\u003C\u002Fdiv\u003E\\n\u003C\u002Ftd\u003E\\n\u003Ctd class=\\\"content\\\"\u003E\\nEn la mayoría de distribuciones Linux necesitarás privilegios para ejecutar los comandos docker (\u003Ccode\u003Esudo\u003C\u002Fcode\u003E).\\n\u003C\u002Ftd\u003E\\n\u003C\u002Ftr\u003E\\n\u003C\u002Ftable\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\",\"props\":{\"title\":\"Contenedores Docker multi-dominio\",\"created\":1479931200000,\"modified\":1479931200000,\"filepath\":\"\u002Fhome\u002Fcarlos\u002Fworkspace\u002Fcarlosvin.github.io\u002Fstatic\u002Fposts\u002Freverse-proxy-multidomain-docker\u002Freverse-proxy-multidomain-docker.es.adoc\",\"dirpath\":\"\u002Fhome\u002Fcarlos\u002Fworkspace\u002Fcarlosvin.github.io\u002Fstatic\u002Fposts\u002Freverse-proxy-multidomain-docker\",\"keywords\":[\"Docker\",\"Microservices\"],\"lang\":\"es\",\"otherLangs\":[\"en\"],\"slug\":\"reverse-proxy-multidomain-docker\",\"summary\":\"Cómo crear varios contenedores Docker con diferentes dominios en la misma máquina.\",\"author\":\"Carlos Martin Sanchez\",\"path\":\"\u002Flangs\u002Fes\u002Fposts\u002Freverse-proxy-multidomain-docker\"}}"}</script>
+</div>
+	</body>
+</html>
