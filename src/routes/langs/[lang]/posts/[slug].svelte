@@ -55,8 +55,10 @@
 			async>
 		</script>
 	</div>
-	<a href="/posts/{props.slug}/{props.lang}"> </a>
-	<a href="/posts/{props.slug}"> </a>
+	<!-- svelte-ignore a11y-missing-content -->
+	<a href="/posts/{props.slug}/{props.lang}" />
+	<!-- svelte-ignore a11y-missing-content -->
+	<a href="/posts/{props.slug}" />
 </Content>
 
 <style>
