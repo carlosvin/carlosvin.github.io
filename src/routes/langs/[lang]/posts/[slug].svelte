@@ -55,7 +55,8 @@
 			async>
 		</script>
 	</div>
-	<a href="/posts/{props.slug}/{props.lang}" />
+	<a href="/posts/{props.slug}/{props.lang}"> </a>
+	<a href="/posts/{props.slug}"> </a>
 </Content>
 
 <style>
