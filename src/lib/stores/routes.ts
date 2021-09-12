@@ -7,8 +7,6 @@ export const routes = Object.keys(import.meta.globEager('/src/routes/**/*.svelte
 	.map(file => removeIndex(file))
 	.map(file => path.relative(BASE_PATH, file));
 
-console.log(routes);
-
 function isValid(file: string) {
 	const name = path.basename(file, '.svelte');
 	return name.charAt(0) !== '_' && name !== 'sitemap' && !file.includes('posts/') && !file.includes('categories/');
