@@ -1,6 +1,7 @@
 import { DEFAULT_LANG } from '$lib/conf';
-import { Translations, TranslationsLoader } from '$lib/services/translations';
 import { writable } from 'svelte/store';
+import { TranslationsLoader } from '$lib/services/translations';
+import type { Translations } from '$lib/services/translations';
 
 export function getLang(navigator: Navigator): string {
 	return navigator.language.substring(0, 2);
