@@ -59,6 +59,8 @@
 
 	img.logo {
 		max-height: 1.6em;
+		width: 25px;
+		height: 25px;
 	}
 
 	@media only screen and (max-width: 640px) {
