@@ -5,10 +5,10 @@ import { categoryPath, postPath, url } from '$lib/services/url';
 import { blogStore } from '$lib/stores/blog';
 import { routes } from '$lib/stores/routes';
 
-function urlPage(page: string) {
+function urlPage(page: string, lang: string) {
 	return `
     <url>
-        <loc>${import.meta.env.VITE_BASE_URL}/${page}</loc>
+        <loc>${import.meta.env.VITE_BASE_URL}/${page.replace('[lang]', lang)}</loc>
         <priority>0.6</priority>
     </url>`;
 }
@@ -40,7 +40,7 @@ function urlCategory(name: string, langs: string[]) {
 
 const render = (pages: string[], posts: PostProps[], categories: Category[]) => `
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-	${pages.map((page) => urlPage(page)).join('\r\n')}
+	${blogStore.langs.map(lang => pages.map((page) => urlPage(page, lang))).join('\r\n')}
   	${posts
 			.filter(({ modified }) => modified && !isNaN(modified))
 			.map((post) => urlPost(post))

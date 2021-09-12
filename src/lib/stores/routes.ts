@@ -1,15 +1,23 @@
-import fs from 'fs';
+import path from 'path';
 
-export const routes = [''];
+const BASE_PATH = '/src/routes';
 
-fs.readdirSync('./src/routes').forEach((file) => {
-	file = file.split('.')[0];
-	if (
-		file.charAt(0) !== '_' &&
-		!file.startsWith('sitemap') &&
-		file !== 'index' &&
-		!file.startsWith('[')
-	) {
-		routes.push(file);
+export const routes = Object.keys(import.meta.globEager('/src/routes/**/*.svelte'))
+	.filter((file) => isValid(file))
+	.map(file => removeIndex(file))
+	.map(file => path.relative(BASE_PATH, file));
+
+console.log(routes);
+
+function isValid(file: string) {
+	const name = path.basename(file, '.svelte');
+	return name.charAt(0) !== '_' && name !== 'sitemap' && !file.includes('posts/') && !file.includes('categories/');
+}
+
+function removeIndex (file: string) {
+	const baseName = path.basename(file, '.svelte');
+	if (baseName === 'index') {
+		return path.dirname(file);
 	}
-});
+	return file;
+}
