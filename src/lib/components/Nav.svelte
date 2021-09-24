@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { I18N } from '$lib/stores/lang';
-
 	import NavEntry from '$lib/components/NavEntry.svelte';
+	import { i18n } from '$lib/stores/lang';
 
 	export let segment: string | undefined;
 	export let siteName: string;
@@ -23,7 +22,7 @@
 		<NavEntry href={`/langs/${lang}`} {segment}>
 			<span class="siteName">{siteName}</span>
 		</NavEntry>
-		<NavEntry href={`/langs/${lang}/categories`} {segment}>{I18N.get(lang, 'Categories')}</NavEntry>
+		<NavEntry href={`/langs/${lang}/categories`} {segment}>{i18n.get('Categories')}</NavEntry>
 		<NavEntry href={`/langs/${lang}/about`} {segment}>About</NavEntry>
 	</ul>
 	{#if !open}

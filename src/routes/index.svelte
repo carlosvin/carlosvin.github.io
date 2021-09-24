@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getLang } from '$lib/stores/lang';
+	import { getLang } from '$lib/services/navigator';
 	import { onMount } from 'svelte';
 
 	onMount(async () => {

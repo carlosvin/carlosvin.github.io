@@ -1,17 +1,19 @@
 import { Atom } from '$lib/services/atom';
 import { blogStore } from '$lib/stores/blog';
-import { I18N } from '$lib/stores/lang';
+import { i18n } from '$lib/stores/lang';
+import {get as g} from 'svelte/store';
 
 export function get({ params }) {
 	const { lang } = params;
 	const posts = blogStore.getByLang(lang);
+	
 	const { xml } = new Atom(
-		I18N.get(lang, 'siteName'),
-		I18N.get(lang, 'siteDescription'),
+		g(i18n).get('siteName'),
+		g(i18n).get('siteDescription'),
 		posts,
 		import.meta.env.VITE_BASE_URL,
 		'',
-		I18N.get(lang, 'author')
+		g(i18n).get('author')
 	);
 
 	return {

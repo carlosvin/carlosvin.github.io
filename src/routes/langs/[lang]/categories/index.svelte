@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
-	// import { jsonLdCategories, jsonLdScript} from "../../services/jsonld";
 	import type { IndexResponse, Category } from '$lib/models/interfaces';
+	import { i18n } from '$lib/stores/lang';
 
 	interface Resp {
 		props: {
@@ -15,7 +15,7 @@
 		const { lang } = page.params;
 		const resp: IndexResponse<Category> = await (await fetch(`${page.path}/json`)).json();
 		// TODO const jsonLd = jsonLdScript(jsonLdCategories(categories, title, description, request.path));
-		resp.title = `${resp.title} - ${I18N.get(lang, 'Categories')}`;
+		resp.title = `${resp.title} - ${i18n.get('Categories')}`;
 		resp.description = 'Index of blog categories';
 		return {
 			props: {
@@ -33,7 +33,6 @@
 
 	import Index from '$lib/components/Index.svelte';
 	import Entry from '$lib/components/Entry.svelte';
-	import { I18N } from '$lib/stores/lang';
 
 	export let index: Category[];
 	export let title: string;
@@ -46,7 +45,7 @@
 	<meta name="description" content={description} />
 </svelte:head>
 
-<h1>{I18N.get(lang, 'Categories')}</h1>
+<h1>{title}</h1>
 {#if index}
 	<Index>
 		{#each index as c}

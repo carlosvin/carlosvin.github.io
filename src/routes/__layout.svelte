@@ -1,50 +1,48 @@
-<script context="module">
-	import GoogleAnalytics from '$lib/components/analytics/GoogleAnalytics.svelte';
+<script lang="ts" context="module">
+	import { i18n } from '$lib/stores/lang';
 
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
-	export async function load({ page }) {
-		const lng = page.params.lang;
-		if (lng) {
-			lang.set(lng);
+	export async function load({ page, fetch }) {
+		const { lang } = page.params;
+		if (lang && (lang !== i18n.lang || i18n.lang === undefined)) {
+			const translations = await (await fetch(`/langs/${lang}/translations`)).json();
+			i18n.setLang(lang, translations);
 			if (typeof document !== 'undefined') {
-				document.documentElement.lang = lng;
+				document.documentElement.lang = lang;
 			}
 		}
-		return { props: { path: page.path } };
+		return { props: { path: page.path, lang } };
 	}
 </script>
 
-<script>
+<script lang="ts">
 	import '../app.css';
 	import Nav from '$lib/components/Nav.svelte';
-	import { lang, I18N } from '$lib/stores/lang';
 	import Social from '$lib/components/Social.svelte';
 	import IconLink from '$lib/components/IconLink.svelte';
+	import GoogleAnalytics from '$lib/components/analytics/GoogleAnalytics.svelte';
 
 	export let path = '/';
-	const siteName = I18N.get($lang, 'siteName');
+	export let lang;
 </script>
 
 {#if import.meta.env.PROD}
 	<GoogleAnalytics />
 {/if}
 
-<svelte:head>
-	<title>{siteName}</title>
-</svelte:head>
-
-<Nav segment={path} {siteName} lang={$lang}>
-	<Social>
-		<IconLink
-			icon="rss"
-			href={`/langs/${$lang}/feed.xml`}
-			title={`${I18N.get($lang, 'SubscribeTo')} ${siteName}`}
-		/>
-	</Social>
-</Nav>
-
+{#if lang}
+	<Nav segment={path} siteName={i18n.get('siteName')} lang={i18n.lang}>
+		<Social>
+			<IconLink
+				icon="rss"
+				href={`/langs/${i18n.lang}/feed.xml`}
+				title={`${i18n.get('SubscribeTo')} ${i18n.get('siteName')}`}
+			/>
+		</Social>
+	</Nav>
+{/if}
 <main>
 	<slot />
 </main>

@@ -1,9 +1,9 @@
+
 <script lang="ts">
-	import { I18N } from '$lib/stores/lang';
+	import { i18n } from "$lib/stores/lang";
 
 	export let numPosts: number;
-	export let lang: string;
-	export let title = numPosts > 0 ? I18N.get(lang, 'RecentPosts') : I18N.get(lang, 'NoPosts');
+	export let title = numPosts > 0 ? i18n.get('RecentPosts') : i18n.get('NoPosts');
 </script>
 
 <header>

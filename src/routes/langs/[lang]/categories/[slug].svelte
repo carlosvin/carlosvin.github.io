@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	import type { IndexResponse, PostProps } from '$lib/models/interfaces';
+	import type { IndexResponse, PostProps, Translator } from '$lib/models/interfaces';
 
 	export async function load({ page, fetch }) {
 		const { lang } = page.params;

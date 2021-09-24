@@ -46,7 +46,13 @@ export interface InputMetadata {
 
 export interface IndexResponse<T> {
 	index: T[];
-	title: string;
-	description: string;
 	langs: string[];
+}
+
+export interface Translations {
+	[key: string]: string;
+}
+
+export interface Translator {
+	get(lang: string, key: string): string;
 }

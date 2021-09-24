@@ -1,12 +1,7 @@
 import { DEFAULT_LANG } from '$lib/conf';
-import { writable } from 'svelte/store';
-import { TranslationsLoader } from '$lib/services/translations';
-import type { Translations } from '$lib/services/translations';
-
-export function getLang(navigator: Navigator): string {
-	return navigator.language.substring(0, 2);
-}
-
+import { loadTranslations } from '$lib/services/translations-loader';
+import type { Translations } from '$lib/models/interfaces';
+/*
 function createLangStore() {
 	const { subscribe, set } = writable(DEFAULT_LANG);
 
@@ -22,26 +17,49 @@ function createLangStore() {
 	};
 }
 
-class Translator {
-	private readonly translations: Map<string, Translations>;
+export const lang = createLangStore();
+
+export const i18n = derived(
+	lang,
+	$lang => new TranslatorImpl(loadTranslations($lang)),
+);
+*/
+
+class TranslationsStore {
+	private readonly _translations: Map<string, Translations>;
+	private _lang: string;
 
 	constructor() {
-		this.translations = new Map();
+		this._translations = new Map<string, Translations>();
 	}
 
-	get(lng: string, key: string) {
-		let translationMap: Translations = this.translations.get(lng);
-		if (translationMap === undefined) {
-			translationMap = TranslationsLoader.get(lng);
-			if (translationMap === undefined) {
-				console.error(`There are no translations for ${lng}`);
-				return key;
-			}
-			this.translations.set(lng, translationMap);
+	get(key: string): string {
+		const tr = this._translations.get(this._lang);
+		if (!tr) {
+			throw new Error(`there are no translations for ${this._lang}`);
 		}
-		return translationMap[key] || key;
+		return tr[key] || key;
+	}
+
+	setLang(lang: string, translations: Translations) {
+		if (this._lang !== lang) {
+			this._lang = lang;
+			this._translations.set(this._lang, translations);
+		}
+		return this;
+	}
+
+	get lang() {
+		return this._lang;
+	}
+
+	get siteName () {
+		return this.get('siteName');
+	}
+
+	get siteDescription () {
+		return this.get('siteDescription');
 	}
 }
 
-export const lang = createLangStore();
-export const I18N = new Translator();
+export const i18n = new TranslationsStore();

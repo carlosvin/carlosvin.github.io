@@ -1,6 +1,6 @@
 import type { Category, IndexResponse } from '$lib/models/interfaces';
 import { blogStore } from '$lib/stores/blog';
-import { I18N } from '$lib/stores/lang';
+import { i18n } from '$lib/stores/lang';
 
 const categories = [...blogStore.categories.values()];
 
@@ -14,8 +14,8 @@ export function get({ params }): Resp {
 	return {
 		body: {
 			index: categories,
-			title: I18N.get(lang, 'siteName'),
-			description: I18N.get(lang, 'siteDescription'),
+			title: i18n.get('siteName'),
+			description: i18n.get('siteDescription'),
 			langs: blogStore.langs
 		}
 	};

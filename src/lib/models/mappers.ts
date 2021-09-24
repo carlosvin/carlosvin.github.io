@@ -2,7 +2,7 @@ import type { Post, PostProps } from './interfaces';
 import type { Asciidoctor } from 'asciidoctor';
 import { toSlug } from '$lib/services/slug';
 import { postPath } from '$lib/services/url';
-import { I18N } from '$lib/stores/lang';
+import { AUTHOR } from '$lib/conf';
 
 export class PostPropsImpl implements PostProps {
 	readonly title: string;
@@ -47,7 +47,7 @@ export class PostPropsImpl implements PostProps {
 		this.otherLangs = [];
 		this.slug = finalSlug;
 		this.summary = description || summary;
-		this.author = author || I18N.get(lang, 'author');
+		this.author = author || AUTHOR;
 		this.previewimage = previewimage;
 		this.path = postPath(finalSlug, lang);
 		this.validate();
