@@ -13,7 +13,7 @@
 	import Index from '$lib/components/posts/Index.svelte';
 	import type { IndexResponse, PostProps } from '$lib/models/interfaces';
 	import { i18n } from '$lib/stores/lang';
-	
+
 	export let index: PostProps[];
 	export let lang: string;
 </script>
@@ -23,4 +23,4 @@
 	<meta name="description" content={i18n.siteDescription} />
 </svelte:head>
 
-<Index posts={index} {lang}/>
+<Index posts={index} {lang} />

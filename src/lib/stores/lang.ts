@@ -53,11 +53,11 @@ class TranslationsStore {
 		return this._lang;
 	}
 
-	get siteName () {
+	get siteName() {
 		return this.get('siteName');
 	}
 
-	get siteDescription () {
+	get siteDescription() {
 		return this.get('siteDescription');
 	}
 }

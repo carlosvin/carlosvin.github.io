@@ -5,7 +5,7 @@ import { i18n } from '$lib/stores/lang';
 export function get({ params }) {
 	const { lang } = params;
 	const posts = blogStore.getByLang(lang);
-	
+
 	const { xml } = new Atom(
 		i18n.get('siteName'),
 		i18n.get('siteDescription'),

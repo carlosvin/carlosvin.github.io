@@ -1,4 +1,4 @@
-import type { Translations, Translator } from "$lib/models/interfaces";
+import type { Translations, Translator } from '$lib/models/interfaces';
 
 export class TranslatorImpl implements Translator {
 	private readonly translations: Translations;
