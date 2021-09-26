@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Crear un plugin para Maven: default lifecycle</title><!-- HTML_TAG_START -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-1328360-10', 'auto');
+	</script>
+	<!-- HTML_TAG_END --><meta name="date.created" content="2020-05-09T13:00:00.000Z" data-svelte="svelte-1lps7vh"><meta name="date.updated" content="2020-05-09T13:00:00.000Z" data-svelte="svelte-1lps7vh"><meta name="description" content="Cómo crear un plugin Maven personalizado que sobrescribe el ciclo de vida de compilación predeterminado" data-svelte="svelte-1lps7vh"><link rel="alternate" hreflang="en" href="/langs/en/posts/creating-custom-maven-plugin-default" data-svelte="svelte-1lps7vh"><link rel="alternate" href="/langs/es/posts/creating-custom-maven-plugin-default.ld.json" type="application/ld+json" data-svelte="svelte-1lps7vh">
+
+		
+
+		<link rel="modulepreload" href="/_app/start-94e646ee.js">
+		<link rel="modulepreload" href="/_app/chunks/vendor-aa34231d.js">
+		<link rel="modulepreload" href="/_app/chunks/singletons-12a22614.js">
+		<link rel="modulepreload" href="/_app/pages/__layout.svelte-f31ebd1c.js">
+		<link rel="modulepreload" href="/_app/chunks/lang-cab22388.js">
+		<link rel="modulepreload" href="/_app/chunks/conf-318ca8e3.js">
+		<link rel="modulepreload" href="/_app/chunks/Social-3a966442.js">
+		<link rel="modulepreload" href="/_app/chunks/IconLink-efcd0a43.js">
+		<link rel="modulepreload" href="/_app/pages/langs/[lang]/posts/[slug].svelte-a29f0a3a.js">
+		<link rel="modulepreload" href="/_app/chunks/url-28a36952.js">
+		<link rel="modulepreload" href="/_app/chunks/Details-901e127c.js">
+		<link rel="stylesheet" href="/_app/assets/start-61d1577b.css">
+		<link rel="stylesheet" href="/_app/assets/pages/__layout.svelte-f58ef34b.css">
+		<link rel="stylesheet" href="/_app/assets/Social-7f1225f5.css">
+		<link rel="stylesheet" href="/_app/assets/IconLink-678181d0.css">
+		<link rel="stylesheet" href="/_app/assets/pages/langs/[lang]/posts/[slug].svelte-ae23d8c4.css">
+		<link rel="stylesheet" href="/_app/assets/Details-dd2367f4.css">
+
+		<script type="module">
+			import { start } from "/_app/start-94e646ee.js";
+			start({
+				target: document.querySelector("#svelte"),
+				paths: {"base":"","assets":""},
+				session: {},
+				host: location.host,
+				route: true,
+				spa: false,
+				trailing_slash: "never",
+				hydrate: {
+					status: 200,
+					error: null,
+					nodes: [
+						import("/_app/pages/__layout.svelte-f31ebd1c.js"),
+						import("/_app/pages/langs/[lang]/posts/[slug].svelte-a29f0a3a.js")
+					],
+					page: {
+						host: location.host, // TODO this is redundant
+						path: "/langs/es/posts/creating-custom-maven-plugin-default",
+						query: new URLSearchParams(""),
+						params: {"lang":"es","slug":"creating-custom-maven-plugin-default"}
+					}
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div id="svelte">
+
+
+
+
+
+
+<nav class="svelte-1kqmhwi"><ul class="svelte-1kqmhwi"><li class="svelte-1nihsj5"><a href="/langs/es" rel="prefetch" class="svelte-1nihsj5"><img class="logo svelte-1kqmhwi" src="/favicon.png" alt="Carlos dice bla bla logo"></a>
+</li></ul>
+	<ul class="closed svelte-1kqmhwi"><li class="svelte-1nihsj5"><a href="/langs/es" rel="prefetch" class="svelte-1nihsj5"><span class="siteName">Carlos dice bla bla</span></a>
+</li>
+<li class="svelte-1nihsj5"><a href="/langs/es/categories" rel="prefetch" class="svelte-1nihsj5">Categorías</a>
+</li>
+<li class="svelte-1nihsj5"><a href="/langs/es/about" rel="prefetch" class="svelte-1nihsj5">About</a>
+</li></ul>
+	<div class="h svelte-geb0ta"><a href="/langs/es/feed.xml" target="_blank" class="icon rss svelte-blgowr" title="Suscríbete a Carlos dice bla bla" rel="noopener" aria-label="Suscríbete a Carlos dice bla bla">
+</a>
+	<a href="https://github.com/carlosvin" target="_blank" class="icon github svelte-blgowr" title="Find me at github" rel="noopener" aria-label="Find me at github">
+</a>
+	<a href="https://twitter.com/carlosvin" target="_blank" class="icon twitter svelte-blgowr" title="Find me at twitter" rel="noopener" aria-label="Find me at twitter">
+</a>
+	<a href="https://stackoverflow.com/story/carlosvin" target="_blank" class="icon stackoverflow svelte-blgowr" title="Find me at stackoverflow" rel="noopener" aria-label="Find me at stackoverflow">
+</a>
+</div>
+	<button type="button" class="svelte-1kqmhwi">≡</button>
+</nav>
+
+<main class="svelte-1m42syy">
+
+<header class="svelte-1ikjkmw"><h1 class="svelte-1ikjkmw">Crear un plugin para Maven: default lifecycle
+<span class="share svelte-1ikjkmw"><a href="https://twitter.com/intent/tweet?url=/langs/es/posts/creating-custom-maven-plugin-default&amp;text=Crear un plugin para Maven: default lifecycle:&amp;nbsp;Cómo crear un plugin Maven personalizado que sobrescribe el ciclo de vida de compilación predeterminado&amp;hashtags=Maven,Java,Build Systems,Maven Plugins" target="_blank" class="icon twitter svelte-blgowr" title="Share &quot;Crear un plugin para Maven: default lifecycle&quot;" rel="noopener" aria-label="Share &quot;Crear un plugin para Maven: default lifecycle&quot;">
+</a></span></h1>
+	<p class="summary svelte-1ikjkmw">Cómo crear un plugin Maven personalizado que sobrescribe el ciclo de vida de compilación predeterminado</p>
+	<div class="subtitle svelte-1s3ascd"><span class="date">09/05/2020</span>
+	<span class="tags svelte-ym0wdt"><a href="/langs/es/categories/maven" title="Maven" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Maven
+</span>
+</a><a href="/langs/es/categories/java" title="Java" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Java
+</span>
+</a><a href="/langs/es/categories/build-systems" title="Build Systems" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Build Systems
+</span>
+</a><a href="/langs/es/categories/maven-plugins" title="Maven Plugins" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Maven Plugins
+</span>
+</a></span>
+</div></header>
+
+<div class="postContent"><!-- HTML_TAG_START --><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ya expliqué en el articulo <a href="/posts/creating-custom-maven-plugin">cómo crear un plugin para Maven</a> which <a href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle">que sobrescribe el ciclo de vida "site"</a>.</p>
+</div>
+<div class="paragraph">
+<p>He creado otro ejemplo que demuestra cómo sobrescribir <a href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#default_Lifecycle">el ciclo de via que utliza Maven por defecto</a>. Éste es utilizado para construir, probar, empaquetar y distribuir un proyecto software, por ejemplo, estamos utilizando el ciclo de vida por defecto cuando ejecutamos <code>mvn install</code> en un proyecto del tipo <code>jar</code>.</p>
+</div>
+<div class="paragraph">
+<p>Puedes encontrar el código fuente del ejemplo en <a href="https://github.com/carlosvin/lifecycle-maven-plugin" class="bare">https://github.com/carlosvin/lifecycle-maven-plugin</a>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+También he creado un <a href="https://maven.apache.org/guides/introduction/introduction-to-archetypes.html" target="_blank" rel="noopener">arquetipo (archetype)</a> de forma que fácilmente puedes probar el ejemplo.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generar_un_proyecto_de_ejemplo">Generar un proyecto de ejemplo</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">Generar un proyecto utilizando el arquetipo</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn archetype:generate \
+  -DarchetypeGroupId=com.github.carlosvin.archetype \
+  -DartifactId=lifecycle-maven-plugin-archetype \
+  -DarchetypeVersion=0.6</code></pre>
+</div>
+</div>
+</div>
+</div><!-- HTML_TAG_END -->
+	<div class="comments"><script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async></script></div>
+	
+	<a href="/posts/creating-custom-maven-plugin-default/es"></a>
+	
+	<a href="/posts/creating-custom-maven-plugin-default"></a>
+</div>
+</main>
+
+
+
+	<script type="application/json" data-type="svelte-data" data-url="/langs/es/posts/creating-custom-maven-plugin-default.json">{"status":200,"statusText":"","headers":{"content-type":"application/json; charset=utf-8"},"body":"{\"html\":\"\u003Cdiv id=\\\"preamble\\\"\u003E\\n\u003Cdiv class=\\\"sectionbody\\\"\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EYa expliqué en el articulo \u003Ca href=\\\"\u002Fposts\u002Fcreating-custom-maven-plugin\\\"\u003Ecómo crear un plugin para Maven\u003C\u002Fa\u003E which \u003Ca href=\\\"https:\u002F\u002Fmaven.apache.org\u002Fref\u002F3.5.3\u002Fmaven-core\u002Flifecycles.html#site_Lifecycle\\\"\u003Eque sobrescribe el ciclo de vida \\\"site\\\"\u003C\u002Fa\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EHe creado otro ejemplo que demuestra cómo sobrescribir \u003Ca href=\\\"https:\u002F\u002Fmaven.apache.org\u002Fref\u002F3.5.3\u002Fmaven-core\u002Flifecycles.html#default_Lifecycle\\\"\u003Eel ciclo de via que utliza Maven por defecto\u003C\u002Fa\u003E. Éste es utilizado para construir, probar, empaquetar y distribuir un proyecto software, por ejemplo, estamos utilizando el ciclo de vida por defecto cuando ejecutamos \u003Ccode\u003Emvn install\u003C\u002Fcode\u003E en un proyecto del tipo \u003Ccode\u003Ejar\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EPuedes encontrar el código fuente del ejemplo en \u003Ca href=\\\"https:\u002F\u002Fgithub.com\u002Fcarlosvin\u002Flifecycle-maven-plugin\\\" class=\\\"bare\\\"\u003Ehttps:\u002F\u002Fgithub.com\u002Fcarlosvin\u002Flifecycle-maven-plugin\u003C\u002Fa\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"admonitionblock tip\\\"\u003E\\n\u003Ctable\u003E\\n\u003Ctr\u003E\\n\u003Ctd class=\\\"icon\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003ETip\u003C\u002Fdiv\u003E\\n\u003C\u002Ftd\u003E\\n\u003Ctd class=\\\"content\\\"\u003E\\nTambién he creado un \u003Ca href=\\\"https:\u002F\u002Fmaven.apache.org\u002Fguides\u002Fintroduction\u002Fintroduction-to-archetypes.html\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\"\u003Earquetipo (archetype)\u003C\u002Fa\u003E de forma que fácilmente puedes probar el ejemplo.\\n\u003C\u002Ftd\u003E\\n\u003C\u002Ftr\u003E\\n\u003C\u002Ftable\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect1\\\"\u003E\\n\u003Ch2 id=\\\"_generar_un_proyecto_de_ejemplo\\\"\u003EGenerar un proyecto de ejemplo\u003C\u002Fh2\u003E\\n\u003Cdiv class=\\\"sectionbody\\\"\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EGenerar un proyecto utilizando el arquetipo\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-bash\\\" data-lang=\\\"bash\\\"\u003Emvn archetype:generate \\\\\\n  -DarchetypeGroupId=com.github.carlosvin.archetype \\\\\\n  -DartifactId=lifecycle-maven-plugin-archetype \\\\\\n  -DarchetypeVersion=0.6\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\",\"props\":{\"title\":\"Crear un plugin para Maven: default lifecycle\",\"created\":1589029200000,\"modified\":1589029200000,\"filepath\":\"\u002Fhome\u002Fcarlos\u002Fworkspace\u002Fblablablog\u002Fposts\u002Fcreating-custom-maven-plugin-default.es.adoc\",\"dirpath\":\"\u002Fhome\u002Fcarlos\u002Fworkspace\u002Fblablablog\u002Fposts\",\"keywords\":[\"Maven\",\"Java\",\"Build Systems\",\"Maven Plugins\"],\"lang\":\"es\",\"otherLangs\":[\"en\"],\"slug\":\"creating-custom-maven-plugin-default\",\"summary\":\"Cómo crear un plugin Maven personalizado que sobrescribe el ciclo de vida de compilación predeterminado\",\"author\":\"Carlos Martin Sanchez\",\"path\":\"\u002Flangs\u002Fes\u002Fposts\u002Fcreating-custom-maven-plugin-default\"}}"}</script>
+</div>
+	</body>
+</html>

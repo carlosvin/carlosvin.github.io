@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>C++ Struct memory alignment</title><!-- HTML_TAG_START -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-1328360-10', 'auto');
+	</script>
+	<!-- HTML_TAG_END --><meta name="date.created" content="2012-11-26T11:00:00.000Z" data-svelte="svelte-1lps7vh"><meta name="date.updated" content="2012-11-26T11:00:00.000Z" data-svelte="svelte-1lps7vh"><meta name="description" content="Understanding pragma pack preprocessor directive and how it affects to memory alignment" data-svelte="svelte-1lps7vh"><link rel="alternate" hreflang="es" href="/langs/es/posts/cpp-pragma-pack" data-svelte="svelte-1lps7vh"><link rel="alternate" href="/langs/en/posts/cpp-pragma-pack.ld.json" type="application/ld+json" data-svelte="svelte-1lps7vh">
+
+		
+
+		<link rel="modulepreload" href="/_app/start-94e646ee.js">
+		<link rel="modulepreload" href="/_app/chunks/vendor-aa34231d.js">
+		<link rel="modulepreload" href="/_app/chunks/singletons-12a22614.js">
+		<link rel="modulepreload" href="/_app/pages/__layout.svelte-f31ebd1c.js">
+		<link rel="modulepreload" href="/_app/chunks/lang-cab22388.js">
+		<link rel="modulepreload" href="/_app/chunks/conf-318ca8e3.js">
+		<link rel="modulepreload" href="/_app/chunks/Social-3a966442.js">
+		<link rel="modulepreload" href="/_app/chunks/IconLink-efcd0a43.js">
+		<link rel="modulepreload" href="/_app/pages/langs/[lang]/posts/[slug].svelte-a29f0a3a.js">
+		<link rel="modulepreload" href="/_app/chunks/url-28a36952.js">
+		<link rel="modulepreload" href="/_app/chunks/Details-901e127c.js">
+		<link rel="stylesheet" href="/_app/assets/start-61d1577b.css">
+		<link rel="stylesheet" href="/_app/assets/pages/__layout.svelte-f58ef34b.css">
+		<link rel="stylesheet" href="/_app/assets/Social-7f1225f5.css">
+		<link rel="stylesheet" href="/_app/assets/IconLink-678181d0.css">
+		<link rel="stylesheet" href="/_app/assets/pages/langs/[lang]/posts/[slug].svelte-ae23d8c4.css">
+		<link rel="stylesheet" href="/_app/assets/Details-dd2367f4.css">
+
+		<script type="module">
+			import { start } from "/_app/start-94e646ee.js";
+			start({
+				target: document.querySelector("#svelte"),
+				paths: {"base":"","assets":""},
+				session: {},
+				host: location.host,
+				route: true,
+				spa: false,
+				trailing_slash: "never",
+				hydrate: {
+					status: 200,
+					error: null,
+					nodes: [
+						import("/_app/pages/__layout.svelte-f31ebd1c.js"),
+						import("/_app/pages/langs/[lang]/posts/[slug].svelte-a29f0a3a.js")
+					],
+					page: {
+						host: location.host, // TODO this is redundant
+						path: "/langs/en/posts/cpp-pragma-pack",
+						query: new URLSearchParams(""),
+						params: {"lang":"en","slug":"cpp-pragma-pack"}
+					}
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div id="svelte">
+
+
+
+
+
+
+<nav class="svelte-1kqmhwi"><ul class="svelte-1kqmhwi"><li class="svelte-1nihsj5"><a href="/langs/en" rel="prefetch" class="svelte-1nihsj5"><img class="logo svelte-1kqmhwi" src="/favicon.png" alt="Carlos Say&#39;s Bla Bla logo"></a>
+</li></ul>
+	<ul class="closed svelte-1kqmhwi"><li class="svelte-1nihsj5"><a href="/langs/en" rel="prefetch" class="svelte-1nihsj5"><span class="siteName">Carlos Say&#39;s Bla Bla</span></a>
+</li>
+<li class="svelte-1nihsj5"><a href="/langs/en/categories" rel="prefetch" class="svelte-1nihsj5">Categories</a>
+</li>
+<li class="svelte-1nihsj5"><a href="/langs/en/about" rel="prefetch" class="svelte-1nihsj5">About</a>
+</li></ul>
+	<div class="h svelte-geb0ta"><a href="/langs/en/feed.xml" target="_blank" class="icon rss svelte-blgowr" title="Subscribe to Carlos Say&#39;s Bla Bla" rel="noopener" aria-label="Subscribe to Carlos Say&#39;s Bla Bla">
+</a>
+	<a href="https://github.com/carlosvin" target="_blank" class="icon github svelte-blgowr" title="Find me at github" rel="noopener" aria-label="Find me at github">
+</a>
+	<a href="https://twitter.com/carlosvin" target="_blank" class="icon twitter svelte-blgowr" title="Find me at twitter" rel="noopener" aria-label="Find me at twitter">
+</a>
+	<a href="https://stackoverflow.com/story/carlosvin" target="_blank" class="icon stackoverflow svelte-blgowr" title="Find me at stackoverflow" rel="noopener" aria-label="Find me at stackoverflow">
+</a>
+</div>
+	<button type="button" class="svelte-1kqmhwi">≡</button>
+</nav>
+
+<main class="svelte-1m42syy">
+
+<header class="svelte-1ikjkmw"><h1 class="svelte-1ikjkmw">C++ Struct memory alignment
+<span class="share svelte-1ikjkmw"><a href="https://twitter.com/intent/tweet?url=/langs/en/posts/cpp-pragma-pack&amp;text=C++ Struct memory alignment:&amp;nbsp;Understanding pragma pack preprocessor directive and how it affects to memory alignment&amp;hashtags=C++,Performance,Compilers,Memory" target="_blank" class="icon twitter svelte-blgowr" title="Share &quot;C++ Struct memory alignment&quot;" rel="noopener" aria-label="Share &quot;C++ Struct memory alignment&quot;">
+</a></span></h1>
+	<p class="summary svelte-1ikjkmw">Understanding pragma pack preprocessor directive and how it affects to memory alignment</p>
+	<div class="subtitle svelte-1s3ascd"><span class="date">26/11/2012</span>
+	<span class="tags svelte-ym0wdt"><a href="/langs/en/categories/c" title="C++" class="svelte-dagte2"><span class="hover svelte-1kmrl92">C++
+</span>
+</a><a href="/langs/en/categories/performance" title="Performance" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Performance
+</span>
+</a><a href="/langs/en/categories/compilers" title="Compilers" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Compilers
+</span>
+</a><a href="/langs/en/categories/memory" title="Memory" class="svelte-dagte2"><span class="hover svelte-1kmrl92">Memory
+</span>
+</a></span>
+</div></header>
+
+<div class="postContent"><!-- HTML_TAG_START --><div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_struct_example">Struct example</a></li>
+<li><a href="#_pragma_pack_directive_in_c_struct">#pragma pack directive in C++ struct</a></li>
+<li><a href="#_performance_test">Performance test</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>A C++ struct is an element that groups attributes with different types so we can manipulate them all together using same reference. It is like a class with public visibility by default for functions and attributes.</p>
+</div>
+<div class="paragraph">
+<p>If we want to work in a lower level, closer to machine, it might be useful understand how that data structure is stored in memory and how to control that mapping.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_struct_example">Struct example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It has two attributes: an integer (4 bytes) and a boolean (1 byte).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStruct</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we get the instance size using <code>sizeof</code> we should get 5 bytes size and memory would be like:</p>
+</div>
+<div id="5-bytes" class="imageblock center">
+<div class="content">
+<img src="/posts/cpp-pragma-pack/5b.png" alt="5Bytes" width="200" height="auto">
+</div>
+<div class="title">Figure 1. 5 bytes struct which uses 5 bytes in memory</div>
+</div>
+<div class="paragraph">
+<p><strong>But</strong> is not that simple, memory alignment depends on compiler and system. We will learn how to control compiler alignment policy, so we can avoid getting unexpected allocation memory sizes.</p>
+</div>
+<div class="paragraph">
+<p>For example, in my local host, if I get the <code>sizeof</code> the previous structure without <code>pragma</code> declarations, <strong>I get a 8 bytes size</strong>. We are getting 8 Bytes instead of expected 5 Bytes because the compiler allocates more memory at the end of structure so it fits in 2n bytes blocks. Memory actually looks like:</p>
+</div>
+<div id="8-bytes" class="imageblock center">
+<div class="content">
+<img src="/posts/cpp-pragma-pack/8b.png" alt="5Bytes" width="200" height="auto">
+</div>
+<div class="title">Without pragma: 5 bytes structure that actually spends 8 bytes in memory</div>
+</div>
+<div class="listingblock">
+<div class="title">It prints structure and attributes size, in this case <strong>4 + 1 is not 5</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span>  <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStruct</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">print</span> <span class="hljs-params">(<span class="hljs-keyword">size_t</span> sz, <span class="hljs-keyword">size_t</span> sz_flag, <span class="hljs-keyword">size_t</span> sz_timeout)</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot;\tflag: &quot;</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t+&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\ttimeout: &quot;</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t=&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t&quot;</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt;<span class="hljs-string">&quot;sizeof struct:  &quot;</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStruct&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStruct), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStruct::flag), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStruct::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://coliru.stacked-crooked.com/a/7c18ee6585e57366">Executing code with pragma pack directive</a>: We get 8 bytes instead of 5 bytes</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStruct
+flag: 1 Bytes
++
+timeout: 4 Bytes
+=
+5 Bytes
+sizeof struct:  8 Bytes
+--</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+If we want to know the exact structure size we have to specify compiler how to align the memory, to do so we have <code>#pragma pack(n)</code> directive.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pragma_pack_directive_in_c_struct">#pragma pack directive in C++ struct</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It is a preprocessor directive to indicate to compiler how to align data in memory.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example with different memory alignment configurations</div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">print</span> <span class="hljs-params">(<span class="hljs-keyword">size_t</span> sz, <span class="hljs-keyword">size_t</span> sz_flag, <span class="hljs-keyword">size_t</span> sz_timeout)</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot; flag: &quot;</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span>&lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; +&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; timeout: &quot;</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">&quot;Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; =&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">&quot;Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; sizeof struct:  &quot;</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (1)</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStructPack1</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (2)</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStructPack2</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (4)</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStructPack4</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack(0)</span>
+
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStruct</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span>
+</span>{
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack1&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack1), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack1::flag), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack1::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack2&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack2), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack2::flag), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack2::timeout));
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack4&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack4), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack4::flag), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStructPack4::timeout));
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStruct&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStruct), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStruct::flag), <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SampleStruct::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://coliru.stacked-crooked.com/a/7c18ee6585e57366">Executing code with pragma pack directive</a>, we have different results depending of pragma value.</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStructPack1 <b class="conum">(1)</b>
+ flag: 1 Bytes
+ +
+ timeout: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  5 Bytes
+ --
+
+SampleStructPack2 <b class="conum">(2)</b>
+ flag: 1 Bytes
+ +
+ timeout: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  6 Bytes
+
+SampleStructPack4 <b class="conum">(3)</b>
+ flag: 1 Bytes
+ +
+ timeout: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  8 Bytes
+
+SampleStruct <b class="conum">(4)</b>
+ flag: 1 Bytes
+ +
+ timeout: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  8 Bytes</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>SampleStructPack1 <code>#pragma pack (1)</code>: It allocates 1 byte memory block, so our sample struct fits perfectly, in this case it is true that <code>4 + 1 = 5</code>.</p>
+</li>
+<li>
+<p>SampleStructPack2 <code>#pragma pack (2)</code>: Minimum block size is 2 bytes. Integer attribute fits because it just needs 2 blocks of 2 Bytes. Boolean attribute needs just 1 Byte, but minimum block size is 2 Bytes, that&#8217;s why total allocated memory is 6 bytes, <code>4 + 2 = 6</code>.</p>
+</li>
+<li>
+<p>SampleStructPack4 <code>#pragma pack (4)</code>: It is like previous one, but in this case we are wasting more memory for boolean attribute, it needs 1 Byte, but we are allocating 4 Bytes.</p>
+</li>
+<li>
+<p>SampleStruct (default compiler alignment): As you can see it behaves exactly like <code>#pragma pack (4)</code>, so we can deduct it is the default compiler alignment.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+Why don&#8217;t we always use smallest memory alignment (<code>#pragma pack (1)</code>) so we can save more memory?
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Because of performance loss.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_performance_test">Performance test</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The test will allocate same number of elements in arrays for each structure type (1, 2, 4).</p>
+</div>
+<div class="listingblock">
+<div class="title">Test results: <a href="https://coliru.stacked-crooked.com/a/954ad542659c7591">execute performance test</a></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStructPack1: 500000000000000000 bytes allocated <span class="hljs-keyword">in</span> 94311 nanoseconds
+SampleStructPack2: 600000000000000000 bytes allocated <span class="hljs-keyword">in</span> 1777 nanoseconds
+SampleStructPack4: 800000000000000000 bytes allocated <span class="hljs-keyword">in</span> 1519 nanoseconds</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, the smallest memory alignment spends more time allocating and releasing memory.</p>
+</div>
+<div class="listingblock">
+<div class="title">Performance test source code:</div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;chrono&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (1)</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStructPack1</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (2)</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStructPack2</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack (4)</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStructPack4</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> pack(0)</span>
+
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SampleStruct</span>
+{</span>
+    <span class="hljs-keyword">bool</span> flag;
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> timeout;
+};
+
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">long</span> MAX_ELEMENTS = <span class="hljs-number">100000000000000000</span>;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std::chrono;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">allocate1</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack1 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack1: &quot;</span> &lt;&lt; <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">allocate2</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack2 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack2: &quot;</span> &lt;&lt; <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">allocate4</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack4 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack4: &quot;</span> &lt;&lt; <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">chrono1</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate1</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">chrono2</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate2</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">chrono4</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate4</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span>
+</span>{
+    <span class="hljs-built_in">chrono1</span>();
+    <span class="hljs-built_in">chrono2</span>();
+    <span class="hljs-built_in">chrono4</span>();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+</div>
+</div><!-- HTML_TAG_END -->
+	<div class="comments"><script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async></script></div>
+	
+	<a href="/posts/cpp-pragma-pack/en"></a>
+	
+	<a href="/posts/cpp-pragma-pack"></a>
+</div>
+</main>
+
+
+
+	<script type="application/json" data-type="svelte-data" data-url="/langs/en/posts/cpp-pragma-pack.json">{"status":200,"statusText":"","headers":{"content-type":"application/json; charset=utf-8"},"body":"{\"html\":\"\u003Cdiv id=\\\"toc\\\" class=\\\"toc\\\"\u003E\\n\u003Cdiv id=\\\"toctitle\\\"\u003ETable of Contents\u003C\u002Fdiv\u003E\\n\u003Cul class=\\\"sectlevel1\\\"\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_struct_example\\\"\u003EStruct example\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_pragma_pack_directive_in_c_struct\\\"\u003E#pragma pack directive in C++ struct\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003Cli\u003E\u003Ca href=\\\"#_performance_test\\\"\u003EPerformance test\u003C\u002Fa\u003E\u003C\u002Fli\u003E\\n\u003C\u002Ful\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv id=\\\"preamble\\\"\u003E\\n\u003Cdiv class=\\\"sectionbody\\\"\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EA C++ struct is an element that groups attributes with different types so we can manipulate them all together using same reference. It is like a class with public visibility by default for functions and attributes.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EIf we want to work in a lower level, closer to machine, it might be useful understand how that data structure is stored in memory and how to control that mapping.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect1\\\"\u003E\\n\u003Ch2 id=\\\"_struct_example\\\"\u003EStruct example\u003C\u002Fh2\u003E\\n\u003Cdiv class=\\\"sectionbody\\\"\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EIt has two attributes: an integer (4 bytes) and a boolean (1 byte).\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-c++\\\" data-lang=\\\"c++\\\"\u003E\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStruct\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EIf we get the instance size using \u003Ccode\u003Esizeof\u003C\u002Fcode\u003E we should get 5 bytes size and memory would be like:\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv id=\\\"5-bytes\\\" class=\\\"imageblock center\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cimg src=\\\"\u002Fposts\u002Fcpp-pragma-pack\u002F5b.png\\\" alt=\\\"5Bytes\\\" width=\\\"200\\\" height=\\\"auto\\\"\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EFigure 1. 5 bytes struct which uses 5 bytes in memory\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003E\u003Cstrong\u003EBut\u003C\u002Fstrong\u003E is not that simple, memory alignment depends on compiler and system. We will learn how to control compiler alignment policy, so we can avoid getting unexpected allocation memory sizes.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EFor example, in my local host, if I get the \u003Ccode\u003Esizeof\u003C\u002Fcode\u003E the previous structure without \u003Ccode\u003Epragma\u003C\u002Fcode\u003E declarations, \u003Cstrong\u003EI get a 8 bytes size\u003C\u002Fstrong\u003E. We are getting 8 Bytes instead of expected 5 Bytes because the compiler allocates more memory at the end of structure so it fits in 2n bytes blocks. Memory actually looks like:\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv id=\\\"8-bytes\\\" class=\\\"imageblock center\\\"\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cimg src=\\\"\u002Fposts\u002Fcpp-pragma-pack\u002F8b.png\\\" alt=\\\"5Bytes\\\" width=\\\"200\\\" height=\\\"auto\\\"\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EWithout pragma: 5 bytes structure that actually spends 8 bytes in memory\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EIt prints structure and attributes size, in this case \u003Cstrong\u003E4 + 1 is not 5\u003C\u002Fstrong\u003E\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-c++\\\" data-lang=\\\"c++\\\"\u003E\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Einclude\u003C\u002Fspan\u003E  \u003Cspan class=\\\"hljs-meta-string\\\"\u003E&lt;iostream&gt;\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-keyword\\\"\u003Eusing\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Enamespace\u003C\u002Fspan\u003E std;\\n\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStruct\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estatic\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Evoid\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Eprint\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-params\\\"\u003E(\u003Cspan class=\\\"hljs-keyword\\\"\u003Esize_t\u003C\u002Fspan\u003E sz, \u003Cspan class=\\\"hljs-keyword\\\"\u003Esize_t\u003C\u002Fspan\u003E sz_flag, \u003Cspan class=\\\"hljs-keyword\\\"\u003Esize_t\u003C\u002Fspan\u003E sz_timeout)\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;\\\\tflag: &quot;\u003C\u002Fspan\u003E &lt;&lt; sz_flag &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; Bytes&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;\\\\t+&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;\\\\ttimeout: &quot;\u003C\u002Fspan\u003E &lt;&lt; sz_timeout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; Bytes&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;\\\\t=&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;\\\\t&quot;\u003C\u002Fspan\u003E &lt;&lt; sz_timeout + sz_flag &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; Bytes&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt;\u003Cspan class=\\\"hljs-string\\\"\u003E&quot;sizeof struct:  &quot;\u003C\u002Fspan\u003E &lt;&lt; sz &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; Bytes&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n}\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Emain\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E(\u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E argc, \u003Cspan class=\\\"hljs-keyword\\\"\u003Echar\u003C\u002Fspan\u003E *argv[])\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;SampleStruct&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Eprint\u003C\u002Fspan\u003E (\u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStruct), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStruct::flag), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStruct::timeout));\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; -- &quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ereturn\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-number\\\"\u003E0\u003C\u002Fspan\u003E;\\n}\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003E\u003Ca href=\\\"https:\u002F\u002Fcoliru.stacked-crooked.com\u002Fa\u002F7c18ee6585e57366\\\"\u003EExecuting code with pragma pack directive\u003C\u002Fa\u003E: We get 8 bytes instead of 5 bytes\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-bash\\\" data-lang=\\\"bash\\\"\u003ESampleStruct\\nflag: 1 Bytes\\n+\\ntimeout: 4 Bytes\\n=\\n5 Bytes\\nsizeof struct:  8 Bytes\\n--\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"admonitionblock tip\\\"\u003E\\n\u003Ctable\u003E\\n\u003Ctr\u003E\\n\u003Ctd class=\\\"icon\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003ETip\u003C\u002Fdiv\u003E\\n\u003C\u002Ftd\u003E\\n\u003Ctd class=\\\"content\\\"\u003E\\nIf we want to know the exact structure size we have to specify compiler how to align the memory, to do so we have \u003Ccode\u003E#pragma pack(n)\u003C\u002Fcode\u003E directive.\\n\u003C\u002Ftd\u003E\\n\u003C\u002Ftr\u003E\\n\u003C\u002Ftable\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect1\\\"\u003E\\n\u003Ch2 id=\\\"_pragma_pack_directive_in_c_struct\\\"\u003E#pragma pack directive in C++ struct\u003C\u002Fh2\u003E\\n\u003Cdiv class=\\\"sectionbody\\\"\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EIt is a preprocessor directive to indicate to compiler how to align data in memory.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EExample with different memory alignment configurations\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-c++\\\" data-lang=\\\"c++\\\"\u003E\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Einclude\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-meta-string\\\"\u003E&lt;iostream&gt;\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-keyword\\\"\u003Eusing\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Enamespace\u003C\u002Fspan\u003E std;\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estatic\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Evoid\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Eprint\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-params\\\"\u003E(\u003Cspan class=\\\"hljs-keyword\\\"\u003Esize_t\u003C\u002Fspan\u003E sz, \u003Cspan class=\\\"hljs-keyword\\\"\u003Esize_t\u003C\u002Fspan\u003E sz_flag, \u003Cspan class=\\\"hljs-keyword\\\"\u003Esize_t\u003C\u002Fspan\u003E sz_timeout)\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; flag: &quot;\u003C\u002Fspan\u003E &lt;&lt; sz_flag &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; Bytes&quot;\u003C\u002Fspan\u003E&lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; +&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; timeout: &quot;\u003C\u002Fspan\u003E &lt;&lt; sz_timeout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;Bytes&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; =&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; &quot;\u003C\u002Fspan\u003E &lt;&lt; sz_timeout + sz_flag &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;Bytes&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; sizeof struct:  &quot;\u003C\u002Fspan\u003E &lt;&lt; sz &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; Bytes&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n}\\n\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack (1)\u003C\u002Fspan\u003E\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStructPack1\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack(0)\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack (2)\u003C\u002Fspan\u003E\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStructPack2\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack(0)\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack (4)\u003C\u002Fspan\u003E\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStructPack4\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack(0)\u003C\u002Fspan\u003E\\n\\n\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStruct\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Emain\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E(\u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E argc, \u003Cspan class=\\\"hljs-keyword\\\"\u003Echar\u003C\u002Fspan\u003E *argv[])\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;SampleStructPack1&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Eprint\u003C\u002Fspan\u003E (\u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack1), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack1::flag), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack1::timeout));\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; -- &quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;SampleStructPack2&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Eprint\u003C\u002Fspan\u003E (\u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack2), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack2::flag), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack2::timeout));\\n\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;SampleStructPack4&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Eprint\u003C\u002Fspan\u003E (\u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack4), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack4::flag), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStructPack4::timeout));\\n\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;SampleStruct&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Eprint\u003C\u002Fspan\u003E (\u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStruct), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStruct::flag), \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(SampleStruct::timeout));\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; -- &quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ereturn\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-number\\\"\u003E0\u003C\u002Fspan\u003E;\\n}\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003E\u003Ca href=\\\"https:\u002F\u002Fcoliru.stacked-crooked.com\u002Fa\u002F7c18ee6585e57366\\\"\u003EExecuting code with pragma pack directive\u003C\u002Fa\u003E, we have different results depending of pragma value.\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-bash\\\" data-lang=\\\"bash\\\"\u003ESampleStructPack1 \u003Cb class=\\\"conum\\\"\u003E(1)\u003C\u002Fb\u003E\\n flag: 1 Bytes\\n +\\n timeout: 4Bytes\\n =\\n 5Bytes\\n sizeof struct:  5 Bytes\\n --\\n\\nSampleStructPack2 \u003Cb class=\\\"conum\\\"\u003E(2)\u003C\u002Fb\u003E\\n flag: 1 Bytes\\n +\\n timeout: 4Bytes\\n =\\n 5Bytes\\n sizeof struct:  6 Bytes\\n\\nSampleStructPack4 \u003Cb class=\\\"conum\\\"\u003E(3)\u003C\u002Fb\u003E\\n flag: 1 Bytes\\n +\\n timeout: 4Bytes\\n =\\n 5Bytes\\n sizeof struct:  8 Bytes\\n\\nSampleStruct \u003Cb class=\\\"conum\\\"\u003E(4)\u003C\u002Fb\u003E\\n flag: 1 Bytes\\n +\\n timeout: 4Bytes\\n =\\n 5Bytes\\n sizeof struct:  8 Bytes\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"colist arabic\\\"\u003E\\n\u003Col\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESampleStructPack1 \u003Ccode\u003E#pragma pack (1)\u003C\u002Fcode\u003E: It allocates 1 byte memory block, so our sample struct fits perfectly, in this case it is true that \u003Ccode\u003E4 + 1 = 5\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESampleStructPack2 \u003Ccode\u003E#pragma pack (2)\u003C\u002Fcode\u003E: Minimum block size is 2 bytes. Integer attribute fits because it just needs 2 blocks of 2 Bytes. Boolean attribute needs just 1 Byte, but minimum block size is 2 Bytes, that&#8217;s why total allocated memory is 6 bytes, \u003Ccode\u003E4 + 2 = 6\u003C\u002Fcode\u003E.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESampleStructPack4 \u003Ccode\u003E#pragma pack (4)\u003C\u002Fcode\u003E: It is like previous one, but in this case we are wasting more memory for boolean attribute, it needs 1 Byte, but we are allocating 4 Bytes.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003Cli\u003E\\n\u003Cp\u003ESampleStruct (default compiler alignment): As you can see it behaves exactly like \u003Ccode\u003E#pragma pack (4)\u003C\u002Fcode\u003E, so we can deduct it is the default compiler alignment.\u003C\u002Fp\u003E\\n\u003C\u002Fli\u003E\\n\u003C\u002Fol\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"admonitionblock important\\\"\u003E\\n\u003Ctable\u003E\\n\u003Ctr\u003E\\n\u003Ctd class=\\\"icon\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EImportant\u003C\u002Fdiv\u003E\\n\u003C\u002Ftd\u003E\\n\u003Ctd class=\\\"content\\\"\u003E\\nWhy don&#8217;t we always use smallest memory alignment (\u003Ccode\u003E#pragma pack (1)\u003C\u002Fcode\u003E) so we can save more memory?\\n\u003C\u002Ftd\u003E\\n\u003C\u002Ftr\u003E\\n\u003C\u002Ftable\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"admonitionblock warning\\\"\u003E\\n\u003Ctable\u003E\\n\u003Ctr\u003E\\n\u003Ctd class=\\\"icon\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EWarning\u003C\u002Fdiv\u003E\\n\u003C\u002Ftd\u003E\\n\u003Ctd class=\\\"content\\\"\u003E\\nBecause of performance loss.\\n\u003C\u002Ftd\u003E\\n\u003C\u002Ftr\u003E\\n\u003C\u002Ftable\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"sect1\\\"\u003E\\n\u003Ch2 id=\\\"_performance_test\\\"\u003EPerformance test\u003C\u002Fh2\u003E\\n\u003Cdiv class=\\\"sectionbody\\\"\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EThe test will allocate same number of elements in arrays for each structure type (1, 2, 4).\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003ETest results: \u003Ca href=\\\"https:\u002F\u002Fcoliru.stacked-crooked.com\u002Fa\u002F954ad542659c7591\\\"\u003Eexecute performance test\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-bash\\\" data-lang=\\\"bash\\\"\u003ESampleStructPack1: 500000000000000000 bytes allocated \u003Cspan class=\\\"hljs-keyword\\\"\u003Ein\u003C\u002Fspan\u003E 94311 nanoseconds\\nSampleStructPack2: 600000000000000000 bytes allocated \u003Cspan class=\\\"hljs-keyword\\\"\u003Ein\u003C\u002Fspan\u003E 1777 nanoseconds\\nSampleStructPack4: 800000000000000000 bytes allocated \u003Cspan class=\\\"hljs-keyword\\\"\u003Ein\u003C\u002Fspan\u003E 1519 nanoseconds\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"paragraph\\\"\u003E\\n\u003Cp\u003EAs you can see, the smallest memory alignment spends more time allocating and releasing memory.\u003C\u002Fp\u003E\\n\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"listingblock\\\"\u003E\\n\u003Cdiv class=\\\"title\\\"\u003EPerformance test source code:\u003C\u002Fdiv\u003E\\n\u003Cdiv class=\\\"content\\\"\u003E\\n\u003Cpre class=\\\"highlight\\\"\u003E\u003Ccode class=\\\"language-c++\\\" data-lang=\\\"c++\\\"\u003E\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Einclude\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-meta-string\\\"\u003E&lt;iostream&gt;\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Einclude\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-meta-string\\\"\u003E&lt;chrono&gt;\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack (1)\u003C\u002Fspan\u003E\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStructPack1\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack(0)\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack (2)\u003C\u002Fspan\u003E\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStructPack2\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack(0)\u003C\u002Fspan\u003E\\n\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack (4)\u003C\u002Fspan\u003E\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStructPack4\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\u003Cspan class=\\\"hljs-meta\\\"\u003E#\u003Cspan class=\\\"hljs-meta-keyword\\\"\u003Epragma\u003C\u002Fspan\u003E pack(0)\u003C\u002Fspan\u003E\\n\\n\\n\u003Cspan class=\\\"hljs-class\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Estruct\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003ESampleStruct\u003C\u002Fspan\u003E\\n{\u003C\u002Fspan\u003E\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ebool\u003C\u002Fspan\u003E flag;\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eunsigned\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E timeout;\\n};\\n\\n\u003Cspan class=\\\"hljs-keyword\\\"\u003Estatic\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Econst\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Elong\u003C\u002Fspan\u003E MAX_ELEMENTS = \u003Cspan class=\\\"hljs-number\\\"\u003E100000000000000000\u003C\u002Fspan\u003E;\\n\u003Cspan class=\\\"hljs-keyword\\\"\u003Eusing\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Enamespace\u003C\u002Fspan\u003E std;\\n\u003Cspan class=\\\"hljs-keyword\\\"\u003Eusing\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-keyword\\\"\u003Enamespace\u003C\u002Fspan\u003E std::chrono;\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Evoid\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Eallocate1\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E()\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    SampleStructPack1 elements [MAX_ELEMENTS];\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;SampleStructPack1: &quot;\u003C\u002Fspan\u003E &lt;&lt; \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(elements) &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; bytes allocated&quot;\u003C\u002Fspan\u003E;\\n}\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Evoid\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Eallocate2\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E()\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    SampleStructPack2 elements [MAX_ELEMENTS];\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;SampleStructPack2: &quot;\u003C\u002Fspan\u003E &lt;&lt; \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(elements) &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; bytes allocated&quot;\u003C\u002Fspan\u003E;\\n}\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Evoid\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Eallocate4\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E()\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    SampleStructPack4 elements [MAX_ELEMENTS];\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot;SampleStructPack4: &quot;\u003C\u002Fspan\u003E &lt;&lt; \u003Cspan class=\\\"hljs-built_in\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Esizeof\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E(elements) &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; bytes allocated&quot;\u003C\u002Fspan\u003E;\\n}\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Evoid\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Echrono1\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E()\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eauto\u003C\u002Fspan\u003E begin = high_resolution_clock::\u003Cspan class=\\\"hljs-built_in\\\"\u003Enow\u003C\u002Fspan\u003E() ;\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Eallocate1\u003C\u002Fspan\u003E();\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; in &quot;\u003C\u002Fspan\u003E &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::\u003Cspan class=\\\"hljs-built_in\\\"\u003Enow\u003C\u002Fspan\u003E() - begin).\u003Cspan class=\\\"hljs-built_in\\\"\u003Ecount\u003C\u002Fspan\u003E() &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; nanoseconds&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n}\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Evoid\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Echrono2\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E()\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eauto\u003C\u002Fspan\u003E begin = high_resolution_clock::\u003Cspan class=\\\"hljs-built_in\\\"\u003Enow\u003C\u002Fspan\u003E() ;\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Eallocate2\u003C\u002Fspan\u003E();\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; in &quot;\u003C\u002Fspan\u003E &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::\u003Cspan class=\\\"hljs-built_in\\\"\u003Enow\u003C\u002Fspan\u003E() - begin).\u003Cspan class=\\\"hljs-built_in\\\"\u003Ecount\u003C\u002Fspan\u003E() &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; nanoseconds&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n}\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Evoid\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Echrono4\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E()\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Eauto\u003C\u002Fspan\u003E begin = high_resolution_clock::\u003Cspan class=\\\"hljs-built_in\\\"\u003Enow\u003C\u002Fspan\u003E() ;\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Eallocate4\u003C\u002Fspan\u003E();\\n    cout &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; in &quot;\u003C\u002Fspan\u003E &lt;&lt; duration_cast&lt;nanoseconds&gt;(high_resolution_clock::\u003Cspan class=\\\"hljs-built_in\\\"\u003Enow\u003C\u002Fspan\u003E() - begin).\u003Cspan class=\\\"hljs-built_in\\\"\u003Ecount\u003C\u002Fspan\u003E() &lt;&lt; \u003Cspan class=\\\"hljs-string\\\"\u003E&quot; nanoseconds&quot;\u003C\u002Fspan\u003E &lt;&lt; endl;\\n}\\n\\n\\n\u003Cspan class=\\\"hljs-function\\\"\u003E\u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-title\\\"\u003Emain\u003C\u002Fspan\u003E\u003Cspan class=\\\"hljs-params\\\"\u003E(\u003Cspan class=\\\"hljs-keyword\\\"\u003Eint\u003C\u002Fspan\u003E argc, \u003Cspan class=\\\"hljs-keyword\\\"\u003Echar\u003C\u002Fspan\u003E *argv[])\u003C\u002Fspan\u003E\\n\u003C\u002Fspan\u003E{\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Echrono1\u003C\u002Fspan\u003E();\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Echrono2\u003C\u002Fspan\u003E();\\n    \u003Cspan class=\\\"hljs-built_in\\\"\u003Echrono4\u003C\u002Fspan\u003E();\\n\\n    \u003Cspan class=\\\"hljs-keyword\\\"\u003Ereturn\u003C\u002Fspan\u003E \u003Cspan class=\\\"hljs-number\\\"\u003E0\u003C\u002Fspan\u003E;\\n}\u003C\u002Fcode\u003E\u003C\u002Fpre\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\\n\u003C\u002Fdiv\u003E\",\"props\":{\"title\":\"C++ Struct memory alignment\",\"created\":1353927600000,\"modified\":1353927600000,\"filepath\":\"\u002Fhome\u002Fcarlos\u002Fworkspace\u002Fblablablog\u002Fposts\u002Fcpp-pragma-pack\u002Fcpp-pragma-pack.en.adoc\",\"dirpath\":\"\u002Fhome\u002Fcarlos\u002Fworkspace\u002Fblablablog\u002Fposts\u002Fcpp-pragma-pack\",\"keywords\":[\"C++\",\"Performance\",\"Compilers\",\"Memory\"],\"lang\":\"en\",\"otherLangs\":[\"es\"],\"slug\":\"cpp-pragma-pack\",\"summary\":\"Understanding pragma pack preprocessor directive and how it affects to memory alignment\",\"author\":\"Carlos Martin Sanchez\",\"path\":\"\u002Flangs\u002Fen\u002Fposts\u002Fcpp-pragma-pack\"}}"}</script>
+</div>
+	</body>
+</html>
