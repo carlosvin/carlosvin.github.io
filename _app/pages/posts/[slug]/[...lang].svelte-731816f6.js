@@ -1,0 +1,1 @@
+import{S as s,i as r,s as a}from"../../../chunks/vendor-e674947e.js";import{p as t,D as e}from"../../../chunks/url-bb89230a.js";function n({page:s}){const{slug:r,lang:a}=s.params;return{status:301,redirect:t(r,a||e)}}class u extends s{constructor(s){super(),r(this,s,null,null,a,{})}}export{u as default,n as load};
