@@ -1,29 +1,5 @@
-import { DEFAULT_LANG } from '$lib/conf';
-import { loadTranslations } from '$lib/services/translations-loader';
 import type { Translations } from '$lib/models/interfaces';
-/*
-function createLangStore() {
-	const { subscribe, set } = writable(DEFAULT_LANG);
 
-	return {
-		subscribe,
-		change: (navigator: Navigator) => {
-			const newLang = getLang(navigator);
-			if (navigator && newLang.length >= 2) {
-				set(newLang);
-			}
-		},
-		set
-	};
-}
-
-export const lang = createLangStore();
-
-export const i18n = derived(
-	lang,
-	$lang => new TranslatorImpl(loadTranslations($lang)),
-);
-*/
 
 class TranslationsStore {
 	private readonly _translations: Map<string, Translations>;
