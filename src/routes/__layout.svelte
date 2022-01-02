@@ -1,11 +1,9 @@
 <script lang="ts" context="module">
 	import { i18n } from '$lib/stores/lang';
+	import type { LoadInput } from '@sveltejs/kit';
 
-	/**
-	 * @type {import('@sveltejs/kit').Load}
-	 */
-	export async function load({ page, fetch }) {
-		const { lang } = page.params;
+	export async function load({ params, url, fetch }: LoadInput) {
+		const { lang } = params;
 		if (lang && (lang !== i18n.lang || i18n.lang === undefined)) {
 			const translations = await (await fetch(`/langs/${lang}/translations`)).json();
 			i18n.setLang(lang, translations);
@@ -13,7 +11,7 @@
 				document.documentElement.lang = lang;
 			}
 		}
-		return { props: { path: page.path, lang } };
+		return { props: { path: url.pathname, lang } };
 	}
 </script>
 

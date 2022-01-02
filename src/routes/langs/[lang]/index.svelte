@@ -2,8 +2,8 @@
 	import type { LoadInput } from '@sveltejs/kit';
 	declare type Resp = IndexResponse<PostProps> & { lang: string };
 
-	export async function load({ fetch, page }: LoadInput): Promise<{ props: Resp }> {
-		const { lang } = page.params;
+	export async function load({ fetch, params }: LoadInput): Promise<{ props: Resp }> {
+		const { lang } = params;
 		const props: Resp = await (await fetch(`${lang}/json`)).json();
 		return { props: { ...props, lang } };
 	}

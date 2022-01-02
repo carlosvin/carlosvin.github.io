@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
 	import type { IndexResponse, Category } from '$lib/models/interfaces';
 	import { i18n } from '$lib/stores/lang';
+	import type { LoadInput } from '@sveltejs/kit';
 
 	interface Resp {
 		props: {
@@ -11,17 +12,15 @@
 		};
 	}
 
-	export async function load({ fetch, page }): Promise<Resp> {
-		const { lang } = page.params;
-		const resp: IndexResponse<Category> = await (await fetch(`${page.path}/json`)).json();
+	export async function load({ fetch, params, url }: LoadInput): Promise<Resp> {
+		const { lang } = params;
+		const resp: IndexResponse<Category> = await (await fetch(`${url.pathname}/json`)).json();
 		// TODO const jsonLd = jsonLdScript(jsonLdCategories(categories, title, description, request.path));
-		resp.title = `${resp.title} - ${i18n.get('Categories')}`;
-		resp.description = 'Index of blog categories';
 		return {
 			props: {
-				title: resp.title,
+				title: i18n.get('Categories'),
 				index: resp.index,
-				description: resp.description,
+				description: i18n.get('Index of blog categories'),
 				lang
 			}
 		};

@@ -1,9 +1,10 @@
 <script context="module" lang="ts">
-	import type { IndexResponse, PostProps, Translator } from '$lib/models/interfaces';
+	import type { IndexResponse, PostProps } from '$lib/models/interfaces';
+	import type { LoadInput } from '@sveltejs/kit';
 
-	export async function load({ page, fetch }) {
-		const { lang } = page.params;
-		const resp: IndexResponse<PostProps> = await (await fetch(`${page.path}.json`)).json();
+	export async function load({ params, url, fetch }: LoadInput) {
+		const { lang } = params;
+		const resp: IndexResponse<PostProps> = await (await fetch(`${url.pathname}.json`)).json();
 		return { props: { ...resp, lang } };
 	}
 </script>

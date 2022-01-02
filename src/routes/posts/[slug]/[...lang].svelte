@@ -3,8 +3,8 @@
 	import { postPath } from '$lib/services/url';
 	import type { LoadInput, LoadOutput } from '@sveltejs/kit';
 
-	export function load({ page }: LoadInput): LoadOutput {
-		const { slug, lang } = page.params;
+	export function load({ params }: LoadInput): LoadOutput {
+		const { slug, lang } = params;
 
 		return {
 			status: 301, //permanent redirect
