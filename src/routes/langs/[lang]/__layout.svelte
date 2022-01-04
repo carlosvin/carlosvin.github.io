@@ -2,11 +2,10 @@
 	import { i18n } from '$lib/stores/lang';
 	import type { LoadInput } from '@sveltejs/kit';
 
-	export async function load({ params, url, fetch }: LoadInput) {
+	export async function load({ params, url }: LoadInput) {
 		const { lang } = params;
 		if (lang && (lang !== i18n.lang || i18n.lang === undefined)) {
-			const translations = await (await fetch(`/langs/${lang}/translations`)).json();
-			i18n.setLang(lang, translations);
+			i18n.setLang(lang);
 			if (typeof document !== 'undefined') {
 				document.documentElement.lang = lang;
 			}
@@ -16,7 +15,7 @@
 </script>
 
 <script lang="ts">
-	import '../app.css';
+	import '../../../app.css';
 	import Nav from '$lib/components/Nav.svelte';
 	import Social from '$lib/components/Social.svelte';
 	import IconLink from '$lib/components/IconLink.svelte';

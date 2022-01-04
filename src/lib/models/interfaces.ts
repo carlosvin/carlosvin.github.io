@@ -56,3 +56,8 @@ export interface Translations {
 export interface Translator {
 	get(lang: string, key: string): string;
 }
+
+export interface HeadInfo {
+	readonly title: string;
+	readonly description: string;
+}

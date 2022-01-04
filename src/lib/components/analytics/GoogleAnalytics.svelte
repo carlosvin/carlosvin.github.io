@@ -14,7 +14,7 @@
 
 	$: {
 		if (typeof ga !== 'undefined') {
-			ga('send', 'pageview', $page.path);
+			ga('send', 'pageview', $page.url.pathname);
 		}
 	}
 </script>

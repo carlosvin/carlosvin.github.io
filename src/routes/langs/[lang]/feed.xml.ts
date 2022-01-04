@@ -1,8 +1,9 @@
 import { Atom } from '$lib/services/atom';
 import { blogStore } from '$lib/stores/blog';
 import { i18n } from '$lib/stores/lang';
+import type { EndpointOutput, LoadInput } from '@sveltejs/kit';
 
-export function get({ params }) {
+export function get({ params }: LoadInput): EndpointOutput {
 	const { lang } = params;
 	const posts = blogStore.getByLang(lang);
 
