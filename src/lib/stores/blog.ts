@@ -122,8 +122,11 @@ class BlogStore {
 		}
 		const post = byLang.get(lang);
 		if (!post) {
-			console.warn(`Post not found in ${lang}: ${slug}`);
-			return byLang.values().next().value;
+			const [defaultPost] = byLang.values();
+			console.warn(
+				`Post ${slug} not found in ${lang}, returning post in ${defaultPost.props.lang}`
+			);
+			return defaultPost;
 		}
 		return post;
 	}

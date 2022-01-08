@@ -1,26 +1,9 @@
-<script context="module" lang="ts">
-	import type { LoadInput } from '@sveltejs/kit';
-	declare type Resp = IndexResponse<PostProps> & { lang: string };
-
-	export async function load({ fetch, params }: LoadInput): Promise<{ props: Resp }> {
-		const { lang } = params;
-		const props: Resp = await (await fetch(`${lang}/json`)).json();
-		return { props: { ...props, lang } };
-	}
-</script>
-
 <script lang="ts">
-	import Index from '$lib/components/posts/Index.svelte';
-	import type { IndexResponse, PostProps } from '$lib/models/interfaces';
-	import { i18n } from '$lib/stores/lang';
+	import { goto } from '$app/navigation';
+	import { getLang } from '$lib/services/navigator';
+	import { onMount } from 'svelte';
 
-	export let index: PostProps[];
-	export let lang: string;
+	onMount(async () => {
+		goto(`/langs/${getLang(navigator)}/posts`, { replaceState: true });
+	});
 </script>
-
-<svelte:head>
-	<title>{i18n.siteName}</title>
-	<meta name="description" content={i18n.siteDescription} />
-</svelte:head>
-
-<Index posts={index} {lang} />
