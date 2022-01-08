@@ -1,1 +1,0 @@
-import{S as t,i as n,s as a}from"../../../chunks/vendor-59328230.js";function o({params:s}){return{status:301,redirect:"feed.xml"}}class l extends t{constructor(e){super();n(this,e,null,null,a,{})}}export{l as default,o as load};
