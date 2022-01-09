@@ -18,5 +18,13 @@
 		display: flex;
 		flex-flow: row wrap;
 		justify-content: space-between;
+		height: max-content;
+		vertical-align: middle;
+
+	}
+	.date {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
