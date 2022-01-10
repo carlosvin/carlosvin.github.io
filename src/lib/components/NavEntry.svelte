@@ -2,7 +2,7 @@
 	function curr(segment: string | undefined, href: string): 'page' | boolean {
 		if (segment === undefined && href === '.') {
 			return 'page';
-		} else if (segment && href.endsWith(segment)) {
+		} else if (segment && segment.startsWith(href)) {
 			return 'page';
 		} else {
 			return undefined;
@@ -37,6 +37,6 @@
 	[aria-current] {
 		position: relative;
 		display: inline-block;
-		box-shadow: inset 1px 1px 1em rgba(100, 100, 100, 0.4);
+		box-shadow: inset 1px 1px 1em rgba(255, 62, 0, 0.1);
 	}
 </style>

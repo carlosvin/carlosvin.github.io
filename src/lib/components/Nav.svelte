@@ -14,12 +14,12 @@
 
 <nav>
 	<ul>
-		<NavEntry href={`/langs/${lang}`} {segment}>
+		<NavEntry href={`/langs/${lang}/posts`} {segment}>
 			<img class="logo" src="/favicon.png" alt="{siteName} logo" />
 		</NavEntry>
 	</ul>
 	<ul class={open ? 'open' : 'closed'}>
-		<NavEntry href={`/langs/${lang}`} {segment}>
+		<NavEntry href={`/langs/${lang}/posts`} {segment}>
 			<span class="siteName">{siteName}</span>
 		</NavEntry>
 		<NavEntry href={`/langs/${lang}/categories`} {segment}>{i18n.get('Categories')}</NavEntry>
