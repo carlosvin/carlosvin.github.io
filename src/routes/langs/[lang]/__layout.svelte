@@ -22,7 +22,7 @@
 	import GoogleAnalytics from '$lib/components/analytics/GoogleAnalytics.svelte';
 
 	export let path = '/';
-	export let lang;
+	const {lang, siteName} = i18n;
 </script>
 
 {#if import.meta.env.PROD}
@@ -30,12 +30,12 @@
 {/if}
 
 {#if lang}
-	<Nav segment={path} siteName={i18n.get('siteName')} lang={i18n.lang}>
+	<Nav segment={path} siteName={siteName} lang={lang}>
 		<Social>
 			<IconLink
 				icon="rss"
-				href={`/langs/${i18n.lang}/feed.xml`}
-				title={`${i18n.get('SubscribeTo')} ${i18n.get('siteName')}`}
+				href={`/langs/${lang}/feed.xml`}
+				title={`${i18n.get('SubscribeTo')} ${siteName}`}
 			/>
 		</Social>
 	</Nav>
