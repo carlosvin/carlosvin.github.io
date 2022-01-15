@@ -1,0 +1,1 @@
+import{S as a,i as n,s as e,v as o}from"../chunks/vendor-541cd9f4.js";import{g as r,a as i}from"../chunks/navigator-6cf6dd5d.js";import"../chunks/singletons-4a680913.js";function c(s){return o(async()=>{r(`/langs/${i(navigator)}/categories`,{replaceState:!0})}),[]}class f extends a{constructor(t){super();n(this,t,c,null,e,{})}}export{f as default};
