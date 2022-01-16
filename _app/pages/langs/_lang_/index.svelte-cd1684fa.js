@@ -1,1 +1,0 @@
-import{S as t,i as a,s as o,v as e}from"../../../chunks/vendor-541cd9f4.js";import{g as r,a as u}from"../../../chunks/navigator-6cf6dd5d.js";import"../../../chunks/singletons-4a680913.js";function c(s){return e(async()=>{r(`/langs/${u(navigator)}/posts`,{replaceState:!0})}),[]}class f extends t{constructor(n){super();a(this,n,c,null,o,{})}}export{f as default};
