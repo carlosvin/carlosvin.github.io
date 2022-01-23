@@ -1,1 +1,0 @@
-import{S as n,i as o,s as e}from"../../../chunks/vendor-0252a1f8.js";import{p as r,D as u}from"../../../chunks/url-bb89230a.js";function i({params:t}){const{slug:s,lang:a}=t;return{status:301,redirect:r(s,a||u)}}class p extends n{constructor(s){super();o(this,s,null,null,e,{})}}export{p as default,i as load};
