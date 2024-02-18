@@ -1,6 +1,4 @@
 import type { Category, Post, PostProps } from '$lib/models/interfaces';
-import fs from 'fs';
-import path from 'path';
 import { PostImpl } from '$lib/models/mappers';
 import { Adoc } from '$lib/services/adoc';
 import { toCapitalize, toSlug } from '$lib/services/slug';
@@ -10,43 +8,29 @@ class BlogStore {
 	private readonly _posts: Map<string, Map<string, Post>>;
 	private readonly _categories: Map<string, Category>;
 	private readonly _slugsByCategory: Map<string, Set<string>>;
-	private readonly _baseDir: string;
 	private readonly _proc: Adoc;
 
-	constructor(baseDir: string) {
+	constructor() {
 		this._langs = new Set();
 		this._posts = new Map();
 		this._categories = new Map();
 		this._slugsByCategory = new Map();
-		this._baseDir = baseDir;
 		this._proc = new Adoc();
 		this._init();
 	}
 
 	private _init() {
-		this._walk(this._baseDir);
+		this._walk();
 		this._addOtherLangs();
 	}
 
-	private _walk(baseDir: string) {
-		for (const f of fs.readdirSync(baseDir)) {
-			const filePath = path.join(baseDir, f);
-			if (this._isDir(filePath)) {
-				this._walk(filePath);
-			} else if (this._isPost(f)) {
-				const post = new PostImpl(this._proc.load(filePath));
-				this._add(post);
-				this._categorize(post.props);
-			}
+	private _walk() {
+		const loaded = import.meta.glob('/static/posts/*.adoc', { eager: true, as: 'raw' });
+		for (const [filePath, content] of Object.entries(loaded)) {
+			const post = new PostImpl(this._proc.load(filePath, content));
+			this._add(post);
+			this._categorize(post.props);
 		}
-	}
-
-	private _isDir(filePath: string): boolean {
-		return fs.statSync(filePath).isDirectory();
-	}
-
-	private _isPost(fileName: string) {
-		return path.extname(fileName) === '.adoc';
 	}
 
 	get langs() {
@@ -134,9 +118,9 @@ class BlogStore {
 	getByLang(lang: string): Post[] {
 		return Array.from(
 			this.posts,
-			([_, byLang]) => byLang.get(lang) || byLang.values().next().value
+			([_, byLang]) => byLang.get(lang) ?? byLang.values().next().value
 		);
 	}
 }
 
-export const blogStore = new BlogStore(import.meta.env.VITE_POSTS_PATH);
+export const blogStore = new BlogStore();

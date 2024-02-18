@@ -6,11 +6,12 @@ export class TranslationsStore {
 
 	constructor() {
 		this._translations = new Map<string, Translations>();
-		const loaded = import.meta.globEager('/static/locales/*.json');
-		for (const filename in loaded) {
-			const lang = filename.split('.').slice(0, -1).join('.').replace('/static/locales/', '');
-			this._translations.set(lang, loaded[filename]);
+		const loaded = import.meta.glob<Translations>('/src/locales/*.json', { eager: true });
+		for (const [filename, content] of Object.entries(loaded)) {
+			const lang = filename.split('.').slice(0, -1).join('.').replace('/src/locales/', '');
+			this._translations.set(lang, content);
 		}
+		this._lang = [...this._translations.keys()][0];
 	}
 
 	get(key: string): string {

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { PostProps } from '$lib/models/interfaces';
 
-	import { filter } from 'fuzzy';
-
+	import pkg from 'fuzzy';
+	const {filter} = pkg;
 	export let index: PostProps[];
 	export let founds: PostProps[];
 
@@ -22,7 +22,7 @@
 <span>
 	<input type="search" placeholder="Search" bind:value={search} id="search-posts" />
 	{#if founds}
-		<label for="search-posts">{`Found ${founds.length}`}</label>
+		<label for="search-posts">{`Found ${founds?.length}`}</label>
 	{/if}
 </span>
 

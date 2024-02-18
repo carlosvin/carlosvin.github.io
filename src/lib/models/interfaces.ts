@@ -12,6 +12,7 @@ export interface PostProps {
 	readonly author?: string;
 	readonly previewimage?: string;
 	readonly path: string;
+	readonly serializable: PostProps;
 	// "wordcount": "1120",
 	// articleBody
 }

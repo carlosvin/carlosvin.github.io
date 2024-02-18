@@ -26,7 +26,7 @@ export class PostPropsImpl implements PostProps {
 			date,
 			modified,
 			docdate,
-			docname,
+			doctitle,
 			docfile,
 			docdir,
 			description,
@@ -36,7 +36,7 @@ export class PostPropsImpl implements PostProps {
 			previewimage,
 			author
 		} = doc.getAttributes();
-		const finalSlug = slug || toSlug(docname.split('.')[0]);
+		const finalSlug = slug || toSlug(doctitle.split('.')[0]);
 		this.title = doc.getTitle();
 		this.created = Date.parse(created || date || docdate);
 		this.modified = Date.parse(modified || date || docdate);
@@ -60,6 +60,10 @@ export class PostPropsImpl implements PostProps {
 		if (!this.lang) {
 			throw TypeError(`"lang" should not be empty: ${this.slug}`);
 		}
+	}
+
+	get serializable(): PostProps {
+		return JSON.parse(JSON.stringify(this));
 	}
 }
 
