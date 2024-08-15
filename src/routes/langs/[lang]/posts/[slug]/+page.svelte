@@ -2,6 +2,7 @@
 
 <script lang="ts">
 	import './code.css';
+	import './content.css';
 	import type { Post } from '$lib/models/interfaces';
 	import { postPath } from '$lib/services/url';
 	import Share from '$lib/components/Share.svelte';
@@ -37,19 +38,7 @@
 	<Details post={props} />
 </header>
 
-<Content>
-	{@html html}
-	<div class="comments">
-		<script
-			src="https://utteranc.es/client.js"
-			repo="carlosvin/carlosvin.github.io"
-			issue-term="title"
-			label="comment"
-			theme="github-light"
-			crossorigin="anonymous"
-			async>
-		</script>
-</Content>
+<Content content={html} />
 
 <style>
 	h1 {
