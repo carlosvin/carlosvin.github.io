@@ -9,7 +9,7 @@
 {#if post}
 	<Entry>
 		<div class="container">
-			<a sveltekit:prefetch href={post.path} class="title">{post.title}</a>
+			<a href={post.path} class="title">{post.title}</a>
 			{#if post.summary}
 				<div class="description">
 					<div class="content">

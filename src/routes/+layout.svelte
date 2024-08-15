@@ -1,9 +1,6 @@
 
 <script lang="ts">
-	import '../app.css';
 	import GoogleAnalytics from '$lib/components/analytics/GoogleAnalytics.svelte';
-	import type { LayoutData } from './$types';	
-	export let data: LayoutData;
 </script>
 
 {#if import.meta.env.PROD}

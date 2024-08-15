@@ -1,22 +1,16 @@
-<script context="module" lang="ts">
-	import type { LoadInput, LoadOutput } from '@sveltejs/kit';
 
-	export async function load({ url, fetch }: LoadInput): Promise<LoadOutput> {
-		const { props, html } = await (await fetch(`${url.pathname}.json`)).json();
-		return { props: { props, html } };
-	}
-</script>
 
 <script lang="ts">
-	import 'highlight.js/styles/default.css';
-	import type { PostProps } from '$lib/models/interfaces';
+	import './code.css';
+	import type { Post } from '$lib/models/interfaces';
 	import { postPath } from '$lib/services/url';
 	import Share from '$lib/components/Share.svelte';
 	import Details from '$lib/components/posts/Details.svelte';
 	import Content from '$lib/components/posts/Content.svelte';
 
-	export let props: PostProps;
-	export let html: string;
+	export let data: Post;
+	const html: string = data.html;
+	const props = data.props;
 </script>
 
 <svelte:head>
@@ -55,11 +49,6 @@
 			crossorigin="anonymous"
 			async>
 		</script>
-	</div>
-	<!-- svelte-ignore a11y-missing-content -->
-	<a href="/posts/{props.slug}/{props.lang}" />
-	<!-- svelte-ignore a11y-missing-content -->
-	<a href="/posts/{props.slug}" />
 </Content>
 
 <style>
