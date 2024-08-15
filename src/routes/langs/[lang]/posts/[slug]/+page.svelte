@@ -1,8 +1,6 @@
 
 
 <script lang="ts">
-	import './code.css';
-	import './content.css';
 	import type { Post } from '$lib/models/interfaces';
 	import { postPath } from '$lib/services/url';
 	import Share from '$lib/components/Share.svelte';

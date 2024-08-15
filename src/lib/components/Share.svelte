@@ -18,7 +18,7 @@
 </script>
 
 {#if canShare}
-	<button on:click={share} {title} type="button" />
+	<button on:click={share} {title} type="button" ></button>
 {:else}
 	<IconLink
 		href={`https://twitter.com/intent/tweet?url=${url}&text=${title}:&nbsp;${text}&hashtags=${keywords.join(

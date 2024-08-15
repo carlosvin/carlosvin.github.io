@@ -12,7 +12,6 @@ export class Adoc {
 	}
 
 	load(filePath: string, content: string) {
-		console.log('load', content);
 		return this._processor.load(content, {
 			mkdirs: true,
 			base_dir: path.dirname(filePath),
