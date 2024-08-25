@@ -37,6 +37,8 @@ function urlCategory(name: string, langs: string[]) {
 		</url>`;
 }
 
+const routes = ['/langs/es/categories', '/langs/en/categories', '/langs/en/about', '/langs/es/about'];
+
 const render = (pages: string[], posts: PostProps[], categories: Category[]) => `
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	${blogStore.langs.map((lang) => pages.map((page) => urlPage(page, lang))).join('\r\n')}
@@ -49,7 +51,7 @@ const render = (pages: string[], posts: PostProps[], categories: Category[]) => 
 
 export function GET() {
     return new Response(
-        render(['/langs/es/categories', '/langs/en/categories'], blogStore.getIndex(DEFAULT_LANG), [...blogStore.categories.values()]),
+        render(routes, blogStore.getIndex(DEFAULT_LANG), [...blogStore.categories.values()]),
         {
             headers: {
                 'Cache-Control': 'max-age=0, s-max-age=3600',
