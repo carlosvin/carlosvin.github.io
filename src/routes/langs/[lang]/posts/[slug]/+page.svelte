@@ -3,6 +3,7 @@
 <script lang="ts">
 	import type { Post } from '$lib/models/interfaces';
 	import { postPath } from '$lib/services/url';
+	import { jsonLdPost } from '$lib/services/jsonld';
 	import Share from '$lib/components/Share.svelte';
 	import Details from '$lib/components/posts/Details.svelte';
 	import Content from '$lib/components/posts/Content.svelte';
@@ -17,12 +18,12 @@
 	<meta name="date.created" content={new Date(props.created).toISOString()} />
 	<meta name="date.updated" content={new Date(props.modified).toISOString()} />
 	<meta name="description" content={props.summary} />
+	{@html `<script type="application/ld+json">${jsonLdPost(data.props)}</script>`}
 	{#if props.otherLangs && props.otherLangs.length > 0}
 		{#each props.otherLangs as lang}
 			<link rel="alternate" hreflang={lang} href={postPath(props.slug, lang)} />
 		{/each}
 	{/if}
-	<link rel="alternate" href="{props.path}.ld.json" type="application/ld+json" />
 </svelte:head>
 
 <header>
