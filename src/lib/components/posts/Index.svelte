@@ -7,7 +7,6 @@
 
 	export let posts: PostProps[];
 	export let title: string | undefined = undefined;
-	export let lang: string;
 
 	let founds: PostProps[];
 	let index: PostProps[];
