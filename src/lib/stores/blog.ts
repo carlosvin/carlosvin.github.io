@@ -117,9 +117,9 @@ class BlogStore {
 
 	getByLang(lang: string): Post[] {
 		return Array.from(
-			this.posts,
-			([_, byLang]) => byLang.get(lang) ?? byLang.values().next().value
-		);
+			this.posts.values(),
+			(byLang) => byLang.get(lang) ?? byLang.values().next().value
+		).filter((post): post is Post => post !== undefined);
 	}
 }
 
