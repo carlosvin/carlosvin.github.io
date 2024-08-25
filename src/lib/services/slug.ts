@@ -2,6 +2,7 @@ export function toSlug(str: string): string {
 	return str
 		.trim()
 		.toLowerCase()
+		.replace(/^.*[\\/]/, '')
 		.replace(/[^a-z0-9 -]/g, '')
 		.replace(/\s+/g, '-')
 		.replace(/-+/g, '-');

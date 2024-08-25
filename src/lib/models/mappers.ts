@@ -19,15 +19,13 @@ export class PostPropsImpl implements PostProps {
 	readonly previewimage?: string;
 	readonly path: string;
 
-	constructor(doc: Asciidoctor.Document) {
+	constructor(doc: Asciidoctor.Document, filepath: string) {
 		const {
 			slug,
 			created,
 			date,
 			modified,
 			docdate,
-			doctitle,
-			docfile,
 			docdir,
 			description,
 			summary,
@@ -36,12 +34,12 @@ export class PostPropsImpl implements PostProps {
 			previewimage,
 			author
 		} = doc.getAttributes();
-		const finalSlug = slug || toSlug(doctitle.split('.')[0]);
+		this.filepath = filepath;
+		this.dirpath = docdir;
+		const finalSlug = slug || toSlug(this.filepath.split('.')[0]);
 		this.title = doc.getTitle();
 		this.created = Date.parse(created || date || docdate);
 		this.modified = Date.parse(modified || date || docdate);
-		this.filepath = docfile;
-		this.dirpath = docdir;
 		this.keywords = keywords ? keywords.split(',').map((k) => k.trim()) : [];
 		this.lang = lang;
 		this.otherLangs = [];
@@ -72,9 +70,9 @@ export class PostImpl implements Post {
 	readonly props: PostProps;
 	public readonly html: string;
 
-	constructor(doc: Asciidoctor.Document) {
+	constructor(doc: Asciidoctor.Document, filepath: string) {
 		this.doc = doc;
 		this.html = this.doc.convert();
-		this.props = new PostPropsImpl(doc);
+		this.props = new PostPropsImpl(doc, filepath);
 	}
 }
