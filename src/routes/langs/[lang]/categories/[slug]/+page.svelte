@@ -1,5 +1,3 @@
-
-
 <script lang="ts">
 	import Index from '$lib/components/posts/Index.svelte';
 	import type { PageData } from './$types';

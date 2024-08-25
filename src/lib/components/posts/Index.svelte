@@ -16,7 +16,7 @@
 	}
 </script>
 
-<Header numPosts={index?.length || 0} {title} >
+<Header numPosts={index?.length || 0} {title}>
 	<Search index={posts} bind:founds />
 </Header>
 

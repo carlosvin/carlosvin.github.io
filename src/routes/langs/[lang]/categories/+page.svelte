@@ -1,4 +1,3 @@
-
 <script lang="ts">
 	import { categoryPath } from '$lib/services/url';
 
@@ -28,4 +27,3 @@
 		<a href="/">All posts</a>
 	</Entry>
 </Index>
-

@@ -20,7 +20,6 @@
 		justify-content: space-between;
 		height: max-content;
 		vertical-align: middle;
-
 	}
 	.date {
 		display: flex;

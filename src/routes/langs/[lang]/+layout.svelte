@@ -1,4 +1,3 @@
-
 <script lang="ts">
 	import { i18n } from '$lib/stores/lang';
 	import Nav from '$lib/components/Nav.svelte';

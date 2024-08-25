@@ -7,8 +7,8 @@ export const load: PageServerLoad = ({ params }) => {
 	return {
 		description: 'unknown',
 		title: 'unknown',
-		index: [...index.map(entry => entry.serializable)],
+		index: [...index.map((entry) => entry.serializable)],
 		lang,
 		langs: blogStore.langs
-	}
+	};
 };

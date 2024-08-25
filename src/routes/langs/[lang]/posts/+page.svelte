@@ -1,11 +1,9 @@
-
 <script lang="ts">
 	import Index from '$lib/components/posts/Index.svelte';
 	import { i18n } from '$lib/stores/lang';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-
 </script>
 
 <svelte:head>

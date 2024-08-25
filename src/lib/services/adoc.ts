@@ -18,7 +18,7 @@ export class Adoc {
 			safe: 'unsafe',
 			catalog_assets: true,
 			attributes: {
-				'source-highlighter': 'highlightjs-ext',
+				'source-highlighter': 'highlightjs-ext'
 				//'source-highlighter': 'highlightjs'
 			}
 		});

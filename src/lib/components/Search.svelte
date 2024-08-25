@@ -2,7 +2,7 @@
 	import type { PostProps } from '$lib/models/interfaces';
 
 	import pkg from 'fuzzy';
-	const {filter} = pkg;
+	const { filter } = pkg;
 	export let index: PostProps[];
 	export let founds: PostProps[];
 

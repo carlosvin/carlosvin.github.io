@@ -1,5 +1,3 @@
-
-
 <script lang="ts">
 	import type { Post } from '$lib/models/interfaces';
 	import { postPath } from '$lib/services/url';
