@@ -10,4 +10,4 @@
 	<meta name="description" content={data.description} />
 </svelte:head>
 
-<Index posts={data.index} title={data.title} lang={data.lang} />
+<Index posts={data.index} title={data.title} translations={data.translations} />

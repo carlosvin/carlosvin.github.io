@@ -1,10 +1,10 @@
 <script lang="ts">
 	import NavEntry from '$lib/components/NavEntry.svelte';
-	import { i18n } from '$lib/stores/lang';
+	import type { TranslationsInterface } from '$lib/stores/locales/interface';
 
 	export let segment: string | undefined;
-	export let siteName: string;
 	export let lang: string;
+	export let translations: TranslationsInterface;
 
 	function toggle() {
 		open = !open;
@@ -15,15 +15,15 @@
 <nav>
 	<ul>
 		<NavEntry href={`/langs/${lang}/posts`} {segment}>
-			<img class="logo" src="/favicon.png" alt="{siteName} logo" />
+			<img class="logo" src="/favicon.png" alt="{translations.siteName} logo" />
 		</NavEntry>
 	</ul>
 	<ul class={open ? 'open' : 'closed'}>
 		<NavEntry href={`/langs/${lang}/posts`} {segment}>
-			<span class="siteName">{siteName}</span>
+			<span class="siteName">{translations.siteName}</span>
 		</NavEntry>
-		<NavEntry href={`/langs/${lang}/categories`} {segment}>{i18n.get('Categories')}</NavEntry>
-		<NavEntry href={`/langs/${lang}/about`} {segment}>About</NavEntry>
+		<NavEntry href={`/langs/${lang}/categories`} {segment}>{translations.Categories}</NavEntry>
+		<NavEntry href={`/langs/${lang}/about`} {segment}>{translations.AboutMe}</NavEntry>
 	</ul>
 	{#if !open}
 		<slot />

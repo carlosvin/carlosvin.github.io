@@ -1,14 +1,17 @@
 import { blogStore } from '$lib/stores/blog';
-import type { PageServerLoad } from './$types';
+import { TranslationsStore } from '$lib/stores/lang';
+import type { EntryGenerator, PageServerLoad } from './$types';
+
+export const prerender = true;
+
+
+export const entries: EntryGenerator = () => blogStore.entries;
 
 export const load: PageServerLoad = ({ params }) => {
 	const { lang } = params;
 	const index = blogStore.getIndex(lang);
 	return {
-		description: 'unknown',
-		title: 'unknown',
 		index: [...index.map((entry) => entry.serializable)],
-		lang,
-		langs: blogStore.langs
+		translations: new TranslationsStore(lang).current,
 	};
 };

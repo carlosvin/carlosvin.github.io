@@ -5,18 +5,15 @@
 	import Entry from '$lib/components/Entry.svelte';
 
 	import type { PageData } from './$types';
-	import { i18n } from '$lib/stores/lang';
 
 	export let data: PageData;
-
-	const title = `${i18n.get('Categories')} | ${i18n.get('siteName')}`;
 </script>
 
 <svelte:head>
-	<title>{title}</title>
+	<title>{data.translations.Categories}</title>
 </svelte:head>
 
-<h1>{title}</h1>
+<h1>{data.translations.Categories}</h1>
 <Index>
 	{#each data.index as c}
 		<Entry>
@@ -24,6 +21,6 @@
 		</Entry>
 	{/each}
 	<Entry>
-		<a href="/">All posts</a>
+		<a href="/">{data.translations.AllPosts}</a>
 	</Entry>
 </Index>

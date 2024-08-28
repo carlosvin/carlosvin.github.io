@@ -121,6 +121,20 @@ class BlogStore {
 			(byLang) => byLang.get(lang) ?? byLang.values().next().value
 		).filter((post): post is Post => post !== undefined);
 	}
+
+	/** 
+	 * @returns The list of entries for the SvelteKit entry generator 
+	 * https://kit.svelte.dev/docs/page-options#entries
+	 * */
+	get entries() {
+		const entries = [];
+		for (const lang of blogStore.langs) {
+			entries.push({ lang });
+			blogStore.getIndex(lang).forEach(({ slug }) => entries.push({ lang, slug }));
+			blogStore.categories.forEach(({ slug }) => entries.push({ lang, slug }));
+		}
+		return entries;
+	}
 }
 
 export const blogStore = new BlogStore();

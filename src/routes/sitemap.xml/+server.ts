@@ -4,6 +4,8 @@ import { getIsoDate } from '$lib/services/dates';
 import { categoryPath, postPath, url } from '$lib/services/url';
 import { blogStore } from '$lib/stores/blog';
 
+export const prerender = true;
+
 function urlPage(page: string, lang: string) {
 	return `
     <url>
@@ -48,9 +50,9 @@ const render = (pages: string[], posts: PostProps[], categories: Category[]) => 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	${blogStore.langs.map((lang) => pages.map((page) => urlPage(page, lang))).join('\r\n')}
   	${posts
-			.filter(({ modified }) => modified && !isNaN(modified))
-			.map((post) => urlPost(post))
-			.join('\r\n')}
+		.filter(({ modified }) => modified && !isNaN(modified))
+		.map((post) => urlPost(post))
+		.join('\r\n')}
     ${categories.map((category) => urlCategory(category.slug, blogStore.langs)).join('\r\n')}
 </urlset>`;
 

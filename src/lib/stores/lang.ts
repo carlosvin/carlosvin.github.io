@@ -1,48 +1,23 @@
-import type { Translations } from '$lib/models/interfaces';
+import es from './locales/es';
+import en from './locales/en';
+import type { TranslationsInterface } from './locales/interface';
 
 export class TranslationsStore {
-	private readonly _translations: Map<string, Translations>;
-	private _lang: string;
+	;
+	private readonly _translations: Map<string, TranslationsInterface>;
 
-	constructor() {
-		this._translations = new Map<string, Translations>();
-		const loaded = import.meta.glob<Translations>('/src/locales/*.json', { eager: true });
-		for (const [filename, content] of Object.entries(loaded)) {
-			const lang = filename.split('.').slice(0, -1).join('.').replace('/src/locales/', '');
-			this._translations.set(lang, content);
-		}
-		this._lang = [...this._translations.keys()][0];
+	constructor(private readonly lang: string) {
+		this._translations = new Map<string, TranslationsInterface>();
+		// TODO implement lazy loading, for now it is not critical do to the small size of the translations
+		this._translations.set(en.lang, en);
+		this._translations.set(es.lang, es);
 	}
 
-	get(key: string): string {
-		const tr = this._translations.get(this._lang);
-		if (!tr) {
-			throw new Error(`there are no translations for ${this._lang}`);
-		}
-		return tr[key] || key;
+	get current(): TranslationsInterface {
+		return this._translations.get(this.lang) ?? en;
 	}
 
-	setLang(lang: string): TranslationsStore {
-		if (this._lang !== lang) {
-			this._lang = lang;
-		}
-		return this;
-	}
-
-	get lang(): string {
-		return this._lang;
-	}
-
-	get siteName(): string {
-		return this.get('siteName');
-	}
-
-	get siteDescription(): string {
-		return this.get('siteDescription');
-	}
-
-	get langs(): IterableIterator<string> {
-		return this._translations.keys();
+	get langs(): string[] {
+		return [...this._translations.keys()];
 	}
 }
-export const i18n = new TranslationsStore();

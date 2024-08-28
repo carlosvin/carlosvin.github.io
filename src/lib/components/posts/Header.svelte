@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { i18n } from '$lib/stores/lang';
+	import type { TranslationsInterface } from '$lib/stores/locales/interface';
 
 	export let numPosts: number;
-	export let title = numPosts > 0 ? i18n.get('RecentPosts') : i18n.get('NoPosts');
+	export let translations: TranslationsInterface;
+	export let title = numPosts > 0 ? translations.RecentPosts : translations.NoPosts;
 </script>
 
 <header>

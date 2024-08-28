@@ -4,8 +4,10 @@
 	import Search from '../Search.svelte';
 	import Header from './Header.svelte';
 	import type { PostProps } from '$lib/models/interfaces';
+	import type { TranslationsInterface } from '$lib/stores/locales/interface';
 
 	export let posts: PostProps[];
+	export let translations: TranslationsInterface;
 	export let title: string | undefined = undefined;
 
 	let founds: PostProps[];
@@ -16,7 +18,7 @@
 	}
 </script>
 
-<Header numPosts={index?.length || 0} {title}>
+<Header numPosts={index?.length ?? 0} {translations} {title}>
 	<Search index={posts} bind:founds />
 </Header>
 
