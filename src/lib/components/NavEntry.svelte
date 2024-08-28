@@ -2,10 +2,10 @@
 	function curr(segment: string | undefined, href: string): 'page' | boolean {
 		if (segment === undefined && href === '.') {
 			return 'page';
-		} else if (segment && segment.startsWith(href)) {
+		} else if (segment?.startsWith(href)) {
 			return 'page';
 		} else {
-			return undefined;
+			return false;
 		}
 	}
 

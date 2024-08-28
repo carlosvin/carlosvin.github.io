@@ -127,13 +127,11 @@ class BlogStore {
 	 * https://kit.svelte.dev/docs/page-options#entries
 	 * */
 	get entries() {
-		const entries = [];
-		for (const lang of blogStore.langs) {
-			entries.push({ lang });
-			blogStore.getIndex(lang).forEach(({ slug }) => entries.push({ lang, slug }));
-			blogStore.categories.forEach(({ slug }) => entries.push({ lang, slug }));
-		}
-		return entries;
+		const postEntries: { slug: string, lang: string }[] = [];
+		this._posts.keys().forEach((slug) => postEntries.push({ slug, lang: 'en' }));
+		this._posts.keys().forEach((slug) => postEntries.push({ slug, lang: 'es' }));
+		console.log('Entries:', postEntries);
+		return postEntries;
 	}
 }
 
