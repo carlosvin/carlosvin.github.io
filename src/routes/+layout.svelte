@@ -6,22 +6,4 @@
 	<GoogleAnalytics />
 {/if}
 
-<main>
-	<slot />
-</main>
-
-<style>
-	main {
-		position: relative;
-		max-width: 86%;
-		background-color: white;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	@media (width < 32em) {
-		main {
-			max-width: unset;
-		}
-	}
-</style>
+<slot />

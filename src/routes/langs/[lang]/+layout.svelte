@@ -16,4 +16,23 @@
 	</Social>
 </Nav>
 
-<slot />
+<main>
+	<slot />
+</main>
+
+<style>
+	main {
+		position: relative;
+		max-width: 86%;
+		background-color: white;
+		margin: 2em auto;
+		box-sizing: border-box;
+	}
+
+	@media (width < 32em) {
+		main {
+			max-width: unset;
+			margin: 1em auto;
+		}
+	}
+</style>
