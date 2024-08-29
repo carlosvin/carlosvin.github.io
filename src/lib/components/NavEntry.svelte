@@ -1,11 +1,11 @@
 <script lang="ts">
-	function curr(segment: string | undefined, href: string): 'page' | boolean {
+	function curr(segment: string | undefined, href: string): 'page' | undefined {
 		if (segment === undefined && href === '.') {
 			return 'page';
 		} else if (segment?.startsWith(href)) {
 			return 'page';
 		} else {
-			return false;
+			return undefined;
 		}
 	}
 
