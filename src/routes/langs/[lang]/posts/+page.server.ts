@@ -4,7 +4,6 @@ import type { EntryGenerator, PageServerLoad } from './$types';
 
 export const prerender = true;
 
-
 export const entries: EntryGenerator = () => blogStore.entries;
 
 export const load: PageServerLoad = ({ params }) => {
@@ -12,6 +11,6 @@ export const load: PageServerLoad = ({ params }) => {
 	const index = blogStore.getIndex(lang);
 	return {
 		index: [...index.map((entry) => entry.serializable)],
-		translations: new TranslationsStore(lang).current,
+		translations: new TranslationsStore(lang).current
 	};
 };

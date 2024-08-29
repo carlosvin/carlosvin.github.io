@@ -13,7 +13,6 @@ export const load: PageServerLoad = ({ params }) => {
 			index: posts, //JSON.parse(JSON.stringify(posts)) as,
 			langs: [lang],
 			translations: new TranslationsStore(lang).current
-
 		};
 	}
 	return {

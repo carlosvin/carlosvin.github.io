@@ -3,7 +3,6 @@ import en from './locales/en';
 import type { TranslationsInterface } from './locales/interface';
 
 export class TranslationsStore {
-	;
 	private readonly _translations: Map<string, TranslationsInterface>;
 
 	constructor(private readonly lang: string) {

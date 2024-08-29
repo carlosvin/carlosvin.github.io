@@ -1,6 +1,6 @@
-import { Atom } from "$lib/services/atom";
-import { blogStore } from "$lib/stores/blog";
-import { TranslationsStore } from "$lib/stores/lang.js";
+import { Atom } from '$lib/services/atom';
+import { blogStore } from '$lib/stores/blog';
+import { TranslationsStore } from '$lib/stores/lang.js';
 
 export const prerender = true;
 
@@ -16,15 +16,11 @@ export function GET({ params }) {
 		import.meta.env.VITE_BASE_URL,
 		'',
 		translations.author
-	)
-	return new Response(
-		xml,
-		{
-			headers: {
-				'Cache-Control': 'max-age=0, s-max-age=3600',
-				'Content-Type': 'application/xml'
-			}
-		}
 	);
+	return new Response(xml, {
+		headers: {
+			'Cache-Control': 'max-age=0, s-max-age=3600',
+			'Content-Type': 'application/xml'
+		}
+	});
 }
-

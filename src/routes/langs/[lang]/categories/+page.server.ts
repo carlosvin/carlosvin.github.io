@@ -7,6 +7,6 @@ export const load: PageServerLoad = ({ params }) => {
 		index: [...blogStore.categories.values()],
 		langs: blogStore.langs,
 		lang: params.lang,
-		translations: new TranslationsStore(params.lang).current,
+		translations: new TranslationsStore(params.lang).current
 	};
 };

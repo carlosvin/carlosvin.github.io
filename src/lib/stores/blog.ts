@@ -122,12 +122,12 @@ class BlogStore {
 		).filter((post): post is Post => post !== undefined);
 	}
 
-	/** 
-	 * @returns The list of entries for the SvelteKit entry generator 
+	/**
+	 * @returns The list of entries for the SvelteKit entry generator
 	 * https://kit.svelte.dev/docs/page-options#entries
 	 * */
 	get entries() {
-		const postEntries: { slug: string, lang: string }[] = [];
+		const postEntries: { slug: string; lang: string }[] = [];
 		this._posts.keys().forEach((slug) => postEntries.push({ slug, lang: 'en' }));
 		this._posts.keys().forEach((slug) => postEntries.push({ slug, lang: 'es' }));
 		return postEntries;

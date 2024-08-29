@@ -35,8 +35,8 @@ class AtomItem {
 	get modified(): string {
 		try {
 			return new Date(this.entry.modified || this.entry.created).toISOString();
-		} catch (e) {
-			console.error('Error generating rss', this.entry);
+		} catch (error) {
+			console.error('Error generating rss', this.entry, error);
 			return '?';
 		}
 	}
