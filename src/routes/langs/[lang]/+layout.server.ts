@@ -2,7 +2,7 @@ import { TranslationsStore } from '$lib/stores/lang';
 import type { LayoutServerLoad } from './$types';
 
 export const prerender = true;
-
+export const trailingSlash = 'always';
 export const load: LayoutServerLoad = async ({ params, url }) => {
 	const { lang } = params;
 	if (lang && typeof document !== 'undefined') {
