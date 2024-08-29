@@ -130,7 +130,6 @@ class BlogStore {
 		const postEntries: { slug: string, lang: string }[] = [];
 		this._posts.keys().forEach((slug) => postEntries.push({ slug, lang: 'en' }));
 		this._posts.keys().forEach((slug) => postEntries.push({ slug, lang: 'es' }));
-		console.log('Entries:', postEntries);
 		return postEntries;
 	}
 }

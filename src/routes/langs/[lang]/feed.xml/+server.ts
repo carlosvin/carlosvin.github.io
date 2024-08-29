@@ -2,6 +2,8 @@ import { Atom } from "$lib/services/atom";
 import { blogStore } from "$lib/stores/blog";
 import { TranslationsStore } from "$lib/stores/lang.js";
 
+export const prerender = true;
+
 // Generates the feed.xml file for the blog in the specified language
 export function GET({ params }) {
 	const { lang } = params;

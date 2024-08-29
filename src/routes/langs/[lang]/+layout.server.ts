@@ -2,7 +2,7 @@ import { TranslationsStore } from '$lib/stores/lang';
 import type { LayoutServerLoad } from './$types';
 
 
-//export const prerender = true;
+export const prerender = true;
 
 
 export const load: LayoutServerLoad = async ({ params, url }) => {
