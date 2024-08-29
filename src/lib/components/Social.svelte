@@ -7,7 +7,7 @@
 	<slot />
 	<IconLink href="https://github.com/carlosvin" icon="github" />
 	<IconLink href="https://twitter.com/carlosvin" icon="twitter" />
-	<IconLink href="https://stackoverflow.com/story/carlosvin" icon="stackoverflow" />
+	<IconLink href="https://stackoverflow.com/users/1421059/carlosvin" icon="stackoverflow" />
 </div>
 
 <style>
