@@ -2,21 +2,36 @@ import es from './locales/es';
 import en from './locales/en';
 import type { TranslationsInterface } from './locales/interface';
 
-export class TranslationsStore {
-	private readonly _translations: Map<string, TranslationsInterface>;
+/**
+ * Store for translations
+ */
+const translations = new Map<string, TranslationsInterface>([
+	[en.lang, en],
+	[es.lang, es]
+]);
 
+export class TranslationsStore {
 	constructor(private readonly lang: string) {
-		this._translations = new Map<string, TranslationsInterface>();
 		// TODO implement lazy loading, for now it is not critical do to the small size of the translations
-		this._translations.set(en.lang, en);
-		this._translations.set(es.lang, es);
 	}
 
 	get current(): TranslationsInterface {
-		return this._translations.get(this.lang) ?? en;
+		return translations.get(this.lang) ?? en;
 	}
 
 	get langs(): string[] {
-		return [...this._translations.keys()];
+		return [...translations.keys()];
+	}
+
+	static get defaultLang(): string {
+		return en.lang;
+	}
+
+	/**
+	 * @param lang input language to check if it is supported
+	 * @returns the input language or a supported language
+	 */
+	static getSupported(lang: string): string {
+		return translations.has(lang) ? lang : this.defaultLang;
 	}
 }
