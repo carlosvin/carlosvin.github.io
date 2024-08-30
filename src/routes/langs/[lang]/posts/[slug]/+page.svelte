@@ -4,16 +4,25 @@
 	import Details from '$lib/components/posts/Details.svelte';
 	import Content from '$lib/components/posts/Content.svelte';
 	import type { PageData } from './$types';
-
+	import { page } from '$app/stores';
 	export let data: PageData;
 	$: ({ html, props, jsonLd } = data);
 </script>
 
 <svelte:head>
 	<title>{props.title}</title>
+	<meta property="og:title" content={props.title} />
 	<meta name="date.created" content={new Date(props.created).toISOString()} />
 	<meta name="date.updated" content={new Date(props.modified).toISOString()} />
 	<meta name="description" content={props.summary} />
+	<meta property="og:description" content={props.summary} />
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content={$page.url.toString()} />
+	<meta property="og:locale" content={props.lang} />
+	<meta property="og:locale:alternate" content={props.otherLangs.join(',')} />
+	<meta property="og:image" content={props.previewimage} />
+	<meta property="og:article:tag" content={props.keywords.join(',')} />
+
 	{#if props.otherLangs && props.otherLangs.length > 0}
 		{#each props.otherLangs as lang}
 			<link rel="alternate" hreflang={lang} href={postPath(props.slug, lang)} />
