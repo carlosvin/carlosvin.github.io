@@ -28,23 +28,6 @@ export interface Category {
 	// readonly path: string;
 }
 
-export interface InputMetadata {
-	readonly title: string;
-	readonly doctitle?: string;
-	readonly summary: string;
-	readonly description: string;
-	readonly slug?: string;
-	readonly keywords?: string;
-	readonly lang: string;
-	readonly date: string;
-	readonly updated: string;
-	readonly modified: string;
-	readonly previewimage?: string;
-	readonly previewImage?: string;
-	readonly author: string;
-	readonly otherLangs: string;
-}
-
 export interface IndexResponse<T> {
 	index: T[];
 	langs: string[];
