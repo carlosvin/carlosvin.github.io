@@ -23,6 +23,7 @@
 		background: #eee;
 		white-space: nowrap;
 		min-width: 48px;
+		height: fit-content;
 	}
 
 	a:hover {
