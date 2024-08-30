@@ -15,7 +15,7 @@
 <nav>
 	<ul>
 		<NavEntry href={`/langs/${lang}/posts`} {segment}>
-			<img class="logo" src="/favicon.png" alt="{translations.siteName} logo" />
+			<img class="logo" src="/favicon.25px.png" alt="{translations.siteName} logo" />
 		</NavEntry>
 	</ul>
 	<ul class={open ? 'open' : 'closed'}>
