@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="../../../../favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="/app.css" />
+		
+		<link href="../../../../_app/immutable/assets/2.D6-wnWlq.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/IconLink.DCDy1KOq.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/Social.BuJ-IkEK.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/8.BrJEuWPS.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/Details.9eYqvsBa.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../../../_app/immutable/entry/start.Bc4KkBV-.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/entry.BjgygLQ9.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/runtime.Dmq9lEfb.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/entry/app.-56L8BUG.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/render.DEuRsD3K.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/svelte-head.gMhgFLgJ.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/disclose-version.DZGYuMPK.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/if.DdJqp0Gs.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/props.DtZ137fb.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/nodes/0.B16GFbVX.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/misc.Djj4xh76.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/lifecycle.Dfv6L9JC.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/html.B-jAldvN.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/stores.Dz0nqkEC.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/nodes/2.BdJhhyR_.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/attributes.Dp_OjnNi.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/IconLink.B1K-9nqp.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/Social.D9rHMohW.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/nodes/8.ZkUutzok.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/url.CTei4sZV.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/Details.CG9aGsbs.js"><!--[--><!---->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-1328360-10', 'auto');
+	</script>
+	<!----><!--]--><!--[--><meta name="date.created" content="2014-06-07T16:09:00.000Z"> <meta name="date.updated" content="2014-06-07T16:09:00.000Z"> <meta name="description" content="Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB"> <!--[--><!--[--><link rel="alternate" hreflang="en" href="/langs/en/posts/java-embedded-db-performance-comparison"><!--]--><!--]--> <!----><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"Webpage","@id":"https://google.com/article"},"headline":"Bases de Datos Embebidas Java: Comparación de Rendimiento","alternativeHeadline":"Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB","description":"Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB","datePublished":"2014-06-07T16:09:00.000Z","dateModified":"2014-06-07T16:09:00.000Z","keywords":["Java","database","embedded"],"author":{"@type":"Person","name":"Carlos"},"publisher":{"@type":"Person","name":"Carlos"}}</script><!----><!--]--><title>Bases de Datos Embebidas Java: Comparación de Rendimiento</title>
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[--><!----><!--[--><!--]--> <!----><!--[--><!----><nav class="svelte-1kqmhwi"><ul class="svelte-1kqmhwi"><li class="svelte-1rykg79"><a aria-current="page" href="/langs/en/posts" rel="prefetch" class="svelte-1rykg79"><!----><img class="logo svelte-1kqmhwi" src="/favicon.png" alt="Carlos Say's Bla Bla logo"><!----></a></li><!----></ul> <ul class="closed svelte-1kqmhwi"><li class="svelte-1rykg79"><a aria-current="page" href="/langs/en/posts" rel="prefetch" class="svelte-1rykg79"><!----><span class="siteName">Carlos Say's Bla Bla</span><!----></a></li><!----> <li class="svelte-1rykg79"><a href="/langs/en/categories" rel="prefetch" class="svelte-1rykg79"><!----><!---->Categories<!----></a></li><!----> <li class="svelte-1rykg79"><a href="/langs/en/about" rel="prefetch" class="svelte-1rykg79"><!----><!---->About me<!----></a></li><!----></ul> <!--[--><!----><div class="h svelte-geb0ta"><!----><a href="/langs/en/feed.xml" target="_blank" class="icon rss svelte-blgowr" title="Subscribe to the feed Carlos Say's Bla Bla" rel="noopener" aria-label="Subscribe to the feed Carlos Say's Bla Bla"><!----><!----></a><!----> <a href="https://github.com/carlosvin" target="_blank" class="icon github svelte-blgowr" title="Find me at github" rel="noopener" aria-label="Find me at github"><!----><!----></a><!----> <a href="https://stackoverflow.com/users/1421059/carlosvin" target="_blank" class="icon stackoverflow svelte-blgowr" title="Find me at stackoverflow" rel="noopener" aria-label="Find me at stackoverflow"><!----><!----></a><!----></div><!----><!--]--> <button type="button" class="svelte-1kqmhwi">≡</button></nav><!----> <main class="svelte-7ld3yf"><!----><!----><header class="svelte-1ikjkmw"><h1 class="svelte-1ikjkmw">Bases de Datos Embebidas Java: Comparación de Rendimiento <span class="share svelte-1ikjkmw"><!--[!--><a href="https://twitter.com/intent/tweet?url=/langs/es/posts/java-embedded-db-performance-comparison&amp;text=Bases de Datos Embebidas Java: Comparación de Rendimiento:&amp;nbsp;Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB&amp;hashtags=Java,database,embedded" target="_blank" class="icon twitter svelte-blgowr" title="Share &quot;Bases de Datos Embebidas Java: Comparación de Rendimiento&quot;" rel="noopener" aria-label="Share &quot;Bases de Datos Embebidas Java: Comparación de Rendimiento&quot;"><!----><!----></a><!--]--><!----></span></h1> <p class="summary svelte-1ikjkmw">Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB</p> <div class="subtitle svelte-pcqcm5"><span class="date svelte-pcqcm5">6/7/2014</span> <!--[--><span class="tags svelte-wqh6y7"><!--[--><a href="/langs/en/categories/java" title="Java" class="svelte-vx17la">Java</a><a href="/langs/en/categories/database" title="database" class="svelte-vx17la">database</a><a href="/langs/en/categories/embedded" title="embedded" class="svelte-vx17la">embedded</a><!--]--></span><!--]--><!----></div><!----></header> <div class="postContent"><!----><div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_bases_de_datos_embebidas">Bases de datos embebidas</a>
+<ul class="sectlevel2">
+<li><a href="#_sqlitedb">SqliteDB</a></li>
+<li><a href="#_derbydb_o_javadb">DerbyDB o JavaDB</a></li>
+<li><a href="#_objectdb">ObjectDb</a></li>
+</ul>
+</li>
+<li><a href="#_los_tests">Los Tests</a>
+<ul class="sectlevel2">
+<li><a href="#_las_bases_de_datos_jdbc">Las Bases de Datos JDBC</a></li>
+<li><a href="#_el_código_fuente">El código fuente</a></li>
+<li><a href="#_resultados_de_los_tests">Resultados de los tests</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_bases_de_datos_embebidas">Bases de datos embebidas</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Se trata de bases de datos que carecen de servidor, están inscrustadas en la propia aplicación y suelen estar almacenadas en ficheros locales. Esto último unido a que suelen tener un modo de funcionamiento en el que mantienen los datos en memoria hace que puedan tener un rendimiento muy alto.</p>
+</div>
+<div class="paragraph">
+<p>Eso sí, este gran grado acoplamiento a la aplicación, hace que tengan peor rendimiento cuando se comparten entre varias aplicaciones debido a colisiones de acceso.</p>
+</div>
+<div class="paragraph">
+<p>Otra ventaja es que no tenemos que encargarnos de mantener y gestionar un servidor de bases de datos.</p>
+</div>
+<div class="paragraph">
+<p>Voy a hacer una comparativa de rendimiento entre 3 bases de datos embebidas <a href="https://es.wikipedia.org/wiki/ACID" target="_blank" rel="noopener">ACID</a> (transaccionales), las <a href="https://es.wikipedia.org/wiki/NoSQL" target="_blank" rel="noopener">NoSQL</a> no entran en esta comparativa que están en otra liga de rendimiento.</p>
+</div>
+<div class="paragraph">
+<p>Contenidos</p>
+</div>
+<div class="sect2">
+<h3 id="_sqlitedb"><a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java" target="_blank" rel="noopener">SqliteDB</a></h3>
+<div class="paragraph">
+<p>Se trata de una librería escrita en <a href="https://es.wikipedia.org/wiki/ANSI_C" target="_blank" rel="noopener">ANSI C</a>, de menos de 500KB, multi-plataforma, sin dependencias externas, almacena todo el contenido de la base de datos en un solo fichero.</p>
+</div>
+<div class="paragraph">
+<p>Es la que da mejor rendimiento en los <a href="#_resultados_de_los_tests">Resultados de los tests</a>.</p>
+</div>
+<div class="paragraph">
+<p>Se puede utilizar desde C y C++, pero también <a href="https://es.wikipedia.org/wiki/Sqlite#Lenguajes_de_programaci.C3.B3n" target="_blank" rel="noopener">desde otros lenguajes de programación</a> (PHP, Python, Java, .NET &#8230;&#8203;).</p>
+</div>
+<div class="paragraph">
+<p>En el caso de <a href="https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)" target="_blank" rel="noopener">Java</a> podemos gestionar esta base de datos a través de <a href="https://es.wikipedia.org/wiki/Java_Database_Connectivity" target="_blank" rel="noopener">JDBC</a>. Podemos obtener la librería de <a href="https://bitbucket.org/xerial/sqlite-jdbc" class="bare">https://bitbucket.org/xerial/sqlite-jdbc</a>.</p>
+</div>
+<div class="paragraph">
+<p>Veamos un ejemplo de la inserción de una serie de objetos de la clase <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java" target="_blank" rel="noopener">Price.java</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JdbcDb</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DB</span> {
+
+    <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Column</span> {
+        INSTRUMENT,
+        MARKET,
+        PRICE,
+        DATE;
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">TABLE_NAME</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;PRICES&quot;</span>;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">SQL_INSERT</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;INSERT INTO &quot;</span> + TABLE_NAME
+            + <span class="hljs-string">&quot; (INSTRUMENT, MARKET, PRICE, DATE) VALUES (?,?,?,?)&quot;</span>;
+
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(Price p, PreparedStatement preparedStatement)</span> <span class="hljs-keyword">throws</span> SQLException {
+        preparedStatement.setString(<span class="hljs-number">1</span>, p.getInstrument());
+        preparedStatement.setString(<span class="hljs-number">2</span>, p.getMarket());
+        preparedStatement.setDouble(<span class="hljs-number">3</span>, p.getPrice());
+        preparedStatement.setTimestamp(<span class="hljs-number">4</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Timestamp</span>(p.getDate().getTime()));
+        preparedStatement.addBatch();
+    }
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(Price... prices)</span> <span class="hljs-keyword">throws</span> SQLException {
+        <span class="hljs-type">PreparedStatement</span> <span class="hljs-variable">preparedStatement</span> <span class="hljs-operator">=</span> conn.prepareStatement(SQL_INSERT);
+        <span class="hljs-keyword">for</span> (Price p : prices) {
+            insert(p, preparedStatement);
+        }
+        preparedStatement.executeBatch();
+        preparedStatement.close();
+        conn.commit();
+    }
+
+    <span class="hljs-comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_derbydb_o_javadb"><a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java" target="_blank" rel="noopener">DerbyDB</a> o <a href="https://www.oracle.com/technetwork/es/java/javadb/overview/index.html" target="_blank" rel="noopener">JavaDB</a></h3>
+<div class="paragraph">
+<p><a href="https://www.oracle.com/technetwork/es/java/javadb/overview/index.html" target="_blank" rel="noopener">JavaDB</a> es una distribución de Oracle de la base de datos de código libre <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java" target="_blank" rel="noopener">DerbyDB</a>. Soporta el estándar <a href="https://es.wikipedia.org/wiki/SQL" target="_blank" rel="noopener">ANSI/ISO SQL</a> a través de <a href="https://es.wikipedia.org/wiki/Java_Database_Connectivity" target="_blank" rel="noopener">JDBC</a> y <a href="https://es.wikipedia.org/wiki/Java_EE" target="_blank" rel="noopener">Java EE</a>. Estas librerías están incluidas en el <a href="https://es.wikipedia.org/wiki/Java_Development_Kit" target="_blank" rel="noopener">JDK</a>.</p>
+</div>
+<div class="paragraph">
+<p>Almacena la base de datos en multiples archivos, lo que puede resultar útil para escalar el almacenamiento.</p>
+</div>
+<div class="paragraph">
+<p>Solo podemos utilizarlo en <a href="https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)" target="_blank" rel="noopener">Java</a>, no desde otros lenguajes.</p>
+</div>
+<div class="paragraph">
+<p>Como veremos más adelante ha sido la más lenta en los <a href="#_resultados_de_los_tests">Resultados de los tests</a>.</p>
+</div>
+<div class="paragraph">
+<p>La implementación de ejemplo de una inserción de una serie de objetos de la clase <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java" target="_blank" rel="noopener">Price.java</a>, es exactamente la misma que la que hemos hecho más arriba en <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java" target="_blank" rel="noopener">SqliteDB</a>, esto es una de las bondades de <a href="https://es.wikipedia.org/wiki/Java_Database_Connectivity" target="_blank" rel="noopener">JDBC</a>, que nos permite obtener una conexión para una base de datos específica, pero a partir de ahí casi siempre nos podemos olvidar de la base de datos con la que trabajamos, siempre y cuando soporte nuestras consultas <a href="https://es.wikipedia.org/wiki/SQL" target="_blank" rel="noopener">SQL</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_objectdb"><a href="https://www.objectdb.com/" target="_blank" rel="noopener">ObjectDb</a></h3>
+<div class="paragraph">
+<p>Es una <a href="https://es.wikipedia.org/wiki/Base_de_datos_orientada_a_objetos">base de datos orientada a objetos</a> que nos permite acceso <a href="https://es.wikipedia.org/wiki/Java_Persistence_API" target="_blank" rel="noopener">JPA</a>, un estándar de Java que persigue no perder las ventajas de la orientación a objetos; esto se suele perder cuando nos acercamos a la capa de persistencia.</p>
+</div>
+<div class="paragraph">
+<p>Resulta realmente sencillo realizar acciones típicas de una base de datos, abstrayéndonos del SQL, por ejemplo veamos cómo quedaría una inserción de un array de objetos de la clase Price con <a href="https://www.objectdb.com/" target="_blank" rel="noopener">ObjectDb</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(Price... prices)</span> <span class="hljs-keyword">throws</span> SQLException {
+    em.getTransaction().begin();
+    <span class="hljs-keyword">for</span> (Price p : prices) {
+        em.persist(p);
+    }
+    em.getTransaction().commit();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Si a esta facilidad de uso, le unimos que los <a href="#_resultados_de_los_tests">Resultados de los tests</a> de rendimiento han sido muy buenos (cerca de <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java" target="_blank" rel="noopener">SqliteDB</a>), puedo decir que he descubierto una base de datos embebida a tener muy en cuenta en futuros proyectos <a href="https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)" target="_blank" rel="noopener">Java</a>, eso sí, al igual que con <a href="https://www.oracle.com/technetwork/es/java/javadb/overview/index.html" target="_blank" rel="noopener">JavaDB</a>, solo nos sirve si vamos a programar en <a href="https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)" target="_blank" rel="noopener">Java</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_los_tests">Los Tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Simplemente consisten en realizar repetidamente una serie operaciones <a href="https://es.wikipedia.org/wiki/CRUD" target="_blank" rel="noopener">CRUD</a>. Para cada base de datos, el test realiza una serie de inserciones, selects, actualizaciones y borrado de objetos de la clase Precio.</p>
+</div>
+<div class="paragraph">
+<p>He utilizado 100000 instancias de la clase <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java" target="_blank" rel="noopener">Price.java</a>, las mismas para cada tipo de base de datos.</p>
+</div>
+<div class="paragraph">
+<p>Para esto he creado una interfaz <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DB.java" target="_blank" rel="noopener">DB.java</a> que compartirán cada una de las implementaciones para cada base de datos.</p>
+</div>
+<div class="listingblock">
+<div class="title">DB.java</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">DB</span> {
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(Price... prices)</span> <span class="hljs-keyword">throws</span> SQLException;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createTable</span><span class="hljs-params">()</span>;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">deleteAll</span><span class="hljs-params">()</span>;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">update</span><span class="hljs-params">(Price... prices)</span> <span class="hljs-keyword">throws</span> SQLException;
+
+    <span class="hljs-keyword">public</span> Set&lt;Price&gt; <span class="hljs-title function_">selectAll</span><span class="hljs-params">()</span>;
+
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_las_bases_de_datos_jdbc">Las Bases de Datos JDBC</h3>
+<div class="paragraph">
+<p>Solo cambian los datos necesarios para obtener el driver y la conexión a la base de datos, por eso toda la lógica está en la clase <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/JdbcDb.java" target="_blank" rel="noopener">JdbcDb</a> de la que heredan <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java" target="_blank" rel="noopener">SqliteDB</a> y <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java" target="_blank" rel="noopener">DerbyDB</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_el_código_fuente">El código fuente</h3>
+<div class="paragraph">
+<p>Podéis descargar el código fuente de <a href="https://github.com/carlosvin/java_embedded_databases" class="bare">https://github.com/carlosvin/java_embedded_databases</a>.</p>
+</div>
+<div class="paragraph">
+<p>Se trata de un proyecto <a href="https://www.gradle.org" target="_blank" rel="noopener">Gradle</a>, por lo que para ejecutar los tests solo tenéis que ejecutar: <code>grade test</code>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.gradle.org" target="_blank" rel="noopener">Gradle</a> descargará automáticamente las librerías necesarias, compilará y ejecutará los tests.</p>
+</div>
+<div class="paragraph">
+<p>También podéis ver directamente la ejecución en <a href="https://travis-ci.org/carlosvin/java_embedded_databases" class="bare">https://travis-ci.org/carlosvin/java_embedded_databases</a>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://travis-ci.org/carlosvin/java_embedded_databases"><span class="image"><img src="https://travis-ci.org/carlosvin/java_embedded_databases.svg" alt="image"></span></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resultados_de_los_tests">Resultados de los tests</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.DbTest &gt; testSqliteDB STANDARD_OUT
+    Testing with 100000 elements
+    100000 Prices SqliteDB, total time 3455 ms <b class="conum">(1)</b>
+    	Insert:	 1508 ms
+    	Select:	 605 ms
+    	Update:	 1319 ms
+    	Delete:	 23 ms
+    ----------------------------------------------
+db.DbTest &gt; testObjectDB STANDARD_OUT
+    Testing with 100000 elements
+    100000 Prices ObjectDB, total time 6467 ms <b class="conum">(2)</b>
+    	Insert:	 2579 ms
+    	Select:	 1126 ms
+    	Update:	 1698 ms
+    	Delete:	 1064 ms
+    ----------------------------------------------
+db.DbTest &gt; testDerbyDB STANDARD_OUT
+    Testing with 100000 elements
+    100000 Prices DerbyDB, total time 24808 ms <b class="conum">(3)</b>
+    	Insert:	 11467 ms
+    	Select:	 695 ms
+    	Update:	 6983 ms
+    	Delete:	 5663 ms</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p><a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java" target="_blank" rel="noopener">SqliteDB</a> es el más rápido.</p>
+</li>
+<li>
+<p><a href="https://www.objectdb.com/" target="_blank" rel="noopener">ObjectDb</a> es dos veces más lento que <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java" target="_blank" rel="noopener">SqliteDB</a>.</p>
+</li>
+<li>
+<p><a href="https://www.oracle.com/technetwork/es/java/javadb/overview/index.html" target="_blank" rel="noopener">JavaDB</a> o <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java" target="_blank" rel="noopener">DerbyDB</a> es el más lento, unas 8 veces más lento que <a href="https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java" target="_blank" rel="noopener">SqliteDB</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div><!----> <div class="comments"><script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="title" label="comment" theme="github-light" crossorigin="anonymous" async>
+	</script></div><!----></div><!----><!----><!----></main><!----><!--]--><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_oi522e = {
+						base: new URL("../../../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,{"type":"data","data":{path:"/langs/en/posts/java-embedded-db-performance-comparison/",lang:"en",translations:{lang:"en",author:"Carlos Martin Sanchez",siteName:"Carlos Say's Bla Bla",siteDescription:"What is going on in my mind and its surroundings",categories:"categories",Categories:"Categories",RecentPosts:"Recent posts",NoPosts:"There are no posts",SubscribeTo:"Subscribe to the feed",AboutMe:"About me",AllPosts:"All posts"}},"uses":{"params":["lang"],"url":1},"slash":"always"},{"type":"data","data":{html:"\u003Cdiv id=\"toc\" class=\"toc\">\n\u003Cdiv id=\"toctitle\">Table of Contents\u003C/div>\n\u003Cul class=\"sectlevel1\">\n\u003Cli>\u003Ca href=\"#_bases_de_datos_embebidas\">Bases de datos embebidas\u003C/a>\n\u003Cul class=\"sectlevel2\">\n\u003Cli>\u003Ca href=\"#_sqlitedb\">SqliteDB\u003C/a>\u003C/li>\n\u003Cli>\u003Ca href=\"#_derbydb_o_javadb\">DerbyDB o JavaDB\u003C/a>\u003C/li>\n\u003Cli>\u003Ca href=\"#_objectdb\">ObjectDb\u003C/a>\u003C/li>\n\u003C/ul>\n\u003C/li>\n\u003Cli>\u003Ca href=\"#_los_tests\">Los Tests\u003C/a>\n\u003Cul class=\"sectlevel2\">\n\u003Cli>\u003Ca href=\"#_las_bases_de_datos_jdbc\">Las Bases de Datos JDBC\u003C/a>\u003C/li>\n\u003Cli>\u003Ca href=\"#_el_código_fuente\">El código fuente\u003C/a>\u003C/li>\n\u003Cli>\u003Ca href=\"#_resultados_de_los_tests\">Resultados de los tests\u003C/a>\u003C/li>\n\u003C/ul>\n\u003C/li>\n\u003C/ul>\n\u003C/div>\n\u003Cdiv class=\"sect1\">\n\u003Ch2 id=\"_bases_de_datos_embebidas\">Bases de datos embebidas\u003C/h2>\n\u003Cdiv class=\"sectionbody\">\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Se trata de bases de datos que carecen de servidor, están inscrustadas en la propia aplicación y suelen estar almacenadas en ficheros locales. Esto último unido a que suelen tener un modo de funcionamiento en el que mantienen los datos en memoria hace que puedan tener un rendimiento muy alto.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Eso sí, este gran grado acoplamiento a la aplicación, hace que tengan peor rendimiento cuando se comparten entre varias aplicaciones debido a colisiones de acceso.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Otra ventaja es que no tenemos que encargarnos de mantener y gestionar un servidor de bases de datos.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Voy a hacer una comparativa de rendimiento entre 3 bases de datos embebidas \u003Ca href=\"https://es.wikipedia.org/wiki/ACID\" target=\"_blank\" rel=\"noopener\">ACID\u003C/a> (transaccionales), las \u003Ca href=\"https://es.wikipedia.org/wiki/NoSQL\" target=\"_blank\" rel=\"noopener\">NoSQL\u003C/a> no entran en esta comparativa que están en otra liga de rendimiento.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Contenidos\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"sect2\">\n\u003Ch3 id=\"_sqlitedb\">\u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java\" target=\"_blank\" rel=\"noopener\">SqliteDB\u003C/a>\u003C/h3>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Se trata de una librería escrita en \u003Ca href=\"https://es.wikipedia.org/wiki/ANSI_C\" target=\"_blank\" rel=\"noopener\">ANSI C\u003C/a>, de menos de 500KB, multi-plataforma, sin dependencias externas, almacena todo el contenido de la base de datos en un solo fichero.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Es la que da mejor rendimiento en los \u003Ca href=\"#_resultados_de_los_tests\">Resultados de los tests\u003C/a>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Se puede utilizar desde C y C++, pero también \u003Ca href=\"https://es.wikipedia.org/wiki/Sqlite#Lenguajes_de_programaci.C3.B3n\" target=\"_blank\" rel=\"noopener\">desde otros lenguajes de programación\u003C/a> (PHP, Python, Java, .NET &#8230;&#8203;).\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>En el caso de \u003Ca href=\"https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)\" target=\"_blank\" rel=\"noopener\">Java\u003C/a> podemos gestionar esta base de datos a través de \u003Ca href=\"https://es.wikipedia.org/wiki/Java_Database_Connectivity\" target=\"_blank\" rel=\"noopener\">JDBC\u003C/a>. Podemos obtener la librería de \u003Ca href=\"https://bitbucket.org/xerial/sqlite-jdbc\" class=\"bare\">https://bitbucket.org/xerial/sqlite-jdbc\u003C/a>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Veamos un ejemplo de la inserción de una serie de objetos de la clase \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java\" target=\"_blank\" rel=\"noopener\">Price.java\u003C/a>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-java\" data-lang=\"java\">\u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">class\u003C/span> \u003Cspan class=\"hljs-title class_\">JdbcDb\u003C/span> \u003Cspan class=\"hljs-keyword\">implements\u003C/span> \u003Cspan class=\"hljs-title class_\">DB\u003C/span> {\n\n    \u003Cspan class=\"hljs-keyword\">enum\u003C/span> \u003Cspan class=\"hljs-title class_\">Column\u003C/span> {\n        INSTRUMENT,\n        MARKET,\n        PRICE,\n        DATE;\n    }\n\n    \u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">static\u003C/span> \u003Cspan class=\"hljs-keyword\">final\u003C/span> \u003Cspan class=\"hljs-type\">String\u003C/span> \u003Cspan class=\"hljs-variable\">TABLE_NAME\u003C/span> \u003Cspan class=\"hljs-operator\">=\u003C/span> \u003Cspan class=\"hljs-string\">&quot;PRICES&quot;\u003C/span>;\n    \u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">static\u003C/span> \u003Cspan class=\"hljs-keyword\">final\u003C/span> \u003Cspan class=\"hljs-type\">String\u003C/span> \u003Cspan class=\"hljs-variable\">SQL_INSERT\u003C/span> \u003Cspan class=\"hljs-operator\">=\u003C/span> \u003Cspan class=\"hljs-string\">&quot;INSERT INTO &quot;\u003C/span> + TABLE_NAME\n            + \u003Cspan class=\"hljs-string\">&quot; (INSTRUMENT, MARKET, PRICE, DATE) VALUES (?,?,?,?)&quot;\u003C/span>;\n\n    \u003Cspan class=\"hljs-comment\">// ...\u003C/span>\n\n    \u003Cspan class=\"hljs-keyword\">private\u003C/span> \u003Cspan class=\"hljs-keyword\">void\u003C/span> \u003Cspan class=\"hljs-title function_\">insert\u003C/span>\u003Cspan class=\"hljs-params\">(Price p, PreparedStatement preparedStatement)\u003C/span> \u003Cspan class=\"hljs-keyword\">throws\u003C/span> SQLException {\n        preparedStatement.setString(\u003Cspan class=\"hljs-number\">1\u003C/span>, p.getInstrument());\n        preparedStatement.setString(\u003Cspan class=\"hljs-number\">2\u003C/span>, p.getMarket());\n        preparedStatement.setDouble(\u003Cspan class=\"hljs-number\">3\u003C/span>, p.getPrice());\n        preparedStatement.setTimestamp(\u003Cspan class=\"hljs-number\">4\u003C/span>, \u003Cspan class=\"hljs-keyword\">new\u003C/span> \u003Cspan class=\"hljs-title class_\">Timestamp\u003C/span>(p.getDate().getTime()));\n        preparedStatement.addBatch();\n    }\n\n    \u003Cspan class=\"hljs-meta\">@Override\u003C/span>\n    \u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">void\u003C/span> \u003Cspan class=\"hljs-title function_\">insert\u003C/span>\u003Cspan class=\"hljs-params\">(Price... prices)\u003C/span> \u003Cspan class=\"hljs-keyword\">throws\u003C/span> SQLException {\n        \u003Cspan class=\"hljs-type\">PreparedStatement\u003C/span> \u003Cspan class=\"hljs-variable\">preparedStatement\u003C/span> \u003Cspan class=\"hljs-operator\">=\u003C/span> conn.prepareStatement(SQL_INSERT);\n        \u003Cspan class=\"hljs-keyword\">for\u003C/span> (Price p : prices) {\n            insert(p, preparedStatement);\n        }\n        preparedStatement.executeBatch();\n        preparedStatement.close();\n        conn.commit();\n    }\n\n    \u003Cspan class=\"hljs-comment\">// ...\u003C/span>\n}\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect2\">\n\u003Ch3 id=\"_derbydb_o_javadb\">\u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java\" target=\"_blank\" rel=\"noopener\">DerbyDB\u003C/a> o \u003Ca href=\"https://www.oracle.com/technetwork/es/java/javadb/overview/index.html\" target=\"_blank\" rel=\"noopener\">JavaDB\u003C/a>\u003C/h3>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>\u003Ca href=\"https://www.oracle.com/technetwork/es/java/javadb/overview/index.html\" target=\"_blank\" rel=\"noopener\">JavaDB\u003C/a> es una distribución de Oracle de la base de datos de código libre \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java\" target=\"_blank\" rel=\"noopener\">DerbyDB\u003C/a>. Soporta el estándar \u003Ca href=\"https://es.wikipedia.org/wiki/SQL\" target=\"_blank\" rel=\"noopener\">ANSI/ISO SQL\u003C/a> a través de \u003Ca href=\"https://es.wikipedia.org/wiki/Java_Database_Connectivity\" target=\"_blank\" rel=\"noopener\">JDBC\u003C/a> y \u003Ca href=\"https://es.wikipedia.org/wiki/Java_EE\" target=\"_blank\" rel=\"noopener\">Java EE\u003C/a>. Estas librerías están incluidas en el \u003Ca href=\"https://es.wikipedia.org/wiki/Java_Development_Kit\" target=\"_blank\" rel=\"noopener\">JDK\u003C/a>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Almacena la base de datos en multiples archivos, lo que puede resultar útil para escalar el almacenamiento.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Solo podemos utilizarlo en \u003Ca href=\"https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)\" target=\"_blank\" rel=\"noopener\">Java\u003C/a>, no desde otros lenguajes.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Como veremos más adelante ha sido la más lenta en los \u003Ca href=\"#_resultados_de_los_tests\">Resultados de los tests\u003C/a>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>La implementación de ejemplo de una inserción de una serie de objetos de la clase \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java\" target=\"_blank\" rel=\"noopener\">Price.java\u003C/a>, es exactamente la misma que la que hemos hecho más arriba en \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java\" target=\"_blank\" rel=\"noopener\">SqliteDB\u003C/a>, esto es una de las bondades de \u003Ca href=\"https://es.wikipedia.org/wiki/Java_Database_Connectivity\" target=\"_blank\" rel=\"noopener\">JDBC\u003C/a>, que nos permite obtener una conexión para una base de datos específica, pero a partir de ahí casi siempre nos podemos olvidar de la base de datos con la que trabajamos, siempre y cuando soporte nuestras consultas \u003Ca href=\"https://es.wikipedia.org/wiki/SQL\" target=\"_blank\" rel=\"noopener\">SQL\u003C/a>.\u003C/p>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect2\">\n\u003Ch3 id=\"_objectdb\">\u003Ca href=\"https://www.objectdb.com/\" target=\"_blank\" rel=\"noopener\">ObjectDb\u003C/a>\u003C/h3>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Es una \u003Ca href=\"https://es.wikipedia.org/wiki/Base_de_datos_orientada_a_objetos\">base de datos orientada a objetos\u003C/a> que nos permite acceso \u003Ca href=\"https://es.wikipedia.org/wiki/Java_Persistence_API\" target=\"_blank\" rel=\"noopener\">JPA\u003C/a>, un estándar de Java que persigue no perder las ventajas de la orientación a objetos; esto se suele perder cuando nos acercamos a la capa de persistencia.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Resulta realmente sencillo realizar acciones típicas de una base de datos, abstrayéndonos del SQL, por ejemplo veamos cómo quedaría una inserción de un array de objetos de la clase Price con \u003Ca href=\"https://www.objectdb.com/\" target=\"_blank\" rel=\"noopener\">ObjectDb\u003C/a>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-java\" data-lang=\"java\">\u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">void\u003C/span> \u003Cspan class=\"hljs-title function_\">insert\u003C/span>\u003Cspan class=\"hljs-params\">(Price... prices)\u003C/span> \u003Cspan class=\"hljs-keyword\">throws\u003C/span> SQLException {\n    em.getTransaction().begin();\n    \u003Cspan class=\"hljs-keyword\">for\u003C/span> (Price p : prices) {\n        em.persist(p);\n    }\n    em.getTransaction().commit();\n}\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Si a esta facilidad de uso, le unimos que los \u003Ca href=\"#_resultados_de_los_tests\">Resultados de los tests\u003C/a> de rendimiento han sido muy buenos (cerca de \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java\" target=\"_blank\" rel=\"noopener\">SqliteDB\u003C/a>), puedo decir que he descubierto una base de datos embebida a tener muy en cuenta en futuros proyectos \u003Ca href=\"https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)\" target=\"_blank\" rel=\"noopener\">Java\u003C/a>, eso sí, al igual que con \u003Ca href=\"https://www.oracle.com/technetwork/es/java/javadb/overview/index.html\" target=\"_blank\" rel=\"noopener\">JavaDB\u003C/a>, solo nos sirve si vamos a programar en \u003Ca href=\"https://es.wikipedia.org/wiki/Java_(lenguaje_de_programaci%C3%B3n)\" target=\"_blank\" rel=\"noopener\">Java\u003C/a>.\u003C/p>\n\u003C/div>\n\u003C/div>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect1\">\n\u003Ch2 id=\"_los_tests\">Los Tests\u003C/h2>\n\u003Cdiv class=\"sectionbody\">\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Simplemente consisten en realizar repetidamente una serie operaciones \u003Ca href=\"https://es.wikipedia.org/wiki/CRUD\" target=\"_blank\" rel=\"noopener\">CRUD\u003C/a>. Para cada base de datos, el test realiza una serie de inserciones, selects, actualizaciones y borrado de objetos de la clase Precio.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>He utilizado 100000 instancias de la clase \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java\" target=\"_blank\" rel=\"noopener\">Price.java\u003C/a>, las mismas para cada tipo de base de datos.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Para esto he creado una interfaz \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DB.java\" target=\"_blank\" rel=\"noopener\">DB.java\u003C/a> que compartirán cada una de las implementaciones para cada base de datos.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"title\">DB.java\u003C/div>\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-java\" data-lang=\"java\">\u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">interface\u003C/span> \u003Cspan class=\"hljs-title class_\">DB\u003C/span> {\n\n    \u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">void\u003C/span> \u003Cspan class=\"hljs-title function_\">insert\u003C/span>\u003Cspan class=\"hljs-params\">(Price... prices)\u003C/span> \u003Cspan class=\"hljs-keyword\">throws\u003C/span> SQLException;\n\n    \u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">void\u003C/span> \u003Cspan class=\"hljs-title function_\">createTable\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>;\n\n    \u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">void\u003C/span> \u003Cspan class=\"hljs-title function_\">deleteAll\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>;\n\n    \u003Cspan class=\"hljs-keyword\">public\u003C/span> \u003Cspan class=\"hljs-keyword\">void\u003C/span> \u003Cspan class=\"hljs-title function_\">update\u003C/span>\u003Cspan class=\"hljs-params\">(Price... prices)\u003C/span> \u003Cspan class=\"hljs-keyword\">throws\u003C/span> SQLException;\n\n    \u003Cspan class=\"hljs-keyword\">public\u003C/span> Set&lt;Price&gt; \u003Cspan class=\"hljs-title function_\">selectAll\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>;\n\n}\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect2\">\n\u003Ch3 id=\"_las_bases_de_datos_jdbc\">Las Bases de Datos JDBC\u003C/h3>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Solo cambian los datos necesarios para obtener el driver y la conexión a la base de datos, por eso toda la lógica está en la clase \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/JdbcDb.java\" target=\"_blank\" rel=\"noopener\">JdbcDb\u003C/a> de la que heredan \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java\" target=\"_blank\" rel=\"noopener\">SqliteDB\u003C/a> y \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java\" target=\"_blank\" rel=\"noopener\">DerbyDB\u003C/a>.\u003C/p>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect2\">\n\u003Ch3 id=\"_el_código_fuente\">El código fuente\u003C/h3>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Podéis descargar el código fuente de \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases\" class=\"bare\">https://github.com/carlosvin/java_embedded_databases\u003C/a>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Se trata de un proyecto \u003Ca href=\"https://www.gradle.org\" target=\"_blank\" rel=\"noopener\">Gradle\u003C/a>, por lo que para ejecutar los tests solo tenéis que ejecutar: \u003Ccode>grade test\u003C/code>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>\u003Ca href=\"https://www.gradle.org\" target=\"_blank\" rel=\"noopener\">Gradle\u003C/a> descargará automáticamente las librerías necesarias, compilará y ejecutará los tests.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>También podéis ver directamente la ejecución en \u003Ca href=\"https://travis-ci.org/carlosvin/java_embedded_databases\" class=\"bare\">https://travis-ci.org/carlosvin/java_embedded_databases\u003C/a>.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>\u003Ca href=\"https://travis-ci.org/carlosvin/java_embedded_databases\">\u003Cspan class=\"image\">\u003Cimg src=\"https://travis-ci.org/carlosvin/java_embedded_databases.svg\" alt=\"image\">\u003C/span>\u003C/a>\u003C/p>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect2\">\n\u003Ch3 id=\"_resultados_de_los_tests\">Resultados de los tests\u003C/h3>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-bash\" data-lang=\"bash\">db.DbTest &gt; testSqliteDB STANDARD_OUT\n    Testing with 100000 elements\n    100000 Prices SqliteDB, total time 3455 ms \u003Cb class=\"conum\">(1)\u003C/b>\n    \tInsert:\t 1508 ms\n    \tSelect:\t 605 ms\n    \tUpdate:\t 1319 ms\n    \tDelete:\t 23 ms\n    ----------------------------------------------\ndb.DbTest &gt; testObjectDB STANDARD_OUT\n    Testing with 100000 elements\n    100000 Prices ObjectDB, total time 6467 ms \u003Cb class=\"conum\">(2)\u003C/b>\n    \tInsert:\t 2579 ms\n    \tSelect:\t 1126 ms\n    \tUpdate:\t 1698 ms\n    \tDelete:\t 1064 ms\n    ----------------------------------------------\ndb.DbTest &gt; testDerbyDB STANDARD_OUT\n    Testing with 100000 elements\n    100000 Prices DerbyDB, total time 24808 ms \u003Cb class=\"conum\">(3)\u003C/b>\n    \tInsert:\t 11467 ms\n    \tSelect:\t 695 ms\n    \tUpdate:\t 6983 ms\n    \tDelete:\t 5663 ms\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"colist arabic\">\n\u003Col>\n\u003Cli>\n\u003Cp>\u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java\" target=\"_blank\" rel=\"noopener\">SqliteDB\u003C/a> es el más rápido.\u003C/p>\n\u003C/li>\n\u003Cli>\n\u003Cp>\u003Ca href=\"https://www.objectdb.com/\" target=\"_blank\" rel=\"noopener\">ObjectDb\u003C/a> es dos veces más lento que \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java\" target=\"_blank\" rel=\"noopener\">SqliteDB\u003C/a>.\u003C/p>\n\u003C/li>\n\u003Cli>\n\u003Cp>\u003Ca href=\"https://www.oracle.com/technetwork/es/java/javadb/overview/index.html\" target=\"_blank\" rel=\"noopener\">JavaDB\u003C/a> o \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DerbyDB.java\" target=\"_blank\" rel=\"noopener\">DerbyDB\u003C/a> es el más lento, unas 8 veces más lento que \u003Ca href=\"https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/SqliteDB.java\" target=\"_blank\" rel=\"noopener\">SqliteDB\u003C/a>\u003C/p>\n\u003C/li>\n\u003C/ol>\n\u003C/div>\n\u003C/div>\n\u003C/div>\n\u003C/div>",props:{title:"Bases de Datos Embebidas Java: Comparación de Rendimiento",lang:"en",summary:"Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB",slug:"java-embedded-db-performance-comparison",keywords:["Java","database","embedded"],filepath:"/static/posts/java-embedded-db-performance-comparison.es.adoc",dirpath:"/static/posts",created:1402157340000,modified:1402157340000,otherLangs:["en"],author:"Carlos",previewimage:void 0,path:"/langs/es/posts/java-embedded-db-performance-comparison"},jsonLd:"\u003Cscript type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"mainEntityOfPage\":{\"@type\":\"Webpage\",\"@id\":\"https://google.com/article\"},\"headline\":\"Bases de Datos Embebidas Java: Comparación de Rendimiento\",\"alternativeHeadline\":\"Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB\",\"description\":\"Comparación de rendimiento en Java entre tres bases de datos embebidas: Derby/JavaDB, Sqlite y ObjectDB\",\"datePublished\":\"2014-06-07T16:09:00.000Z\",\"dateModified\":\"2014-06-07T16:09:00.000Z\",\"keywords\":[\"Java\",\"database\",\"embedded\"],\"author\":{\"@type\":\"Person\",\"name\":\"Carlos\"},\"publisher\":{\"@type\":\"Person\",\"name\":\"Carlos\"}}\u003C/script>"},"uses":{"params":["slug","lang"]}}];
+
+					Promise.all([
+						import("../../../../_app/immutable/entry/start.Bc4KkBV-.js"),
+						import("../../../../_app/immutable/entry/app.-56L8BUG.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2, 8],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>

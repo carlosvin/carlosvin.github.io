@@ -1,0 +1,1 @@
+import{a as s,t}from"../chunks/disclose-version.DZGYuMPK.js";import{n as o}from"../chunks/runtime.Dmq9lEfb.js";var n=t('<h1>Carlos says bla bla</h1> <p>Just rebuilding by blog again. I spend more time coding the blog software than writing posts.</p> <a href="/langs/en/posts/">en</a> <a href="/langs/es/posts/">es</a>',1);function g(a){var e=n();o(6),s(a,e)}export{g as component};

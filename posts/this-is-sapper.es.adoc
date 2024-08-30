@@ -1,0 +1,181 @@
+= This is Sapper!
+:date: 2020-08-28
+:lang: es
+:description: Este blog ha sido migrado desde Nikola a Sapper. En este artículo describiré las principales razones, resultados de pruebas de rendimiento y otras reflexiones sobre la utilización de Sapper y Svelte para generar sitios web estáticos.
+:toc:
+:keywords: Sapper, Svelte, JAMStack, PWA, Static Site Generator
+:nikola: https://getnikola.com[Nikola,window='_blank']
+:rst: https://en.wikipedia.org/wiki/ReStructuredText[reStructuredText,window='_blank']
+:md: https://en.wikipedia.org/wiki/Markdown[Markdown,window='_blank']
+:asciidoc: https://asciidoctor.org/[Asciidoctor,window='_blank']
+:python: https://python.org[Python,window='_blank']
+:lighthouse: https://developers.google.com/web/tools/lighthouse[Lighthouse audits,window='_blank']
+:js: https://en.wikipedia.org/wiki/JavaScript[JavaScript,window='_blank']
+:html: https://en.wikipedia.org/wiki/HTML[HTML,window='_blank']
+:rollup: https://rollupjs.org[Rollup,window='_blank']
+:pwa: https://web.dev/progressive-web-apps[PWA,window='_blank']
+:sapper: https://sapper.svelte.dev/[Sapper,window='_blank']
+:svelte:  https://svelte.dev[Svelte,window='_blank']
+:jamstack: https://jamstack.org[JAMStack,window='_blank']
+:html: https://developer.mozilla.org/en-US/docs/Web/HTML[HTML,window=_blank]
+:asciidoctorjs: https://asciidoctor.org/docs/asciidoctor.js/[Asciidoctor.js,window=_blank]
+:rollup-plugin-asciidoc: https://github.com/carlosvin/rollup-plugin-asciidoc[rollup-plugin-asciidoc,window=_blank]
+:rollup-plugin-glob: https://www.npmjs.com/package/rollup-plugin-glob[rollup-plugin-glob,window=_blank]
+:cypress: https://www.cypress.io/[Cypress,window=_blank]
+:selenium: https://www.selenium.dev/[Selenium,window=_blank]
+:previewImage: https://sapper.svelte.dev/sapper-logo-horizontal.svg
+:eslint: https://eslint.org/[eslint,window=_blank]
+:svelte-check: https://github.com/sveltejs/language-tools[svelte-check,window=_blank]
+
+He migrado el stack the tecnologías utilizado en mi blog de {nikola} + {rst} a {sapper} + {asciidoc}.
+
+== Por qué dejar {nikola}?
+
+Este blog ha sido generado por {nikola} desde 2014, cuando el término {jamstack} ni existía. Funcionó muy bien estos años y tiene todas las características que necesitaba por defecto:
+
+- Soporte multi-idioma.
+- {rst}, el cual prefiero sobre {md}. 
+- Está desarrollado en {python}, uno de mis lenguajes de programación preferidos.
+
+Pero tuve algunos *problemillas* que me molestaban desde el principio:
+
+- El fichero de configuración estaba un poco hinchado y era algo confuso.
+- No era fácil para mí crear, modificar on encontrar templates que me convenciesen.
+- El rendimiento del sitio era algo mediocre, el último informe que generé con {lighthouse} era alrededor de 80, excepto por la sección SEO que era 96.
+
+== Por qué Sapper?
+
+=== DX: Developer experience
+Ya había utilizado {sapper} para crear algunas pequeñas {pwa}s footnote:[Progressive Web Application], aquí puedes encontrar 2 ejemplos que desarrollé con {Svelte} y {Sapper}:
+
+https://currency-loss.netlify.app[Currency Exchage Loss Calculator,window=_blank]:: Una aplicación útil para viajeros que utilizan casas de cambio. Dependiendo en el cambio que ofrezcan en ese momento y la cantidad de dinero que quieras cambiar, te muestra la cantidad de dinero que estás perdiendo en esta transacción de cambio.
+https://covid-stats-pwa.netlify.app[COVID-19 Stats,window=_blank]:: Muestra estadísticas actualizadas sobre el COVID-19 por país y por fecha.
+
+Durante la creación de estas {pwa}s, la experiencia de desarrollo con {sapper}&{svelte} ha sido bastante impresionante. 
+
+=== UX: La experiencia de usuario con Sapper
+Últimament me he encontrado con algunos blogs utilizando {sapper} como el propio blog de {sapper}, https://www.codingwithjesse.com/blog/statically-generating-a-blog-with-svelte-sapper/[Coding with Jessie,window=_blank] or https://www.swyx.io/writing/svelte-static/[swyx.io,window=_blank]. La experiencia de usuario me ha parecido similar a Gatsby, quizá algo más ligeros y más originales.
+
+NOTE: {sapper} está inspirado en https://nextjs.org/[Next.js], aquí puedes encontrar https://sapper.svelte.dev/docs#Comparison_with_Next_js[una comparación con este conocido framework].
+
+== {asciidoc}
+No tengo una preferencia clara sobre {asciidoc} o {rst}, estoy cómo con ambos, pero hay más soporte para  {asciidoc} en otros lenguajes de programación como {js}. Así que, básicamente he cambiado a {asciidoc} prque no encontré una librería {js} que convirtiese correctamente {rst} a {html}.
+
+El principal problema de no utilizar {md} fue la falta de plugins de {rollup} para convertir {asciidoc} a {html}, así que creé uno, {rollup-plugin-asciidoc}. La implementación fue muy sencilla, el plugin simplemente utiliza la librería {asciidoctorjs} para convertir un texto de entrada en formato {asciidoc} a {html}. 
+
+=== {rollup-plugin-asciidoc} al rescate
+TIP: Con {rollup-plugin-asciidoc} podemos importar {asciidoc} archivos de nuestro blog y {rollup} los convertirá a {html}.
+
+==== Ejemplo
+
+.a-blog-post.adoc
+[source,adoc]
+----
+= Post title
+:date: 2019-11-11
+
+Such a post!
+----
+
+.Con {rollup-plugin-asciidoc} podemos importar archivos {asciidoc} uno por uno.
+[source,javascript]
+----
+import doc from './a-blog-post.adoc';
+
+console.log(doc);
+----
+
+.Salida
+[source,javascript]
+----
+{
+  meta: {
+    title: "Post title",
+    date: "2019-11-11"
+  },
+  html: "<p>Such a post!</p>"
+}
+----
+
+Pero importar ficheros uno por uno no es útil para un blog donde tenemos muchos archivos, los cuales no queremos importart manualmente uno por uno.
+
+=== {rollup-plugin-glob} al rescate
+
+Con {rollup-plugin-glob} podemos importar todos los ficheros que estén en un directorio por extensión, esto significa que ya tenemos todos los posts de nuestro blog convertidos a {html} en un par de líneas de código.
+
+[source,javascript]
+----
+import allAdoc from '../posts/**/*.adoc';
+
+allAdoc.forEach(post => console.log(post));
+----
+
+.Output: List of posts already converted to HTML
+[source,javascript]
+----
+{ meta: { title: "Post title", date: "2019-11-11" },
+  html: "<p>Post 1.</p>"
+}
+{ meta: { title: "Post title", date: "2020-02-22" },
+  html: "<h2>Title post</h2><p>This is a sample post...</p>"
+}
+// ...
+----
+
+== Resaltado de sintáxis para el código fuente
+El tema principal de mi blog es la Ingeniería del Software, así que el resaltado de sintáxis es uno de los requisitos más importantes que un generador de sitios web estáticos debe cumplir.
+
+Al principio utilicé https://highlightjs.org/usage/[la librería highlightjs desde un CDN,window=_blank], que consiste en importar un fichero javascript para analizar el código fuente y un fichero CSS para aplicar el resaltado.
+
+Más tarde me dí cuenta, de que el trabajo de análisis del código fuente lo podemos hacer tiempo de compilación, cuando convertimos {asciidoc} a {html} en la implementación del {rollup-plugin-asciidoc}, de esta forma el usuario no tendrá que descargar el fichero {js} ni procesar el código fuente en su navegador. 
+
+TIP: Haciendo el resaltado de sintáxis mientra construimos el sitio web, mejoramos el rendimiento del blog y reducimos los datos que el usuario tiene que descargar.
+
+La generación del resaltado de sintáxis en la construcción del sitio web tiene 2 grandes beneficios:
+
+- Reducir el tamaño del sitio web: no necesitamos descargar los 27KB del fichero https://highlightjs.org/usage/[highlightjs javascript library].
+- Mejora de rendimiento: el análisis del código fuente se hace solo una vez, mientras se construye el sitio web.
+
+== Resultado
+Todavía hay https://github.com/carlosvin/carlosvin.github.io/issues[algunos problemas o mejoras que hacer=_blank], pero hasta ahora tenemos un blog con las siguientes características:
+
+- Generación automática de link:/sitemap.xml[Sitemap] and link:/langs/en/feed.xml[Atom feeds].
+- Soporte multi-idioma (todavía faltan muchas traducciones).
+- Resaltado de código.
+- Puntuación de 100 en {lighthouse}, aunque todavía hay algunas páginas con menos de 100.
+  
+image::/posts/lighthouse-results.webp[alt=lighthouse score,width="95%"]
+
+== Pruebas
+Soy un ferviente defensor de las pruebas automáticas, no me gusta escribirlas, pero creo que es la mejor forma de saber que todo funciona como se espera.
+
+El template de {sapper} trae preconfigurado un test de integración muy simple. Utiliza {cypress}, un framework de pruebas E2E footnote:[End to end], más sencillo que {selenium}, aunque creo que todavía no podemos hablar de https://blog.logrocket.com/cypress-io-the-selenium-killer/[the Selenium Killer,window=_blank].
+
+NOTE: En muchos casos no puede reemplazar a {selenium}: La principal razón es que {cypress} por diseño no tiene algunas funcionalidades que podrías necesitar, depende del proyecto, como por ejemplo soporte para pruebas en casi cualquier navegador y plataforma, como el proporcionado por https://www.selenium.dev/documentation/en/grid/components_of_a_grid/[Selenium grid,window=_blank].
+
+He añadido algunas pruebas para este blog (y añadiré más), como verificar que la información del header es correcta, que funcionan las redirecciones, que los principales flujos de navegación funcionan... Todo ello en un par de horas, incluyendo correcciones de errores encontrados. Por esto me encanta escribir pruebas con {cypress}, por su productividad.
+
+=== Escribiendo una prueba
+
+Funciona de forma similar a Selenium:
+. Abre una página.
+. Accede a un elemento utilizando https://developer.mozilla.org/en-US/docs/Web/API/Element/id[HTML identifier,window=_blank] (`#element-id`), https://en.wikipedia.org/wiki/XPath[XPath,window=_blank] (`/a[@title='link title']`) or https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors[CSS selector,window=_blank] (`div > a.cssClass`).
+. Interactuar con el elemento seleccionado.
+. Validar que todo se comporta de forma esperada.
+
+Puedes encontrar ejemplos de pruebas en la carpeta https://github.com/carlosvin/carlosvin.github.io/tree/site/cypress/integration[cypress/integration].
+
+.Ejemplo simple
+[source,javascript]
+----
+it('Header', () => {
+  cy.visit('/posts/this-is-sapper/en') <1>
+  cy.get('.subtitle .date').contains('28/08/2020') <2>
+});
+----
+<1> Navega al path de un post.
+<2> Comprueba que la fecha que aparece en el subtítulo es correcta.
+
+== Typescript
+Finalmente https://svelte.dev/blog/svelte-and-typescript[el soporte de Svelte para Typescript está terminado] y después de más trabajo del esperado, he migrado https://github.com/carlosvin/carlosvin.github.io[este blog utlizando Sapper con Javascript a Sapper con Typescript]. 
+Te animo a que utilices este proyecto como ejemplo o template para tu blog, si encuentras algún problema, el feedback es bienvenido. Hay todavía https://github.com/carlosvin/carlosvin.github.io/issues[algunos problemas], como averiguar que si utilizar {eslint} o {svelte-check} o ambos. 

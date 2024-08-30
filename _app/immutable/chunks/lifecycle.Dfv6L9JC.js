@@ -1,0 +1,1 @@
+import{y as r,z as e,A as c,B as a,C as i,D as l,g as u,F as _}from"./runtime.Dmq9lEfb.js";function g(){const s=c,n=s.l.u;n&&(n.b.length&&r(()=>{f(s),a(n.b)}),e(()=>{const o=i(()=>n.m.map(l));return()=>{for(const t of o)typeof t=="function"&&t()}}),n.a.length&&e(()=>{f(s),a(n.a)}))}function f(s){if(s.l.s)for(const n of s.l.s)u(n);_(s.s)}export{g as i};
