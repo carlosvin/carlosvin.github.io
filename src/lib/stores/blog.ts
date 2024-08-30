@@ -25,7 +25,11 @@ class BlogStore {
 	}
 
 	private _walk() {
-		const loaded = import.meta.glob('/static/posts/*.adoc', { eager: true, as: 'raw' });
+		const loaded = import.meta.glob<string>('/static/posts/*.adoc', {
+			eager: true,
+			query: '?raw',
+			import: 'default'
+		});
 		for (const [filePath, content] of Object.entries(loaded)) {
 			const post = new PostImpl(this._proc.load(filePath, content), filePath);
 			this._add(post);
