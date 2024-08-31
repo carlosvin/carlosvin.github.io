@@ -37,6 +37,6 @@
 	[aria-current] {
 		position: relative;
 		display: inline-block;
-		box-shadow: inset 1px 1px 1em rgba(255, 62, 0, 0.1);
+		box-shadow: inset 1px 1px 1em var(--border-color);
 	}
 </style>

@@ -9,6 +9,6 @@ export default defineConfig({
 	},
 	define: {
 		DEFAULT_AUTHOR: `"${pkg.author.name}"`,
-		VERSION: `"${pkg.version}"`,
-	},
+		VERSION: `"${pkg.version}"`
+	}
 });

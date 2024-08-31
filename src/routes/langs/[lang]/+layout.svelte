@@ -19,6 +19,10 @@
 <main>
 	<slot />
 </main>
+<footer>
+	<span>{data.translations.siteName}</span>
+	<code>{VERSION}</code>
+</footer>
 
 <style>
 	main {
@@ -27,6 +31,14 @@
 		background-color: white;
 		margin: 2em auto;
 		box-sizing: border-box;
+	}
+
+	footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1em;
+		border-top: 1px solid var(--border-color);
 	}
 
 	@media (width < 32em) {
