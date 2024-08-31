@@ -21,7 +21,7 @@
 </main>
 <footer>
 	<span>{data.translations.siteName}</span>
-	<code>{VERSION}</code>
+	<code>{data.version}</code>
 </footer>
 
 <style>

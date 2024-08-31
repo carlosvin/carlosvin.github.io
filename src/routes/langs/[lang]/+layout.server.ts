@@ -8,5 +8,10 @@ export const load: LayoutServerLoad = async ({ params, url }) => {
 	if (lang && typeof document !== 'undefined') {
 		document.documentElement.lang = lang;
 	}
-	return { path: url.pathname, lang, translations: new TranslationsStore(lang).current };
+	return {
+		path: url.pathname,
+		lang,
+		translations: new TranslationsStore(lang).current,
+		version: VERSION
+	};
 };
