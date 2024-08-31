@@ -2,7 +2,6 @@ import type { Post, PostProps } from './interfaces';
 import type { Asciidoctor } from 'asciidoctor';
 import { toSlug } from '$lib/services/slug';
 import { postPath } from '$lib/services/url';
-import { AUTHOR } from '$lib/conf';
 
 export class PostPropsImpl implements PostProps {
 	readonly title: string;
@@ -40,12 +39,12 @@ export class PostPropsImpl implements PostProps {
 		this.title = doc.getTitle();
 		this.created = Date.parse(created || date || docdate);
 		this.modified = Date.parse(modified || date || docdate);
-		this.keywords = keywords ? keywords.split(',').map((k) => k.trim()) : [];
+		this.keywords = keywords ? keywords.split(',').map((k: string) => k.trim()) : [];
 		this.lang = lang;
 		this.otherLangs = [];
 		this.slug = finalSlug;
 		this.summary = description || summary;
-		this.author = author || AUTHOR;
+		this.author = author || DEFAULT_AUTHOR;
 		this.previewimage = previewimage;
 		this.path = postPath(finalSlug, lang);
 		this.validate();

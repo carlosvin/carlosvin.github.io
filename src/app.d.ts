@@ -8,6 +8,8 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+	declare const VERSION: string;
+	declare const DEFAULT_AUTHOR: string;
 }
 
 export {};

@@ -1,8 +1,8 @@
-import { DEFAULT_LANG } from '$lib/conf';
 import type { Category, PostProps } from '$lib/models/interfaces';
 import { getIsoDate } from '$lib/services/dates';
 import { categoryPath, postPath, url } from '$lib/services/url';
 import { blogStore } from '$lib/stores/blog';
+import { TranslationsStore } from '$lib/stores/lang';
 
 export const prerender = true;
 
@@ -58,7 +58,9 @@ const render = (pages: string[], posts: PostProps[], categories: Category[]) => 
 
 export function GET() {
 	return new Response(
-		render(routes, blogStore.getIndex(DEFAULT_LANG), [...blogStore.categories.values()]),
+		render(routes, blogStore.getIndex(TranslationsStore.defaultLang), [
+			...blogStore.categories.values()
+		]),
 		{
 			headers: {
 				'Cache-Control': 'max-age=0, s-max-age=3600',
