@@ -25,7 +25,7 @@ class BlogStore {
 	}
 
 	private _walk() {
-		const loaded = import.meta.glob<string>('/static/posts/*.adoc', {
+		const loaded = import.meta.glob<string>('/static/posts/**/*.adoc', {
 			eager: true,
 			query: '?raw',
 			import: 'default'
