@@ -60,7 +60,22 @@ Go uses the concept of {http} multiplexer or router. You can specify routes usin
 .router.go file
 [source,go]
 ----
-include::router.go[]
+package main
+
+import (
+	"log"
+	"net/http"
+)
+
+func main() {
+	router := http.NewServeMux()
+	router.Handle("/redirect", http.RedirectHandler("https://carlosvin.github.io/", 307))
+	router.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello world!"))
+	})
+	log.Println("Listening...")
+	http.ListenAndServe(":3000", router)
+}
 ----
 
 Source code is already quite simple, but there might more complex routing use cases.
@@ -212,7 +227,55 @@ Neither {go} nor {gin} has any {ioc} solution, but you can still apply {di} tech
 .Dependency injection simple example in {go}
 [source,go]
 ----
-include::di.go[]
+package main
+
+import "fmt"
+
+// Greeter interface to greet the caller
+type Greeter interface {
+	greet()
+}
+
+type greeterHello struct{}
+
+func (g *greeterHello) greet() { // <3>
+	fmt.Println("Hello!")
+}
+
+type greeterHi struct{}
+
+func (g *greeterHi) greet() { // <4>
+	fmt.Println("Hi!")
+}
+
+// App Application representation
+type App struct {
+	greeters []Greeter // <1>
+}
+
+func (app *App) startup() {
+	for _, v := range app.greeters {
+		v.greet()
+	}
+}
+
+func main() {
+	greeters := []Greeter{ // <2>
+		&greeterHello{},
+		&greeterHi{},
+		&greeterHello{}}
+
+	app := &App{greeters}
+
+	app.startup()
+}
+
+/*
+<1> `App` accepts an array of `Greeter`
+<2> During `App` instantiation we pass different implementations of `Greeter`
+<3> Greeter implementation that prints *Hello!*
+<4> Greeter implementation that prints *Hi!*
+*/
 ----
 
 It is more verbose, but there is an advantage, there is nothing hidden, everything is explicit and you have full control of instantiation order.

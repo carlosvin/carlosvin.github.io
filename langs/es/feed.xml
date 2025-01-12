@@ -717,6 +717,653 @@ std::mutex mtx;
             <author><name>Carlos Martin Sanchez</name></author>
         </entry>
   <entry>
+            <title>Alineación de una Estructura C++ en Memoria</title>
+            <link href="https://carlosvin.github.io/langs/es/posts/cpp-pragma-pack" />
+            <link 
+				rel="alternate"
+				hreflang="en"
+				href="https://carlosvin.github.io/langs/en/posts/cpp-pragma-pack"/>   
+            <id>https://carlosvin.github.io/langs/es/posts/cpp-pragma-pack</id>
+            <updated>2012-11-26T11:00:00.000Z</updated>
+            <summary>Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria</summary>
+            <content type="html"><![CDATA[<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_estructura_de_ejemplo">Estructura de ejemplo</a></li>
+<li><a href="#_la_directiva_pragma_pack_en_struct_c">La directiva #pragma pack en struct C++</a></li>
+<li><a href="#_rendimiento">Rendimiento</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia. Podemos considerarlo como una clase con visibilidad publica por defecto para sus atributos y funciones.</p>
+</div>
+<div class="paragraph">
+<p>Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_estructura_de_ejemplo">Estructura de ejemplo</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un booleano (un byte). En C++ queda de la siguiente forma:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStruct</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Si hacemos un <code>sizeof</code> de una instancia de la estructura deberíamos obtener un tamaño de 5 bytes. Y la memoria quedaría de la siguiente forma:</p>
+</div>
+<div id="5-bytes" class="imageblock center">
+<div class="content">
+<img src="/posts/cpp-pragma-pack/5b.png" alt="5Bytes" width="200" height="auto">
+</div>
+<div class="title">Figure 1. Estructura de 5 bytes que realmente ocupa 5 bytes en memoria</div>
+</div>
+<div class="paragraph">
+<p><strong>Pero</strong> no es tan sencillo, a continuación veremos que no nos podemos olvidar de la alineación de la memoria que hace el compilador en ese sistema y veremos cómo controlarlo para no encontrarnos con tamaños inesperados, ya que esto depende del compilador del sistema.</p>
+</div>
+<div class="paragraph">
+<p>Por ejemplo, si en mi máquina hago un <code>sizeof</code> de la estructura de ejemplo, <strong>obtengo un tamaño de 8 bytes</strong>. Lo que está sucediendo es que el compilador reserva más memoria al final de la estructura para que cuadre en bloques de 2n Bytes. La memoria realmente queda de la siguiente forma:</p>
+</div>
+<div id="8-bytes" class="imageblock center">
+<div class="content">
+<img src="/posts/cpp-pragma-pack/8b.png" alt="5Bytes" width="200" height="auto">
+</div>
+<div class="title">Sin pragma: Estructura de 5 Bytes que realmente ocupa 8 Bytes en memoria</div>
+</div>
+<div class="listingblock">
+<div class="title">Fragmento de código que imprime el tamaño de la estructura y el de cada uno de sus atributos, en este caso 4 + 1 no es 5</div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span>  <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStruct</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">print</span> <span class="hljs-params">(<span class="hljs-type">size_t</span> sz, <span class="hljs-type">size_t</span> sz_flag, <span class="hljs-type">size_t</span> sz_timeout)</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot;\tflag: &quot;</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t+&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\ttimeout: &quot;</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t=&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t&quot;</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt;<span class="hljs-string">&quot;sizeof struct:  &quot;</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStruct&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStruct), <span class="hljs-built_in">sizeof</span>(SampleStruct::flag), <span class="hljs-built_in">sizeof</span>(SampleStruct::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://coliru.stacked-crooked.com/a/c7deb3df49bebd40">Ejecutando el código sin la directiva pragma</a>, tenemos que nuestra estructura ocupa 8 bytes en lugar de 5 bytes.</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStruct
+flag: 1 Bytes
++
+<span class="hljs-built_in">timeout</span>: 4 Bytes
+=
+5 Bytes
+sizeof struct:  8 Bytes
+--</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+Si queremos conocer el tamaño exacto de las estructuras que vamos a utilizar, tenemos que especificar al compilador la forma de alinear la estructura en memoria, para ello utilizaremos la directiva <code>#pragma pack(n)</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_la_directiva_pragma_pack_en_struct_c">La directiva #pragma pack en struct C++</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Se trata de una directiva del preprocesador que indica al compilador cómo debe realizar la alineación de la memoria.</p>
+</div>
+<div class="listingblock">
+<div class="title">Ejemplo con diferentes configuraciones de alineamiento de memoria</div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">print</span> <span class="hljs-params">(<span class="hljs-type">size_t</span> sz, <span class="hljs-type">size_t</span> sz_flag, <span class="hljs-type">size_t</span> sz_timeout)</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot; flag: &quot;</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span>&lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; +&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; timeout: &quot;</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">&quot;Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; =&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">&quot;Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; sizeof struct:  &quot;</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (1)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack1</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (2)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack2</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (4)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack4</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStruct</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+</span>{
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack1&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStructPack1), <span class="hljs-built_in">sizeof</span>(SampleStructPack1::flag), <span class="hljs-built_in">sizeof</span>(SampleStructPack1::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack2&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStructPack2), <span class="hljs-built_in">sizeof</span>(SampleStructPack2::flag), <span class="hljs-built_in">sizeof</span>(SampleStructPack2::timeout));
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack4&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStructPack4), <span class="hljs-built_in">sizeof</span>(SampleStructPack4::flag), <span class="hljs-built_in">sizeof</span>(SampleStructPack4::timeout));
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStruct&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStruct), <span class="hljs-built_in">sizeof</span>(SampleStruct::flag), <span class="hljs-built_in">sizeof</span>(SampleStruct::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://coliru.stacked-crooked.com/a/7c18ee6585e57366">Ejecutando el código con las directivas pragma</a>, tenemos distintos resultados dependiendo del valor de pragma.</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStructPack1 <b class="conum">(1)</b>
+ flag: 1 Bytes
+ +
+ <span class="hljs-built_in">timeout</span>: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  5 Bytes
+ --
+
+SampleStructPack2 <b class="conum">(2)</b>
+ flag: 1 Bytes
+ +
+ <span class="hljs-built_in">timeout</span>: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  6 Bytes
+
+SampleStructPack4 <b class="conum">(3)</b>
+ flag: 1 Bytes
+ +
+ <span class="hljs-built_in">timeout</span>: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  8 Bytes
+
+SampleStruct <b class="conum">(4)</b>
+ flag: 1 Bytes
+ +
+ <span class="hljs-built_in">timeout</span>: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  8 Bytes</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>SampleStructPack1 <code>#pragma pack (1)</code>: Reserva bloques de memoria de un byte, nuestra estructura se ha ajustado perfectamente; en este caso sí que <code>4 + 1 = 5</code>.</p>
+</li>
+<li>
+<p>SampleStructPack2 <code>#pragma pack (2)</code>: Ahora el mínimo tamaño del bloque de memoria es de 2 bytes. Para el entero, hay un ajuste exacto porque necesita 2 bloques que 2 bytes para alojar sus 4 bytes. Para el caso del booleano, necesita un bloque de 1 byte, pero como mínimo tiene que asignar un bloque de 2 bytes, por eso en total reserva 6 bytes, <code>4 + 2 = 6</code>.</p>
+</li>
+<li>
+<p>SampleStructPack4 <code>#pragma pack (4)</code>: Es el mismo caso que el anterior, aunque en el caso del booleano, hay un mayor "desperdicio" de memoria. Necesita 1 byte, pero reserva 4 bytes que es tamaño mínimo de bloque de memoria que puede asignar el compilador.</p>
+</li>
+<li>
+<p>SampleStruct (default compiler alignment): Como vemos se comporta exactamente igual que <code>#pragma pack (4)</code>, podemos deducir que la alineación por defecto del compilador que estamos utilizando es de 4 bytes.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+¿Por qué no utilizamos siempre la alineación de memoria más ajustada (<code>#pragma pack (1)</code>) para aprovechar mejor la memoria?
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Porque perderemos rendimiento.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rendimiento">Rendimiento</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vamos a hacer una prueba simple de rendimiento, en la que se va a reservar el mismo número de elementos en arrays para cada tipo de estructura.</p>
+</div>
+<div class="paragraph">
+<p>Este es el resultado:</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://coliru.stacked-crooked.com/a/954ad542659c7591">Resultados de la prueba de rendimiento</a>.</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStructPack1: 500000000000000000 bytes allocated <span class="hljs-keyword">in</span> 94311 nanoseconds
+SampleStructPack2: 600000000000000000 bytes allocated <span class="hljs-keyword">in</span> 1777 nanoseconds
+SampleStructPack4: 800000000000000000 bytes allocated <span class="hljs-keyword">in</span> 1519 nanoseconds</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como vemos cuanto más ajustada es la alineación de memoria, más tiempo se tarda en reservar y liberar.</p>
+</div>
+<div class="paragraph">
+<p>A continuación pego el código de la prueba de rendimiento.</p>
+</div>
+<div class="listingblock">
+<div class="title">Código de las pruebas de rendimiento</div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;chrono&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (1)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack1</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (2)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack2</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (4)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack4</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStruct</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">long</span> MAX_ELEMENTS = <span class="hljs-number">100000000000000000</span>;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std::chrono;
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">allocate1</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack1 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack1: &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">allocate2</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack2 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack2: &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">allocate4</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack4 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack4: &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">chrono1</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate1</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; <span class="hljs-built_in">duration_cast</span>&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">chrono2</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate2</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; <span class="hljs-built_in">duration_cast</span>&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">chrono4</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate4</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; <span class="hljs-built_in">duration_cast</span>&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+</span>{
+    <span class="hljs-built_in">chrono1</span>();
+    <span class="hljs-built_in">chrono2</span>();
+    <span class="hljs-built_in">chrono4</span>();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>]]></content>
+            <category term="C++"/>
+    <category term="Performance"/>
+    <category term="Compilers"/>
+    <category term="Memory"/>
+            <author><name>Carlos Martin Sanchez</name></author>
+        </entry>
+  <entry>
+            <title>Easily creating a golang command line tool</title>
+            <link href="https://carlosvin.github.io/langs/en/posts/create-cmd-tool-golang" />
+            <link 
+				rel="alternate"
+				hreflang="es"
+				href="https://carlosvin.github.io/langs/es/posts/create-cmd-tool-golang"/>   
+            <id>https://carlosvin.github.io/langs/en/posts/create-cmd-tool-golang</id>
+            <updated>2021-02-14T00:00:00.000Z</updated>
+            <summary>Let's see how to easily and quickly create a command line tool in golang</summary>
+            <content type="html"><![CDATA[<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_flags">Flags</a></li>
+<li><a href="#_viper">Viper</a></li>
+<li><a href="#_meta_viper">Meta-Viper</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://golang.org/" target="_blank" rel="noopener">Golang</a> is the one of the most useful technologies I&#8217;ve recently learned. <a href="https://golang.org/" target="_blank" rel="noopener">Golang</a> has a pretty nice support for networking, command line or logging out of the box, you don&#8217;t need any dependency. But there are libraries making developers' life even easier.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve already talked about <a href="/langs/en/posts/rest-service-go-vs-java/" target="blank_">creating REST service in go</a>, today I&#8217;d like to focus on creating a command line tool.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flags">Flags</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">Command line tool to read number of lines as an input integer parameter <a href="https://golang.org/" target="_blank" rel="noopener">Golang</a></div>
+<div class="content">
+<pre class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;flag&quot;</span>
+	<span class="hljs-string">&quot;fmt&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	<span class="hljs-keyword">var</span> nFlag = flag.Int(<span class="hljs-string">&quot;lines&quot;</span>, <span class="hljs-number">1234</span>, <span class="hljs-string">&quot;number of lines&quot;</span>)
+	flag.Parse()
+	fmt.Printf(<span class="hljs-string">&quot;Lines %d\n&quot;</span>, *nFlag)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With previous simple code we have already some useful capabilities</p>
+</div>
+<div class="listingblock">
+<div class="title">Print help menu</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cmd --<span class="hljs-built_in">help</span>
+
+&gt; Usage of cmd:
+    -lines int
+        number of lines (default 1234)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Use default value</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cmd
+
+&gt; Lines 1234</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Pass a value to the command tool</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cmd --lines=2
+
+&gt; Lines 2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Pass an invalid value</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cmd --lines=asdf
+
+&gt; invalid value <span class="hljs-string">&quot;asdf&quot;</span> <span class="hljs-keyword">for</span> flag -lines: parse error
+Usage of cmd:
+    -lines int
+        number of lines (default 1234)
+<span class="hljs-built_in">exit</span> status 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a simple command line tool, in most of the cases, we will have enough with the default language support. But if we want to bring more features to the combo like reading configuration from environment variables or from files, then a library like the awesome <a href="https://github.com/spf13/viper" target="_blank" rel="noopener">Viper</a> will come really handy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_viper">Viper</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/spf13/viper" target="_blank" rel="noopener">Viper</a> is very powerful and well documented library widely used from many projects, I will not get into the details or how to use it, because I&#8217;ve created an abstraction to simplify its usage, I named it <a href="https://github.com/carlosvin/meta-viper" target="_blank" rel="noopener">Meta-Viper</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_meta_viper">Meta-Viper</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/carlosvin/meta-viper" target="_blank" rel="noopener">Meta-Viper</a> abstracts you of the details of reading configuration from files, environment or flags. This extra simplicity comes with a tradeoff, we are missing some flexibility.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s see some features with an example.</p>
+</div>
+<div class="listingblock">
+<div class="title">Firstly we have to create a go modules project with the meta-viper dependency</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">go mod init example.com/meta-viper <b class="conum">(1)</b>
+
+go get github.com/carlosvin/meta-viper <b class="conum">(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Create a go modules project</p>
+</li>
+<li>
+<p>Install the meta-viper dependency</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s create a program that is configurable from files, command line params and environment variables.</p>
+</div>
+<div class="listingblock">
+<div class="title">main.go</div>
+<div class="content">
+<pre class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;log&quot;</span>
+	<span class="hljs-string">&quot;os&quot;</span>
+
+	config <span class="hljs-string">&quot;github.com/carlosvin/meta-viper&quot;</span>
+)
+
+<span class="hljs-comment">// Here is where you define the struct that will hold the configuration values</span>
+<span class="hljs-comment">// cfg_name is the parameter name</span>
+<span class="hljs-comment">// cfg_desc is the parameter description that will be shown in the command line help</span>
+<span class="hljs-keyword">type</span> appConfig <span class="hljs-keyword">struct</span> {
+	Host      <span class="hljs-type">string</span> <span class="hljs-string">`cfg_name:&quot;host&quot; cfg_desc:&quot;Server host&quot;`</span>
+	Port      <span class="hljs-type">int</span>    <span class="hljs-string">`cfg_name:&quot;port&quot; cfg_desc:&quot;Server port&quot;`</span>
+	SearchAPI <span class="hljs-type">string</span> <span class="hljs-string">`cfg_name:&quot;apis.search&quot; cfg_desc:&quot;Search API endpoint&quot;`</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	<span class="hljs-comment">// Instantiate the structure with default values</span>
+	cfg := &amp;appConfig{
+		Host:      <span class="hljs-string">&quot;localhost&quot;</span>,
+		Port:      <span class="hljs-number">6000</span>,
+		SearchAPI: <span class="hljs-string">&quot;google&quot;</span>,
+	}
+
+	<span class="hljs-comment">// Meta-Viper instance is loading the configuration from wherever is available: files, env, or input params</span>
+	_, err := config.New(cfg, os.Args)
+	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+		<span class="hljs-built_in">panic</span>(err)
+	}
+	log.Printf(<span class="hljs-string">&quot;Loaded Configuration %v...&quot;</span>, cfg)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s see some examples how this command line tool is able to load configuration.</p>
+</div>
+<div class="listingblock">
+<div class="title">Print usage (help)</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cmd --<span class="hljs-built_in">help</span>
+
+Usage of flagsConfig:
+    --apis.search string    Search API endpoint (default <span class="hljs-string">&quot;google&quot;</span>)
+    --config string         Configuration name
+    --config-dirs strings   Configuration directories search paths (default [.,config,configs,cfg])
+    --host string           Server host (default <span class="hljs-string">&quot;localhost&quot;</span>)
+    --port int              Server port (default 6000)
+pflag: <span class="hljs-built_in">help</span> requested
+<span class="hljs-built_in">exit</span> status 2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Run with default values</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cmd
+
+2021/02/15 23:12:48 No configuration name has been specified, so no configuration file will be loaded. Using flags and environment variables.
+2021/02/15 23:12:48 Loaded Configuration &amp;{localhost 6000 google}...</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Read the port from environment variable and host from input param</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ PORT=9999 cmd --host=myhost
+
+2021/02/15 23:15:47 No configuration name has been specified, so no configuration file will be loaded. Using flags and environment variables.
+2021/02/15 23:15:47 Loaded Configuration &amp;{myhost 9999 google}...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The last example will aggregate all the possible sources of configuration, it will extend the previous one adding configuration from a file. So let&#8217;s create a configuration file:</p>
+</div>
+<div class="listingblock">
+<div class="title">the-config.json</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"><span class="hljs-punctuation">{</span>
+	<span class="hljs-attr">&quot;apis&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+		<span class="hljs-attr">&quot;search&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;duckduckgo&quot;</span>
+	<span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Read configuration from the-config.json file, from environment and from input params</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ PORT=9999 cmd --host=myhost --config=the-config
+
+2021/02/15 23:22:17 Loaded Configuration &amp;{myhost 9999 duckduckgo}...</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+Here you can find a <a href="https://github.com/carlosvin/meta-viper/tree/master/examples/multi-env" target="_blank" rel="noopener">multi-environment example</a> a little bit more complete.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>]]></content>
+            <category term="Golang"/>
+    <category term="cmd"/>
+    <category term="tools"/>
+            <author><name>Carlos Martin Sanchez</name></author>
+        </entry>
+  <entry>
             <title>Crear un plugin para Maven: default lifecycle</title>
             <link href="https://carlosvin.github.io/langs/es/posts/creating-custom-maven-plugin-default" />
             <link 
@@ -1355,6 +2002,150 @@ More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-d
     <category term="Build Systems"/>
     <category term="maven-site-plugin"/>
     <category term="Maven Plugins"/>
+            <author><name>Carlos Martin Sanchez</name></author>
+        </entry>
+  <entry>
+            <title>Parameterized Tests in Cypress</title>
+            <link href="https://carlosvin.github.io/langs/en/posts/cypress-parametrized-dynamic-tests" />
+            <link 
+				rel="alternate"
+				hreflang="es"
+				href="https://carlosvin.github.io/langs/es/posts/cypress-parametrized-dynamic-tests"/>   
+            <id>https://carlosvin.github.io/langs/en/posts/cypress-parametrized-dynamic-tests</id>
+            <updated>2021-01-06T00:00:00.000Z</updated>
+            <summary>How to write parameterized tests in Cypress</summary>
+            <content type="html"><![CDATA[<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_explicit_input_data_set">Explicit input data set</a></li>
+<li><a href="#_generated_input_data_set">Generated input data set</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a> is a testing framework for anything running on a web browser. I am using it to test this site and I&#8217;ve talked before about it in the post <a href="https://carlosvin.github.io/posts/this-is-sapper/en#_testing">"This is Sapper"</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this post I won&#8217;t explain how to use <a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a>, they have a pretty nice documentation: <a href="https://docs.cypress.io/guides/getting-started/installing-cypress.html" target="_blank" rel="noopener">Getting started with Cypress</a>.</p>
+</div>
+<div class="paragraph">
+<p>I will stick to the parameterized tests topic.</p>
+</div>
+<div class="paragraph">
+<p><strong>Parameterized tests</strong>: Also known as dynamic tests, it is an useful technique where you can specify an input dataset and the test case will be repeated for each element in the dataset.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_explicit_input_data_set">Explicit input data set</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since sometimes you can’t run the test for all the possible inputs, you can select a set of meaningful data to test.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example checking that the relevant pages in the site have valid HTML syntax</div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-title function_">describe</span>(<span class="hljs-string">&#x27;validate pages&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+    [ <b class="conum">(1)</b>
+        <span class="hljs-string">&quot;/&quot;</span>,
+        <span class="hljs-string">&quot;/categories&quot;</span>,
+        <span class="hljs-string">&quot;/categories/sapper&quot;</span>,
+        <span class="hljs-string">&quot;/posts/creating-custom-maven-plugin-default&quot;</span>,
+        <span class="hljs-string">&quot;/posts/choosing-modern-cpp-stack&quot;</span>,
+        <span class="hljs-string">&quot;/posts/cpp-mutex&quot;</span>,
+        <span class="hljs-string">&quot;/posts/cpp-pragma-pack&quot;</span>,
+        <span class="hljs-string">&quot;/posts/creating-custom-maven-plugin&quot;</span>,
+        <span class="hljs-string">&quot;/posts/delete-html-tags-py-django&quot;</span>,
+        <span class="hljs-string">&quot;/posts/gradle-cpp&quot;</span>,
+        <span class="hljs-string">&quot;/posts/java-embedded-db-performance-comparison&quot;</span>,
+        <span class="hljs-string">&quot;/posts/react-typescript-parcel&quot;</span>,
+        <span class="hljs-string">&quot;/posts/pwa-lessons-learned-cra&quot;</span>,
+    ].<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">url</span>) =&gt;</span> { <b class="conum">(2)</b>
+        <span class="hljs-title function_">it</span>(<span class="hljs-string">`should be valid HTML <span class="hljs-subst">${url}</span>`</span>, <span class="hljs-function">() =&gt;</span> { <b class="conum">(3)</b>
+            cy.<span class="hljs-title function_">visit</span>(url)
+            cy.<span class="hljs-title function_">htmlvalidate</span>()
+        })
+    })
+})</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>List with relevant pages to validate</p>
+</li>
+<li>
+<p>Iterate over the list of pages</p>
+</li>
+<li>
+<p>Test case execution for selected page</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/posts/cypress-parametrized-dynamic-tests/html-validation.png" alt="Test results" width="100%">
+</div>
+<div class="title">Figure 1. Test results</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generated_input_data_set">Generated input data set</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Instead of explicitly define a data set, you can generate it, for example, creating a random data set.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example checking that any generated random number is less than 0</div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-title function_">describe</span>(<span class="hljs-string">&#x27;random&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">const</span> inputData = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-title class_">Array</span>(<span class="hljs-number">100</span>)).<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()) <b class="conum">(1)</b>
+    inputData.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> { <b class="conum">(2)</b>
+        <span class="hljs-title function_">it</span>(<span class="hljs-string">`should be valid <span class="hljs-subst">${x}</span>`</span>, <span class="hljs-function">() =&gt;</span> { <b class="conum">(3)</b>
+		    <span class="hljs-title function_">expect</span>(x).<span class="hljs-property">to</span>.<span class="hljs-property">be</span>.<span class="hljs-title function_">lessThan</span>(<span class="hljs-number">1</span>)
+        })
+    })
+})</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>It generates an array of 100 random numbers</p>
+</li>
+<li>
+<p>Iterate over the generated array</p>
+</li>
+<li>
+<p>Test case execution</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/posts/cypress-parametrized-dynamic-tests/random-validation.png" alt="Test results">
+</div>
+<div class="title">Figure 2. Test results</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+Please check the <a href="https://github.com/cypress-io/cypress-example-recipes/tree/master/examples/fundamentals__dynamic-tests">cypress official examples to learn more about dynamic/parameterized testing</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>]]></content>
+            <category term="Testing"/>
+    <category term="Cypress"/>
+    <category term="Javascript"/>
             <author><name>Carlos Martin Sanchez</name></author>
         </entry>
   <entry>
@@ -3990,6 +4781,587 @@ filtered files:
             <author><name>Carlos Martin Sanchez</name></author>
         </entry>
   <entry>
+            <title>Golang over Java for REST services</title>
+            <link href="https://carlosvin.github.io/langs/en/posts/rest-service-go-vs-java" />
+            <link 
+				rel="alternate"
+				hreflang="es"
+				href="https://carlosvin.github.io/langs/es/posts/rest-service-go-vs-java"/>   
+            <id>https://carlosvin.github.io/langs/en/posts/rest-service-go-vs-java</id>
+            <updated>2020-11-01T00:00:00.000Z</updated>
+            <summary>Why I'd pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang</summary>
+            <content type="html"><![CDATA[<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_actual_project_examples">Actual project examples</a></li>
+<li><a href="#_the_ecosystems">The Ecosystems</a></li>
+<li><a href="#_routing">Routing</a>
+<ul class="sectlevel2">
+<li><a href="#_go_without_framework">Go - Without framework</a></li>
+<li><a href="#_go_gin_framework">Go - Gin Framework</a></li>
+<li><a href="#_java_spring_io">Java + Spring.io</a></li>
+</ul>
+</li>
+<li><a href="#_validations">Validations</a>
+<ul class="sectlevel2">
+<li><a href="#_go_gin_framework_2">Go - Gin Framework</a></li>
+<li><a href="#_java_spring_io_2">Java + Spring.io</a></li>
+<li><a href="#_filtering_and_middleware">Filtering and Middleware</a></li>
+</ul>
+</li>
+<li><a href="#_dependency_injection_ioc">Dependency injection / IoC</a>
+<ul class="sectlevel2">
+<li><a href="#_spring_ioc">Spring IoC</a></li>
+<li><a href="#_go">Go</a></li>
+</ul>
+</li>
+<li><a href="#_testing">Testing</a>
+<ul class="sectlevel2">
+<li><a href="#_unit_tests">Unit tests</a></li>
+<li><a href="#_integration_tests">Integration tests</a></li>
+</ul>
+</li>
+<li><a href="#_performance">Performance</a>
+<ul class="sectlevel2">
+<li><a href="#_memory">Memory</a></li>
+<li><a href="#_speed">Speed</a></li>
+</ul>
+</li>
+<li><a href="#_conclusions">Conclusions</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Lately I&#8217;ve been working with two different technology stacks almost in parallel, in both cases we were using them to develop <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="noopener">REST</a> services.</p>
+</div>
+<div class="paragraph">
+<p>During this time I&#8217;ve come up with some conclusions and opinions I&#8217;d like to share.</p>
+</div>
+<div class="paragraph">
+<p>A disclaimer, few months ago, I had several years of experience with Java and 0 days of professional experience with Golang.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_actual_project_examples">Actual project examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Few months ago I created <a href="https://covid-rest.appspot.com/docs" target="_blank" rel="noopener">an API to extract and structure COVID-19 data</a> from <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide" target="_blank" rel="noopener">ECDC website</a>. I developed it in <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a>.</p>
+</div>
+<div class="paragraph">
+<p>Few months later I had the luck of work on my first professional project in <a href="https://golang.org" target="_blank" rel="noopener">Go</a> and I decided to create a port of <a href="https://covid-rest.appspot.com/docs" target="_blank" rel="noopener">the API to extract COVID-19 data</a> in <a href="https://golang.org" target="_blank" rel="noopener">Go</a>, just for learning and for fun.</p>
+</div>
+<div class="paragraph">
+<p>Now we have two REST services, almost functionally identical, but developed in two different tech stacks, so we can easily compare some relevant aspects of both.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Source code for the 2 REST services implementations</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><a href="https://www.java.com" target="_blank" rel="noopener">Java</a> + <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a></th>
+<th class="tableblock halign-left valign-top"><a href="https://golang.org" target="_blank" rel="noopener">Go</a> + <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/carlosvin/covid-rest" class="bare">https://github.com/carlosvin/covid-rest</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/carlosvin/covid-rest-go" class="bare">https://github.com/carlosvin/covid-rest-go</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+I actually created that <a href="https://covid-rest.appspot.com/docs">COVID-19 data REST API</a> to be the data source for the <a href="https://covid-stats-pwa.netlify.app" target="_blank" rel="noopener">COVID19-Stats App</a>, a <a href="https://web.dev/progressive-web-apps" target="_blank" rel="noopener">PWA</a> built with <a href="https://svelte.dev" target="_blank" rel="noopener">Svelte</a>, but that&#8217;s another topic.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_ecosystems">The Ecosystems</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you want to create a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="noopener">REST</a> service just in plain Java you will have extra work to do, in Golang a little bit less. That&#8217;s why we use framework, because they&#8217;ve already solved many common problems for us.</p>
+</div>
+<div class="paragraph">
+<p>For this comparison I am going to use <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> for <a href="https://www.java.com" target="_blank" rel="noopener">Java</a> and <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> for <a href="https://golang.org" target="_blank" rel="noopener">Go</a>, but in both languages there are a lot of production ready nice options.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_routing">Routing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_go_without_framework">Go - Without framework</h3>
+<div class="paragraph">
+<p>Go uses the concept of <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank" rel="noopener">HTTP</a> multiplexer or router. You can specify routes using patterns and link those routes to handlers. The router will decide which handler has to execute the request based on the path received.</p>
+</div>
+<div class="listingblock">
+<div class="title">router.go file</div>
+<div class="content">
+<pre class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;log&quot;</span>
+	<span class="hljs-string">&quot;net/http&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	router := http.NewServeMux()
+	router.Handle(<span class="hljs-string">&quot;/redirect&quot;</span>, http.RedirectHandler(<span class="hljs-string">&quot;https://carlosvin.github.io/&quot;</span>, <span class="hljs-number">307</span>))
+	router.HandleFunc(<span class="hljs-string">&quot;/hello&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(w http.ResponseWriter, r *http.Request)</span></span> {
+		w.Write([]<span class="hljs-type">byte</span>(<span class="hljs-string">&quot;Hello world!&quot;</span>))
+	})
+	log.Println(<span class="hljs-string">&quot;Listening...&quot;</span>)
+	http.ListenAndServe(<span class="hljs-string">&quot;:3000&quot;</span>, router)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Source code is already quite simple, but there might more complex routing use cases.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_go_gin_framework">Go - Gin Framework</h3>
+<div class="paragraph">
+<p>Happily there are frameworks that help us to keep our base code simple, for example when we need to extract path parameters, which is quite common use case in <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="noopener">REST</a> <a href="https://en.wikipedia.org/wiki/Application_programming_interface" target="_blank" rel="noopener">API</a>s, we can use a routing library, I&#8217;ve used <a href="https://github.com/gorilla/mux" target="_blank" rel="noopener">Gorilla Mux</a> and <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> and I liked more <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/carlosvin/covid-rest-go/blob/master/main.go">Full example</a></div>
+<div class="content">
+<pre class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">import</span> (
+	<span class="hljs-string">&quot;github.com/carlosvin/covid-rest-go/handlers&quot;</span>
+	<span class="hljs-string">&quot;github.com/carlosvin/covid-rest-go/readers&quot;</span>
+	<span class="hljs-string">&quot;github.com/gin-gonic/gin&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+
+	<span class="hljs-comment">// ...</span>
+
+	r := gin.Default()
+	r.GET(<span class="hljs-string">&quot;/countries&quot;</span>, router.Countries)
+	r.GET(<span class="hljs-string">&quot;/countries/:code&quot;</span>, router.Country)
+	r.GET(<span class="hljs-string">&quot;/countries/:code/dates&quot;</span>, router.CountryDates)
+	r.GET(<span class="hljs-string">&quot;/countries/:code/dates/:date&quot;</span>, router.CountryDate)
+	r.Run()
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/carlosvin/covid-rest-go/blob/master/handlers/countries.go">And this is a handler example</a>, the router.Countries one</div>
+<div class="content">
+<pre class="highlight"><code class="language-go" data-lang="go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *routerImpl)</span></span> Countries(c *gin.Context) {
+	c.JSON(<span class="hljs-number">200</span>, r.countries())
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_spring_io">Java + Spring.io</h3>
+<div class="paragraph">
+<p>The <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> is based on the concept of Controller, it is implemented using annotations on the class and methods.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/carlosvin/covid-rest/blob/master/src/main/java/com/carlosvin/covid/controllers/CountriesController.java" target="_blank" rel="noopener">CountriesController.java</a></div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Validated</span>
+<span class="hljs-meta">@RestController</span> <b class="conum">(1)</b>
+<span class="hljs-meta">@RequestMapping(&quot;/countries&quot;)</span> <b class="conum">(2)</b>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CountriesController</span> {
+
+	<span class="hljs-comment">// Some source code is not shown, you can find the complete example in the repository</span>
+
+	<span class="hljs-meta">@GetMapping(&quot;/{country}/dates/{isoDateStr}&quot;)</span>  <b class="conum">(3)</b>
+	<span class="hljs-keyword">public</span> DateStatsDto <span class="hljs-title function_">getDateByCountry</span><span class="hljs-params">(<span class="hljs-meta">@Size(min = 2, max = 2)</span> <span class="hljs-meta">@PathVariable</span> String country, <span class="hljs-meta">@Size(min = 10, max = 20)</span> <span class="hljs-meta">@PathVariable</span> String isoDateStr)</span> <span class="hljs-keyword">throws</span> NotFoundException {
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DateStatsDto</span>(service.getDate(country, DateUtils.convert(isoDateStr)));
+	}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Declare the class as Controller so it is registered in <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a></p>
+</li>
+<li>
+<p>Controller base path definition</p>
+</li>
+<li>
+<p>Handler definition for a nested path under the main controller path. <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> makes easy to extract path variables defined in the route, you can directly use them as method arguments.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_validations">Validations</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_go_gin_framework_2">Go - Gin Framework</h3>
+<div class="paragraph">
+<p><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> uses an external validation package <a href="https://godoc.org/github.com/go-playground/validator">validator</a>, besides that it is fully integrated with <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">type</span> User <span class="hljs-keyword">struct</span> {
+	Name  <span class="hljs-type">string</span> <span class="hljs-string">`validate:&quot;required&quot;`</span> <b class="conum">(1)</b>
+	Email <span class="hljs-type">string</span> <span class="hljs-string">`validate:&quot;required,email&quot;`</span>
+}
+
+err := validate.Struct(user) <b class="conum">(2)</b>
+validationErrors := err.(validator.ValidationErrors) <b class="conum">(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>The validation system uses <a href="https://golang.org" target="_blank" rel="noopener">Go</a> tags, it is not the same as <a href="https://www.java.com" target="_blank" rel="noopener">Java</a> annotations, but in the validation case, it works in pretty same way as annotations.</p>
+</li>
+<li>
+<p>Executes the validation explicitly</p>
+</li>
+<li>
+<p>Extracts validation errors</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_spring_io_2">Java + Spring.io</h3>
+<div class="paragraph">
+<p>You can enable the validation in the controller level, then in the handlers you can also specify the type of validation. Let&#8217;s explain it using the previous example:</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/carlosvin/covid-rest/blob/master/src/main/java/com/carlosvin/covid/controllers/CountriesController.java" target="_blank" rel="noopener">CountriesController.java</a></div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Validated</span> <b class="conum">(1)</b>
+<span class="hljs-meta">@RestController</span>
+<span class="hljs-meta">@RequestMapping(&quot;/countries&quot;)</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CountriesController</span> {
+
+	<span class="hljs-comment">// Some source code is not shown, you can find the complete example in the repository</span>
+
+	<span class="hljs-meta">@GetMapping(&quot;/{country}/dates/{isoDateStr}&quot;)</span>
+	<span class="hljs-keyword">public</span> DateStatsDto <span class="hljs-title function_">getDateByCountry</span><span class="hljs-params">(
+		<span class="hljs-meta">@Size(min = 2, max = 2)</span> <span class="hljs-meta">@PathVariable</span> String country, <b class="conum">(2)</b>
+		<span class="hljs-meta">@Size(min = 10, max = 20)</span> <span class="hljs-meta">@PathVariable</span> String isoDateStr)</span> <span class="hljs-keyword">throws</span> NotFoundException {
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DateStatsDto</span>(service.getDate(country, DateUtils.convert(isoDateStr)));
+	}
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Declare the class as Controller so it is registered in <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a></p>
+</li>
+<li>
+<p><code>@Size</code> validates that the input argument country has 2 characters</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The validation system is more powerful than you can see in this code snippet, for example adding <code>@Valid</code> annotation opens the door to complex types validation.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_filtering_and_middleware">Filtering and Middleware</h3>
+<div class="paragraph">
+<p>Different approaches, pretty much the same end result.</p>
+</div>
+<div class="paragraph">
+<p>I will elaborate this topic in following days.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dependency_injection_ioc">Dependency injection / IoC</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_spring_ioc"><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a></h3>
+<div class="paragraph">
+<p><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a> is the most complete and powerful systems I&#8217;ve ever used for <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="noopener">IoC</a>, actually, the first time I used Spring professionally was just to deal with <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="noopener">IoC</a>. It supports XML configuration files or <a href="https://www.java.com" target="_blank" rel="noopener">Java</a> annotations, I like annotations more, here a simple example from <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a> documentation:</p>
+</div>
+<div class="listingblock">
+<div class="title">Spring IoC example</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JpaMovieFinder</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">MovieFinder</span> { <b class="conum">(1)</b>
+    <span class="hljs-comment">// implementation elided for clarity</span>
+}
+
+<span class="hljs-comment">//</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleMovieLister</span> {
+
+    <span class="hljs-keyword">private</span> MovieFinder movieFinder;
+
+    <span class="hljs-meta">@Autowired</span> <b class="conum">(2)</b>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setMovieFinder</span><span class="hljs-params">(MovieFinder movieFinder)</span> {
+        <span class="hljs-built_in">this</span>.movieFinder = movieFinder;
+    }
+
+    <span class="hljs-comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p><code>JpaMovieFinder</code> is instantiated by <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a></p>
+</li>
+<li>
+<p>With <code>@Autowired</code> annotation <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators" target="_blank" rel="noopener">Spring IoC</a> knows that has to inject <code>movieFinder</code> argument. It should be a class implementing <code>MovieFinder</code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_go">Go</h3>
+<div class="paragraph">
+<p>Neither <a href="https://golang.org" target="_blank" rel="noopener">Go</a> nor <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> has any <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="noopener">IoC</a> solution, but you can still apply <a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="noopener">Dependency Injection</a> technique to decouple your components and improve the testability of your system.</p>
+</div>
+<div class="listingblock">
+<div class="title">Dependency injection simple example in <a href="https://golang.org" target="_blank" rel="noopener">Go</a></div>
+<div class="content">
+<pre class="highlight"><code class="language-go" data-lang="go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-comment">// Greeter interface to greet the caller</span>
+<span class="hljs-keyword">type</span> Greeter <span class="hljs-keyword">interface</span> {
+	greet()
+}
+
+<span class="hljs-keyword">type</span> greeterHello <span class="hljs-keyword">struct</span>{}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *greeterHello)</span></span> greet() { <b class="conum">(3)</b>
+	fmt.Println(<span class="hljs-string">&quot;Hello!&quot;</span>)
+}
+
+<span class="hljs-keyword">type</span> greeterHi <span class="hljs-keyword">struct</span>{}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *greeterHi)</span></span> greet() { <b class="conum">(4)</b>
+	fmt.Println(<span class="hljs-string">&quot;Hi!&quot;</span>)
+}
+
+<span class="hljs-comment">// App Application representation</span>
+<span class="hljs-keyword">type</span> App <span class="hljs-keyword">struct</span> {
+	greeters []Greeter <b class="conum">(1)</b>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(app *App)</span></span> startup() {
+	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> app.greeters {
+		v.greet()
+	}
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	greeters := []Greeter{ <b class="conum">(2)</b>
+		&amp;greeterHello{},
+		&amp;greeterHi{},
+		&amp;greeterHello{}}
+
+	app := &amp;App{greeters}
+
+	app.startup()
+}
+
+<span class="hljs-comment">/*
+&lt;1&gt; `App` accepts an array of `Greeter`
+&lt;2&gt; During `App` instantiation we pass different implementations of `Greeter`
+&lt;3&gt; Greeter implementation that prints *Hello!*
+&lt;4&gt; Greeter implementation that prints *Hi!*
+*/</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is more verbose, but there is an advantage, there is nothing hidden, everything is explicit and you have full control of instantiation order.</p>
+</div>
+<div class="paragraph">
+<p>As soon as you use <a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="noopener">Dependency Injection</a>, I don&#8217;t have any strong opinion about using <a href="https://en.wikipedia.org/wiki/Inversion_of_control" target="_blank" rel="noopener">IoC</a> system or doing <a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="noopener">Dependency Injection</a> manually.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing">Testing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_unit_tests">Unit tests</h3>
+<div class="paragraph">
+<p>For unit tests there are no big differences.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://golang.org" target="_blank" rel="noopener">Go</a> comes with a standard <a href="https://golang.org/pkg/testing/" target="_blank" rel="noopener">library for testing and benchmarking</a>.</p>
+</div>
+<div class="paragraph">
+<p>For <a href="https://www.java.com" target="_blank" rel="noopener">Java</a> there are many well-known unit testing frameworks, but Spring already has quite big support for <a href="https://docs.spring.io/spring-batch/docs/current/reference/html/testing.html" target="_blank" rel="noopener">unit testing</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_integration_tests">Integration tests</h3>
+<div class="sect3">
+<h4 id="_go_2">Go</h4>
+<div class="paragraph">
+<p>There are no support for Integration Tests in <a href="https://golang.org" target="_blank" rel="noopener">Go</a>, you will have to implement everything by yourself, although it is not difficult, <a href="https://kpat.io/2019/06/testing-with-gin/" target="_blank" rel="noopener">here you can find a simple example</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_spring">Spring</h4>
+<div class="paragraph">
+<p>On the other hand, <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html" target="_bank">Spring has a great testing support</a>.</p>
+</div>
+<div class="paragraph">
+<p>To write integration tests for <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="noopener">REST</a> services, <a href="https://spring.io/guides/gs/testing-web/" target="_blank" rel="noopener">MockMvc</a> is really convenient.</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;ve used <a href="https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/carlosvin/covid/CountriesControllerTest.java" target="_blank" rel="noopener">MockMvc in the covid-rest project</a>.</p>
+</div>
+<div class="listingblock">
+<div class="title">MockMvc code snippet from <a href="https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/carlosvin/covid/CountriesControllerTest.java" target="_blank" rel="noopener">CountriesControllerTest.java</a></div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">	<span class="hljs-meta">@Autowired</span>
+	<span class="hljs-keyword">private</span> MockMvc mockMvc; <b class="conum">(1)</b>
+
+	<span class="hljs-meta">@Test</span>
+	<span class="hljs-keyword">void</span> <span class="hljs-title function_">getCountries</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception {
+		<span class="hljs-built_in">this</span>.mockMvc.perform(get(<span class="hljs-string">&quot;/countries&quot;</span>)) <b class="conum">(2)</b>
+				.andDo(print()).andExpect(status().isOk()) <b class="conum">(3)</b>
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.*&quot;</span>, hasSize(<span class="hljs-number">144</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.confirmedCases&quot;</span>,comparesEqualTo(<span class="hljs-number">9191</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.deathsNumber&quot;</span>, comparesEqualTo(<span class="hljs-number">309</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.countryCode&quot;</span>, comparesEqualTo(<span class="hljs-string">&quot;ES&quot;</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.countryName&quot;</span>, comparesEqualTo(<span class="hljs-string">&quot;Spain&quot;</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.ES.path&quot;</span>, comparesEqualTo(<span class="hljs-string">&quot;/countries/ES&quot;</span>)))
+				.andExpect(jsonPath(<span class="hljs-string">&quot;$.VC.countryName&quot;</span>, comparesEqualTo(<span class="hljs-string">&quot;Saint Vincent and the Grenadines&quot;</span>)))
+				.andDo(document(<span class="hljs-string">&quot;countries/list&quot;</span>, preprocessResponse(prettyPrint(), <span class="hljs-keyword">new</span> <span class="hljs-title class_">CropPreprocessor</span>())));
+	}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>The Spring test runner injects the MockMvc object.</p>
+</li>
+<li>
+<p>We use MockMvc to call to the endpoint we have created.</p>
+</li>
+<li>
+<p>Then we validate the endpoint response: status code and body.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_performance">Performance</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Besides the languages specific differences, the main difference is the performance. The CPU consumption in <a href="https://golang.org" target="_blank" rel="noopener">Go</a> is smaller, but about the memory the difference is really significant, <strong>the order of 30 times smaller fingerprint</strong>.</p>
+</div>
+<div class="sect2">
+<h3 id="_memory">Memory</h3>
+<div class="paragraph">
+<p>Here I&#8217;ve found a surprising difference, just by checking the memory consumption in my laptop.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> <code>15.6MB</code></p>
+</li>
+<li>
+<p><a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> <code>465.9MB</code></p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/posts/rest-service-go-vs-java/memory-consumption-go-java.png" alt="Memory consumption">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_speed">Speed</h3>
+<div class="paragraph">
+<p>Following the <a href="https://www.techempower.com/benchmarks/" target="_blank" rel="noopener">TechEmpower benchmarks</a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a> is in 193 position, 9.9%.</p>
+</li>
+<li>
+<p><a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a> is in 284 position, 4%.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Following the <a href="https://github.com/the-benchmarker/web-frameworks" target="_blank" rel="noopener">The Benchmarker results</a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">Gin framework</a>: position 33.</p>
+</li>
+<li>
+<p><a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a>: position 68.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusions">Conclusions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If I were you, I&#8217;d choose <a href="https://golang.org" target="_blank" rel="noopener">Go</a> if:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you value the explicit over implicit, keep in mind that there is a cost, you will most likely have to write more lines of code.</p>
+</li>
+<li>
+<p>If you value the simplicity, <a href="https://golang.org" target="_blank" rel="noopener">Go</a> has a quite reduced set of keywords, which reduces the learning curve and simplifies the code reviews.</p>
+</li>
+<li>
+<p>If RAM memory usage is critical for your project, actually I&#8217;d just keep away from <a href="https://spring.io/guides/gs/rest-service" target="_blank" rel="noopener">Spring Boot (REST)</a>.</p>
+</li>
+<li>
+<p>If the project you are going to work on is a distributed system, specially if it is based on <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank" rel="noopener">HTTP</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>]]></content>
+            <category term="REST"/>
+    <category term="API"/>
+    <category term="Web Services"/>
+    <category term="Java"/>
+    <category term="Golang"/>
+    <category term="Gingonic"/>
+    <category term="Spring"/>
+            <author><name>Carlos Martin Sanchez</name></author>
+        </entry>
+  <entry>
             <title>Creando REST URLs</title>
             <link href="https://carlosvin.github.io/langs/es/posts/rest-urls" />
             <link 
@@ -4494,6 +5866,309 @@ Para el ejemplo asumiremos que el identificador del aceite es el atributo tipo.
             <category term="REST"/>
     <category term="API"/>
     <category term="Web Services"/>
+            <author><name>Carlos Martin Sanchez</name></author>
+        </entry>
+  <entry>
+            <title>Contenedores Docker multi-dominio</title>
+            <link href="https://carlosvin.github.io/langs/es/posts/reverse-proxy-multidomain-docker" />
+            <link 
+				rel="alternate"
+				hreflang="en"
+				href="https://carlosvin.github.io/langs/en/posts/reverse-proxy-multidomain-docker"/>   
+            <id>https://carlosvin.github.io/langs/es/posts/reverse-proxy-multidomain-docker</id>
+            <updated>2016-11-23T20:00:00.000Z</updated>
+            <summary>Cómo crear varios contenedores Docker con diferentes dominios en la misma máquina.</summary>
+            <content type="html"><![CDATA[<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_caso_de_uso">Caso de Uso</a></li>
+<li><a href="#_cómo_configurar_un_proxy_inverso_multi_dominio">Cómo configurar un Proxy Inverso Multi-Dominio</a>
+<ul class="sectlevel2">
+<li><a href="#_estructura_del_proyecto_de_ejemplo">Estructura del proyecto de ejemplo</a></li>
+<li><a href="#_configuración_de_la_arquitectura_docker_compose">Configuración de la arquitectura (docker-compose)</a></li>
+<li><a href="#_configuración_de_la_imágen_de_la_aplicación">Configuración de la imágen de la aplicación</a></li>
+<li><a href="#_añadiendo_los_nombres_de_dominio_a_tu_configuración">Añadiendo los nombres de dominio a tu configuración</a></li>
+<li><a href="#_todo_listo">¡Todo listo!</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_caso_de_uso">Caso de Uso</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Tenemos varias aplicaciones servidoras a la vez en un mismo entorno de desarrollo, cada una encapsulada en un contenedor, llamémosles de ahora en adelante <strong>"Contenedor A"</strong> y <strong>"Contenedor B"</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Utilizando docker estas aplicaciones tienen la misma dirección IP en nuestra máquina, una forma de distinguirlas es cambiando el puerto que exponen.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/ip.png" alt="ip">
+</div>
+</div>
+<div class="paragraph">
+<p>Aplicaciones exponiendo la misma dirección IP utilizando diferentes puertos para diferenciar las aplicaciones.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si queremos llamar a la <strong>"aplicación A"</strong> haremos algo así: <code>GET <a href="http://10.20.30.40:8080/colors/red" class="bare">http://10.20.30.40:8080/colors/red</a></code>.</p>
+</li>
+<li>
+<p>Si queremos llamar a la <strong>"aplicación B"</strong> haremos algo así: <code>GET <a href="http://10.20.30.40:8081/fruits/tomato" class="bare">http://10.20.30.40:8081/fruits/tomato</a></code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Pero esto es un poco confuso, ¿8080 sigfica que accedemos a las "aplicación A" y 8081 significa "aplicación B"?</p>
+</div>
+<div class="paragraph">
+<p>Sería mucho más sencillo de recordar algo así:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si queremos llamar a la "aplicación A" haremos algo así: <code>GET <a href="http://a.domain.com/colors/red" class="bare">http://a.domain.com/colors/red</a></code>.</p>
+</li>
+<li>
+<p>Si queremos llamar a la "aplicación B" haremos algo así: <code>GET <a href="http://b.domain.com/fruits/tomato" class="bare">http://b.domain.com/fruits/tomato</a></code>.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/domain.png" alt="domain">
+</div>
+</div>
+<div class="paragraph">
+<p>Diferenciando aplicaciones por nombre de dominio</p>
+</div>
+<div class="paragraph">
+<p>Obtener este valor semántico extra es más sencillo de lo que parece.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cómo_configurar_un_proxy_inverso_multi_dominio">Cómo configurar un Proxy Inverso Multi-Dominio</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dije que era fácil porque no vamos a tener que hacer casi nada, ya que otro contenedor hará casi todo el trabajo por nosotros. Vamos a utilizar <a href="https://github.com/jwilder/nginx-proxy" target="_blank" rel="noopener">nginx-proxy</a>, que generará automáticamente las configuraciones necesarias para <a href="https://www.nginx.com" target="_blank" rel="noopener">NGINX</a>.</p>
+</div>
+<div class="paragraph">
+<p>Así que al final no tendremos 2 contenedores, sino también tendremos un tercero que hará las veces de proxy.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/proxy.png" alt="domain">
+</div>
+</div>
+<div class="paragraph">
+<p>Los 2 contenedores y el proxy.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Puedes descargar el ejemplo completo desde: <a href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain" class="bare">https://github.com/carlosvin/docker-reverse-proxy-multi-domain</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_estructura_del_proyecto_de_ejemplo">Estructura del proyecto de ejemplo</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">docker-compose.yaml</dt>
+<dd>
+<p>Archivo con la configuración descrita en la imágen previa.</p>
+</dd>
+<dt class="hdlist1">a</dt>
+<dd>
+<p>Directorio para la aplicación A.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Dockerfile</dt>
+<dd>
+<p>Archivo con la configuración del contenedor A.</p>
+</dd>
+</dl>
+</div>
+</dd>
+<dt class="hdlist1">b</dt>
+<dd>
+<p>Directorio para la aplicación B.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Dockerfile</dt>
+<dd>
+<p>Archivo con la configuración del contenedor B.</p>
+</dd>
+</dl>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain" target="_blank" rel="noopener">Ver proyecto</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuración_de_la_arquitectura_docker_compose">Configuración de la arquitectura (docker-compose)</h3>
+<div class="paragraph">
+<p>La parte más importante es la configuración de las relaciones entre los contenedores.</p>
+</div>
+<div class="listingblock">
+<div class="title">docker-reverse-proxy-multi-domain/docker-compose.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-attr">a:</span>
+  <span class="hljs-attr">build:</span> <span class="hljs-string">a</span> <b class="conum">(4)</b>
+  <span class="hljs-attr">environment:</span>
+    <span class="hljs-attr">VIRTUAL_HOST:</span> <span class="hljs-string">a.domain.com</span> <b class="conum">(1)</b>
+  <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span>
+
+<span class="hljs-attr">b:</span>
+  <span class="hljs-attr">build:</span> <span class="hljs-string">b</span> <b class="conum">(5)</b>
+  <span class="hljs-attr">environment:</span>
+    <span class="hljs-attr">VIRTUAL_HOST:</span>  <span class="hljs-string">b.domain.com</span> <b class="conum">(2)</b>
+  <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span>
+
+<span class="hljs-attr">nginx-proxy:</span> <b class="conum">(3)</b>
+  <span class="hljs-attr">image:</span> <span class="hljs-string">jwilder/nginx-proxy</span>
+  <span class="hljs-attr">ports:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;80:80&quot;</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;443:443&quot;</span>
+  <span class="hljs-attr">volumes:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">/var/run/docker.sock:/tmp/docker.sock:ro</span>
+
+  <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span>
+  <span class="hljs-attr">privileged:</span> <span class="hljs-literal">true</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Configuramos el nombre de dominio que queremos utilizar para la aplicación a.</p>
+</li>
+<li>
+<p>Lo mismo para la aplicación b.</p>
+</li>
+<li>
+<p>A partir de aquí configuramos el proxy (esta es la parte de copiar y pegar).</p>
+</li>
+<li>
+<p>Indicamos a docker-compose que tiene que construir las imágenes dentro del directorio indicado.</p>
+</li>
+<li>
+<p>Por ejemplo, aquí, estamos indicando que docker-compose tiene que construir la imágen docker utilizando ./b/Dockerfile.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuración_de_la_imágen_de_la_aplicación">Configuración de la imágen de la aplicación</h3>
+<div class="paragraph">
+<p>A continuación vamos a comentar la configuración de la imágen del contenedor para la aplicación A.</p>
+</div>
+<div class="listingblock">
+<div class="title">a/Dockerfile</div>
+<div class="content">
+<pre class="highlight"><code class="language-docker" data-lang="docker"><span class="hljs-keyword">FROM</span> httpd:<span class="hljs-number">2.4</span> <b class="conum">(1)</b>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;&quot;</span> &gt; /usr/local/apache2/htdocs/index.html </span><b class="conum">(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Importamos una imágen con un servidor apache.</p>
+</li>
+<li>
+<p>Servimos un archivo que muestra "Host A" como página por defecto.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>La configuración para la aplicación B, es prácticamente la misma:</p>
+</div>
+<div class="listingblock">
+<div class="title">b/Dockerfile</div>
+<div class="content">
+<pre class="highlight"><code class="language-docker" data-lang="docker"><span class="hljs-keyword">FROM</span> httpd:<span class="hljs-number">2.4</span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;&quot;</span> &gt; /usr/local/apache2/htdocs/index.html</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_añadiendo_los_nombres_de_dominio_a_tu_configuración">Añadiendo los nombres de dominio a tu configuración</h3>
+<div class="paragraph">
+<p>En Linux simplemente tenemos mapear la dirección local a los nombres de dominio que hayas elegido, en nuestro ejemplo es <code>a.domain.com</code> y <code>b.domain.com</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">/etc/hosts</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">127.0.0.1     localhost.localdomain localhost
+::1             localhost6.localdomain6 localhost6
+127.0.0.1   a.domain.com <b class="conum">(1)</b>
+127.0.0.1   b.domain.com</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Simplemente he añadido las líneas 4 y 5.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_todo_listo">¡Todo listo!</h3>
+<div class="paragraph">
+<p>Ya solo nos queda probar el ejemplo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">docker-compose build
+docker-compose up</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ya están las tres contenedores arrancados.</p>
+</div>
+<div class="paragraph">
+<p>Ahora podemos abrir nuestro navegador y escribir a.domain.com y nos mostrará el texto <em>App A works!</em>. Si escribimos b.domain.com entonces veremos <em>App B works!</em>.</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/a.screenshot.png" alt="App A works!">
+</div>
+<div class="title">Figure 1. a.domain.com</div>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="/posts/reverse-proxy-multidomain-docker/b.screenshot.png" alt="App B works!">
+</div>
+<div class="title">Figure 2. b.domain.com</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+En la mayoría de distribuciones Linux necesitarás privilegios para ejecutar los comandos docker (<code>sudo</code>).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>]]></content>
+            <category term="Docker"/>
+    <category term="Microservices"/>
             <author><name>Carlos Martin Sanchez</name></author>
         </entry>
   <entry>

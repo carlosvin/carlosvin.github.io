@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="../../../../favicon.png" />
+		<script
+			async
+			src="https://cdn.jsdelivr.net/npm/@statsig/js-client@1/build/statsig-js-client+session-replay+web-analytics.min.js?apikey=client-HFdLXhoqeAqLJGsEO0FuGCieE2nSFNxpPp2ziw3ZPYK"
+		></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="/app.css" />
+		
+		<link href="../../../../_app/immutable/assets/2.BkyfcBaI.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/IconLink.2qtseSjK.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/Social.CTdkLZ_f.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/8.CqjetrkP.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/Details.C_CQQSd4.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../../../_app/immutable/entry/start.Dg2WxSzj.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/entry.BXLEF9h2.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/runtime.3FY_vtsg.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/index-client.B1gllz1k.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/entry/app.DiecyXnG.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/render.CY392Wed.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/svelte-head.CPyUmzYt.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/disclose-version.B5WKJUOZ.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/3.CAhkvHRE.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/props.DBxtFyAD.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/nodes/0.hWIgE5sI.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/nodes/2.Xa-J0HUn.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/misc.8zLmL9bg.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/lifecycle.4u1WjEOg.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/IconLink.k-vueeZX.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/Social.D6bLOiwf.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/nodes/8.DMK56GIg.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/url.QYYjpySO.js">
+		<link rel="modulepreload" href="../../../../_app/immutable/chunks/Details.C57OQ6iz.js"><!--[--><meta property="og:title" content="Alineación de una Estructura C++ en Memoria"> <meta name="date.created" content="2012-11-26T11:00:00.000Z"> <meta name="date.updated" content="2012-11-26T11:00:00.000Z"> <meta name="description" content="Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria"> <meta property="og:description" content="Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria"> <meta property="og:type" content="article"> <meta property="og:url" content="http://sveltekit-prerender/langs/es/posts/cpp-pragma-pack/"> <meta property="og:locale" content="es"> <meta property="og:locale:alternate" content="en"> <meta property="og:image" content="/posts/cpp-pragma-pack/5b.png"> <meta property="og:article:tag" content="C++,Performance,Compilers,Memory"> <!--[--><!--[--><link rel="alternate" hreflang="en" href="/langs/en/posts/cpp-pragma-pack"><!--]--><!--]--> <!----><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"Webpage","@id":"https://google.com/article"},"headline":"Alineación de una Estructura C++ en Memoria","alternativeHeadline":"Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria","description":"Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria","image":"/posts/cpp-pragma-pack/5b.png","datePublished":"2012-11-26T11:00:00.000Z","dateModified":"2012-11-26T11:00:00.000Z","keywords":["C++","Performance","Compilers","Memory"],"author":{"@type":"Person","name":"Carlos Martin Sanchez"},"publisher":{"@type":"Person","name":"Carlos Martin Sanchez"}}</script><!----><!--]--><title>Alineación de una Estructura C++ en Memoria</title>
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[--><!----><!--[--><!----><nav class="svelte-pyuk6k"><ul class="svelte-pyuk6k"><li class="svelte-2j41u7"><a aria-current="page" href="/langs/es/posts" rel="prefetch" class="svelte-2j41u7"><!----><img class="logo svelte-pyuk6k" src="/favicon.25px.png" alt="Carlos dice bla bla logo"><!----></a></li><!----></ul> <ul class="closed svelte-pyuk6k"><li class="svelte-2j41u7"><a aria-current="page" href="/langs/es/posts" rel="prefetch" class="svelte-2j41u7"><!----><span class="siteName">Carlos dice bla bla</span><!----></a></li><!----> <li class="svelte-2j41u7"><a href="/langs/es/categories" rel="prefetch" class="svelte-2j41u7"><!----><!---->Categorías<!----></a></li><!----> <li class="svelte-2j41u7"><a href="/langs/es/about" rel="prefetch" class="svelte-2j41u7"><!----><!---->Sobre mi<!----></a></li><!----></ul> <!--[--><!----><div class="h svelte-geb0ta"><!----><a href="/langs/es/feed.xml" target="_blank" class="icon rss svelte-blgowr" title="Suscríbete al feed Carlos dice bla bla" rel="noopener" aria-label="Suscríbete al feed Carlos dice bla bla"><!----><!----></a><!----> <a href="https://github.com/carlosvin" target="_blank" class="icon github svelte-blgowr" title="Find me at github" rel="noopener" aria-label="Find me at github"><!----><!----></a><!----> <a href="https://stackoverflow.com/users/1421059/carlosvin" target="_blank" class="icon stackoverflow svelte-blgowr" title="Find me at stackoverflow" rel="noopener" aria-label="Find me at stackoverflow"><!----><!----></a><!----></div><!----><!--]--> <button type="button" class="svelte-pyuk6k">≡</button></nav><!----> <main class="svelte-qhq9sm"><!----><!----><header class="svelte-1ikjkmw"><h1 class="svelte-1ikjkmw">Alineación de una Estructura C++ en Memoria <span class="share svelte-1ikjkmw"><!--[!--><a href="https://twitter.com/intent/tweet?url=/langs/es/posts/cpp-pragma-pack&amp;text=Alineación de una Estructura C++ en Memoria:&amp;nbsp;Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria&amp;hashtags=C++,Performance,Compilers,Memory" target="_blank" class="icon twitter svelte-blgowr" title="Share &quot;Alineación de una Estructura C++ en Memoria&quot;" rel="noopener" aria-label="Share &quot;Alineación de una Estructura C++ en Memoria&quot;"><!----><!----></a><!--]--><!----></span></h1> <p class="summary svelte-1ikjkmw">Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria</p> <div class="subtitle svelte-9uod0d"><span class="date">11/26/2012</span> <span class="langs"><!--[--><ul class="otherLangs svelte-1numgf3"><!--[--><!--[--><li class="svelte-1numgf3"><a rel="alternate" hreflang="en" href="/langs/en/posts/cpp-pragma-pack" title="Check the post in other language: en">en</a></li><!--]--><!--]--></ul><!--]--><!----></span> <!--[--><span class="tags svelte-wqh6y7"><!--[--><a href="/langs/es/categories/c" title="C++" class="svelte-1g7d2s3">C++</a><a href="/langs/es/categories/performance" title="Performance" class="svelte-1g7d2s3">Performance</a><a href="/langs/es/categories/compilers" title="Compilers" class="svelte-1g7d2s3">Compilers</a><a href="/langs/es/categories/memory" title="Memory" class="svelte-1g7d2s3">Memory</a><!--]--></span><!--]--><!----></div><!----></header> <div class="postContent"><!----><div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_estructura_de_ejemplo">Estructura de ejemplo</a></li>
+<li><a href="#_la_directiva_pragma_pack_en_struct_c">La directiva #pragma pack en struct C++</a></li>
+<li><a href="#_rendimiento">Rendimiento</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia. Podemos considerarlo como una clase con visibilidad publica por defecto para sus atributos y funciones.</p>
+</div>
+<div class="paragraph">
+<p>Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_estructura_de_ejemplo">Estructura de ejemplo</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un booleano (un byte). En C++ queda de la siguiente forma:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStruct</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Si hacemos un <code>sizeof</code> de una instancia de la estructura deberíamos obtener un tamaño de 5 bytes. Y la memoria quedaría de la siguiente forma:</p>
+</div>
+<div id="5-bytes" class="imageblock center">
+<div class="content">
+<img src="/posts/cpp-pragma-pack/5b.png" alt="5Bytes" width="200" height="auto">
+</div>
+<div class="title">Figure 1. Estructura de 5 bytes que realmente ocupa 5 bytes en memoria</div>
+</div>
+<div class="paragraph">
+<p><strong>Pero</strong> no es tan sencillo, a continuación veremos que no nos podemos olvidar de la alineación de la memoria que hace el compilador en ese sistema y veremos cómo controlarlo para no encontrarnos con tamaños inesperados, ya que esto depende del compilador del sistema.</p>
+</div>
+<div class="paragraph">
+<p>Por ejemplo, si en mi máquina hago un <code>sizeof</code> de la estructura de ejemplo, <strong>obtengo un tamaño de 8 bytes</strong>. Lo que está sucediendo es que el compilador reserva más memoria al final de la estructura para que cuadre en bloques de 2n Bytes. La memoria realmente queda de la siguiente forma:</p>
+</div>
+<div id="8-bytes" class="imageblock center">
+<div class="content">
+<img src="/posts/cpp-pragma-pack/8b.png" alt="5Bytes" width="200" height="auto">
+</div>
+<div class="title">Sin pragma: Estructura de 5 Bytes que realmente ocupa 8 Bytes en memoria</div>
+</div>
+<div class="listingblock">
+<div class="title">Fragmento de código que imprime el tamaño de la estructura y el de cada uno de sus atributos, en este caso 4 + 1 no es 5</div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span>  <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStruct</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">print</span> <span class="hljs-params">(<span class="hljs-type">size_t</span> sz, <span class="hljs-type">size_t</span> sz_flag, <span class="hljs-type">size_t</span> sz_timeout)</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot;\tflag: &quot;</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t+&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\ttimeout: &quot;</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t=&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;\t&quot;</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt;<span class="hljs-string">&quot;sizeof struct:  &quot;</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStruct&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStruct), <span class="hljs-built_in">sizeof</span>(SampleStruct::flag), <span class="hljs-built_in">sizeof</span>(SampleStruct::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://coliru.stacked-crooked.com/a/c7deb3df49bebd40">Ejecutando el código sin la directiva pragma</a>, tenemos que nuestra estructura ocupa 8 bytes en lugar de 5 bytes.</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStruct
+flag: 1 Bytes
++
+<span class="hljs-built_in">timeout</span>: 4 Bytes
+=
+5 Bytes
+sizeof struct:  8 Bytes
+--</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+Si queremos conocer el tamaño exacto de las estructuras que vamos a utilizar, tenemos que especificar al compilador la forma de alinear la estructura en memoria, para ello utilizaremos la directiva <code>#pragma pack(n)</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_la_directiva_pragma_pack_en_struct_c">La directiva #pragma pack en struct C++</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Se trata de una directiva del preprocesador que indica al compilador cómo debe realizar la alineación de la memoria.</p>
+</div>
+<div class="listingblock">
+<div class="title">Ejemplo con diferentes configuraciones de alineamiento de memoria</div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">print</span> <span class="hljs-params">(<span class="hljs-type">size_t</span> sz, <span class="hljs-type">size_t</span> sz_flag, <span class="hljs-type">size_t</span> sz_timeout)</span>
+</span>{
+    cout &lt;&lt; <span class="hljs-string">&quot; flag: &quot;</span> &lt;&lt; sz_flag &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span>&lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; +&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; timeout: &quot;</span> &lt;&lt; sz_timeout &lt;&lt; <span class="hljs-string">&quot;Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; =&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; <span class="hljs-string">&quot;Bytes&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot; sizeof struct:  &quot;</span> &lt;&lt; sz &lt;&lt; <span class="hljs-string">&quot; Bytes&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (1)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack1</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (2)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack2</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (4)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack4</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStruct</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+</span>{
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack1&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStructPack1), <span class="hljs-built_in">sizeof</span>(SampleStructPack1::flag), <span class="hljs-built_in">sizeof</span>(SampleStructPack1::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack2&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStructPack2), <span class="hljs-built_in">sizeof</span>(SampleStructPack2::flag), <span class="hljs-built_in">sizeof</span>(SampleStructPack2::timeout));
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack4&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStructPack4), <span class="hljs-built_in">sizeof</span>(SampleStructPack4::flag), <span class="hljs-built_in">sizeof</span>(SampleStructPack4::timeout));
+
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStruct&quot;</span> &lt;&lt; endl;
+    <span class="hljs-built_in">print</span> (<span class="hljs-built_in">sizeof</span>(SampleStruct), <span class="hljs-built_in">sizeof</span>(SampleStruct::flag), <span class="hljs-built_in">sizeof</span>(SampleStruct::timeout));
+    cout &lt;&lt; <span class="hljs-string">&quot; -- &quot;</span> &lt;&lt; endl;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://coliru.stacked-crooked.com/a/7c18ee6585e57366">Ejecutando el código con las directivas pragma</a>, tenemos distintos resultados dependiendo del valor de pragma.</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStructPack1 <b class="conum">(1)</b>
+ flag: 1 Bytes
+ +
+ <span class="hljs-built_in">timeout</span>: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  5 Bytes
+ --
+
+SampleStructPack2 <b class="conum">(2)</b>
+ flag: 1 Bytes
+ +
+ <span class="hljs-built_in">timeout</span>: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  6 Bytes
+
+SampleStructPack4 <b class="conum">(3)</b>
+ flag: 1 Bytes
+ +
+ <span class="hljs-built_in">timeout</span>: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  8 Bytes
+
+SampleStruct <b class="conum">(4)</b>
+ flag: 1 Bytes
+ +
+ <span class="hljs-built_in">timeout</span>: 4Bytes
+ =
+ 5Bytes
+ sizeof struct:  8 Bytes</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>SampleStructPack1 <code>#pragma pack (1)</code>: Reserva bloques de memoria de un byte, nuestra estructura se ha ajustado perfectamente; en este caso sí que <code>4 + 1 = 5</code>.</p>
+</li>
+<li>
+<p>SampleStructPack2 <code>#pragma pack (2)</code>: Ahora el mínimo tamaño del bloque de memoria es de 2 bytes. Para el entero, hay un ajuste exacto porque necesita 2 bloques que 2 bytes para alojar sus 4 bytes. Para el caso del booleano, necesita un bloque de 1 byte, pero como mínimo tiene que asignar un bloque de 2 bytes, por eso en total reserva 6 bytes, <code>4 + 2 = 6</code>.</p>
+</li>
+<li>
+<p>SampleStructPack4 <code>#pragma pack (4)</code>: Es el mismo caso que el anterior, aunque en el caso del booleano, hay un mayor "desperdicio" de memoria. Necesita 1 byte, pero reserva 4 bytes que es tamaño mínimo de bloque de memoria que puede asignar el compilador.</p>
+</li>
+<li>
+<p>SampleStruct (default compiler alignment): Como vemos se comporta exactamente igual que <code>#pragma pack (4)</code>, podemos deducir que la alineación por defecto del compilador que estamos utilizando es de 4 bytes.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+¿Por qué no utilizamos siempre la alineación de memoria más ajustada (<code>#pragma pack (1)</code>) para aprovechar mejor la memoria?
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Porque perderemos rendimiento.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rendimiento">Rendimiento</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vamos a hacer una prueba simple de rendimiento, en la que se va a reservar el mismo número de elementos en arrays para cada tipo de estructura.</p>
+</div>
+<div class="paragraph">
+<p>Este es el resultado:</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://coliru.stacked-crooked.com/a/954ad542659c7591">Resultados de la prueba de rendimiento</a>.</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">SampleStructPack1: 500000000000000000 bytes allocated <span class="hljs-keyword">in</span> 94311 nanoseconds
+SampleStructPack2: 600000000000000000 bytes allocated <span class="hljs-keyword">in</span> 1777 nanoseconds
+SampleStructPack4: 800000000000000000 bytes allocated <span class="hljs-keyword">in</span> 1519 nanoseconds</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como vemos cuanto más ajustada es la alineación de memoria, más tiempo se tarda en reservar y liberar.</p>
+</div>
+<div class="paragraph">
+<p>A continuación pego el código de la prueba de rendimiento.</p>
+</div>
+<div class="listingblock">
+<div class="title">Código de las pruebas de rendimiento</div>
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;chrono&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (1)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack1</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (2)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack2</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack (4)</span>
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStructPack4</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> pack(0)</span>
+
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">SampleStruct</span>
+{
+    <span class="hljs-type">bool</span> flag;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> timeout;
+};
+
+<span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">long</span> MAX_ELEMENTS = <span class="hljs-number">100000000000000000</span>;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std::chrono;
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">allocate1</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack1 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack1: &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">allocate2</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack2 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack2: &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">allocate4</span><span class="hljs-params">()</span>
+</span>{
+    SampleStructPack4 elements [MAX_ELEMENTS];
+    cout &lt;&lt; <span class="hljs-string">&quot;SampleStructPack4: &quot;</span> &lt;&lt; <span class="hljs-built_in">sizeof</span>(elements) &lt;&lt; <span class="hljs-string">&quot; bytes allocated&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">chrono1</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate1</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; <span class="hljs-built_in">duration_cast</span>&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">chrono2</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate2</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; <span class="hljs-built_in">duration_cast</span>&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">chrono4</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">auto</span> begin = high_resolution_clock::<span class="hljs-built_in">now</span>() ;
+    <span class="hljs-built_in">allocate4</span>();
+    cout &lt;&lt; <span class="hljs-string">&quot; in &quot;</span> &lt;&lt; <span class="hljs-built_in">duration_cast</span>&lt;nanoseconds&gt;(high_resolution_clock::<span class="hljs-built_in">now</span>() - begin).<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">&quot; nanoseconds&quot;</span> &lt;&lt; endl;
+}
+
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+</span>{
+    <span class="hljs-built_in">chrono1</span>();
+    <span class="hljs-built_in">chrono2</span>();
+    <span class="hljs-built_in">chrono4</span>();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+</div>
+</div>
+</div>
+</div><!----> <div class="comments"><script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="title" label="comment" theme="github-light" crossorigin="anonymous" async>
+	</script></div><!----></div><!----><!----><!----></main> <footer class="svelte-qhq9sm"><span>Carlos dice bla bla</span> <code>1.0.1</code></footer><!----><!--]--><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_1qhkr5p = {
+						base: new URL("../../../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../../../_app/immutable/entry/start.Dg2WxSzj.js"),
+						import("../../../../_app/immutable/entry/app.DiecyXnG.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2, 8],
+							data: [null,{"type":"data","data":{path:"/langs/es/posts/cpp-pragma-pack/",lang:"es",translations:{lang:"es",author:"Carlos Martin Sanchez",siteName:"Carlos dice bla bla",siteDescription:"Qué está pasando por mi cabeza y alrededores",categories:"categorías",Categories:"Categorías",RecentPosts:"Últimas entradas",NoPosts:"No hay entradas",SubscribeTo:"Suscríbete al feed",AboutMe:"Sobre mi",AllPosts:"Todas las entradas"},version:"1.0.1"},"uses":{"params":["lang"],"url":1},"slash":"always"},{"type":"data","data":{html:"\u003Cdiv id=\"toc\" class=\"toc\">\n\u003Cdiv id=\"toctitle\">Table of Contents\u003C/div>\n\u003Cul class=\"sectlevel1\">\n\u003Cli>\u003Ca href=\"#_estructura_de_ejemplo\">Estructura de ejemplo\u003C/a>\u003C/li>\n\u003Cli>\u003Ca href=\"#_la_directiva_pragma_pack_en_struct_c\">La directiva #pragma pack en struct C++\u003C/a>\u003C/li>\n\u003Cli>\u003Ca href=\"#_rendimiento\">Rendimiento\u003C/a>\u003C/li>\n\u003C/ul>\n\u003C/div>\n\u003Cdiv id=\"preamble\">\n\u003Cdiv class=\"sectionbody\">\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Un struct de C++ es un elemento que permite agrupar elementos de tipos distintos con alguna relación entre ellos. Esto permite manipular todos los elementos en bloque mediante una única referencia. Podemos considerarlo como una clase con visibilidad publica por defecto para sus atributos y funciones.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Si alguna vez nos interesa trabajar a un nivel más bajo, nos puede resultar útil entender cómo se mapea una estructura en memoria y cómo controlar este mapeo.\u003C/p>\n\u003C/div>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect1\">\n\u003Ch2 id=\"_estructura_de_ejemplo\">Estructura de ejemplo\u003C/h2>\n\u003Cdiv class=\"sectionbody\">\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Esta estructura estará compuesta por dos campos, un entero (4 bytes) y un booleano (un byte). En C++ queda de la siguiente forma:\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-c++\" data-lang=\"c++\">\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStruct\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Si hacemos un \u003Ccode>sizeof\u003C/code> de una instancia de la estructura deberíamos obtener un tamaño de 5 bytes. Y la memoria quedaría de la siguiente forma:\u003C/p>\n\u003C/div>\n\u003Cdiv id=\"5-bytes\" class=\"imageblock center\">\n\u003Cdiv class=\"content\">\n\u003Cimg src=\"/posts/cpp-pragma-pack/5b.png\" alt=\"5Bytes\" width=\"200\" height=\"auto\">\n\u003C/div>\n\u003Cdiv class=\"title\">Figure 1. Estructura de 5 bytes que realmente ocupa 5 bytes en memoria\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>\u003Cstrong>Pero\u003C/strong> no es tan sencillo, a continuación veremos que no nos podemos olvidar de la alineación de la memoria que hace el compilador en ese sistema y veremos cómo controlarlo para no encontrarnos con tamaños inesperados, ya que esto depende del compilador del sistema.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Por ejemplo, si en mi máquina hago un \u003Ccode>sizeof\u003C/code> de la estructura de ejemplo, \u003Cstrong>obtengo un tamaño de 8 bytes\u003C/strong>. Lo que está sucediendo es que el compilador reserva más memoria al final de la estructura para que cuadre en bloques de 2n Bytes. La memoria realmente queda de la siguiente forma:\u003C/p>\n\u003C/div>\n\u003Cdiv id=\"8-bytes\" class=\"imageblock center\">\n\u003Cdiv class=\"content\">\n\u003Cimg src=\"/posts/cpp-pragma-pack/8b.png\" alt=\"5Bytes\" width=\"200\" height=\"auto\">\n\u003C/div>\n\u003Cdiv class=\"title\">Sin pragma: Estructura de 5 Bytes que realmente ocupa 8 Bytes en memoria\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"title\">Fragmento de código que imprime el tamaño de la estructura y el de cada uno de sus atributos, en este caso 4 + 1 no es 5\u003C/div>\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-c++\" data-lang=\"c++\">\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">include\u003C/span>  \u003Cspan class=\"hljs-string\">&lt;iostream&gt;\u003C/span>\u003C/span>\n\n\u003Cspan class=\"hljs-keyword\">using\u003C/span> \u003Cspan class=\"hljs-keyword\">namespace\u003C/span> std;\n\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStruct\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">static\u003C/span> \u003Cspan class=\"hljs-type\">void\u003C/span> \u003Cspan class=\"hljs-title\">print\u003C/span> \u003Cspan class=\"hljs-params\">(\u003Cspan class=\"hljs-type\">size_t\u003C/span> sz, \u003Cspan class=\"hljs-type\">size_t\u003C/span> sz_flag, \u003Cspan class=\"hljs-type\">size_t\u003C/span> sz_timeout)\u003C/span>\n\u003C/span>{\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;\\tflag: &quot;\u003C/span> &lt;&lt; sz_flag &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; Bytes&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;\\t+&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;\\ttimeout: &quot;\u003C/span> &lt;&lt; sz_timeout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; Bytes&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;\\t=&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;\\t&quot;\u003C/span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; Bytes&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt;\u003Cspan class=\"hljs-string\">&quot;sizeof struct:  &quot;\u003C/span> &lt;&lt; sz &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; Bytes&quot;\u003C/span> &lt;&lt; endl;\n}\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">int\u003C/span> \u003Cspan class=\"hljs-title\">main\u003C/span>\u003Cspan class=\"hljs-params\">(\u003Cspan class=\"hljs-type\">int\u003C/span> argc, \u003Cspan class=\"hljs-type\">char\u003C/span> *argv[])\u003C/span>\n\u003C/span>{\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;SampleStruct&quot;\u003C/span> &lt;&lt; endl;\n    \u003Cspan class=\"hljs-built_in\">print\u003C/span> (\u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStruct), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStruct::flag), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStruct::timeout));\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; -- &quot;\u003C/span> &lt;&lt; endl;\n\n    \u003Cspan class=\"hljs-keyword\">return\u003C/span> \u003Cspan class=\"hljs-number\">0\u003C/span>;\n}\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"title\">\u003Ca href=\"https://coliru.stacked-crooked.com/a/c7deb3df49bebd40\">Ejecutando el código sin la directiva pragma\u003C/a>, tenemos que nuestra estructura ocupa 8 bytes en lugar de 5 bytes.\u003C/div>\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-bash\" data-lang=\"bash\">SampleStruct\nflag: 1 Bytes\n+\n\u003Cspan class=\"hljs-built_in\">timeout\u003C/span>: 4 Bytes\n=\n5 Bytes\nsizeof struct:  8 Bytes\n--\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"admonitionblock tip\">\n\u003Ctable>\n\u003Ctr>\n\u003Ctd class=\"icon\">\n\u003Cdiv class=\"title\">Tip\u003C/div>\n\u003C/td>\n\u003Ctd class=\"content\">\nSi queremos conocer el tamaño exacto de las estructuras que vamos a utilizar, tenemos que especificar al compilador la forma de alinear la estructura en memoria, para ello utilizaremos la directiva \u003Ccode>#pragma pack(n)\u003C/code>.\n\u003C/td>\n\u003C/tr>\n\u003C/table>\n\u003C/div>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect1\">\n\u003Ch2 id=\"_la_directiva_pragma_pack_en_struct_c\">La directiva #pragma pack en struct C++\u003C/h2>\n\u003Cdiv class=\"sectionbody\">\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Se trata de una directiva del preprocesador que indica al compilador cómo debe realizar la alineación de la memoria.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"title\">Ejemplo con diferentes configuraciones de alineamiento de memoria\u003C/div>\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-c++\" data-lang=\"c++\">\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">include\u003C/span> \u003Cspan class=\"hljs-string\">&lt;iostream&gt;\u003C/span>\u003C/span>\n\n\u003Cspan class=\"hljs-keyword\">using\u003C/span> \u003Cspan class=\"hljs-keyword\">namespace\u003C/span> std;\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">static\u003C/span> \u003Cspan class=\"hljs-type\">void\u003C/span> \u003Cspan class=\"hljs-title\">print\u003C/span> \u003Cspan class=\"hljs-params\">(\u003Cspan class=\"hljs-type\">size_t\u003C/span> sz, \u003Cspan class=\"hljs-type\">size_t\u003C/span> sz_flag, \u003Cspan class=\"hljs-type\">size_t\u003C/span> sz_timeout)\u003C/span>\n\u003C/span>{\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; flag: &quot;\u003C/span> &lt;&lt; sz_flag &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; Bytes&quot;\u003C/span>&lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; +&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; timeout: &quot;\u003C/span> &lt;&lt; sz_timeout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;Bytes&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; =&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; &quot;\u003C/span> &lt;&lt; sz_timeout + sz_flag &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;Bytes&quot;\u003C/span> &lt;&lt; endl;\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; sizeof struct:  &quot;\u003C/span> &lt;&lt; sz &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; Bytes&quot;\u003C/span> &lt;&lt; endl;\n}\n\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack (1)\u003C/span>\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStructPack1\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack(0)\u003C/span>\n\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack (2)\u003C/span>\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStructPack2\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack(0)\u003C/span>\n\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack (4)\u003C/span>\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStructPack4\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack(0)\u003C/span>\n\n\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStruct\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">int\u003C/span> \u003Cspan class=\"hljs-title\">main\u003C/span>\u003Cspan class=\"hljs-params\">(\u003Cspan class=\"hljs-type\">int\u003C/span> argc, \u003Cspan class=\"hljs-type\">char\u003C/span> *argv[])\u003C/span>\n\u003C/span>{\n\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;SampleStructPack1&quot;\u003C/span> &lt;&lt; endl;\n    \u003Cspan class=\"hljs-built_in\">print\u003C/span> (\u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack1), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack1::flag), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack1::timeout));\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; -- &quot;\u003C/span> &lt;&lt; endl;\n\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;SampleStructPack2&quot;\u003C/span> &lt;&lt; endl;\n    \u003Cspan class=\"hljs-built_in\">print\u003C/span> (\u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack2), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack2::flag), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack2::timeout));\n\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;SampleStructPack4&quot;\u003C/span> &lt;&lt; endl;\n    \u003Cspan class=\"hljs-built_in\">print\u003C/span> (\u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack4), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack4::flag), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStructPack4::timeout));\n\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;SampleStruct&quot;\u003C/span> &lt;&lt; endl;\n    \u003Cspan class=\"hljs-built_in\">print\u003C/span> (\u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStruct), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStruct::flag), \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(SampleStruct::timeout));\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; -- &quot;\u003C/span> &lt;&lt; endl;\n\n    \u003Cspan class=\"hljs-keyword\">return\u003C/span> \u003Cspan class=\"hljs-number\">0\u003C/span>;\n}\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"title\">\u003Ca href=\"https://coliru.stacked-crooked.com/a/7c18ee6585e57366\">Ejecutando el código con las directivas pragma\u003C/a>, tenemos distintos resultados dependiendo del valor de pragma.\u003C/div>\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-bash\" data-lang=\"bash\">SampleStructPack1 \u003Cb class=\"conum\">(1)\u003C/b>\n flag: 1 Bytes\n +\n \u003Cspan class=\"hljs-built_in\">timeout\u003C/span>: 4Bytes\n =\n 5Bytes\n sizeof struct:  5 Bytes\n --\n\nSampleStructPack2 \u003Cb class=\"conum\">(2)\u003C/b>\n flag: 1 Bytes\n +\n \u003Cspan class=\"hljs-built_in\">timeout\u003C/span>: 4Bytes\n =\n 5Bytes\n sizeof struct:  6 Bytes\n\nSampleStructPack4 \u003Cb class=\"conum\">(3)\u003C/b>\n flag: 1 Bytes\n +\n \u003Cspan class=\"hljs-built_in\">timeout\u003C/span>: 4Bytes\n =\n 5Bytes\n sizeof struct:  8 Bytes\n\nSampleStruct \u003Cb class=\"conum\">(4)\u003C/b>\n flag: 1 Bytes\n +\n \u003Cspan class=\"hljs-built_in\">timeout\u003C/span>: 4Bytes\n =\n 5Bytes\n sizeof struct:  8 Bytes\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"colist arabic\">\n\u003Col>\n\u003Cli>\n\u003Cp>SampleStructPack1 \u003Ccode>#pragma pack (1)\u003C/code>: Reserva bloques de memoria de un byte, nuestra estructura se ha ajustado perfectamente; en este caso sí que \u003Ccode>4 + 1 = 5\u003C/code>.\u003C/p>\n\u003C/li>\n\u003Cli>\n\u003Cp>SampleStructPack2 \u003Ccode>#pragma pack (2)\u003C/code>: Ahora el mínimo tamaño del bloque de memoria es de 2 bytes. Para el entero, hay un ajuste exacto porque necesita 2 bloques que 2 bytes para alojar sus 4 bytes. Para el caso del booleano, necesita un bloque de 1 byte, pero como mínimo tiene que asignar un bloque de 2 bytes, por eso en total reserva 6 bytes, \u003Ccode>4 + 2 = 6\u003C/code>.\u003C/p>\n\u003C/li>\n\u003Cli>\n\u003Cp>SampleStructPack4 \u003Ccode>#pragma pack (4)\u003C/code>: Es el mismo caso que el anterior, aunque en el caso del booleano, hay un mayor \"desperdicio\" de memoria. Necesita 1 byte, pero reserva 4 bytes que es tamaño mínimo de bloque de memoria que puede asignar el compilador.\u003C/p>\n\u003C/li>\n\u003Cli>\n\u003Cp>SampleStruct (default compiler alignment): Como vemos se comporta exactamente igual que \u003Ccode>#pragma pack (4)\u003C/code>, podemos deducir que la alineación por defecto del compilador que estamos utilizando es de 4 bytes.\u003C/p>\n\u003C/li>\n\u003C/ol>\n\u003C/div>\n\u003Cdiv class=\"admonitionblock important\">\n\u003Ctable>\n\u003Ctr>\n\u003Ctd class=\"icon\">\n\u003Cdiv class=\"title\">Important\u003C/div>\n\u003C/td>\n\u003Ctd class=\"content\">\n¿Por qué no utilizamos siempre la alineación de memoria más ajustada (\u003Ccode>#pragma pack (1)\u003C/code>) para aprovechar mejor la memoria?\n\u003C/td>\n\u003C/tr>\n\u003C/table>\n\u003C/div>\n\u003Cdiv class=\"admonitionblock warning\">\n\u003Ctable>\n\u003Ctr>\n\u003Ctd class=\"icon\">\n\u003Cdiv class=\"title\">Warning\u003C/div>\n\u003C/td>\n\u003Ctd class=\"content\">\nPorque perderemos rendimiento.\n\u003C/td>\n\u003C/tr>\n\u003C/table>\n\u003C/div>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"sect1\">\n\u003Ch2 id=\"_rendimiento\">Rendimiento\u003C/h2>\n\u003Cdiv class=\"sectionbody\">\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Vamos a hacer una prueba simple de rendimiento, en la que se va a reservar el mismo número de elementos en arrays para cada tipo de estructura.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Este es el resultado:\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"title\">\u003Ca href=\"https://coliru.stacked-crooked.com/a/954ad542659c7591\">Resultados de la prueba de rendimiento\u003C/a>.\u003C/div>\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-bash\" data-lang=\"bash\">SampleStructPack1: 500000000000000000 bytes allocated \u003Cspan class=\"hljs-keyword\">in\u003C/span> 94311 nanoseconds\nSampleStructPack2: 600000000000000000 bytes allocated \u003Cspan class=\"hljs-keyword\">in\u003C/span> 1777 nanoseconds\nSampleStructPack4: 800000000000000000 bytes allocated \u003Cspan class=\"hljs-keyword\">in\u003C/span> 1519 nanoseconds\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>Como vemos cuanto más ajustada es la alineación de memoria, más tiempo se tarda en reservar y liberar.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"paragraph\">\n\u003Cp>A continuación pego el código de la prueba de rendimiento.\u003C/p>\n\u003C/div>\n\u003Cdiv class=\"listingblock\">\n\u003Cdiv class=\"title\">Código de las pruebas de rendimiento\u003C/div>\n\u003Cdiv class=\"content\">\n\u003Cpre class=\"highlight\">\u003Ccode class=\"language-c++\" data-lang=\"c++\">\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">include\u003C/span> \u003Cspan class=\"hljs-string\">&lt;iostream&gt;\u003C/span>\u003C/span>\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">include\u003C/span> \u003Cspan class=\"hljs-string\">&lt;chrono&gt;\u003C/span>\u003C/span>\n\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack (1)\u003C/span>\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStructPack1\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack(0)\u003C/span>\n\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack (2)\u003C/span>\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStructPack2\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack(0)\u003C/span>\n\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack (4)\u003C/span>\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStructPack4\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\u003Cspan class=\"hljs-meta\">#\u003Cspan class=\"hljs-keyword\">pragma\u003C/span> pack(0)\u003C/span>\n\n\n\u003Cspan class=\"hljs-keyword\">struct\u003C/span> \u003Cspan class=\"hljs-title class_\">SampleStruct\u003C/span>\n{\n    \u003Cspan class=\"hljs-type\">bool\u003C/span> flag;\n    \u003Cspan class=\"hljs-type\">unsigned\u003C/span> \u003Cspan class=\"hljs-type\">int\u003C/span> timeout;\n};\n\n\u003Cspan class=\"hljs-type\">static\u003C/span> \u003Cspan class=\"hljs-type\">const\u003C/span> \u003Cspan class=\"hljs-type\">long\u003C/span> MAX_ELEMENTS = \u003Cspan class=\"hljs-number\">100000000000000000\u003C/span>;\n\u003Cspan class=\"hljs-keyword\">using\u003C/span> \u003Cspan class=\"hljs-keyword\">namespace\u003C/span> std;\n\u003Cspan class=\"hljs-keyword\">using\u003C/span> \u003Cspan class=\"hljs-keyword\">namespace\u003C/span> std::chrono;\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">void\u003C/span> \u003Cspan class=\"hljs-title\">allocate1\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>\n\u003C/span>{\n    SampleStructPack1 elements [MAX_ELEMENTS];\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;SampleStructPack1: &quot;\u003C/span> &lt;&lt; \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(elements) &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; bytes allocated&quot;\u003C/span>;\n}\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">void\u003C/span> \u003Cspan class=\"hljs-title\">allocate2\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>\n\u003C/span>{\n    SampleStructPack2 elements [MAX_ELEMENTS];\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;SampleStructPack2: &quot;\u003C/span> &lt;&lt; \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(elements) &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; bytes allocated&quot;\u003C/span>;\n}\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">void\u003C/span> \u003Cspan class=\"hljs-title\">allocate4\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>\n\u003C/span>{\n    SampleStructPack4 elements [MAX_ELEMENTS];\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot;SampleStructPack4: &quot;\u003C/span> &lt;&lt; \u003Cspan class=\"hljs-built_in\">sizeof\u003C/span>(elements) &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; bytes allocated&quot;\u003C/span>;\n}\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">void\u003C/span> \u003Cspan class=\"hljs-title\">chrono1\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>\n\u003C/span>{\n    \u003Cspan class=\"hljs-keyword\">auto\u003C/span> begin = high_resolution_clock::\u003Cspan class=\"hljs-built_in\">now\u003C/span>() ;\n    \u003Cspan class=\"hljs-built_in\">allocate1\u003C/span>();\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; in &quot;\u003C/span> &lt;&lt; \u003Cspan class=\"hljs-built_in\">duration_cast\u003C/span>&lt;nanoseconds&gt;(high_resolution_clock::\u003Cspan class=\"hljs-built_in\">now\u003C/span>() - begin).\u003Cspan class=\"hljs-built_in\">count\u003C/span>() &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; nanoseconds&quot;\u003C/span> &lt;&lt; endl;\n}\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">void\u003C/span> \u003Cspan class=\"hljs-title\">chrono2\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>\n\u003C/span>{\n    \u003Cspan class=\"hljs-keyword\">auto\u003C/span> begin = high_resolution_clock::\u003Cspan class=\"hljs-built_in\">now\u003C/span>() ;\n    \u003Cspan class=\"hljs-built_in\">allocate2\u003C/span>();\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; in &quot;\u003C/span> &lt;&lt; \u003Cspan class=\"hljs-built_in\">duration_cast\u003C/span>&lt;nanoseconds&gt;(high_resolution_clock::\u003Cspan class=\"hljs-built_in\">now\u003C/span>() - begin).\u003Cspan class=\"hljs-built_in\">count\u003C/span>() &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; nanoseconds&quot;\u003C/span> &lt;&lt; endl;\n}\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">void\u003C/span> \u003Cspan class=\"hljs-title\">chrono4\u003C/span>\u003Cspan class=\"hljs-params\">()\u003C/span>\n\u003C/span>{\n    \u003Cspan class=\"hljs-keyword\">auto\u003C/span> begin = high_resolution_clock::\u003Cspan class=\"hljs-built_in\">now\u003C/span>() ;\n    \u003Cspan class=\"hljs-built_in\">allocate4\u003C/span>();\n    cout &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; in &quot;\u003C/span> &lt;&lt; \u003Cspan class=\"hljs-built_in\">duration_cast\u003C/span>&lt;nanoseconds&gt;(high_resolution_clock::\u003Cspan class=\"hljs-built_in\">now\u003C/span>() - begin).\u003Cspan class=\"hljs-built_in\">count\u003C/span>() &lt;&lt; \u003Cspan class=\"hljs-string\">&quot; nanoseconds&quot;\u003C/span> &lt;&lt; endl;\n}\n\n\n\u003Cspan class=\"hljs-function\">\u003Cspan class=\"hljs-type\">int\u003C/span> \u003Cspan class=\"hljs-title\">main\u003C/span>\u003Cspan class=\"hljs-params\">(\u003Cspan class=\"hljs-type\">int\u003C/span> argc, \u003Cspan class=\"hljs-type\">char\u003C/span> *argv[])\u003C/span>\n\u003C/span>{\n    \u003Cspan class=\"hljs-built_in\">chrono1\u003C/span>();\n    \u003Cspan class=\"hljs-built_in\">chrono2\u003C/span>();\n    \u003Cspan class=\"hljs-built_in\">chrono4\u003C/span>();\n\n    \u003Cspan class=\"hljs-keyword\">return\u003C/span> \u003Cspan class=\"hljs-number\">0\u003C/span>;\n}\u003C/code>\u003C/pre>\n\u003C/div>\n\u003C/div>\n\u003C/div>\n\u003C/div>",props:{title:"Alineación de una Estructura C++ en Memoria",lang:"es",summary:"Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria",slug:"cpp-pragma-pack",keywords:["C++","Performance","Compilers","Memory"],filepath:"/static/posts/cpp-pragma-pack/cpp-pragma-pack.es.adoc",dirpath:"/static/posts/cpp-pragma-pack",created:1353927600000,modified:1353927600000,otherLangs:["en"],author:"Carlos Martin Sanchez",previewimage:"/posts/cpp-pragma-pack/5b.png",path:"/langs/es/posts/cpp-pragma-pack"},jsonLd:"\u003Cscript type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"mainEntityOfPage\":{\"@type\":\"Webpage\",\"@id\":\"https://google.com/article\"},\"headline\":\"Alineación de una Estructura C++ en Memoria\",\"alternativeHeadline\":\"Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria\",\"description\":\"Comprendiendo cómo funciona la directiva C++ pragma pack y cómo afecta a la alineación de la memoria\",\"image\":\"/posts/cpp-pragma-pack/5b.png\",\"datePublished\":\"2012-11-26T11:00:00.000Z\",\"dateModified\":\"2012-11-26T11:00:00.000Z\",\"keywords\":[\"C++\",\"Performance\",\"Compilers\",\"Memory\"],\"author\":{\"@type\":\"Person\",\"name\":\"Carlos Martin Sanchez\"},\"publisher\":{\"@type\":\"Person\",\"name\":\"Carlos Martin Sanchez\"}}\u003C/script>"},"uses":{"params":["slug","lang"]}}],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
