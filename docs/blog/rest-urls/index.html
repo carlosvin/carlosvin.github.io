@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>REST URLs - Carlos says bla, bla</title>
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+      <ul>
+        <li><strong><a href="https://carlosvin.github.io">Carlos says bla, bla</a></strong></li>
+      </ul>
+      <ul>
+        
+        <li>
+          <a href="https://carlosvin.github.io/blog">Blog</a>
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/about">About</a>
+        </li>
+        
+        <li>
+          <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+        </li>
+      </ul>
+
+    </nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <h1 class="post-title">REST URLs</h1>
+    <div class="post-meta">
+      
+      <time datetime=" 2015-08-16">
+        August 16, 2015
+      </time>
+      
+      
+      
+    </div>
+  </header>
+
+  
+<ul>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/rest-urls/#rest-basics">REST Basics</a>
+    
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/rest-urls/#rest-verbs">REST Verbs</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/rest-urls/#accessing-to-resources">Accessing to Resources</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/rest-urls/#update-resources">Update resources</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/rest-urls/#delete-resources">Delete Resources</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/rest-urls/#create-resources">Create Resources</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/rest-urls/#collections">Collections</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/rest-urls/#common-mistake">Common mistake</a>
+    
+  </li>
+  
+</ul>
+
+
+  <section class="post-content">
+    <p>First time I designed a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URL</a> with examples.</p>
+<h2 id="rest-basics">REST Basics</h2>
+<ul>
+<li>Using <a href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URL</a>s for get resources.</li>
+<li>Using <em>verbs</em> for modify resources.</li>
+<li>The <em>verbs</em> are provided by the <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> protocol.</li>
+<li>The <em>verbs</em> have a direct equivalency with <a href="https://en.wikipedia.org/wiki/CRUD">CRUD</a> (Create, Read, Update, Delete).</li>
+<li>To access to an existent resource we need an identifier.</li>
+</ul>
+<h3 id="rest-verbs">REST Verbs</h3>
+<p>POST: <strong>Create</strong> new resources.<br />
+GET: <strong>Read</strong> already existing resources.<br />
+PUT: <strong>Update</strong> already existing resources.<br />
+DELETE: <strong>Delete</strong> already existing resources.</p>
+<p>It is clearer in the following table:</p>
+<table><thead><tr><th>REST Verb</th><th>CRUD Action</th><th>Resource must exist</th></tr></thead><tbody>
+<tr><td>POST</td><td>Create</td><td>No</td></tr>
+<tr><td>GET</td><td>Read</td><td>Yes</td></tr>
+<tr><td>PUT</td><td>Update</td><td>Yes</td></tr>
+<tr><td>DELETE</td><td>Delete</td><td>Yes</td></tr>
+</tbody></table>
+<h3 id="accessing-to-resources">Accessing to Resources</h3>
+<p>A resource is <em>what we want to get</em>. For example, a car.</p>
+<p>To be able to get a car, that information is not enough, you can't go to your car dealer and ask for whatever car, you have to specify which one you want:</p>
+<blockquote>
+<p>Good morning. I'd like to have a Fiat Bravo 1.9 Emotion 120CV.</p>
+</blockquote>
+<p>In this manner the seller knows which one is.</p>
+<p>"Fiat Bravo 1.9 Emotion 120CV" is the <strong>identifier</strong>.</p>
+<p>Transferring the example to <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a>s:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>   https://cardealer.com/api/cars/fiat-bravo-19-emotion-120cv
+</span></code></pre>
+<p>Now our <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> can supply the car info.</p>
+<p>This is a very simple example, but actually when we access to a specific resource, we have to use something to identify it, a common and recommendable practice is use <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>  https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+</span></code></pre>
+<p>But our <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a>, like a shop, it hasn't to be so strict. We can ask for cars with several features:</p>
+<blockquote>
+<p>Good morning, I want a Fiat Bravo.</p>
+</blockquote>
+<p>Then, the dealer kindly will show you all Fiat Bravo he has available. Let's see how <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> says that.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>  https://cardealer.com/api/cars/?brand=fiat&amp;</span><span style="color:#bf616a;">model</span><span>=</span><span style="color:#a3be8c;">bravo
+</span></code></pre>
+<p><a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> will return all cars with Fiat brand and Bravo model.</p>
+<p>Brand and model are so called <strong>query parameters</strong>.</p>
+<p>As you might already notice, to get resource information, we have always used <strong>GET</strong> <em>verb</em></p>
+<h3 id="update-resources">Update resources</h3>
+<p>The <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> should also support updating resources. Like reading resources, to update a resource we have to specify which resource we want to update, so we again need an <em>identifier</em>.</p>
+<p>Before, we wanted to get information (read) and we used <strong>GET</strong> <em>verb</em>. Now the only difference is the verb.</p>
+<p>We want to <strong>update</strong> so we use the equivalency <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> verb: <strong>PUT</strong>.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">PUT</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+</span></code></pre>
+<p>Actually something else is missing, we have to say what thing of the car we want to change, for example, let's imagine we want to change the engine power and set it to 100CV.</p>
+<p>We have to send the new engine power to following <a href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URL</a> <a href="https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f">https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f</a> through <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> using <strong>PUT</strong> verb.</p>
+<p><a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> protocol allows sending data within PUT message, we have to choose a sending format.</p>
+<p>We can use <a href="https://en.wikipedia.org/wiki/JSON">JSON</a> or <a href="https://en.wikipedia.org/wiki/XML">XML</a> or whatever, we only have to ensure that sent format is expected in server side.</p>
+<blockquote>
+<p><strong>Note:</strong> Designing a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> requires to select a data format.</p>
+</blockquote>
+<p><strong>JSON example:</strong></p>
+<pre data-lang="json" style="background-color:#2b303b;color:#c0c5ce;" class="language-json "><code class="language-json" data-lang="json"><span>{ &quot;</span><span style="color:#a3be8c;">enginePower</span><span>&quot;: </span><span style="color:#d08770;">100 </span><span>}
+</span></code></pre>
+<h3 id="delete-resources">Delete Resources</h3>
+<p>Let's imagine that now we are the car dealer and we don't want to sell the Fiat Bravo Emotion 1.9CV anymore (the cce05bee-386b-11e5-a151-feff819cdc9f). We'll keep the <a href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URL</a> that identifies the resource, but we change the verb: we don't want to read (GET), we don't want to update (PUT), we want to <strong>delete (DELETE)</strong>.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">DELETE</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f
+</span></code></pre>
+<p>We don't have to supply any additional info, only the verb (DELETE) and the resource identifier.</p>
+<h3 id="create-resources">Create Resources</h3>
+<p>And the last verb is <strong>create (POST)</strong>. In this case we don't have to identify the resource, because it still doesn't exist.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">POST</span><span>   https://cardealer.com/api/cars/
+</span></code></pre>
+<p>But we have to send the data to create the resource.</p>
+<p>Following with the example, let's create a new car, so we include the necessary data within POST <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> message, it is something similar what we did at section "Update resources", but we are going to send <strong>all required data</strong>, not only the engine power.</p>
+<p><strong>JSON example:</strong></p>
+<pre data-lang="json" style="background-color:#2b303b;color:#c0c5ce;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>  &quot;</span><span style="color:#a3be8c;">brand</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">Fiat</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">model</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">Bravo</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">year</span><span>&quot;: </span><span style="color:#d08770;">2010</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">doors</span><span>&quot;: </span><span style="color:#d08770;">5</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">enginePower</span><span>&quot;: </span><span style="color:#d08770;">120</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">version</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">Emotion</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">clima</span><span>&quot;: </span><span style="color:#d08770;">true</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">ac</span><span>&quot;: </span><span style="color:#d08770;">false</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">fuel</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">Diesel</span><span>&quot;
+</span><span>}
+</span></code></pre>
+<p>We can delegate on the system to assign a new <strong>identifier</strong>, or simply send it within the message:</p>
+<pre data-lang="json" style="background-color:#2b303b;color:#c0c5ce;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>  &quot;</span><span style="color:#a3be8c;">identifier</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">cce05bee-386b-11e5-a151-feff819cdc9f</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">brand</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">Fiat</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">model</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">Bravo</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">year</span><span>&quot;: </span><span style="color:#d08770;">2010</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">doors</span><span>&quot;: </span><span style="color:#d08770;">5</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">enginePower</span><span>&quot;: </span><span style="color:#d08770;">120</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">version</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">Emotion</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">clima</span><span>&quot;: </span><span style="color:#d08770;">true</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">ac</span><span>&quot;: </span><span style="color:#d08770;">false</span><span>,
+</span><span>  &quot;</span><span style="color:#a3be8c;">fuel</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">Diesel</span><span>&quot;
+</span><span>}
+</span></code></pre>
+<h3 id="collections">Collections</h3>
+<p>All actions we have already explained were actually applied over a cars collection.</p>
+<p>But, what happens if a resource has a nested collection?</p>
+<p>Continuing with cars example, a car can use a set of engine oils. So the <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> must allow update, delete or create elements in the set.</p>
+<blockquote>
+<p><strong>Note:</strong> For the example we will assume that <em>the oil identifier</em> is the attribute <em>type</em>.</p>
+</blockquote>
+<h4 id="add-an-element-to-collection">Add an element to collection</h4>
+<p>When we add a car to cars collection, what we do is create a new car, so it is the case of "Create Resources".</p>
+<p>To add a new engine oil to the car cce05bee-386b-11e5-a151-feff819cdc9f, that already exists:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">POST</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+</span></code></pre>
+<p><strong>Response:</strong></p>
+<pre data-lang="json" style="background-color:#2b303b;color:#c0c5ce;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>  &quot;</span><span style="color:#a3be8c;">type</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">5W30</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">otherInfo</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">This is the best oil for this car</span><span>&quot;
+</span><span>}
+</span></code></pre>
+<p>If we want to add another one:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">POST</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+</span></code></pre>
+<p><strong>Response:</strong></p>
+<pre data-lang="json" style="background-color:#2b303b;color:#c0c5ce;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>  &quot;</span><span style="color:#a3be8c;">type</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">10W30</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">otherInfo</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">This is very good for cold weather</span><span>&quot;
+</span><span>}
+</span></code></pre>
+<h4 id="update-a-collection-item">Update a collection item</h4>
+<p>If we want to update the info of oil <em>5W30</em> of car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">PUT</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/5W30/
+</span></code></pre>
+<p><strong>Response:</strong></p>
+<pre data-lang="json" style="background-color:#2b303b;color:#c0c5ce;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>  &quot;</span><span style="color:#a3be8c;">type</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">5W30</span><span>&quot;,
+</span><span>  &quot;</span><span style="color:#a3be8c;">otherInfo</span><span>&quot;: &quot;</span><span style="color:#a3be8c;">This is no longer the best oil for this car</span><span>&quot;
+</span><span>}
+</span></code></pre>
+<h4 id="delete-a-collection-item">Delete a collection item</h4>
+<p>To delete an oil <em>10W30</em> from car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">DELETE</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
+</span></code></pre>
+<h4 id="read-a-collection-item">Read a collection item</h4>
+<p>To get the oil info <em>10W30</em> of the car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/10W30
+</span></code></pre>
+<h4 id="list-collection-items">List collection items</h4>
+<p>As we have seen at "Read a collection item", we can get the info of every collection element, but we also can get multiple collection elements, sorted, paged and apply typical collection actions.</p>
+<p>We can get all supported oils for a car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>, it is as simple as:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/
+</span></code></pre>
+<p>We can also get sorted items:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?sort_by=type&amp;</span><span style="color:#bf616a;">order</span><span>=</span><span style="color:#a3be8c;">asc
+</span></code></pre>
+<p>We can ask <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> to return the first 10 oils for car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em>:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?number_of_elements=10
+</span></code></pre>
+<p><a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> can support also pagination:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=3&amp;</span><span style="color:#bf616a;">number_of_elements</span><span>=</span><span style="color:#a3be8c;">2
+</span></code></pre>
+<p>Above request is telling <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> that returns the page 3 of all oils of car <em>cce05bee-386b-11e5-a151-feff819cdc9f</em> and it has to show 2 oils per page. If we want to go to next page:</p>
+<p><strong>Request:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">GET</span><span>   https://cardealer.com/api/cars/cce05bee-386b-11e5-a151-feff819cdc9f/oils/?page=4&amp;</span><span style="color:#bf616a;">number_of_elements</span><span>=</span><span style="color:#a3be8c;">2
+</span></code></pre>
+<p>All those features are supported by <strong>query parameters</strong>.</p>
+<h2 id="common-mistake">Common mistake</h2>
+<p>First time I tried to design a <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> I designed an <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a>, but not <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a>.</p>
+<p>My main mistake was the <a href="https://en.wikipedia.org/wiki/Uniform_resource_locator">URL</a>s design, I added my own <em>verbs</em> skipping <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> <em>verbs</em>.</p>
+<p><strong>Wrong:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">POST</span><span>    https://example.com/api/cars/ford-focus/delete-oil/5W30
+</span></code></pre>
+<p><strong>The correct way:</strong></p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">DELETE</span><span>  https://example.com/api/cars/ford-focus/oils/5W30
+</span></code></pre>
+
+  </section>
+
+  <footer>
+  </footer>
+</article>
+
+    <script src="/js/search.js"></script>
+
+  </main>
+
+  <footer class="grid">
+    <span>&copy; 2025 Carlos says bla, bla</span>
+    <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn"
+      width="32" height="32" />
+  </a>
+</span>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>

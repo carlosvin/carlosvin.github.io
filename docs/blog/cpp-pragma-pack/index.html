@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C++ Struct memory alignment - Carlos says bla, bla</title>
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+      <ul>
+        <li><strong><a href="https://carlosvin.github.io">Carlos says bla, bla</a></strong></li>
+      </ul>
+      <ul>
+        
+        <li>
+          <a href="https://carlosvin.github.io/blog">Blog</a>
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/about">About</a>
+        </li>
+        
+        <li>
+          <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+        </li>
+      </ul>
+
+    </nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <h1 class="post-title">C++ Struct memory alignment</h1>
+    <div class="post-meta">
+      
+      <time datetime=" 2012-11-26">
+        November 26, 2012
+      </time>
+      
+      
+      
+    </div>
+  </header>
+
+  
+<ul>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/cpp-pragma-pack/#struct-example">Struct example</a>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/cpp-pragma-pack/#pragma-pack-directive-in-c-struct">#pragma pack directive in C++ struct</a>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/cpp-pragma-pack/#performance-test">Performance test</a>
+    
+  </li>
+  
+</ul>
+
+
+  <section class="post-content">
+    <p>A C++ struct is an element that groups attributes with different types so we can manipulate them all together using same reference. It is like a class with public visibility by default for functions and attributes.</p>
+<p>If we want to work in a lower level, closer to machine, it might be useful to understand how that data structure is stored in memory and how to control that mapping.</p>
+<h2 id="struct-example">Struct example</h2>
+<p>It has two attributes: an integer (4 bytes) and a boolean (1 byte).</p>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">struct </span><span>SampleStruct {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span></code></pre>
+<p>If we get the instance size using <code>sizeof</code> we should get 5 bytes size and memory would be like:</p>
+<p><img src="https://carlosvin.github.io/blog/cpp-pragma-pack/./5b.png" alt="5 bytes struct which uses 5 bytes in memory" /></p>
+<p><strong>But</strong> is not that simple, memory alignment depends on compiler and system. We will learn how to control compiler alignment policy, so we can avoid getting unexpected allocation memory sizes.</p>
+<p>For example, in my local host, if I get the <code>sizeof</code> the previous structure without <code>pragma</code> declarations, <strong>I get a 8 bytes size</strong>. We are getting 8 Bytes instead of expected 5 Bytes because the compiler allocates more memory at the end of structure so it fits in 2n bytes blocks. Memory actually looks like:</p>
+<p><img src="https://carlosvin.github.io/blog/cpp-pragma-pack/./8b.png" alt="5 bytes structure that actually spends 8 bytes in memory" /></p>
+<p>Example output:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">SampleStruct
+</span><span style="color:#bf616a;">flag:</span><span> 1 Bytes
+</span><span style="color:#bf616a;">+
+</span><span style="color:#bf616a;">timeout:</span><span> 4 Bytes
+</span><span>=
+</span><span style="color:#bf616a;">5</span><span> Bytes
+</span><span style="color:#bf616a;">sizeof</span><span> struct:  8 Bytes
+</span><span style="color:#bf616a;">--
+</span></code></pre>
+<p>TIP: If we want to know the exact structure size we have to specify compiler how to align the memory, to do so we have <code>#pragma pack(n)</code> directive.</p>
+<h2 id="pragma-pack-directive-in-c-struct"><code>#pragma pack</code> directive in C++ struct</h2>
+<p>It is a preprocessor directive to indicate to compiler how to align data in memory.</p>
+<p>Example with different memory alignment configurations:</p>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#pragma</span><span> pack (1)
+</span><span style="color:#b48ead;">struct </span><span>SampleStructPack1 {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span><span style="color:#b48ead;">#pragma</span><span> pack(0)
+</span><span>
+</span><span style="color:#b48ead;">#pragma</span><span> pack (2)
+</span><span style="color:#b48ead;">struct </span><span>SampleStructPack2 {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span><span style="color:#b48ead;">#pragma</span><span> pack(0)
+</span><span>
+</span><span style="color:#b48ead;">#pragma</span><span> pack (4)
+</span><span style="color:#b48ead;">struct </span><span>SampleStructPack4 {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span><span style="color:#b48ead;">#pragma</span><span> pack(0)
+</span><span>
+</span><span style="color:#b48ead;">struct </span><span>SampleStruct {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span></code></pre>
+<p>Example output:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">SampleStructPack1
+</span><span> </span><span style="color:#bf616a;">flag:</span><span> 1 Bytes
+</span><span> </span><span style="color:#bf616a;">+
+</span><span> </span><span style="color:#bf616a;">timeout:</span><span> 4Bytes
+</span><span> =
+</span><span> </span><span style="color:#bf616a;">5Bytes
+</span><span> </span><span style="color:#bf616a;">sizeof</span><span> struct:  5 Bytes
+</span><span> </span><span style="color:#bf616a;">--
+</span><span>
+</span><span style="color:#bf616a;">SampleStructPack2
+</span><span> </span><span style="color:#bf616a;">flag:</span><span> 1 Bytes
+</span><span> </span><span style="color:#bf616a;">+
+</span><span> </span><span style="color:#bf616a;">timeout:</span><span> 4Bytes
+</span><span> =
+</span><span> </span><span style="color:#bf616a;">5Bytes
+</span><span> </span><span style="color:#bf616a;">sizeof</span><span> struct:  6 Bytes
+</span><span>
+</span><span style="color:#bf616a;">SampleStructPack4
+</span><span> </span><span style="color:#bf616a;">flag:</span><span> 1 Bytes
+</span><span> </span><span style="color:#bf616a;">+
+</span><span> </span><span style="color:#bf616a;">timeout:</span><span> 4Bytes
+</span><span> =
+</span><span> </span><span style="color:#bf616a;">5Bytes
+</span><span> </span><span style="color:#bf616a;">sizeof</span><span> struct:  8 Bytes
+</span><span>
+</span><span style="color:#bf616a;">SampleStruct
+</span><span> </span><span style="color:#bf616a;">flag:</span><span> 1 Bytes
+</span><span> </span><span style="color:#bf616a;">+
+</span><span> </span><span style="color:#bf616a;">timeout:</span><span> 4Bytes
+</span><span> =
+</span><span> </span><span style="color:#bf616a;">5Bytes
+</span><span> </span><span style="color:#bf616a;">sizeof</span><span> struct:  8 Bytes
+</span></code></pre>
+<ol>
+<li>SampleStructPack1 <code>#pragma pack (1)</code>: It allocates 1 byte memory block, so our sample struct fits perfectly, in this case it is true that <code>4 + 1 = 5</code>.</li>
+<li>SampleStructPack2 <code>#pragma pack (2)</code>: Minimum block size is 2 bytes. Integer attribute fits because it just needs 2 blocks of 2 Bytes. Boolean attribute needs just 1 Byte, but minimum block size is 2 Bytes, that's why total allocated memory is 6 bytes, <code>4 + 2 = 6</code>.</li>
+<li>SampleStructPack4 <code>#pragma pack (4)</code>: It is like previous one, but in this case we are wasting more memory for boolean attribute, it needs 1 Byte, but we are allocating 4 Bytes.</li>
+<li>SampleStruct (default compiler alignment): As you can see it behaves exactly like <code>#pragma pack (4)</code>, so we can deduce it is the default compiler alignment.</li>
+</ol>
+<p><strong>IMPORTANT:</strong> Why don't we always use smallest memory alignment (<code>#pragma pack (1)</code>) so we can save more memory?</p>
+<p><strong>WARNING:</strong> Because of performance loss.</p>
+<h2 id="performance-test">Performance test</h2>
+<p>The test will allocate same number of elements in arrays for each structure type (1, 2, 4).</p>
+<p>Example output:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">SampleStructPack1:</span><span> 500000000000000000 bytes allocated in 94311 nanoseconds
+</span><span style="color:#bf616a;">SampleStructPack2:</span><span> 600000000000000000 bytes allocated in 1777 nanoseconds
+</span><span style="color:#bf616a;">SampleStructPack4:</span><span> 800000000000000000 bytes allocated in 1519 nanoseconds
+</span></code></pre>
+<p>As you can see, the smallest memory alignment spends more time allocating and releasing memory.</p>
+<p>Performance test source code:</p>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">chrono</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">#pragma</span><span> pack (1)
+</span><span style="color:#b48ead;">struct </span><span>SampleStructPack1 {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span><span style="color:#b48ead;">#pragma</span><span> pack(0)
+</span><span>
+</span><span style="color:#b48ead;">#pragma</span><span> pack (2)
+</span><span style="color:#b48ead;">struct </span><span>SampleStructPack2 {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span><span style="color:#b48ead;">#pragma</span><span> pack(0)
+</span><span>
+</span><span style="color:#b48ead;">#pragma</span><span> pack (4)
+</span><span style="color:#b48ead;">struct </span><span>SampleStructPack4 {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span><span style="color:#b48ead;">#pragma</span><span> pack(0)
+</span><span>
+</span><span style="color:#b48ead;">struct </span><span>SampleStruct {
+</span><span>    </span><span style="color:#b48ead;">bool</span><span> flag;
+</span><span>    </span><span style="color:#b48ead;">unsigned int</span><span> timeout;
+</span><span>};
+</span><span>
+</span><span style="color:#b48ead;">static const long</span><span> MAX_ELEMENTS = </span><span style="color:#d08770;">100000000000000000</span><span>;
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span style="color:#b48ead;">using namespace</span><span> std::chrono;
+</span><span>
+</span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">allocate1</span><span>() {
+</span><span>    SampleStructPack1 elements [MAX_ELEMENTS];
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">SampleStructPack1: </span><span>&quot; &lt;&lt; sizeof(elements) &lt;&lt; &quot;</span><span style="color:#a3be8c;"> bytes allocated</span><span>&quot;;
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">allocate2</span><span>() {
+</span><span>    SampleStructPack2 elements [MAX_ELEMENTS];
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">SampleStructPack2: </span><span>&quot; &lt;&lt; sizeof(elements) &lt;&lt; &quot;</span><span style="color:#a3be8c;"> bytes allocated</span><span>&quot;;
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">allocate4</span><span>() {
+</span><span>    SampleStructPack4 elements [MAX_ELEMENTS];
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">SampleStructPack4: </span><span>&quot; &lt;&lt; sizeof(elements) &lt;&lt; &quot;</span><span style="color:#a3be8c;"> bytes allocated</span><span>&quot;;
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">chrono1</span><span>() {
+</span><span>    </span><span style="color:#b48ead;">auto</span><span> begin = high_resolution_clock::</span><span style="color:#bf616a;">now</span><span>() ;
+</span><span>    </span><span style="color:#bf616a;">allocate1</span><span>();
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;"> in </span><span>&quot; &lt;&lt; </span><span style="color:#bf616a;">duration_cast</span><span>&lt;nanoseconds&gt;(high_resolution_clock::</span><span style="color:#bf616a;">now</span><span>() - begin).</span><span style="color:#bf616a;">count</span><span>() &lt;&lt; &quot;</span><span style="color:#a3be8c;"> nanoseconds</span><span>&quot; &lt;&lt; endl;
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">chrono2</span><span>() {
+</span><span>    </span><span style="color:#b48ead;">auto</span><span> begin = high_resolution_clock::</span><span style="color:#bf616a;">now</span><span>() ;
+</span><span>    </span><span style="color:#bf616a;">allocate2</span><span>();
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;"> in </span><span>&quot; &lt;&lt; </span><span style="color:#bf616a;">duration_cast</span><span>&lt;nanoseconds&gt;(high_resolution_clock::</span><span style="color:#bf616a;">now</span><span>() - begin).</span><span style="color:#bf616a;">count</span><span>() &lt;&lt; &quot;</span><span style="color:#a3be8c;"> nanoseconds</span><span>&quot; &lt;&lt; endl;
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">chrono4</span><span>() {
+</span><span>    </span><span style="color:#b48ead;">auto</span><span> begin = high_resolution_clock::</span><span style="color:#bf616a;">now</span><span>() ;
+</span><span>    </span><span style="color:#bf616a;">allocate4</span><span>();
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;"> in </span><span>&quot; &lt;&lt; </span><span style="color:#bf616a;">duration_cast</span><span>&lt;nanoseconds&gt;(high_resolution_clock::</span><span style="color:#bf616a;">now</span><span>() - begin).</span><span style="color:#bf616a;">count</span><span>() &lt;&lt; &quot;</span><span style="color:#a3be8c;"> nanoseconds</span><span>&quot; &lt;&lt; endl;
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main</span><span>(</span><span style="color:#b48ead;">int </span><span style="color:#bf616a;">argc</span><span>, </span><span style="color:#b48ead;">char </span><span>*</span><span style="color:#bf616a;">argv</span><span>[]) {
+</span><span>    </span><span style="color:#bf616a;">chrono1</span><span>();
+</span><span>    </span><span style="color:#bf616a;">chrono2</span><span>();
+</span><span>    </span><span style="color:#bf616a;">chrono4</span><span>();
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+
+  </section>
+
+  <footer>
+  </footer>
+</article>
+
+    <script src="/js/search.js"></script>
+
+  </main>
+
+  <footer class="grid">
+    <span>&copy; 2025 Carlos says bla, bla</span>
+    <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn"
+      width="32" height="32" />
+  </a>
+</span>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>

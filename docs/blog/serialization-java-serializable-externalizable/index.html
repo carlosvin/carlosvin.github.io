@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Java serialization ways: Performance Comparison - Carlos says bla, bla</title>
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+      <ul>
+        <li><strong><a href="https://carlosvin.github.io">Carlos says bla, bla</a></strong></li>
+      </ul>
+      <ul>
+        
+        <li>
+          <a href="https://carlosvin.github.io/blog">Blog</a>
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/about">About</a>
+        </li>
+        
+        <li>
+          <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+        </li>
+      </ul>
+
+    </nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <h1 class="post-title">Java serialization ways: Performance Comparison</h1>
+    <div class="post-meta">
+      
+      <time datetime=" 2014-05-13">
+        May 13, 2014
+      </time>
+      
+      
+      
+    </div>
+  </header>
+
+  
+<ul>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#serializable">Serializable</a>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#externalizable">Externalizable</a>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#performance-tests-serializable-vs-externalizable">Performance tests (Serializable vs. Externalizable)</a>
+    
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#implementing-serializable">Implementing Serializable</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#implementing-externalizable-wrong-way">Implementing Externalizable (wrong way)</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#implementing-externalizable-right-way">Implementing Externalizable (right way)</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#results-analysis">Results Analysis</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+</ul>
+
+
+  <section class="post-content">
+    <p>Recently I've had to serialize/deserialize some data in <a href="https://www.java.com">Java</a> binary format. Lately I use <a href="https://www.json.org">JSON</a> or <a href="https://en.wikipedia.org/wiki/XML">XML</a> formats.</p>
+<p>I remember that to serialize <a href="https://www.java.com">Java</a> objects they must implement the <a href="https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> interface, but I had also read in Internet other way, implementing the <a href="https://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> interface, then, which interface must I implement? It depends on what you want such as everything in the life.</p>
+<p>When to use <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#serializable">Serializable</a> or <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#externalizable">Externalizable</a>.</p>
+<h2 id="serializable">Serializable</h2>
+<ul>
+<li>To serialize easily. You have to write less code.</li>
+<li>This way has some restrictions: The object to serialize must implement the default constructor (0 args). It must be responsible to manage the parent class attributes.</li>
+<li>The performance is not as important, we will see more about that in <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#performance-tests-serializable-vs-externalizable">Performance tests (Serializable vs. Externalizable)</a>.</li>
+</ul>
+<h2 id="externalizable">Externalizable</h2>
+<ul>
+<li>You must implement the serialization/deserialization methods, so you have to write more code.</li>
+<li>When you cannot use <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#serializable">Serializable</a>.</li>
+<li>When you want to improve the performance, as we'll see in <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#performance-tests-serializable-vs-externalizable">Performance tests (Serializable vs. Externalizable)</a>.</li>
+<li>If you have to manage the serialization of parent class attributes, then I recommend you use <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#externalizable">Externalizable</a>, because we'll avoid a weird private methods overriding.</li>
+</ul>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span style="color:#b48ead;">private</span><span> void </span><span style="color:#bf616a;">writeObject</span><span>(</span><span style="color:#ebcb8b;">ObjectOutputStream</span><span> oos)
+</span><span style="color:#b48ead;">private</span><span> void </span><span style="color:#bf616a;">readObject</span><span>(</span><span style="color:#ebcb8b;">ObjectInputStream</span><span> ois)
+</span></code></pre>
+<h2 id="performance-tests-serializable-vs-externalizable">Performance tests (Serializable vs. Externalizable)</h2>
+<p><a href="https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>: Java, through introspection, guesses the types of class attributes to know how to serialize/deserialize them, but this "magic" is not free, it has a performance penalty.</p>
+<p>When we use <a href="https://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> interface, we decide how to serialize/deserialize, namely we have to write the code that does it. We've lost ease, but also we avoid that <a href="https://www.java.com">Java</a> does some tasks, so if we override the methods properly, we'll get a performance improvement.</p>
+<p>To know how big is the performance difference between both interfaces, I've written a <a href="https://github.com/carlosvin/serializations-performance-java">tiny example in which we serialize an object with 2 collections with 100000 elements each one</a>. Here you can find the <a href="http://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html">tests execution results</a>. There are 3 different implementations:</p>
+<h3 id="implementing-serializable">Implementing Serializable</h3>
+<p>As we mentioned above, <a href="https://www.java.com">Java</a> has to guess certain things. During this process it sacrifices some of performance (slowest way), in exchange we get really simple source code, the class to serialize just has to implement the <a href="https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> interface.</p>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">Contacts </span><span style="color:#b48ead;">implements </span><span style="color:#a3be8c;">Serializable </span><span style="color:#eff1f5;">{
+</span><span style="color:#eff1f5;">  </span><span style="color:#65737e;">// ...
+</span><span style="color:#eff1f5;">}
+</span></code></pre>
+<ul>
+<li>serializing: 1133 millisecond</li>
+<li>deserializing: 506 millisecond</li>
+</ul>
+<h3 id="implementing-externalizable-wrong-way">Implementing Externalizable (wrong way)</h3>
+<p>If the class implements <a href="https://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a>, we must tell to <a href="https://www.java.com">Java</a> how it has to serialize/deserialize the class attributes. We just have to be careful, because if we did it bad, then we'll get the worst of the both worlds: more complex implementation and bad performance, i.e: If we serialize/deserialize complex class attributes (like collections), <a href="https://www.java.com">Java</a> will also have to guess many things about the attributes type.</p>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span>@</span><span style="color:#bf616a;">Override
+</span><span style="color:#b48ead;">public</span><span> void </span><span style="color:#bf616a;">readExternal</span><span>(</span><span style="color:#ebcb8b;">ObjectInput</span><span> in) throws </span><span style="color:#ebcb8b;">IOException</span><span>, </span><span style="color:#ebcb8b;">ClassNotFoundException </span><span>{
+</span><span>  </span><span style="color:#bf616a;">setEmails</span><span>((</span><span style="color:#ebcb8b;">Set</span><span>&lt;</span><span style="color:#ebcb8b;">String</span><span>&gt;) in.</span><span style="color:#bf616a;">readObject</span><span>());
+</span><span>  </span><span style="color:#bf616a;">setPhones</span><span>((</span><span style="color:#ebcb8b;">Set</span><span>&lt;</span><span style="color:#ebcb8b;">String</span><span>&gt;) in.</span><span style="color:#bf616a;">readObject</span><span>());
+</span><span>}
+</span><span>
+</span><span>@</span><span style="color:#bf616a;">Override
+</span><span style="color:#b48ead;">public</span><span> void </span><span style="color:#bf616a;">writeExternal</span><span>(</span><span style="color:#ebcb8b;">ObjectOutput</span><span> out) throws </span><span style="color:#ebcb8b;">IOException </span><span>{
+</span><span>  out.</span><span style="color:#bf616a;">writeObject</span><span>(emails);
+</span><span>  out.</span><span style="color:#bf616a;">writeObject</span><span>(phones);
+</span><span>}
+</span></code></pre>
+<ul>
+<li>serializing: 737 millisecond</li>
+<li>deserializing: 367 millisecond</li>
+</ul>
+<h3 id="implementing-externalizable-right-way">Implementing Externalizable (right way)</h3>
+<p>If we serialize one by one the collection elements, then we'll save more time, because <a href="https://www.java.com">Java</a> serializes simple types, this way avoids guessing things that we actually know.</p>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span>@</span><span style="color:#bf616a;">Override
+</span><span style="color:#b48ead;">public</span><span> void </span><span style="color:#bf616a;">readExternal</span><span>(</span><span style="color:#ebcb8b;">ObjectInput</span><span> in) throws </span><span style="color:#ebcb8b;">IOException</span><span>, </span><span style="color:#ebcb8b;">ClassNotFoundException </span><span>{
+</span><span>  emails.</span><span style="color:#bf616a;">clear</span><span>();
+</span><span>  phones.</span><span style="color:#bf616a;">clear</span><span>();
+</span><span>  </span><span style="color:#b48ead;">int</span><span> nEmails = in.</span><span style="color:#bf616a;">readInt</span><span>();
+</span><span>  </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">int</span><span> i = </span><span style="color:#d08770;">0</span><span>; i &lt; nEmails; i++) {
+</span><span>    emails.</span><span style="color:#bf616a;">add</span><span>(in.</span><span style="color:#bf616a;">readUTF</span><span>());
+</span><span>  }
+</span><span>  </span><span style="color:#b48ead;">int</span><span> nPhones = in.</span><span style="color:#bf616a;">readInt</span><span>();
+</span><span>  </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">int</span><span> i = </span><span style="color:#d08770;">0</span><span>; i &lt; nPhones; i++) {
+</span><span>    phones.</span><span style="color:#bf616a;">add</span><span>(in.</span><span style="color:#bf616a;">readUTF</span><span>());
+</span><span>  }
+</span><span>}
+</span><span>
+</span><span>@</span><span style="color:#bf616a;">Override
+</span><span style="color:#b48ead;">public</span><span> void </span><span style="color:#bf616a;">writeExternal</span><span>(</span><span style="color:#ebcb8b;">ObjectOutput</span><span> out) throws </span><span style="color:#ebcb8b;">IOException </span><span>{
+</span><span>  out.</span><span style="color:#bf616a;">writeInt</span><span>(emails.</span><span style="color:#bf616a;">size</span><span>());
+</span><span>  </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#ebcb8b;">String</span><span> e : emails) {
+</span><span>    out.</span><span style="color:#bf616a;">writeUTF</span><span>(e);
+</span><span>  }
+</span><span>  out.</span><span style="color:#bf616a;">writeInt</span><span>(phones.</span><span style="color:#bf616a;">size</span><span>());
+</span><span>  </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#ebcb8b;">String</span><span> p : phones) {
+</span><span>    out.</span><span style="color:#bf616a;">writeUTF</span><span>(p);
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<ul>
+<li>serializing: 204 millisecond</li>
+<li>deserializing: 92 millisecond</li>
+</ul>
+<p>We've gained performance at expense of write more code.</p>
+<h3 id="results-analysis">Results Analysis</h3>
+<p>We don't gain performance due to use an interface or the other one.</p>
+<p>We gain performance because <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#externalizable">Externalizable</a> interface forces us to implement ourselves the guessing code, so <a href="https://www.java.com">Java</a> doesn't have to do that.</p>
+<p>As we have seen at <a href="https://carlosvin.github.io/blog/serialization-java-serializable-externalizable/#implementing-externalizable-wrong-way">Implementing Externalizable (wrong way)</a>, si no tenemos cuidado, conseguiremos una mejora poco significativa a costa de complicar nuestro código fuente.</p>
+<ul>
+<li><a href="http://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html">Test results</a>.</li>
+<li><a href="https://github.com/carlosvin/serializations-performance-java/">Code in Github</a>.</li>
+</ul>
+
+  </section>
+
+  <footer>
+  </footer>
+</article>
+
+    <script src="/js/search.js"></script>
+
+  </main>
+
+  <footer class="grid">
+    <span>&copy; 2025 Carlos says bla, bla</span>
+    <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn"
+      width="32" height="32" />
+  </a>
+</span>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>

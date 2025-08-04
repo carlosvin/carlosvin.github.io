@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choosing a Modern C++ stack - Carlos says bla, bla</title>
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+      <ul>
+        <li><strong><a href="https://carlosvin.github.io">Carlos says bla, bla</a></strong></li>
+      </ul>
+      <ul>
+        
+        <li>
+          <a href="https://carlosvin.github.io/blog">Blog</a>
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/about">About</a>
+        </li>
+        
+        <li>
+          <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+        </li>
+      </ul>
+
+    </nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <h1 class="post-title">Choosing a Modern C++ stack</h1>
+    <div class="post-meta">
+      
+      <time datetime=" 2017-09-15">
+        September 15, 2017
+      </time>
+      
+      
+      <span class="updated">
+        (Updated on <time datetime=" 2020-06-13">
+          June 13, 2020
+        </time>)
+      </span>
+      
+      
+    </div>
+  </header>
+
+  
+<ul>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#choosing-build-system-meson">Choosing Build System (Meson)</a>
+    
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#cmake-vs-meson">CMake vs Meson</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#steps-to-compile-and-test-a-project">Steps to compile and test a project</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#other-build-systems-comparisons">Other build systems comparisons</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#unit-testing-framework">Unit Testing Framework</a>
+    
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#doctest-a-catch-alternative">Doctest: A Catch alternative</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#example">Example</a>
+    
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#project-output-artifacts">Project output artifacts</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/choosing-modern-cpp-stack/#project-structure-fork-project">Project structure (Fork project)</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+</ul>
+
+
+  <section class="post-content">
+    <p>I'm starting a new project in C++, but I've run into a couple of questions before starting:</p>
+<ol>
+<li>Which build system should I use?</li>
+<li>Which unit testing framework?</li>
+</ol>
+<blockquote>
+<p><strong>Tip</strong>: If you just want a project template so you can have a C++ project skeleton ready in seconds, just go to <a href="https://github.com/carlosvin/uuid-cpp">uuid-cpp</a> and follow the <a href="https://github.com/carlosvin/uuid-cpp/blob/master/README.md">instructions in README.md</a>.</p>
+</blockquote>
+<h2 id="choosing-build-system-meson">Choosing Build System (<a href="https://mesonbuild.com/">Meson</a>)</h2>
+<p>I have used before <a href="https://www.gnu.org/software/make/manual/make.html">Make</a>, <a href="https://maven.apache.org/">Maven</a>, <a href="https://scons.org/">Scons</a>, <a href="https://gradle.org/">Gradle</a> and <a href="https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html">Autotools</a>, but I have some reasons to try something else:</p>
+<ul>
+<li><strong>Autotools:</strong> It is not easy to configure and maintain. There are several configuration files and several configuration steps.</li>
+<li><strong>Gradle:</strong> CPP feature is still incubating. Not very fast. You can check a similar example project at <a href="/langs/en/posts/gradle-cpp">Build C++ project with Gradle</a>.</li>
+<li><strong>Make:</strong> I don't love the syntax. Files tend to get messy as the project grows.</li>
+<li><strong>Scons:</strong> It is just slower and not as easy to understand as Meson.</li>
+<li><strong>Maven:</strong> It is slow and you might end up "Javatizing" your C++ project structure.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: I've listed just things I don't like; those projects have other great features.</p>
+</blockquote>
+<h3 id="cmake-vs-meson"><a href="https://cmake.org/">CMake</a> vs <a href="https://mesonbuild.com/">Meson</a></h3>
+<p>After discarding previous ones, I'm considering Meson or CMake. Both are fast build systems:</p>
+<p>Although Meson is written in <a href="https://python.org/">Python</a>, it generates a <a href="https://ninja-build.org/">Ninja</a> build project. The first time you configure the project you have to run Meson, but for building or testing you are actually running Ninja.</p>
+<p>CMake can also generate Ninja files among other formats; <a href="https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html">check CMake generators documentation for more information</a>.</p>
+<ul>
+<li><strong>CMake:</strong> It has a big advantage over Meson; it is mature and widely used in many projects, which means there are many examples and it will fulfill your C++ project building needs.</li>
+<li><strong>Meson:</strong> It is a young project compared with CMake, but it is growing quite fast and it has been adopted in other big projects like <a href="https://www.gnome.org/">Gnome</a>, which has an initiative to <a href="https://wiki.gnome.org/Initiatives/GnomeGoals/MesonPorting">port from Autotools to Meson</a>.</li>
+</ul>
+<p><strong>Finally, I've chosen</strong> Meson because syntax is really clear to me; when I read a <code>meson.build</code> file I can quickly understand what is happening during the build process.</p>
+<h3 id="steps-to-compile-and-test-a-project">Steps to compile and test a project</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">meson</span><span> build .  </span><span style="color:#65737e;"># First time you configure the project
+</span><span style="color:#96b5b4;">cd</span><span> build
+</span><span style="color:#bf616a;">ninja</span><span> build    </span><span style="color:#65737e;"># Each time you build it
+</span><span style="color:#bf616a;">ninja</span><span> test     </span><span style="color:#65737e;"># Each time you run tests
+</span></code></pre>
+<ol>
+<li>First time you configure the project</li>
+<li>Each time you build it</li>
+<li>Each time you run tests</li>
+</ol>
+<h3 id="other-build-systems-comparisons">Other build systems comparisons</h3>
+<p>I've found two interesting comparisons about available C++ build systems; they might be a little biased because those comparisons come from Meson and Scons.</p>
+<ul>
+<li><a href="https://bitbucket.org/scons/scons/wiki/SconsVsOtherBuildTools">C++ build systems comparison from Scons</a></li>
+<li><a href="https://mesonbuild.com/Simple-comparison.html">C++ build systems comparison from Meson</a></li>
+</ul>
+<h2 id="unit-testing-framework">Unit Testing Framework</h2>
+<p>I have used some <a href="https://en.wikipedia.org/wiki/XUnit">xUnit</a>-based libraries like <a href="https://github.com/unittest-cpp/unittest-cpp">UnitTest++</a>, <a href="https://cpputest.github.io/">CppUTest</a> or <a href="https://github.com/google/googletest">Google Test</a>, which pair perfectly with <a href="https://github.com/google/googletest/tree/master/googlemock">Google Mock</a>. If you want a safe bet that fulfills almost all of your testing needs I highly recommend Google Test.</p>
+<p>But some time ago I found a testing framework with some interesting features: <a href="https://github.com/philsquared/Catch">Catch</a>:</p>
+<ul>
+<li>It is just a header file with no external dependencies, so very easy to start (wget + include downloaded file).</li>
+<li>You can use normal unit test style or <a href="https://en.wikipedia.org/wiki/Behavior-driven_development">BDD</a>-style.</li>
+</ul>
+<p>If you want to know more about Catch, I recommend you to give it a try; it takes just 2 minutes to have a <a href="https://github.com/philsquared/Catch/blob/master/docs/tutorial.md#writing-tests">simple example up and running</a>. You can also read some interesting articles like <a href="https://github.com/philsquared/Catch/blob/master/docs/why-catch.md">Why do we need yet another C++ test framework?</a> or <a href="https://blog.coldflake.com/posts/Testing-C++-with-a-new-Catch/">Testing C++ With A New Catch</a>.</p>
+<h3 id="doctest-a-catch-alternative"><a href="https://github.com/onqtam/doctest">Doctest</a>: A Catch alternative</h3>
+<p>There is another testing framework named Doctest, with the same benefits as Catch, but it promises to be faster and lighter (<a href="/content/blog/serialization-java-serializable-externalizable.en.md">performance results</a>) than Catch.</p>
+<p>Doctest is modeled after Catch and some parts of the code have been taken directly, but there are <a href="https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch">differences</a>.</p>
+<p>It hasn't been easy to decide; both are really similar. Below you can see some differences:</p>
+<pre data-lang="diff" style="background-color:#2b303b;color:#c0c5ce;" class="language-diff "><code class="language-diff" data-lang="diff"><span>@@ -1,12 +1,12 @@
+</span><span style="color:#bf616a;">-#define CATCH_CONFIG_MAIN // It tells Catch to provide a main() - only do this in one cpp file
+</span><span style="color:#a3be8c;">+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+</span><span>
+</span><span style="color:#bf616a;">-#include &quot;catch.hpp&quot;
+</span><span style="color:#a3be8c;">+#include &quot;doctest.h&quot;
+</span><span>#include &quot;Uuid.h&quot;
+</span><span>#include &lt;string&gt;
+</span><span>
+</span><span>constexpr int MAX_ITERS = 100;
+</span><span>
+</span><span style="color:#bf616a;">-TEST_CASE(&quot;Uuid&quot;, &quot;[uuid]&quot;)
+</span><span style="color:#a3be8c;">+TEST_CASE(&quot;Uuid&quot;)
+</span><span>@@ -26,7 +26,7 @@ </span><span style="color:#8fa1b3;">TEST_CASE(&quot;Uuid&quot;, &quot;[uuid]&quot;)
+</span><span>// BDD style
+</span><span>
+</span><span style="color:#bf616a;">-SCENARIO(&quot;UUID creation&quot;, &quot;[Uuid]&quot;)
+</span><span style="color:#a3be8c;">+SCENARIO(&quot;UUID creation&quot;)
+</span></code></pre>
+<p>I've finally chosen Doctest because it promises to be faster: <a href="/content/blog/serialization-java-serializable-externalizable.en.md">performance results</a>.</p>
+<blockquote>
+<p><strong>Note</strong>: I've created the project using both frameworks; you can find them in the corresponding branches: <a href="https://github.com/carlosvin/uuid-cpp/tree/doctest">doctest branch</a> or <a href="https://github.com/carlosvin/uuid-cpp/tree/catch">catch branch</a>.</p>
+</blockquote>
+<h2 id="example">Example</h2>
+<p>I've created an example to illustrate this article: <a href="https://github.com/carlosvin/uuid-cpp">uuid-cpp</a>. It is a basic implementation of UUID pseudo-random generator based on <a href="https://www.cplusplus.com/reference/random/mt19937">mt19937</a>, which is not cryptographically secure.</p>
+<h3 id="project-output-artifacts">Project output artifacts</h3>
+<p>When we install the project using Meson (Ninja), we will get some artifacts generated and copied in our system:</p>
+<ul>
+<li>Shared library: <code>libuuid</code>.</li>
+<li>Header library for developers who want to use the shared library: <code>include/Uuid.h</code>.</li>
+<li>Executable <code>uuidgen</code> (<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a> generator).</li>
+<li>Test executable (not installed). It tests the shared library.</li>
+</ul>
+<p>For example, if you execute:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">/usr/local/lib/libuuid.so
+</span><span style="color:#bf616a;">/usr/local/include/Uuid.h
+</span><span style="color:#bf616a;">/usr/local/bin/uuidgen
+</span></code></pre>
+<h3 id="project-structure-fork-project">Project structure (<a href="https://github.com/carlosvin/uuid-cpp">Fork project</a>)</h3>
+<p>...existing code...</p>
+
+  </section>
+
+  <footer>
+  </footer>
+</article>
+
+    <script src="/js/search.js"></script>
+
+  </main>
+
+  <footer class="grid">
+    <span>&copy; 2025 Carlos says bla, bla</span>
+    <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn"
+      width="32" height="32" />
+  </a>
+</span>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Example how to create custom Maven Plugin - Carlos says bla, bla</title>
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.png" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+      <ul>
+        <li><strong><a href="https://carlosvin.github.io">Carlos says bla, bla</a></strong></li>
+      </ul>
+      <ul>
+        
+        <li>
+          <a href="https://carlosvin.github.io/blog">Blog</a>
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/about">About</a>
+        </li>
+        
+        <li>
+          <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+        </li>
+      </ul>
+
+    </nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <h1 class="post-title">Example how to create custom Maven Plugin</h1>
+    <div class="post-meta">
+      
+      <time datetime=" 2018-03-11">
+        March 11, 2018
+      </time>
+      
+      
+      
+    </div>
+  </header>
+
+  
+<ul>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#maven-plugin-concepts">Maven plugin concepts</a>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#create-your-custom-plugin-site-lifecycle">Create your custom plugin (Site Lifecycle)</a>
+    
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#project-structure">Project structure</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#dependency-injection">Dependency Injection</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#pom-xml-dependency">pom.xml (Dependency)</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#pom-xml-plugin">pom.xml (Plugin)</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#buildmojo-java-dependency-injection">BuildMojo.java (Dependency Injection)</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#write-a-custom-mojo">Write a custom Mojo</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#buildmojo-java-execute-method">BuildMojo.java (Execute Method)</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#unit-tests">Unit tests</a>
+    
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#pom-xml">pom.xml</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#integration-tests">Integration tests</a>
+    
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#how-does-invoker-plugin-work">How does Invoker Plugin work?</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#configure-invoker-plugin">Configure Invoker Plugin</a>
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/blog/creating-custom-maven-plugin/#create-an-integration-test-project">Create an Integration Test Project</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+</ul>
+
+
+  <section class="post-content">
+    <p><a href="https://maven.apache.org">Maven</a> has lots of plugins to assist you in project construction, testing, packaging and deployment. For example if you want to compile C++ code instead of Java, you can use <a href="https://www.mojohaus.org/maven-native/native-maven-plugin/">native-maven-plugin</a>. But what if you need something more specific? Then you can create a custom Maven plugin.</p>
+<p>I will explain how to create a simple custom maven plugin to generate static blog site from Markdown files. I know we can already do that with <a href="https://maven.apache.org/plugins/maven-site-plugin/examples/creating-content.html">maven-site-plugin</a> since version 3.3, I will just use it for learning purposes.</p>
+<p>You can find the source code of this example at <a href="https://github.com/carlosvin/blog-maven-plugin">https://github.com/carlosvin/blog-maven-plugin</a>.</p>
+<h2 id="maven-plugin-concepts">Maven plugin concepts</h2>
+<p><strong>Mojo:</strong> An executable goal in Maven, e.g: <code>mvn your-plugin:your-mojo</code> will execute a maven goal <code>your-mojo</code> declared as part of <code>your-plugin</code>.</p>
+<p><strong>Goal:</strong> It is equivalent to Mojo execution.</p>
+<p><strong>Lifecycle:</strong> It is a well-defined sequence of phases. Each phase consists of a sequence of goals. Let's see an example of lifecycle, e.g: <code>FooLifecycle</code> has <code>clean</code>, <code>prepare</code> and <code>assemble</code> phases. Each of those phases has one of more goals. <em>FooLifecycle</em>:</p>
+<ul>
+<li>clean:
+<ul>
+<li>rmSources: a goal to remove source files</li>
+<li>rmBuild: a goal to remove files in cache directory</li>
+</ul>
+</li>
+<li>prepare:
+<ul>
+<li>installDependencies: a goal to download dependencies for the project</li>
+</ul>
+</li>
+<li>assemble:
+<ul>
+<li>build: a goal to compile source files</li>
+</ul>
+</li>
+</ul>
+<p>To define a custom life-cycle similar to previous one, we will use <code>src/main/resources/META-INF/plexus/components.xml</code>, we will speak about that file in following sections. Normally is enough to override <a href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html">predefined lifecycles</a>, in this example, we will override <em>site life-cycle</em>.</p>
+<blockquote>
+<p><strong>Tip:</strong> You can find an introduction to Maven life-cycles at <a href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">Maven life-cycle guide</a></p>
+</blockquote>
+<h2 id="create-your-custom-plugin-site-lifecycle">Create your custom plugin (Site Lifecycle)</h2>
+<p>The plugin we are about to explain will <a href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle">override site lifecycle</a>, which has only 2 default phases, so when we run <code>mvn site</code> using our new custom plugin it will execute the goals we are about to create.</p>
+<p>Our plugin will work with <code>md</code> (for <a href="https://commonmark.org/">Markdown</a>) file bindings: It will build and deploy the project using <a href="https://maven.apache.org/plugins/maven-deploy-plugin/">maven deployment plugin</a>.</p>
+<h3 id="project-structure">Project structure</h3>
+<ul>
+<li><code>src/main/java</code>: Where Java source code is</li>
+<li><code>src/main/resources/META-INF/plexus/components.xml</code>: file to create/override maven lifecycles and artifact types. Here we can specify which goals will be executed when for an artifact type, for example, we can say that for an artifact of type <code>whatever</code> when we run <code>mvn foo</code> it will verify the files, run tests, run linter, compile and zip all generated files.</li>
+<li><code>src/test/java</code>: Unit tests folder.</li>
+<li><code>src/it</code>: Folder with all integration tests. Those integration tests are running actual projects and checking that outputs are as expected.</li>
+<li><code>pom.xml</code>: File with Maven project description (<a href="https://maven.apache.org/guides/introduction/introduction-to-the-pom.html">Project Object Model</a>)</li>
+</ul>
+<h3 id="dependency-injection">Dependency Injection</h3>
+<p>Maven has finally chosen <a href="https://maven.apache.org/maven-jsr330.html">JSR-330</a> as <a href="https://javax-inject.github.io/javax-inject/">dependency injection standard</a> (previously it was Plexus Annotations API).</p>
+<p>To use dependency injection with Maven we have to:</p>
+<p>Add <code>javax.inject</code> dependency to <code>pom.xml</code>, so we can use <code>@Inject</code>, <code>@Named</code>, and <code>@Singleton</code> annotations in plugin implementation Java code.</p>
+<h3 id="pom-xml-dependency">pom.xml (Dependency)</h3>
+<pre data-lang="xml" style="background-color:#2b303b;color:#c0c5ce;" class="language-xml "><code class="language-xml" data-lang="xml"><span>&lt;</span><span style="color:#bf616a;">dependency</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">groupId</span><span>&gt;javax.inject&lt;/</span><span style="color:#bf616a;">groupId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">artifactId</span><span>&gt;javax.inject&lt;/</span><span style="color:#bf616a;">artifactId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">version</span><span>&gt;1&lt;/</span><span style="color:#bf616a;">version</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">dependency</span><span>&gt;
+</span></code></pre>
+<p>Set up the <code>sisu-maven-plugin</code> to index the JSR-330 components you want made available to Maven.</p>
+<h3 id="pom-xml-plugin">pom.xml (Plugin)</h3>
+<pre data-lang="xml" style="background-color:#2b303b;color:#c0c5ce;" class="language-xml "><code class="language-xml" data-lang="xml"><span>&lt;</span><span style="color:#bf616a;">plugin</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">groupId</span><span>&gt;org.eclipse.sisu&lt;/</span><span style="color:#bf616a;">groupId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">artifactId</span><span>&gt;sisu-maven-plugin&lt;/</span><span style="color:#bf616a;">artifactId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">version</span><span>&gt;0.3.3&lt;/</span><span style="color:#bf616a;">version</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">executions</span><span>&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">execution</span><span>&gt;
+</span><span>            &lt;</span><span style="color:#bf616a;">id</span><span>&gt;generate-index&lt;/</span><span style="color:#bf616a;">id</span><span>&gt;
+</span><span>            &lt;</span><span style="color:#bf616a;">goals</span><span>&gt;
+</span><span>                &lt;</span><span style="color:#bf616a;">goal</span><span>&gt;main-index&lt;/</span><span style="color:#bf616a;">goal</span><span>&gt;
+</span><span>            &lt;/</span><span style="color:#bf616a;">goals</span><span>&gt;
+</span><span>        &lt;/</span><span style="color:#bf616a;">execution</span><span>&gt;
+</span><span>    &lt;/</span><span style="color:#bf616a;">executions</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">plugin</span><span>&gt;
+</span></code></pre>
+<p>Add annotations to your Mojo, e.g:</p>
+<h3 id="buildmojo-java-dependency-injection">BuildMojo.java (Dependency Injection)</h3>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span>@</span><span style="color:#bf616a;">Mojo</span><span>(</span><span style="color:#bf616a;">name </span><span>= &quot;</span><span style="color:#a3be8c;">build</span><span>&quot;, </span><span style="color:#bf616a;">defaultPhase </span><span>= </span><span style="color:#ebcb8b;">LifecyclePhase</span><span>.</span><span style="color:#d08770;">COMPILE</span><span>) </span><span style="color:#65737e;">// &lt;1&gt;
+</span><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">BuildMojo </span><span style="color:#b48ead;">extends </span><span style="color:#a3be8c;">AbstractMojo </span><span style="color:#eff1f5;">{
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">    </span><span style="color:#b48ead;">private final </span><span style="color:#ebcb8b;">FileSetManager </span><span style="color:#eff1f5;">fileSetManager;
+</span><span style="color:#eff1f5;">    </span><span style="color:#b48ead;">private final </span><span style="color:#ebcb8b;">MdToHtml </span><span style="color:#eff1f5;">mdToHtml;
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">    @</span><span style="color:#bf616a;">Inject </span><span style="color:#65737e;">// &lt;2&gt;
+</span><span style="color:#eff1f5;">    </span><span style="color:#b48ead;">public </span><span style="color:#8fa1b3;">BuildMojo</span><span style="color:#eff1f5;">(</span><span style="color:#ebcb8b;">FileSetManager </span><span style="color:#bf616a;">fileSetManager</span><span style="color:#eff1f5;">, </span><span style="color:#ebcb8b;">MdToHtml </span><span style="color:#bf616a;">mdToHtml</span><span style="color:#eff1f5;">) {
+</span><span style="color:#eff1f5;">        </span><span style="color:#bf616a;">this</span><span style="color:#eff1f5;">.fileSetManager </span><span>=</span><span style="color:#eff1f5;"> fileSetManager;
+</span><span style="color:#eff1f5;">        </span><span style="color:#bf616a;">this</span><span style="color:#eff1f5;">.mdToHtml </span><span>=</span><span style="color:#eff1f5;"> mdToHtml;
+</span><span style="color:#eff1f5;">        </span><span style="color:#65737e;">//
+</span><span style="color:#eff1f5;">    }
+</span><span style="color:#eff1f5;">}
+</span></code></pre>
+<ol>
+<li>This annotation is not a dependency injection one, we will explain later what it is for.</li>
+<li>It will inject an instance of FileSetManager and MdToHtml.</li>
+</ol>
+<h3 id="write-a-custom-mojo">Write a custom Mojo</h3>
+<p>It is quite straightforward to implement a Mojo class, we have to:</p>
+<h4 id="1-implement-mojo-interface">1. Implement Mojo interface</h4>
+<p>Your Mojo class has to implement <code>org.apache.maven.plugin.Mojo</code>, although it is more convenient to extend <code>org.apache.maven.plugin.AbstractMojo</code>, an abstract class to provide most of the infrastructure required to implement a Mojo except for execute method. That interface and class are described at <a href="https://maven.apache.org/developers/mojo-api-specification.html">Mojo API</a>.</p>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">BuildMojo </span><span style="color:#b48ead;">extends </span><span style="color:#a3be8c;">AbstractMojo </span><span style="color:#eff1f5;">{ 
+</span><span style="color:#eff1f5;">    </span><span style="color:#65737e;">// ...
+</span><span style="color:#eff1f5;">}
+</span></code></pre>
+<h4 id="2-configure-mojo-with-java-5-annotations">2. Configure Mojo with Java 5 annotations</h4>
+<p>Annotate Mojo class with <code>@Mojo</code> and input parameters with <code>@Parameter</code>. Those annotations belong to another set of annotations to configure Mojos, <a href="https://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html">Plugin Tools Java5 Annotations</a>.</p>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span style="color:#65737e;">/**
+</span><span style="color:#65737e;">* Generate HTML files from Markdown files
+</span><span style="color:#65737e;">*/
+</span><span>@</span><span style="color:#bf616a;">Mojo</span><span>(</span><span style="color:#bf616a;">name </span><span>= &quot;</span><span style="color:#a3be8c;">build</span><span>&quot;, </span><span style="color:#bf616a;">defaultPhase </span><span>= </span><span style="color:#ebcb8b;">LifecyclePhase</span><span>.</span><span style="color:#d08770;">COMPILE</span><span>) </span><span style="color:#65737e;">// &lt;1&gt;
+</span><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">BuildMojo </span><span style="color:#b48ead;">extends </span><span style="color:#a3be8c;">AbstractMojo </span><span style="color:#eff1f5;">{
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">    </span><span style="color:#65737e;">/**
+</span><span style="color:#65737e;">    * Output directory path where HTML files are generated
+</span><span style="color:#65737e;">    */
+</span><span style="color:#65737e;">    @Parameter( // &lt;2&gt;
+</span><span style="color:#65737e;">      defaultValue = &quot;${project.reporting.outputDirectory}&quot;, // &lt;3&gt;
+</span><span style="color:#65737e;">      property = &quot;siteOutputDirectory&quot;, // &lt;4&gt;
+</span><span style="color:#65737e;">      required = true) 
+</span><span style="color:#65737e;">    private File outputDirectory;
+</span><span style="color:#65737e;">
+</span><span style="color:#65737e;">    /**
+</span><span style="color:#65737e;">    * A specific &lt;code&gt;fileSet&lt;/code&gt; rule to select files and directories.
+</span><span style="color:#65737e;">    * Fileset spec: https://maven.apache.org/shared/file-management/fileset.html
+</span><span style="color:#65737e;">    */
+</span><span style="color:#eff1f5;">    @</span><span style="color:#bf616a;">Parameter
+</span><span style="color:#eff1f5;">    </span><span style="color:#b48ead;">private </span><span style="color:#ebcb8b;">FileSet </span><span style="color:#eff1f5;">inputFiles;
+</span><span style="color:#eff1f5;">    </span><span style="color:#65737e;">// 
+</span><span style="color:#eff1f5;">}
+</span></code></pre>
+<ol>
+<li>Configures Mojo name and default life-cycle phase. To execute the Mojo in this example we will use <code>mvn site:build</code>: <em>site</em> is the plugin name and <em>build</em> is <code>name</code> parameter.</li>
+<li>We use <code>@Parameter</code> annotation to pass configuration parameters to Mojo.</li>
+<li>You can use properties placeholder or any String. If the parameter type is not a String, then Maven will try to cast it.</li>
+<li>It allows configuration of the Mojo parameter from the command line by referencing a system property that the user sets via the -D option. E.g: <code>mvn site:build -DsiteOutputDirectory=/var/www/html</code> will set siteOutputDirectory attribute to <code>/var/www/html</code>.</li>
+</ol>
+<blockquote>
+<p><strong>Tip:</strong> More info in <a href="https://maven.apache.org/guides/plugin/guide-java-plugin-development.html#Parameters">Maven Plugin development guide in Parameters section</a>.</p>
+</blockquote>
+<h4 id="3-implement-execute-method">3. Implement <em>execute</em> method</h4>
+<p>As I have explained before at <strong>1. Implement Mojo interface</strong>, our Mojo class extends <code>org.apache.maven.plugin.AbstractMojo</code> which has one unimplemented method from <code>org.apache.maven.plugin.Mojo</code> interface. In that method we are going to implement the Maven goal logic.</p>
+<p>Mojo class instance is called from Maven execution life-cycle by invoking <code>execute()</code> method. Before calling <code>execute()</code>, Maven has performed some other tasks related with the Mojo:</p>
+<p>Maven instantiates Mojo and injects dependencies (see <strong>Dependency Injection</strong> section).</p>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span style="color:#ebcb8b;">Mojo</span><span> mojo = </span><span style="color:#b48ead;">new </span><span style="color:#ebcb8b;">BuildMojo</span><span>(fileSetManager, mdToHtml);
+</span></code></pre>
+<p>Maven configures the Mojo by assigning values to parameters.</p>
+<p>I will simplify <code>execute</code> method implementation in the <a href="https://github.com/carlosvin/blog-maven-plugin">sample project in github</a>, because it is more complicated and this complexity is not relevant for learning purposes.</p>
+<p>Maven calls execute method: <code>mojo.execute()</code>.</p>
+<h3 id="buildmojo-java-execute-method">BuildMojo.java (Execute Method)</h3>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span style="color:#b48ead;">public</span><span> void </span><span style="color:#bf616a;">execute</span><span>() throws </span><span style="color:#ebcb8b;">MojoExecutionException </span><span>{ </span><span style="color:#65737e;">// &lt;1&gt;
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(inputFiles == </span><span style="color:#d08770;">null</span><span>) {
+</span><span>        </span><span style="color:#bf616a;">setDefaultInput</span><span>();
+</span><span>    }
+</span><span>    inputDirPath = </span><span style="color:#ebcb8b;">Paths</span><span>.</span><span style="color:#bf616a;">get</span><span>(inputFiles.</span><span style="color:#bf616a;">getDirectory</span><span>());
+</span><span>
+</span><span>    </span><span style="color:#ebcb8b;">String</span><span style="color:#b48ead;">[]</span><span> includedFiles = fileSetManager.</span><span style="color:#bf616a;">getIncludedFiles</span><span>(inputFiles); </span><span style="color:#65737e;">// &lt;2&gt;
+</span><span>
+</span><span>    outputDirPath = outputDirectory.</span><span style="color:#bf616a;">toPath</span><span>();
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(includedFiles == </span><span style="color:#d08770;">null </span><span>|| includedFiles.length == </span><span style="color:#d08770;">0</span><span>) {
+</span><span>        </span><span style="color:#bf616a;">getLog</span><span>().</span><span style="color:#bf616a;">warn</span><span>(&quot;</span><span style="color:#a3be8c;">SKIP: There are no input files. </span><span>&quot; + </span><span style="color:#bf616a;">getInputFilesToString</span><span>()); </span><span style="color:#65737e;">// &lt;3&gt;
+</span><span>    } </span><span style="color:#b48ead;">else </span><span>{
+</span><span>        </span><span style="color:#b48ead;">if </span><span>(!outputDirectory.</span><span style="color:#bf616a;">exists</span><span>()) { </span><span style="color:#65737e;">// &lt;4&gt;
+</span><span>            outputDirectory.</span><span style="color:#bf616a;">mkdirs</span><span>();
+</span><span>        }
+</span><span>        </span><span style="color:#b48ead;">try </span><span>{
+</span><span>            </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#ebcb8b;">String</span><span> f : includedFiles) {
+</span><span>                </span><span style="color:#bf616a;">convertToHtml</span><span>(</span><span style="color:#ebcb8b;">Paths</span><span>.</span><span style="color:#bf616a;">get</span><span>(f), outputDirectory); </span><span style="color:#65737e;">// &lt;5&gt;
+</span><span>            }
+</span><span>        } </span><span style="color:#b48ead;">catch </span><span>(</span><span style="color:#ebcb8b;">InterruptedException </span><span style="color:#bf616a;">e</span><span>) {
+</span><span>            </span><span style="color:#b48ead;">throw new </span><span style="color:#ebcb8b;">MojoExecutionException</span><span>(e.</span><span style="color:#bf616a;">getLocalizedMessage</span><span>(), e); </span><span style="color:#65737e;">// &lt;6&gt;
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<ol>
+<li>If there is any error during execution, it should throw MojoExecutionException.</li>
+<li>A way to get all selected files from <a href="https://maven.apache.org/shared/file-management/fileset.html">FileSet</a>.</li>
+<li>AbstractMojo supplies logger functionality.</li>
+<li>If output directory doesn't exist, it will be created.</li>
+<li>It converts each file Markdown to HTML.</li>
+<li>Convert thrown exception to MojoExecutionException.</li>
+</ol>
+<h2 id="unit-tests">Unit tests</h2>
+<p>In the example we use <a href="https://junit.org/junit4/">JUnit 4</a>, but you can use any other testing framework.</p>
+<p>Firstly, you have to add the unit test library dependency to <code>pom.xml</code>.</p>
+<h3 id="pom-xml">pom.xml</h3>
+<pre data-lang="xml" style="background-color:#2b303b;color:#c0c5ce;" class="language-xml "><code class="language-xml" data-lang="xml"><span>&lt;</span><span style="color:#bf616a;">dependency</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">groupId</span><span>&gt;junit&lt;/</span><span style="color:#bf616a;">groupId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">artifactId</span><span>&gt;junit&lt;/</span><span style="color:#bf616a;">artifactId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">version</span><span>&gt;4.11&lt;/</span><span style="color:#bf616a;">version</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">scope</span><span>&gt;test&lt;/</span><span style="color:#bf616a;">scope</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">dependency</span><span>&gt;
+</span></code></pre>
+<p>Then you just have to write your unit tests under <code>src/test/java</code> folder: <a href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/test/java/com/maven/plugins/blog/PathsTest.java">src/test/java/com/maven/plugins/blog/PathsTest.java</a>.</p>
+<p>To run the unit tests you just need to execute <code>mvn test</code>.</p>
+<h2 id="integration-tests">Integration tests</h2>
+<p>The 2 most popular ways to perform integration tests on custom maven plugins are using <a href="https://maven.apache.org/surefire/maven-failsafe-plugin">maven-failsafe-plugin</a> or <a href="https://maven.apache.org/plugins/maven-invoker-plugin">maven-invoker-plugin</a>.</p>
+<p>I've chosen maven-invoker-plugin because for me it is more straightforward. There is <a href="https://stackoverflow.com/questions/40010745/maven-invoker-plugin-vs-maven-failsafe-plugin-which-to-use-for-integration-test">an answer at stackoverflow where they explain thoroughly the differences between them</a>.</p>
+<h3 id="how-does-invoker-plugin-work">How does Invoker Plugin work?</h3>
+<ol>
+<li>We create projects to use our custom plugin under <code>src/it</code> folder, so our plugin will be applied to test projects.</li>
+<li>Invoker plugin will simulate a previously configured Maven execution.</li>
+<li>After Maven execution, a validation script will check if our plugin outputs are the expected ones. For example, if our plugin is supposed to generate a file named <code>foo.file</code>, verification plugin will check if that file exists, if it doesn't, integration test will fail.</li>
+</ol>
+<h3 id="configure-invoker-plugin">Configure Invoker Plugin</h3>
+<pre data-lang="xml" style="background-color:#2b303b;color:#c0c5ce;" class="language-xml "><code class="language-xml" data-lang="xml"><span>&lt;</span><span style="color:#bf616a;">plugin</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">artifactId</span><span>&gt;maven-invoker-plugin&lt;/</span><span style="color:#bf616a;">artifactId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">version</span><span>&gt;3.0.1&lt;/</span><span style="color:#bf616a;">version</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">configuration</span><span>&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">postBuildHookScript</span><span>&gt;verify&lt;/</span><span style="color:#bf616a;">postBuildHookScript</span><span>&gt; </span><span style="color:#65737e;">&lt;!-- 3 --&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">showVersion</span><span>&gt;true&lt;/</span><span style="color:#bf616a;">showVersion</span><span>&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">streamLogs</span><span>&gt;true&lt;/</span><span style="color:#bf616a;">streamLogs</span><span>&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">noLog</span><span>&gt;false&lt;/</span><span style="color:#bf616a;">noLog</span><span>&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">showErrors</span><span>&gt;true&lt;/</span><span style="color:#bf616a;">showErrors</span><span>&gt;
+</span><span>    &lt;/</span><span style="color:#bf616a;">configuration</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">executions</span><span>&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">execution</span><span>&gt;
+</span><span>            &lt;</span><span style="color:#bf616a;">id</span><span>&gt;integration-test&lt;/</span><span style="color:#bf616a;">id</span><span>&gt;
+</span><span>            &lt;</span><span style="color:#bf616a;">goals</span><span>&gt;
+</span><span>                &lt;</span><span style="color:#bf616a;">goal</span><span>&gt;install&lt;/</span><span style="color:#bf616a;">goal</span><span>&gt; </span><span style="color:#65737e;">&lt;!-- 1 --&gt;
+</span><span>                &lt;</span><span style="color:#bf616a;">goal</span><span>&gt;run&lt;/</span><span style="color:#bf616a;">goal</span><span>&gt; </span><span style="color:#65737e;">&lt;!-- 2 --&gt;
+</span><span>            &lt;/</span><span style="color:#bf616a;">goals</span><span>&gt;
+</span><span>        &lt;/</span><span style="color:#bf616a;">execution</span><span>&gt;
+</span><span>    &lt;/</span><span style="color:#bf616a;">executions</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">plugin</span><span>&gt;
+</span></code></pre>
+<ol>
+<li><code>invoker:install</code> will be executed during the phase pre-integration-test and will install the main project artifact into target/local-repo.</li>
+<li><code>invoker:run</code> will be executed during the integration-test phase and it will execute all defined integration tests under <code>src/it</code> folder.</li>
+<li>It configures invoker plugin to execute validation script after integration test project execution. This script may be written with either BeanShell or Groovy (verify.groovy or verify.bsh).</li>
+</ol>
+<p>We have used other properties to show errors, show maven log and save it to a file.</p>
+<p>You can check all <code>invoker:run</code> configuration properties at <a href="https://maven.apache.org/plugins/maven-invoker-plugin/run-mojo.html">maven-invoker-plugin run-mojo</a>.</p>
+<h3 id="create-an-integration-test-project">Create an Integration Test Project</h3>
+<p>It is a project we use to execute custom plugin goals, so we can validate if it produces the expected output.</p>
+<p>There are 3 important files matching with <a href="http://wiki.c2.com/?ArrangeActAssert">AAA</a> phases ("Arrange-Act-Assert").</p>
+<h4 id="arrange-pom-xml">Arrange: pom.xml</h4>
+<p>This file is a project using our custom plugin.</p>
+<p><a href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/pom.xml">src/it/md-html/pom.xml</a></p>
+<pre data-lang="xml" style="background-color:#2b303b;color:#c0c5ce;" class="language-xml "><code class="language-xml" data-lang="xml"><span>&lt;?</span><span style="color:#bf616a;">xml </span><span style="color:#d08770;">version</span><span>=&quot;</span><span style="color:#a3be8c;">1.0</span><span>&quot; </span><span style="color:#d08770;">encoding</span><span>=&quot;</span><span style="color:#a3be8c;">UTF-8</span><span>&quot;?&gt;
+</span><span>&lt;</span><span style="color:#bf616a;">project </span><span style="color:#d08770;">xmlns</span><span>=&quot;</span><span style="color:#a3be8c;">http://maven.apache.org/POM/4.0.0</span><span>&quot; </span><span style="color:#d08770;">xmlns:xsi</span><span>=&quot;</span><span style="color:#a3be8c;">http://www.w3.org/2001/XMLSchema-instance</span><span>&quot;
+</span><span style="color:#d08770;">xsi:schemaLocation</span><span>=&quot;</span><span style="color:#a3be8c;">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span>&quot;&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">modelVersion</span><span>&gt;4.0.0&lt;/</span><span style="color:#bf616a;">modelVersion</span><span>&gt;
+</span><span>
+</span><span>    &lt;</span><span style="color:#bf616a;">groupId</span><span>&gt;com.maven.plugins.it&lt;/</span><span style="color:#bf616a;">groupId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">artifactId</span><span>&gt;simple-it&lt;/</span><span style="color:#bf616a;">artifactId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">version</span><span>&gt;1.0-SNAPSHOT&lt;/</span><span style="color:#bf616a;">version</span><span>&gt;
+</span><span>
+</span><span>    &lt;</span><span style="color:#bf616a;">build</span><span>&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">plugins</span><span>&gt;
+</span><span>            &lt;</span><span style="color:#bf616a;">plugin</span><span>&gt;
+</span><span>                &lt;</span><span style="color:#bf616a;">groupId</span><span>&gt;@project.groupId@&lt;/</span><span style="color:#bf616a;">groupId</span><span>&gt;
+</span><span>                &lt;</span><span style="color:#bf616a;">artifactId</span><span>&gt;@project.artifactId@&lt;/</span><span style="color:#bf616a;">artifactId</span><span>&gt;
+</span><span>                &lt;</span><span style="color:#bf616a;">version</span><span>&gt;@project.version@&lt;/</span><span style="color:#bf616a;">version</span><span>&gt;
+</span><span>            &lt;/</span><span style="color:#bf616a;">plugin</span><span>&gt;
+</span><span>        &lt;/</span><span style="color:#bf616a;">plugins</span><span>&gt;
+</span><span>    &lt;/</span><span style="color:#bf616a;">build</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">project</span><span>&gt;
+</span></code></pre>
+<p>It is a very simple pom file where we use placeholders to reference to our plugin under test. When invoker plugin executes following pom file, firstly will replace those placeholders to reference to the latest version of our custom plugin which was recently installed in the local repository:</p>
+<pre data-lang="xml" style="background-color:#2b303b;color:#c0c5ce;" class="language-xml "><code class="language-xml" data-lang="xml"><span>&lt;</span><span style="color:#bf616a;">plugin</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">groupId</span><span>&gt;com.maven.plugins&lt;/</span><span style="color:#bf616a;">groupId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">artifactId</span><span>&gt;blog&lt;/</span><span style="color:#bf616a;">artifactId</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#bf616a;">version</span><span>&gt;0.0.1-SNAPSHOT&lt;/</span><span style="color:#bf616a;">version</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">plugin</span><span>&gt;
+</span></code></pre>
+<p>In that way invoker plugin ensures it is testing the latest version of current project.</p>
+<h4 id="act-invoker-properties">Act: invoker.properties</h4>
+<p>It configures how test project will be executed.</p>
+<p><a href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/invoker.properties">src/it/md-html/invoker.properties</a></p>
+<pre data-lang="properties" style="background-color:#2b303b;color:#c0c5ce;" class="language-properties "><code class="language-properties" data-lang="properties"><span>invoker.goals = </span><span style="color:#a3be8c;">blog:build
+</span><span>invoker.name = </span><span style="color:#a3be8c;">Test build MD
+</span></code></pre>
+<p>It will execute <code>mvn blog:build</code>, a goal defined in our custom plugin under example or what is the same, it will execute BuildMojo described in section <strong>Write a custom Mojo</strong>.</p>
+<h4 id="assert-verify-groovy">Assert: verify.groovy</h4>
+<p>It is the script to check that plugin execution generated the expected results.</p>
+<p>Verification script, it is checking if <code>target/site/README.html</code> file was generated by the plugin.</p>
+<p><a href="https://github.com/carlosvin/blog-maven-plugin/blob/master/src/it/md-html/verify.groovy">src/it/md-html/verify.groovy</a></p>
+<pre data-lang="groovy" style="background-color:#2b303b;color:#c0c5ce;" class="language-groovy "><code class="language-groovy" data-lang="groovy"><span style="color:#b48ead;">File</span><span> generated = </span><span style="color:#b48ead;">new File</span><span>( basedir, &quot;</span><span style="color:#a3be8c;">target/site/README.html</span><span>&quot; );
+</span><span>
+</span><span style="color:#b48ead;">assert</span><span> generated.isFile()
+</span></code></pre>
+
+  </section>
+
+  <footer>
+  </footer>
+</article>
+
+    <script src="/js/search.js"></script>
+
+  </main>
+
+  <footer class="grid">
+    <span>&copy; 2025 Carlos says bla, bla</span>
+    <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn"
+      width="32" height="32" />
+  </a>
+</span>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>
