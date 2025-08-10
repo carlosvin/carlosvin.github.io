@@ -5,6 +5,7 @@ keywords: C++, C++11, C++17, IO, Filesystem
 toc: true
 description: We are going to analyze with examples new filesystem features coming with C++17
 lang: en
+aliases: ["/langs/en/posts/recursive-directory-iterator"]
 ---
 
 ## Introduction

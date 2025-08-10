@@ -7,6 +7,7 @@ keywords: React, Typescript, Parcel, SPA
 link: https://github.com/carlosvin/react-typescript-parcel-template
 description: Example project how to create a Single Page Application with React, Typescript and Parcel.
 toc: true
+aliases: ["/langs/en/posts/react-typescript-parcel"]
 ---
 
 I was about to start yet another personal project, it consists of a SPA (Single Page Application) for a travel journal.

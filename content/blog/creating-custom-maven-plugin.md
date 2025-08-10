@@ -5,6 +5,7 @@ keywords: Maven, Java, Build Systems, maven-site-plugin, Maven Plugins
 description: Example to understand Maven plugins concepts and how to create a custom Maven plugin from scratch
 lang: en
 toc: true
+aliases: ["/langs/en/posts/creating-custom-maven-plugin"]
 ---
 
 [Maven](https://maven.apache.org) has lots of plugins to assist you in project construction, testing, packaging and deployment. For example if you want to compile C++ code instead of Java, you can use [native-maven-plugin](https://www.mojohaus.org/maven-native/native-maven-plugin/). But what if you need something more specific? Then you can create a custom Maven plugin.
