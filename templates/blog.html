@@ -1,12 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  {{ section.title }}
-</h1>
-<ul>
-  {% for page in section.pages %}
-  <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
+<h1 class="title">{{ section.title }}</h1>
+
+<div class="posts-list">
+  {% for page in paginator.pages | default(value=section.pages) %}
+  <article>
+    <header>
+      <h2><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>
+      <small>
+        {% if page.date %}
+        <time datetime="{{ page.date | date(format='%Y-%m-%d') }}">{{ page.date | date(format="%B %d, %Y") }}</time>
+        {% endif %}
+      </small>
+    </header>
+    {% if page.description %}
+    <p>{{ page.description }}</p>
+    {% else %}
+    {% if page.summary %}
+    {{ page.summary | safe }}
+    {% endif %}
+    {% endif %}
+    <p><a href="{{ page.permalink | safe }}" aria-label="Read more: {{ page.title }}">Read more →</a></p>
+  </article>
   {% endfor %}
-</ul>
+</div>
+
+{% if paginator %}
+<nav aria-label="Pagination">
+  <ul class="pagination">
+    {% if paginator.previous %}
+    <li><a href="{{ paginator.previous | safe }}">← Newer</a></li>
+    {% endif %}
+    <li>Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</li>
+    {% if paginator.next %}
+    <li><a href="{{ paginator.next | safe }}">Older →</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
 {% endblock content %}
