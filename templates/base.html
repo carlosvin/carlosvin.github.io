@@ -4,11 +4,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ section.title }}{% endif %}</title>
+  <title>
+    {% if page is defined and page.title %}
+    {{ page.title }} | {{ config.title }}
+    {% elif section is defined and section.title %}
+    {{ section.title }} | {{ config.title }}
+    {% else %}
+    {{ config.title }}
+    {% endif %}
+  </title>
   <meta name="author" content="{{ config.author }}" />
-  <link rel="stylesheet" href="{{get_url(path='css/base.css') | safe }}" rel=preconnect>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" rel=preconnect>
-  <link rel="icon" href="{{get_url(path='img/favicon.png') | safe }}" rel=preconnect />
+  <meta name="theme-color" content="#0ea5e9">
+  <link rel="icon" href="{{ get_url(path='img/favicon.png') | safe }}" />
+  <link rel="manifest" href="{{ get_url(path='manifest.webmanifest') }}">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ get_url(path='css/base.css') | safe }}" rel="preconnect">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" rel="preconnect">
+
+  <!-- Feeds -->
+  <link rel="alternate" type="application/atom+xml" title="{{ config.title }} Atom Feed"
+    href="{{ get_url(path='atom.xml') }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ config.title }} RSS Feed"
+    href="{{ get_url(path='rss.xml') }}">
+
+  <!-- Canonical -->
+  {% if page is defined and page.permalink %}
+  <link rel="canonical" href="{{ page.permalink | safe }}">
+  {% elif section is defined and section.permalink %}
+  <link rel="canonical" href="{{ section.permalink | safe }}">
+  {% else %}
+  <link rel="canonical" href="{{ config.base_url }}">
+  {% endif %}
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title"
+    content="{% if page is defined and page.title %}{{ page.title }}{% elif section is defined and section.title %}{{ section.title }}{% else %}{{ config.title }}{% endif %}">
+  <meta property="og:type" content="{% if page is defined and page.title %}article{% else %}website{% endif %}">
+  <meta property="og:url"
+    content="{% if page is defined and page.permalink %}{{ page.permalink | safe }}{% elif section is defined and section.permalink %}{{ section.permalink | safe }}{% else %}{{ config.base_url }}{% endif %}">
+  <meta property="og:site_name" content="{{ config.title }}">
+  <meta property="og:image" content="{{ get_url(path='img/favicon.png') }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ get_url(path='img/favicon.png') }}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
     integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
     crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
@@ -33,9 +71,16 @@
 
   {% block meta %}
   <meta name="description"
-    content="{% if page.description %}{{ page.description }}{% else %}{{ section.description }}{% endif %}" />
+    content="{% if page is defined and page.description %}{{ page.description }}{% elif section is defined and section.description %}{{ section.description }}{% else %}{{ config.description }}{% endif %}" />
+  <meta name="twitter:description"
+    content="{% if page is defined and page.description %}{{ page.description }}{% elif section is defined and section.description %}{{ section.description }}{% else %}{{ config.description }}{% endif %}">
+  <meta property="og:description"
+    content="{% if page is defined and page.description %}{{ page.description }}{% elif section is defined and section.description %}{{ section.description }}{% else %}{{ config.description }}{% endif %}">
+  <meta name="twitter:title"
+    content="{% if page is defined and page.title %}{{ page.title }}{% elif section is defined and section.title %}{{ section.title }}{% else %}{{ config.title }}{% endif %}">
   {% endblock %}
-  <script defer data-domain="carlosvin.github.io" src="https://plausible.io/js/script.js"></script>
+  <script defer async src="{{ get_url(path='js/search.js') }}"></script>
+
 </head>
 
 <body class="container">
@@ -56,7 +101,7 @@
       </ul>
     </nav>
     <div class="search-container">
-      <div class="search-results">
+      <div class="search-results" role="status" aria-live="polite">
         <div class="search-results__items"></div>
       </div>
     </div>
@@ -65,7 +110,6 @@
 
   <main>
     {% block content %}{% endblock %}
-    <script src="/js/search.js"></script>
 
   </main>
 
@@ -78,7 +122,6 @@
     </nav>
   </footer>
 
-  <script src="{{ get_url(path='js/search.js') }}"></script>
 </body>
 
 </html>
