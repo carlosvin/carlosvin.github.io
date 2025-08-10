@@ -6,6 +6,7 @@ lang: en
 description: "How to write parameterized tests in Cypress"
 previewImage: ./html-validation.png
 toc: true
+aliases: ["langs/en/posts/cypress-parametrized-dynamic-tests"]
 ---
 
 [Cypress](https://www.cypress.io/) is a testing framework for anything running on a web browser. I am using it to test this site and I've talked before about it in the post ["This is Sapper"](https://carlosvin.github.io/posts/this-is-sapper/en#_testing).
