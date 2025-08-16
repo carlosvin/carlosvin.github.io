@@ -12,9 +12,9 @@ Over the years, I've had the privilege of working with industry in great compani
 
 ## Now
 
-I currently have the privilege of leading the Sales Apps Team at [MongoDB](https://www.mongodb.com/). Our mission is to enhance the productivity of the sales department by developing innovative software solutions. We're leveraging the [FARM tech stack](https://www.mongodb.com/resources/basics/farm-stack) ([FastAPI](https://fastapi.tiangolo.com/), [React](https://reactjs.org/), [Next.js](https://nextjs.org/), [TanStack Router](https://tanstack.com/router), and, naturally, [MongoDB](https://www.mongodb.com/)) to build tools that empower our sales teams to work smarter and more efficiently.
+Currently, I lead the Sales Apps team at [MongoDB](https://www.mongodb.com/). Our mission is to boost the productivity of the GTM organization by building innovative software solutions. We leverage the [FARM stack](https://www.mongodb.com/resources/basics/farm-stack)—[FastAPI](https://fastapi.tiangolo.com/), [React](https://reactjs.org/), [MongoDB](https://www.mongodb.com/), and [Next.js](https://nextjs.org/)—along with [TanStack Router](https://tanstack.com/router), to create tools that help our sales teams work more efficiently and effectively.
 
-We also spun off a sister team with the same mission of improving sales efficiency, this time leveraging AI to solve problems.
+We also created a sister team with the same mission of improving GTM efficiency, but focused on leveraging AI to solve problems.
 
 ## Contact
 
