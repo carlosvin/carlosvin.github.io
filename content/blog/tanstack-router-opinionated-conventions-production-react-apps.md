@@ -23,7 +23,7 @@ Faster and safer development: Our goal was to catch bugs as early as possible—
 
 We can see some examples of next level code assistance enabled by TypeScript in tools like [Arktype](https://arktype.io/), [TanStack Router](https://tanstack.com/router/latest), or [openapi-typescript](https://github.com/drwpow/openapi-typescript).
 
-### Arktype + TanStack router + openapi-fetch for E2E typing
+### E2E type safe: Arktype + TanStack router + openapi-fetch
 
 Any input to our application will be validated and typed, there are different data inputs that can affect our application state:
 
