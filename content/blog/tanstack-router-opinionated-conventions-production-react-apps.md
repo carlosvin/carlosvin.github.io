@@ -176,12 +176,13 @@ try {
 async function handleDelete(productId: string) {
     const { data, error } = await deleteProduct(productId)
     if (error) {
-        // Optional: send to your error tracker
+        // The error has a title and description attributes
         pushToast({ variant: 'warning', ...error })
     } else {
         pushToast({
             variant: 'success',
-            title: `Deleted product ${productId}`,
+            title: 'Deleted!',
+            description: `Product ${productId}`
         })
         // Invalidate so the loader re-fetches the page state
         router.invalidate()
