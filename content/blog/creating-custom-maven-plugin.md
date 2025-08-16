@@ -1,9 +1,9 @@
 ---
 title: Example how to create custom Maven Plugin
-date: 2018-03-11 19:00:00
+date: 2018-03-11
+lang: en
 keywords: Maven, Java, Build Systems, maven-site-plugin, Maven Plugins
 description: Example to understand Maven plugins concepts and how to create a custom Maven plugin from scratch
-lang: en
 toc: true
 aliases: ["/langs/en/posts/creating-custom-maven-plugin"]
 ---

@@ -1,9 +1,10 @@
 ---
 title: Remove orphaned packages (Linux)
-date: 2012-10-02 13:30:02
-description: How to remove unused packages in Linux
+date: 2012-10-02
 lang: en
+description: How to remove unused packages in Linux
 keywords: Linux, Archlinux, Debian, Tips and Tricks
+toc: true
 aliases: ["/langs/en/posts/linux-remove-orphaned-files"]
 ---
 

@@ -1,9 +1,10 @@
 ---
 title: Custom Maven Plugin - Override default build lifecycle
 date: 2018-05-12
-keywords: Maven, Java, Build Systems, Maven Plugins
 lang: en
+keywords: Maven, Java, Build Systems, Maven Plugins
 description: How to create a custom Maven plugin which overrides default build lifecycle
+toc: true
 aliases: ["/langs/en/posts/creating-custom-maven-plugin-default"]
 ---
 

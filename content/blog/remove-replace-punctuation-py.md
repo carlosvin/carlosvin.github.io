@@ -1,10 +1,11 @@
 ---
 title: Replace punctuation symbols in Python
 date: 2012-10-23
+lang: en
 updated: 2012-05-09
 keywords: Python, Tips and Tricks
 description: An example of how to remove or replace punctuation symbols of a Python string
-lang: en
+toc: true
 aliases: ["/langs/en/posts/remove-replace-punctuation-py"]
 ---
 

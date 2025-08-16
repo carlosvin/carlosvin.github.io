@@ -1,9 +1,10 @@
 ---
 title: Convert files formats - Windows to Unix
 date: 2016-02-12
+lang: en
 keywords: Useful Commands, Unix, Windows
 description: Convert Windows formatted files to Unix format per directory recursively
-lang: en
+toc: true
 aliases: ["/langs/en/posts/recursive-dos-unix"]
 ---
 

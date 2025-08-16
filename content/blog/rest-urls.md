@@ -1,8 +1,8 @@
 ---
 title: "REST URLs"
 date: 2015-08-16
-keywords: REST, API, Web Services
 lang: en
+keywords: REST, API, Web Services
 description: "Design REST API: URLs"
 toc: true
 aliases: ["/langs/en/posts/rest-urls"]

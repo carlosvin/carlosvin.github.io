@@ -1,9 +1,9 @@
 ---
 title: Build C++ project with Gradle
 date: 2014-09-27
+lang: en
 keywords: Gradle, C++, Build Software, Build System, Dependency Management
 description: How to build a C++ project using Gradle
-lang: en
 toc: true
 aliases: ["/langs/en/posts/gradle-cpp"]
 ---
@@ -335,28 +335,3 @@ Requirements:
 You just have to follow next steps:
 
 1. `git clone git@github.com:carlosvin/cpp_gradle.git`
-2. `cd cpp_gradle`
-3. `./gradlew task` or `./gradlew.bat task` if you are in Windows. In this way you'll see available tasks for this project. The first execution will take more time, because it downloads Gradle runtime.
-4. If you are in a 64 bits platform, you can use this command to install the application: `./gradlew installX64ReleaseEnterpriseMainExecutable`.
-5. Run the application you just built: `build/install/mainExecutable/x64ReleaseEnterprise/main`.
-
-## Conclusions
-
-With a tiny configuration file, we have many different build combinations.
-
-Gradle for C++ has a promising future, I hope it follows the steps of Java and Android support.
-
-It is well supported by continuous integration systems.
-
-It has many plugins and features.
-
-Gradle for C++ is a feature under development, we have to be careful:
-
-- Don't use it in production environments.
-- Many things can change or disappear.
-
-The full example is on [https://github.com/carlosvin/cpp_gradle](https://github.com/carlosvin/cpp_gradle). I recommend you to try it yourself.
-
-> **Note:** If you find any issue in this example, please write a comment, open a defect or fix it yourself at [https://github.com/carlosvin/cpp_gradle](https://github.com/carlosvin/cpp_gradle)
-
-More info at [Getting Started Gradle Native](https://docs.gradle.org/current/userguide/native_software.html).
