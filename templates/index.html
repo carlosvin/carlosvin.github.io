@@ -1,13 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section>
-  <header>
-    <h1>{{ section.title | default(value=config.title) }}</h1>
-  </header>
-
-  <p>
-    {{ section.content | safe }}
-  </p>
-</section>
+<h1 class="title">
+  {{ section.title }}
+</h1>
+<div class="blog">
+  {% for page in section.pages %}
+  {% if page.title != "About" %}
+  <article>
+    <header>
+      <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+      <small>{{ page.date | date(format="%Y-%m-%d") }}</small>
+    </header>
+    <p>{{ page.description | default(value="") }}</p>
+  </article>
+  {% endif %}
+  {% endfor %}
+</div>
 {% endblock content %}
