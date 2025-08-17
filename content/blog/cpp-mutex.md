@@ -1,8 +1,8 @@
 ---
 title: Mutex C++
 date: 2014-04-24
-description: Mutex wrapper on C++98 pthread mutex and a the better C++11 std::mutex solution
 lang: en
+description: Mutex wrapper on C++98 pthread mutex and a the better C++11 std::mutex solution
 keywords: C++, pthread, Mutex
 toc: true
 aliases: ["/langs/en/posts/cpp-mutex"]

@@ -1,12 +1,13 @@
-+++
-title = "Easily creating a golang command line tool"
-date = 2021-02-14
-keywords = ["Golang", "cmd", "tools"]
-description = "Let's see how to easily and quickly create a command line tool in golang"
-lang = "en"
-preview_image = "https://golang.org/lib/godoc/images/go-logo-blue.svg"
-aliases = ["langs/en/posts/create-cmd-tool-golang"]
-+++
+---
+title: "Easily creating a golang command line tool"
+date: 2021-02-14
+lang: en
+keywords: ["Golang", "cmd", "tools"]
+description: "Let's see how to easily and quickly create a command line tool in golang"
+toc: true
+aliases: ["/langs/en/posts/create-cmd-tool-golang"]
+preview_image: "https://golang.org/lib/godoc/images/go-logo-blue.svg"
+---
 
 [Golang](https://golang.org/) is one of the most useful technologies I've recently learned. Golang has pretty nice support for networking, command line, or logging out of the box—you don't need any dependency. But there are libraries making developers' life even easier.
 

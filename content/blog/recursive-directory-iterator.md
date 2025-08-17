@@ -1,10 +1,10 @@
 ---
 title: Filesystem in C++17
 date: 2017-05-28
-keywords: C++, C++11, C++17, IO, Filesystem
-toc: true
-description: We are going to analyze with examples new filesystem features coming with C++17
 lang: en
+keywords: C++, C++11, C++17, IO, Filesystem
+description: We are going to analyze with examples new filesystem features coming with C++17
+toc: true
 aliases: ["/langs/en/posts/recursive-directory-iterator"]
 ---
 

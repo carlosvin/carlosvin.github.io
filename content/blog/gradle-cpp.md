@@ -1,9 +1,9 @@
 ---
 title: Build C++ project with Gradle
 date: 2014-09-27
+lang: en
 keywords: Gradle, C++, Build Software, Build System, Dependency Management
 description: How to build a C++ project using Gradle
-lang: en
 toc: true
 aliases: ["/langs/en/posts/gradle-cpp"]
 ---
@@ -342,21 +342,19 @@ You just have to follow next steps:
 
 ## Conclusions
 
-With a tiny configuration file, we have many different build combinations.
+With a small configuration file, we can achieve many different build combinations.
 
-Gradle for C++ has a promising future, I hope it follows the steps of Java and Android support.
+Gradle for C++ has a promising future, and I hope it will follow the successful path of Java and Android support.
 
-It is well supported by continuous integration systems.
+It is well supported by continuous integration systems and offers many plugins and features.
 
-It has many plugins and features.
+However, Gradle for C++ is still under development, so we need to be cautious:
 
-Gradle for C++ is a feature under development, we have to be careful:
+- Do not use it in production environments.
+- Many things may change or be removed in future versions.
 
-- Don't use it in production environments.
-- Many things can change or disappear.
+The full example is available at [https://github.com/carlosvin/cpp_gradle](https://github.com/carlosvin/cpp_gradle). I encourage you to try it yourself.
 
-The full example is on [https://github.com/carlosvin/cpp_gradle](https://github.com/carlosvin/cpp_gradle). I recommend you to try it yourself.
+> **Note:** If you find any issues in this example, please leave a comment, open an issue, or submit a fix at [https://github.com/carlosvin/cpp_gradle](https://github.com/carlosvin/cpp_gradle).
 
-> **Note:** If you find any issue in this example, please write a comment, open a defect or fix it yourself at [https://github.com/carlosvin/cpp_gradle](https://github.com/carlosvin/cpp_gradle)
-
-More info at [Getting Started Gradle Native](https://docs.gradle.org/current/userguide/native_software.html).
+For more information, see [Getting Started with Gradle Native](https://docs.gradle.org/current/userguide/native_software.html).
