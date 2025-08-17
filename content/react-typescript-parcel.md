@@ -39,10 +39,10 @@ yarn start
 
 Last `yarn start` command will:
 
-- start a development server at [http://localhost:1234](http://localhost:1234) with [hot module replacement](https://en.parceljs.org/hmr.html)
+- start a development server at `http://localhost:1234` with [hot module replacement](https://en.parceljs.org/hmr.html)
 - build automatically development javascript files with source maps
 
-> **Tip:** Each time you save a file, you will see automatically the result at [http://localhost:1234](http://localhost:1234) without refreshing the page
+> **Tip:** Each time you save a file, you will see automatically the result at `http://localhost:1234` without refreshing the page
 
 ### Build production bundle
 

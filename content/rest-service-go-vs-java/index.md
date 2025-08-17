@@ -16,9 +16,9 @@ A disclaimer, few months ago, I had several years of experience with Java and 0 
 
 ## Actual project examples
 
-Few months ago I created [an API to extract and structure COVID-19 data](https://covid-rest.appspot.com/docs) from [ECDC website](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide). I developed it in [Spring Boot (REST)](https://spring.io/guides/gs/rest-service).
+Few months ago I created [an API to extract and structure COVID-19 data](https://github.com/carlosvin/covid-rest-go) from [ECDC website](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide). I developed it in [Spring Boot (REST)](https://spring.io/guides/gs/rest-service).
 
-Few months later I had the luck of work on my first professional project in [Go](https://golang.org) and I decided to create a port of [the API to extract COVID-19 data](https://covid-rest.appspot.com/docs) in [Go](https://golang.org), just for learning and for fun.
+Few months later I had the luck of work on my first professional project in [Go](https://golang.org) and I decided to create a port of [the API to extract COVID-19 data](https://github.com/carlosvin/covid-rest-go) in [Go](https://golang.org), just for learning and for fun.
 
 Now we have two REST services, almost functionally identical, but developed in two different tech stacks, so we can easily compare some relevant aspects of both.
 
@@ -28,7 +28,7 @@ Now we have two REST services, almost functionally identical, but developed in t
 |---|---|
 | [https://github.com/carlosvin/covid-rest](https://github.com/carlosvin/covid-rest) | [https://github.com/carlosvin/covid-rest-go](https://github.com/carlosvin/covid-rest-go) |
 
-> **Note**: I actually created that [COVID-19 data REST API](https://covid-rest.appspot.com/docs) to be the data source for the [COVID19-Stats App](https://covid-stats-pwa.netlify.app), a [PWA](https://web.dev/progressive-web-apps) built with [Svelte](https://svelte.dev), but that's another topic.
+> **Note**: I actually created that [COVID-19 data REST API](https://github.com/carlosvin/covid-rest-go) to be the data source for the [COVID19-Stats App](https://covid-stats-pwa.netlify.app), a [PWA](https://web.dev/progressive-web-apps) built with [Svelte](https://svelte.dev), but that's another topic.
 
 ## The Ecosystems
 
