@@ -122,7 +122,6 @@ function makeTeaser(body, terms) {
 }
 
 function formatSearchResultItem(item, terms) {
-  console.log(item);
   return `
     <article>
       <header>
