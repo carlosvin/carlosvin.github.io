@@ -335,3 +335,26 @@ Requirements:
 You just have to follow next steps:
 
 1. `git clone git@github.com:carlosvin/cpp_gradle.git`
+2. `cd cpp_gradle`
+3. `./gradlew task` or `./gradlew.bat task` if you are in Windows. In this way you'll see available tasks for this project. The first execution will take more time, because it downloads Gradle runtime.
+4. If you are in a 64 bits platform, you can use this command to install the application: `./gradlew installX64ReleaseEnterpriseMainExecutable`.
+5. Run the application you just built: `build/install/mainExecutable/x64ReleaseEnterprise/main`.
+
+## Conclusions
+
+With a small configuration file, we can achieve many different build combinations.
+
+Gradle for C++ has a promising future, and I hope it will follow the successful path of Java and Android support.
+
+It is well supported by continuous integration systems and offers many plugins and features.
+
+However, Gradle for C++ is still under development, so we need to be cautious:
+
+- Do not use it in production environments.
+- Many things may change or be removed in future versions.
+
+The full example is available at [https://github.com/carlosvin/cpp_gradle](https://github.com/carlosvin/cpp_gradle). I encourage you to try it yourself.
+
+> **Note:** If you find any issues in this example, please leave a comment, open an issue, or submit a fix at [https://github.com/carlosvin/cpp_gradle](https://github.com/carlosvin/cpp_gradle).
+
+For more information, see [Getting Started with Gradle Native](https://docs.gradle.org/current/userguide/native_software.html).
