@@ -2,19 +2,21 @@
 <html lang="en">
 
 <head>
+  <title>{% if page.title %}{{ page.title }}{% else %}{{ section.title }}{% endif %}</title>
+
+  <!-- Meta tags and OpenGraph metadata for SEO, social sharing, and browser configuration -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ section.title }}{% endif %}</title>
   <meta name="author" content="{{ config.author }}" />
   {% block og %}{% include "partials/base-og.html" %}{% endblock %}
+
+  <!-- Links to files -->
   <link rel="stylesheet" href="{{get_url(path='css/base.css') | safe }}" rel=preconnect>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.lime.min.css" rel=preconnect>
   <link rel="icon" href="{{get_url(path='img/favicon.ico') | safe }}" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
-    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
   <link rel="manifest" href="/manifest.json" />
 
+  <!-- Scripts -->
   <script type="speculationrules">
     {
     "prerender": [
@@ -33,11 +35,9 @@
       y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, "clarity", "script", "58k0hy1db4");
   </script>
-
-  {% block meta %}
-  <meta name="description"
-    content="{% if page.description %}{{ page.description }}{% else %}{{ section.description }}{% endif %}" />
-  {% endblock %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
   <script defer data-domain="carlosvin.github.io" src="https://plausible.io/js/script.js"></script>
 </head>
 
@@ -45,7 +45,16 @@
   <header>
     <nav>
       <ul>
-        <li><strong><a href="{{ get_url(path='') }}">{{ config.title }}</a></strong></li>
+        <li>
+          <a href="{{ get_url(path='') }}">
+            <img src="{{ get_url(path='img/android-chrome-192x192.png') }}" alt="Blog Logo"
+              style="height:2rem;vertical-align:middle;border-radius:8px;">
+          </a>
+        </li>
+
+        <li>
+          <a href="{{ get_url(path='') }}">{{ config.title }}</a>
+        </li>
       </ul>
       <ul>
         {% for section in config.extra.nav_sections %}
