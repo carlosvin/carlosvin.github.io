@@ -5,7 +5,7 @@ lang: en
 keywords: REST, API, Web Services
 description: "Design REST API: URLs"
 toc: true
-aliases: ["/langs/en/posts/rest-urls"]
+aliases: ["/langs/en/posts/rest-urls", "/langs/es/posts/rest-urls"]
 ---
 
 First time I designed a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) [API](https://en.wikipedia.org/wiki/Application_programming_interface) I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) [URL](https://en.wikipedia.org/wiki/Uniform_resource_locator) with examples.
