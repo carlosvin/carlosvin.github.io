@@ -5,7 +5,7 @@ lang: en
 keywords: Gradle, C++, Build Software, Build System, Dependency Management
 description: How to build a C++ project using Gradle
 toc: true
-aliases: ["/langs/en/posts/gradle-cpp"]
+aliases: ["/langs/en/posts/gradle-cpp", "/langs/es/posts/gradle-cpp"]
 ---
 
 ## Introduction

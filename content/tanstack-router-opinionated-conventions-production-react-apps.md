@@ -5,7 +5,6 @@ lang: en
 keywords: TanStack Router, React, TypeScript, Vite, Vitest, Routing, Conventions
 description: "A practical guide to building production-ready React applications with TanStack Router, featuring opinionated conventions for type-safe routing, data fetching, and state management. Learn how to leverage search params for shareable URLs, implement efficient loaders and mutations, and structure your codebase for maintainability. Based on real-world experience from MongoDB's Sales Apps Team."
 toc: true
-aliases: ["/langs/en/posts/tanstack-router-opinionated-conventions-production-react-apps"]
 ---
 
 This post captures a practical way to implement a React application using TanStack Router. It focuses on maintainability, predictable data flows, and ergonomics for both reading and writing code.
