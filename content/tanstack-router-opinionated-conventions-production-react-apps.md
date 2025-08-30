@@ -1,6 +1,7 @@
 ---
 title: "TanStack Router: Opinionated Conventions for Production React Apps"
 date: 2025-08-15
+updated: 2025-08-30
 lang: en
 keywords: TanStack Router, React, TypeScript, Vite, Vitest, Routing, Conventions
 description: "A practical guide to building production-ready React applications with TanStack Router, featuring opinionated conventions for type-safe routing, data fetching, and state management. Learn how to leverage search params for shareable URLs, implement efficient loaders and mutations, and structure your codebase for maintainability. Based on real-world experience from MongoDB's Sales Apps Team."
@@ -43,7 +44,7 @@ Here the choices are quite obvious:
 
 ## Project conventions
 
-### Use search params to keep page state
+### Use search params to keep **page** state
 
 Favor search params over component state for sharable, restorable URLs. This reduces ad‑hoc `useState` and makes the page state linkable.
 
@@ -88,6 +89,9 @@ If I want to change the state, will only have to navigate sort by date in descen
 -`/shop/products?page=2&itemsPerPage=100&sort=asc&query=water ski&sortBy=price`  
 +`/shop/products?page=2&itemsPerPage=100&sort=desc&query=water ski&sortBy=date`  
 ```
+
+> **Note:**  
+> Component-level state management will still be necessary for UI interactions (e.g., form inputs, toggle states, loading indicators). This convention specifically applies to maintaining the **current page state**—the data and filters that define what content is displayed and should be shareable via URL.
 
 ### Interacting with the backend
 
