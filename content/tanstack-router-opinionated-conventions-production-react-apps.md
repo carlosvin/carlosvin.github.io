@@ -1,17 +1,17 @@
 ---
-title: "TanStack Router: Opinionated Conventions for Production React Apps"
+title: "TanStack Router: Opinionated Guidelines for Production React Apps"
 date: 2025-08-15
 updated: 2025-08-30
 lang: en
-keywords: TanStack Router, React, TypeScript, Vite, Vitest, Routing, Conventions
-description: "A practical guide to building production-ready React applications with TanStack Router, featuring opinionated conventions for type-safe routing, data fetching, and state management. Learn how to leverage search params for shareable URLs, implement efficient loaders and mutations, and structure your codebase for maintainability. Based on real-world experience from MongoDB's Sales Apps Team."
+keywords: TanStack Router, React, TypeScript, Vite, Vitest, Routing, Guidelines
+description: "A practical guide to building production-ready React applications with TanStack Router, featuring opinionated guidelines for type-safe routing, data fetching, and state management. Learn how to leverage search params for shareable URLs, implement efficient loaders and mutations, and structure your codebase for maintainability. Based on real-world experience from MongoDB's Sales Apps Team."
 toc: true
 ---
 
 This post captures a practical way to implement a React application using TanStack Router. It focuses on maintainability, predictable data flows, and ergonomics for both reading and writing code.
 
 > **Note:**  
-> The conventions and recommendations in this guide are based on our real-world experience building a new internal application as the Sales Apps Team at [MongoDB](https://www.mongodb.com). They reflect lessons learned and best practices developed throughout that process.
+> The guidelines and recommendations in this guide are based on our real-world experience building a new internal application as the Sales Apps Team at [MongoDB](https://www.mongodb.com). They reflect lessons learned and best practices developed throughout that process.
 
 ## Chosen tech stack
 
@@ -20,7 +20,7 @@ This post captures a practical way to implement a React application using TanSta
 Faster and safer development: Our goal was to catch bugs as early as possible—ideally at compile time, together with a next level developer experience. This approach not only reduces runtime errors but also makes refactoring and onboarding significantly easier.
 
 > **Note:**  
-> In my experience, well-documented project or team conventions have an even greater positive impact on onboarding than end-to-end typing alone.
+> In my experience, well-documented project or team guidelines have an even greater positive impact on onboarding than end-to-end typing alone.
 
 We can see some examples of next level code assistance enabled by TypeScript in tools like [Arktype](https://arktype.io/), [TanStack Router](https://tanstack.com/router/latest), or [openapi-typescript](https://github.com/drwpow/openapi-typescript).
 
@@ -42,13 +42,13 @@ Here the choices are quite obvious:
 - [Vitest](https://vitest.dev/) because it is the go-to testing framework if you are using [Vite](https://vitejs.dev/).
 - [Testing Library](https://testing-library.com/docs/) for intuitive, user-focused component tests.
 
-## Project conventions
+## Project guidelines
 
 ### Use search params to keep **page** state
 
 Favor search params over component state for sharable, restorable URLs. This reduces ad‑hoc `useState` and makes the page state linkable.
 
-This convention is one of the easiest and most impactful decisions we have made:
+This guideline is one of the easiest and most impactful decisions we have made:
 
 - Being able for our users to share exactly the same data via URLs was really important and we get this for free.
 - If we want to change the page state, we just navigate to change search params:
@@ -91,7 +91,7 @@ If I want to change the state, will only have to navigate sort by date in descen
 ```
 
 > **Note:**  
-> Component-level state management will still be necessary for UI interactions (e.g., form inputs, toggle states, loading indicators). This convention specifically applies to maintaining the **current page state**—the data and filters that define what content is displayed and should be shareable via URL.
+> Component-level state management will still be necessary for UI interactions (e.g., form inputs, toggle states, loading indicators). This guideline specifically applies to maintaining the **current page state**—the data and filters that define what content is displayed and should be shareable via URL.
 
 ### Interacting with the backend
 
@@ -158,7 +158,7 @@ function getProduct(productId: string) {
 
 ### Mutations
 
-Mutation functions are similar to fetchers but generally **should NOT throw exceptions**. They’re invoked from event handlers, and **throwing loses error type information**. Return a `{ data, error }` object instead.
+Mutation functions are similar to fetchers but generally **should NOT throw exceptions**. They're invoked from event handlers, and **throwing loses error type information**. Return a `{ data, error }` object instead.
 
 🚫 Ideally, we want to avoid having to inspect or discriminate error types at runtime:
 
@@ -214,7 +214,7 @@ export default function HomeLayout() {
 
 ### Leverage nested routing to show nested components
 
-If a nested component isn’t rendered by default (e.g., a modal), make it a nested route instead of toggling hidden UI state.
+If a nested component isn't rendered by default (e.g., a modal), make it a nested route instead of toggling hidden UI state.
 
 Benefits:
 
