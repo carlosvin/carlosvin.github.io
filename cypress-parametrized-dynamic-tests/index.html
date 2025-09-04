@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Parameterized Tests in Cypress</title>
+
+  <!-- Meta tags and OpenGraph metadata for SEO, social sharing, and browser configuration -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Carlos Martin Sanchez" />
+  
+  <meta name="description" content="Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers." />
+  
+
+  
+
+
+<title>
+    
+    Parameterized Tests in Cypress
+    
+</title>
+<meta property="og:title"
+    content="Parameterized Tests in Cypress" />
+
+
+
+
+
+<meta name="description" content="How to write parameterized tests in Cypress" />
+<meta property="og:description" content="How to write parameterized tests in Cypress" />
+
+
+
+
+
+<link rel="canonical" href="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;cypress-parametrized-dynamic-tests&#x2F;" />
+<meta property="og:url" content="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;cypress-parametrized-dynamic-tests&#x2F;" />
+
+
+<meta property="og:type" content="article" />
+
+
+<meta property="og:site_name" content="My software engineering journey" />
+
+
+<meta property="og:locale" content="en_US" />
+
+
+
+<meta property="article:published_time" content="2021-01-06T00:00:00Z" />
+
+
+
+
+
+
+<meta property="og:image" content="&#x2F;img&#x2F;android-chrome-192x192.png" />
+
+
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title"
+    content="Parameterized Tests in Cypress" />
+
+<meta name="twitter:description" content="How to write parameterized tests in Cypress" />
+
+
+<meta name="twitter:image" content="&#x2F;img&#x2F;android-chrome-192x192.png" />
+
+
+
+  <!-- Links to files -->
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css" rel=preconnect>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.lime.min.css" rel=preconnect>
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.ico" />
+  <link rel="manifest" href="https://carlosvin.github.io/manifest.json" />
+
+  <!-- Scripts -->
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
+  <script defer data-domain="carlosvin.github.io" src="https://plausible.io/js/script.js"></script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <a href="https://carlosvin.github.io">
+        <img src="https://carlosvin.github.io/img/android-chrome-192x192.png" alt="My software engineering journey logo"
+          style="height:2rem;vertical-align:middle;border-radius:8px;">
+      </a>
+    </li>
+    <li>
+      <a href="https://carlosvin.github.io">My software engineering journey</a>
+    </li>
+  </ul>
+  <ul>
+    
+    <li>
+      <a href="https://carlosvin.github.io/about">About</a>
+    </li>
+    
+    <li>
+      <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+    </li>
+  </ul>
+</nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <hgroup>
+      <h1 class="post-title">Parameterized Tests in Cypress</h1>
+      <div class="post-meta">
+        
+        <time datetime=" 2021-01-06">
+          January 06, 2021
+        </time>
+        
+      </div>
+    </hgroup>
+  </header>
+
+  
+
+  <section class="post-content">
+    <p><a href="https://www.cypress.io/">Cypress</a> is a testing framework for anything running on a web browser. I am using it to test this site and I've talked before about it in the post <a href="https://carlosvin.github.io/posts/this-is-sapper/en#_testing">"This is Sapper"</a>.</p>
+<p>In this post I won't explain how to use <a href="https://www.cypress.io/">Cypress</a>, they have a pretty nice documentation: <a href="https://docs.cypress.io/guides/getting-started/installing-cypress.html">Getting started with Cypress</a>.</p>
+<p>I will stick to the parameterized tests topic.</p>
+<p><strong>Parameterized tests</strong>: Also known as dynamic tests, it is an useful technique where you can specify an input dataset and the test case will be repeated for each element in the dataset.</p>
+<h2 id="explicit-input-data-set">Explicit input data set</h2>
+<p>Since sometimes you can’t run the test for all the possible inputs, you can select a set of meaningful data to test.</p>
+<p>Example checking that the relevant pages in the site have valid HTML syntax:</p>
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">describe</span><span>(&#39;</span><span style="color:#a3be8c;">validate pages</span><span>&#39;, () </span><span style="color:#b48ead;">=&gt; </span><span>{
+</span><span>    [ </span><span style="color:#65737e;">// &lt;1&gt;
+</span><span>        &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/categories</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/categories/sapper</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/creating-custom-maven-plugin-default</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/choosing-modern-cpp-stack</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/cpp-mutex</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/cpp-pragma-pack</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/creating-custom-maven-plugin</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/delete-html-tags-py-django</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/gradle-cpp</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/java-embedded-db-performance-comparison</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/react-typescript-parcel</span><span>&quot;,
+</span><span>        &quot;</span><span style="color:#a3be8c;">/posts/pwa-lessons-learned-cra</span><span>&quot;,
+</span><span>    ].</span><span style="color:#96b5b4;">forEach</span><span>((</span><span style="color:#bf616a;">url</span><span>) </span><span style="color:#b48ead;">=&gt; </span><span>{ </span><span style="color:#65737e;">// &lt;2&gt;
+</span><span>        </span><span style="color:#8fa1b3;">it</span><span>(`</span><span style="color:#a3be8c;">should be valid HTML ${</span><span style="color:#bf616a;">url</span><span style="color:#a3be8c;">}</span><span>`, () </span><span style="color:#b48ead;">=&gt; </span><span>{ </span><span style="color:#65737e;">// &lt;3&gt;
+</span><span>            </span><span style="color:#bf616a;">cy</span><span>.</span><span style="color:#8fa1b3;">visit</span><span>(</span><span style="color:#bf616a;">url</span><span>)
+</span><span>            </span><span style="color:#bf616a;">cy</span><span>.</span><span style="color:#8fa1b3;">htmlvalidate</span><span>()
+</span><span>        })
+</span><span>    })
+</span><span>})
+</span></code></pre>
+<p>&lt;1&gt; List with relevant pages to validate<br />
+&lt;2&gt; Iterate over the list of pages<br />
+&lt;3&gt; Test case execution for selected page</p>
+<h3 id="test-results">Test results</h3>
+<p><img src="https://carlosvin.github.io/cypress-parametrized-dynamic-tests/./html-validation.png" alt="Test results" /></p>
+<h2 id="generated-input-data-set">Generated input data set</h2>
+<p>Instead of explicitly defining a data set, you can generate it, for example, creating a random data set.</p>
+<p>Example checking that any generated random number is less than 0:</p>
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#8fa1b3;">describe</span><span>(&#39;</span><span style="color:#a3be8c;">random</span><span>&#39;, () </span><span style="color:#b48ead;">=&gt; </span><span>{
+</span><span>    </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">inputData </span><span>= </span><span style="color:#ebcb8b;">Array</span><span>.</span><span style="color:#8fa1b3;">from</span><span>(</span><span style="color:#ebcb8b;">Array</span><span>(</span><span style="color:#d08770;">100</span><span>)).</span><span style="color:#8fa1b3;">map</span><span>(</span><span style="color:#bf616a;">x </span><span style="color:#b48ead;">=&gt; </span><span>Math.</span><span style="color:#96b5b4;">random</span><span>()) </span><span style="color:#65737e;">// &lt;1&gt;
+</span><span>    </span><span style="color:#bf616a;">inputData</span><span>.</span><span style="color:#96b5b4;">forEach</span><span>(</span><span style="color:#bf616a;">x </span><span style="color:#b48ead;">=&gt; </span><span>{ </span><span style="color:#65737e;">// &lt;2&gt;
+</span><span>        </span><span style="color:#8fa1b3;">it</span><span>(`</span><span style="color:#a3be8c;">should be valid ${</span><span style="color:#bf616a;">x</span><span style="color:#a3be8c;">}</span><span>`, () </span><span style="color:#b48ead;">=&gt; </span><span>{ </span><span style="color:#65737e;">// &lt;3&gt;
+</span><span>            </span><span style="color:#8fa1b3;">expect</span><span>(</span><span style="color:#bf616a;">x</span><span>).</span><span style="color:#bf616a;">to</span><span>.</span><span style="color:#bf616a;">be</span><span>.</span><span style="color:#8fa1b3;">lessThan</span><span>(</span><span style="color:#d08770;">1</span><span>)
+</span><span>        })
+</span><span>    })
+</span><span>})
+</span></code></pre>
+<p>&lt;1&gt; It generates an array of 100 random numbers<br />
+&lt;2&gt; Iterate over the generated array<br />
+&lt;3&gt; Test case execution</p>
+<h3 id="test-results-1">Test results</h3>
+<p><img src="https://carlosvin.github.io/cypress-parametrized-dynamic-tests/./random-validation.png" alt="Test results" /></p>
+<blockquote>
+<p><strong>Tip:</strong> Please check the <a href="https://github.com/cypress-io/cypress-example-recipes/tree/master/examples/fundamentals__dynamic-tests">cypress official examples to learn more about dynamic/parameterized testing</a>.</p>
+</blockquote>
+
+  </section>
+
+  <footer>
+    <script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="title"
+      theme="github-light" crossorigin="anonymous" async defer>
+      </script>
+  </footer>
+</article>
+
+    <script src="https://carlosvin.github.io/js/search.js"></script>
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2025 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn"
+      width="32" height="32" />
+  </a>
+  <a href="https://carlosvin.github.io/atom.xml">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS" width="32" height="32" />
+  </a>
+</span>
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>

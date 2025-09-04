@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Custom Maven Plugin - Override default build lifecycle</title>
+
+  <!-- Meta tags and OpenGraph metadata for SEO, social sharing, and browser configuration -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Carlos Martin Sanchez" />
+  
+  <meta name="description" content="Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers." />
+  
+
+  
+
+
+<title>
+    
+    Custom Maven Plugin - Override default build lifecycle
+    
+</title>
+<meta property="og:title"
+    content="Custom Maven Plugin - Override default build lifecycle" />
+
+
+
+
+
+<meta name="description" content="How to create a custom Maven plugin which overrides default build lifecycle" />
+<meta property="og:description" content="How to create a custom Maven plugin which overrides default build lifecycle" />
+
+
+
+
+
+<link rel="canonical" href="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;creating-custom-maven-plugin-default&#x2F;" />
+<meta property="og:url" content="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;creating-custom-maven-plugin-default&#x2F;" />
+
+
+<meta property="og:type" content="article" />
+
+
+<meta property="og:site_name" content="My software engineering journey" />
+
+
+<meta property="og:locale" content="en_US" />
+
+
+
+<meta property="article:published_time" content="2018-05-12T00:00:00Z" />
+
+
+
+
+
+
+<meta property="og:image" content="&#x2F;img&#x2F;android-chrome-192x192.png" />
+
+
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title"
+    content="Custom Maven Plugin - Override default build lifecycle" />
+
+<meta name="twitter:description" content="How to create a custom Maven plugin which overrides default build lifecycle" />
+
+
+<meta name="twitter:image" content="&#x2F;img&#x2F;android-chrome-192x192.png" />
+
+
+
+  <!-- Links to files -->
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css" rel=preconnect>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.lime.min.css" rel=preconnect>
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.ico" />
+  <link rel="manifest" href="https://carlosvin.github.io/manifest.json" />
+
+  <!-- Scripts -->
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
+  <script defer data-domain="carlosvin.github.io" src="https://plausible.io/js/script.js"></script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <a href="https://carlosvin.github.io">
+        <img src="https://carlosvin.github.io/img/android-chrome-192x192.png" alt="My software engineering journey logo"
+          style="height:2rem;vertical-align:middle;border-radius:8px;">
+      </a>
+    </li>
+    <li>
+      <a href="https://carlosvin.github.io">My software engineering journey</a>
+    </li>
+  </ul>
+  <ul>
+    
+    <li>
+      <a href="https://carlosvin.github.io/about">About</a>
+    </li>
+    
+    <li>
+      <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+    </li>
+  </ul>
+</nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <hgroup>
+      <h1 class="post-title">Custom Maven Plugin - Override default build lifecycle</h1>
+      <div class="post-meta">
+        
+        <time datetime=" 2018-05-12">
+          May 12, 2018
+        </time>
+        
+      </div>
+    </hgroup>
+  </header>
+
+  
+
+  <section class="post-content">
+    <p>I explained in previous article <a href="/langs/en/posts/creating-custom-maven-plugin">Example how to create custom Maven Plugin</a> which <a href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle">overrides site lifecycle</a>.</p>
+<p>I have created another example to demonstrate how to override <a href="https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#default_Lifecycle">default Maven build lifecycle</a>. Default build lifecycle is used to construct your software project, for example, it is executed when you run <code>mvn install</code> in a <code>jar</code> type project.</p>
+<p>You can find source code example at <a href="https://github.com/carlosvin/lifecycle-maven-plugin">https://github.com/carlosvin/lifecycle-maven-plugin</a>.</p>
+<blockquote>
+<p><strong>Tip:</strong> I've also created an <a href="https://maven.apache.org/guides/introduction/introduction-to-archetypes.html">archetype</a> so you can easily play with the example.</p>
+</blockquote>
+<h2 id="create-an-example-project">Create an example project</h2>
+<h3 id="generate-the-project-using-archetype">Generate the project using archetype</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">mvn</span><span> archetype:generate \
+</span><span style="color:#bf616a;">  -DarchetypeGroupId</span><span>=com.github.carlosvin.archetype \
+</span><span style="color:#bf616a;">  -DartifactId</span><span>=lifecycle-maven-plugin-archetype \
+</span><span style="color:#bf616a;">  -DarchetypeVersion</span><span>=0.6
+</span></code></pre>
+
+  </section>
+
+  <footer>
+    <script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="title"
+      theme="github-light" crossorigin="anonymous" async defer>
+      </script>
+  </footer>
+</article>
+
+    <script src="https://carlosvin.github.io/js/search.js"></script>
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2025 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn"
+      width="32" height="32" />
+  </a>
+  <a href="https://carlosvin.github.io/atom.xml">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS" width="32" height="32" />
+  </a>
+</span>
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>
