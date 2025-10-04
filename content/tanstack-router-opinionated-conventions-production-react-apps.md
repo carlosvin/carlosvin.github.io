@@ -3,8 +3,8 @@ title: "TanStack Router: Opinionated Guidelines for Production React Apps"
 date: 2025-08-15
 updated: 2025-08-30
 lang: en
-keywords: TanStack Router, React, TypeScript, Vite, Vitest, Routing, Guidelines, Arktype
-description: "A practical guide to building production-ready React applications with TanStack Router, featuring opinionated guidelines for type-safe routing, data fetching, and state management. Learn how to leverage search params for shareable URLs, implement efficient loaders and mutations, and structure your codebase for maintainability. Based on real-world experience from MongoDB's Sales Apps Team."
+keywords: TanStack Router, React, TypeScript, Routing, Guidelines, Type-Safe Routing, Data Fetching, State Management, Production-Ready, Vite, Vitest, Arktype, Application Architecture
+description: "Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture."
 toc: true
 ---
 
