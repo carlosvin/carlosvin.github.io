@@ -3,8 +3,8 @@ title: "TanStack Router: Opinionated Guidelines for Production React Apps"
 date: 2025-08-15
 updated: 2025-08-30
 lang: en
-keywords: TanStack Router, React, TypeScript, Vite, Vitest, Routing, Guidelines, Arktype
-description: "A practical guide to building production-ready React applications with TanStack Router, featuring opinionated guidelines for type-safe routing, data fetching, and state management. Learn how to leverage search params for shareable URLs, implement efficient loaders and mutations, and structure your codebase for maintainability. Based on real-world experience from MongoDB's Sales Apps Team."
+keywords: TanStack Router, React, TypeScript, Routing, Guidelines, Type-Safe Routing, Data Fetching, State Management, Production-Ready, Vite, Vitest, Arktype, Application Architecture
+description: "Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture."
 toc: true
 ---
 
@@ -33,7 +33,7 @@ Any input to our application will be validated and typed, there are different da
 
 - **Search params**: TanStack Router offers robust, type-safe search param validation out of the box. We use [Arktype](https://arktype.io/) for runtime validation, which integrates seamlessly with TanStack Router—see [this concise, powerful example](https://tanstack.com/router/latest/docs/framework/react/guide/search-params#arktype).
 
-- **Backend**: In this case we generate a typed client from the backend [OpenAPI spec](https://swagger.io/docs/specification/v3_0/about/) with [`openapi-fetch`](https://github.com/openapi-ts/openapi-fetch). All backend interactions are handled exclusively through this generated client, ensuring type safety and consistency across the app.
+- **Backend**: In this case we generate a typed client from the backend [OpenAPI spec](https://swagger.io/docs/specification/v3_0/about/) with [`openapi-fetch`](https://openapi-ts.dev/openapi-fetch/). All backend interactions are handled exclusively through this generated client, ensuring type safety and consistency across the app.
 
 > **Note:**  
 > For teams seeking an extra layer of runtime validation, tools like [Arktype](https://arktype.io/) can be used to validate backend responses. However, in our experience—especially as maintainers of both the backend and frontend—this has proven unnecessary. With well-maintained OpenAPI specs, semantic versioning, and strong type generation, we've yet to encounter bugs caused by a mismatch between expected and actual responses. Unless your backend is managed by a separate team or you frequently encounter contract drift, runtime validation with Arktype is likely not needed in this case.
