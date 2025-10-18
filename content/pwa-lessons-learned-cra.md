@@ -6,7 +6,7 @@ updated: 2020-06-10
 keywords: React, Typescript, CRA, PWA, Create React App, Firebase, Firestore, Svelte, Sapper
 description: "Lessons learned while developing a PWA with CRA: Budget Tracker"
 toc: true
-aliases: ["/langs/en/posts/pwa-lessons-learned-cra", "/langs/es/posts/pwa-lessons-learned-cra"]
+aliases: ["/blog/pwa-lessons-learned-cra", "/langs/en/posts/pwa-lessons-learned-cra", "/langs/es/posts/pwa-lessons-learned-cra"]
 link: https://btapp.netlify.com
 ---
 
