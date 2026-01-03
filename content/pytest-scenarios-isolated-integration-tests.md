@@ -6,6 +6,7 @@ lang: en
 description: "Use pytest-scenarios to create isolated integration test data that cleans itself up automatically."
 toc: true
 aliases: ["/posts/pytest-scenarios-integration-tests"]
+tags: ["Testing", "Python", "Pytest", "MongoDB"]
 ---
 
 # Isolated Integration Tests with pytest-scenarios
@@ -19,6 +20,7 @@ That's what [`pytest-scenarios`](https://github.com/carlosvin/pytest-scenarios) 
 ## The Problem
 
 Consider testing an e-commerce checkout system. You need to verify that:
+
 - Active customers can complete orders
 - Suspended customers are rejected  
 - Out-of-stock items fail gracefully
@@ -79,6 +81,7 @@ I've created a complete runnable example that demonstrates `pytest-scenarios` wi
 👉 **[View the example on GitHub](https://github.com/carlosvin/pytest-scenarios/tree/main/examples)**
 
 The example includes:
+
 - A [`Checkout` class](https://github.com/carlosvin/pytest-scenarios/blob/main/examples/src/checkout.py) with real business logic
 - [Integration tests](https://github.com/carlosvin/pytest-scenarios/blob/main/examples/tests/integration/test_checkout.py) covering happy paths and edge cases
 - [Templates](https://github.com/carlosvin/pytest-scenarios/tree/main/examples/tests/templates) for customers, products, and orders
