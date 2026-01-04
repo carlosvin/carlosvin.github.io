@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  
+  <title>Multi-Domain Docker Containers</title>
+
+  
+  
+  
+  <meta name="description" content="How to create different Docker containers with different domain names in the same host">
+  
+  <meta name="keywords" content="docker,microservices,reverse-proxy,nginx">
+  
+  <meta name="robots" content="index, follow">
+
+
+  <!-- Meta tags and OpenGraph metadata for SEO, social sharing, and browser configuration -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Carlos Martin Sanchez">
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="https://carlosvin.github.io/rss.xml">
+  
+
+  
+
+
+
+
+<meta property="og:title" content="Multi-Domain Docker Containers">
+<meta property="og:description" content="How to create different Docker containers with different domain names in the same host">
+
+
+
+
+<link rel="canonical" href="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;">
+<meta property="og:url" content="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;">
+
+
+<meta property="og:type" content="article">
+
+
+<meta property="og:site_name" content="My software engineering journey">
+
+
+<meta property="og:locale" content="en_US">
+
+
+
+<meta property="article:published_time" content="2016-11-24T00:00:00Z">
+
+
+
+
+
+<meta property="article:tag" content="docker">
+
+<meta property="article:tag" content="microservices">
+
+<meta property="article:tag" content="reverse-proxy">
+
+<meta property="article:tag" content="nginx">
+
+
+
+
+
+
+<meta property="og:image" content="&#x2F;img&#x2F;android-chrome-192x192.png">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Multi-Domain Docker Containers">
+<meta name="twitter:description" content="How to create different Docker containers with different domain names in the same host">
+
+<meta name="twitter:image" content="&#x2F;img&#x2F;android-chrome-192x192.png">
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io",
+      "name": "My software engineering journey",
+      "description": "Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers.",
+      "publisher": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https:&#x2F;&#x2F;carlosvin.github.io/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person",
+      "name": "Carlos Martin Sanchez",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io",
+      "sameAs": [
+        
+      ]
+    },
+    
+    {
+      "@type": "BlogPosting",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;/#article",
+      "isPartOf": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website"
+      },
+      "author": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "headline": "Multi-Domain Docker Containers",
+      "description": "How to create different Docker containers with different domain names in the same host",
+      "datePublished": "2016-11-24T00:00:00Z",
+      "dateModified": "2016-11-24T00:00:00Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;"
+      },
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;",
+      "image": "&#x2F;img&#x2F;android-chrome-192x192.png",
+      "publisher": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "articleSection": "Blog",
+      "keywords": [
+        "docker",
+        "microservices",
+        "reverse-proxy",
+        "nginx"
+        
+      ],
+      "inLanguage": "en",
+      "wordCount": 524,
+      "copyrightYear": 2016,
+      "copyrightHolder": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;",
+      "name": "Multi-Domain Docker Containers",
+      "isPartOf": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website"
+      },
+      "about": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;/#article"
+      },
+      "description": "How to create different Docker containers with different domain names in the same host",
+      "breadcrumb": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;/#breadcrumb"
+      },
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": ["https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;"]
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https:&#x2F;&#x2F;carlosvin.github.io"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Multi-Domain Docker Containers",
+          "item": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;reverse-proxy-multidomain-docker&#x2F;"
+        }
+        ]
+    }
+    
+  ]
+}
+</script>
+
+  <!-- Links to files -->
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css" rel=preconnect>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.lime.min.css" rel=preconnect>
+
+  <!-- Favicons -->
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.ico" sizes="any">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://carlosvin.github.io/img/android-chrome-192x192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="https://carlosvin.github.io/img/apple-touch-icon.png">
+
+  <link rel="manifest" href="https://carlosvin.github.io/manifest.json"> <!-- Scripts -->
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="b33a381d-0843-4a11-b306-74c285c39206"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.5.0/index.js"></script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <details class="dropdown">
+        <summary role="button" class="outline"><img src="https://carlosvin.github.io/img/android-chrome-192x192.png"
+            alt="Menu" style="height:2rem;vertical-align:middle;border-radius:8px;"></summary>
+        <ul>
+          
+          <li><a href="https://carlosvin.github.io/about">About</a></li>
+          
+          <li><a href="https://carlosvin.github.io/tags">Tags</a></li>
+          <li>
+            <label>
+              Dark
+              <input type="checkbox" data-toggle-theme="dark,light" role="switch">
+            </label>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <a href="https://carlosvin.github.io">My software engineering journey</a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+    </li>
+  </ul>
+
+</nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <hgroup>
+      <h1>Multi-Domain Docker Containers</h1>
+      <p>
+        
+
+<time datetime="2016-11-24">
+    November 24, 2016
+</time>
+• <time datetime="PT3M">3 min read</time> • <data
+    value="524">524 words</data>
+      </p>
+      
+
+
+<span class="tags">
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/docker/' title="All the posts in docker"
+            role="button" class="secondary outline">
+            docker
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/microservices/' title="All the posts in microservices"
+            role="button" class="secondary outline">
+            microservices
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/reverse-proxy/' title="All the posts in reverse-proxy"
+            role="button" class="secondary outline">
+            reverse-proxy
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/nginx/' title="All the posts in nginx"
+            role="button" class="secondary outline">
+            nginx
+            
+        </a>
+    </small>
+    
+</span>
+
+    </hgroup>
+  </header>
+
+  
+<aside class="sidebar">
+  <details class="dropdown">
+    <summary role="button" class="secondary">📑 Contents</summary>
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#use-case">Use case</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#how-to-configure-multi-domain-reverse-proxy">How to Configure Multi-Domain Reverse Proxy</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#example-project-structure">Example Project Structure</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#architecture-configuration-docker-compose">Architecture Configuration (docker-compose)</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#docker-reverse-proxy-multi-domain-docker-compose-yaml">docker-reverse-proxy-multi-domain&#x2F;docker-compose.yaml</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#application-image-configuration">Application Image Configuration</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#a-dockerfile">a&#x2F;Dockerfile</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#b-dockerfile">b&#x2F;Dockerfile</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#adding-domain-names-to-your-development-environment-configuration">Adding domain names to your development environment configuration</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#etc-hosts">&#x2F;etc&#x2F;hosts</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/reverse-proxy-multidomain-docker/#everything-ready">Everything ready</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+    </ul>
+  </details>
+</aside>
+
+
+  <section class="post-content">
+    <h2 id="use-case">Use case</h2>
+<p>We have several server applications in the same development environment, each application is bundled in a Docker container, e.g: <strong>"Container A"</strong> and <strong>"Container B"</strong>.</p>
+<p>With Docker those applications have the same IP address. One way to differentiate and access to an specific application is exposing different ports.</p>
+<p><img src="https://carlosvin.github.io/reverse-proxy-multidomain-docker/ip.png" alt="Containers exposing the same IP address and different ports." /></p>
+<ul>
+<li>If we want to call to <strong>"Application A"</strong> we will do: <code>GET http://10.20.30.40:8080/colors/red</code>.</li>
+<li>If we want to call to <strong>"Application B"</strong> we will do: <code>GET http://10.20.30.40:8081/fruits/tomato</code>.</li>
+</ul>
+<p>But that solution is a little bit confusing, does 8080 mean we are accessing to "application A"?</p>
+<p>It would be <strong>simpler and easier</strong> to remind something like:</p>
+<ul>
+<li>Calling <strong>"Application A"</strong>: <code>GET http://a.domain.com/colors/red</code>.</li>
+<li>Calling <strong>"Application B"</strong>: <code>GET http://b.domain.com/fruits/tomato</code>.</li>
+</ul>
+<p><img src="https://carlosvin.github.io/reverse-proxy-multidomain-docker/domain.png" alt="Accessing applications by domain name." /></p>
+<p>Get that extra semantic value is much simpler than I thought at the beginning and you will see below.</p>
+<h2 id="how-to-configure-multi-domain-reverse-proxy">How to Configure Multi-Domain Reverse Proxy</h2>
+<p>I said it is easy, because we almost have to do nothing, another container will do it for us, especifically we are going to use <a href="https://github.com/jwilder/nginx-proxy">nginx-proxy</a>, it will automatically generate the required <a href="https://www.nginx.com">NGINX</a> configurations.</p>
+<p>So, we will have 2 applications + 1 proxy, that is 3 containers.</p>
+<p><img src="https://carlosvin.github.io/reverse-proxy-multidomain-docker/proxy.png" alt="3 containers, 2 applications and 1 proxy" /></p>
+<blockquote>
+<p><strong>Note</strong>: You can download the full example at <a href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain">https://github.com/carlosvin/docker-reverse-proxy-multi-domain</a>.</p>
+</blockquote>
+<h3 id="example-project-structure">Example Project Structure</h3>
+<ul>
+<li><strong>docker-compose.yaml</strong>: Main configuration file describing architecture in previous picture.</li>
+<li><strong>a</strong>: Application A directory.
+<ul>
+<li><strong>Dockerfile</strong>: Container A configuration file.</li>
+</ul>
+</li>
+<li><strong>b</strong>: Application B directory.
+<ul>
+<li><strong>Dockerfile</strong>: Container B configuration file.</li>
+</ul>
+</li>
+</ul>
+<p><a href="https://github.com/carlosvin/docker-reverse-proxy-multi-domain">View Project</a></p>
+<h3 id="architecture-configuration-docker-compose">Architecture Configuration (docker-compose)</h3>
+<p>The relationships between containers is the most interesting part in this example.</p>
+<h3 id="docker-reverse-proxy-multi-domain-docker-compose-yaml">docker-reverse-proxy-multi-domain/docker-compose.yaml</h3>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">a</span><span>:
+</span><span>  </span><span style="color:#bf616a;">build</span><span>: </span><span style="color:#a3be8c;">a                </span><span style="color:#65737e;"># (4)
+</span><span>  </span><span style="color:#bf616a;">environment</span><span>:
+</span><span>    </span><span style="color:#bf616a;">VIRTUAL_HOST</span><span>: </span><span style="color:#a3be8c;">a.domain.com    </span><span style="color:#65737e;"># (1)
+</span><span>  </span><span style="color:#bf616a;">restart</span><span>: </span><span style="color:#a3be8c;">always
+</span><span>
+</span><span style="color:#bf616a;">b</span><span>:
+</span><span>  </span><span style="color:#bf616a;">build</span><span>: </span><span style="color:#a3be8c;">b                </span><span style="color:#65737e;"># (5)
+</span><span>  </span><span style="color:#bf616a;">environment</span><span>:
+</span><span>    </span><span style="color:#bf616a;">VIRTUAL_HOST</span><span>:  </span><span style="color:#a3be8c;">b.domain.com   </span><span style="color:#65737e;"># (2)
+</span><span>  </span><span style="color:#bf616a;">restart</span><span>: </span><span style="color:#a3be8c;">always
+</span><span>
+</span><span style="color:#bf616a;">nginx-proxy</span><span>:              </span><span style="color:#65737e;"># (3)
+</span><span>  </span><span style="color:#bf616a;">image</span><span>: </span><span style="color:#a3be8c;">jwilder/nginx-proxy
+</span><span>  </span><span style="color:#bf616a;">ports</span><span>:
+</span><span>    - &quot;</span><span style="color:#a3be8c;">80:80</span><span>&quot;
+</span><span>    - &quot;</span><span style="color:#a3be8c;">443:443</span><span>&quot;
+</span><span>  </span><span style="color:#bf616a;">volumes</span><span>:
+</span><span>    - </span><span style="color:#a3be8c;">/var/run/docker.sock:/tmp/docker.sock:ro
+</span><span>
+</span><span>  </span><span style="color:#bf616a;">restart</span><span>: </span><span style="color:#a3be8c;">always
+</span><span>  </span><span style="color:#bf616a;">privileged</span><span>: </span><span style="color:#d08770;">true
+</span></code></pre>
+<ol>
+<li>Configure the domain name for app a.</li>
+<li>Configure the domain name for app b.</li>
+<li>From this line there is proxy configuration (copy/paste part).</li>
+<li>We tell docker-compose has to build Docker images within specified directory.</li>
+<li>For example, we are saying that docker-compose has to build a Docker image using ../b/Dockerfile file.</li>
+</ol>
+<h3 id="application-image-configuration">Application Image Configuration</h3>
+<h3 id="a-dockerfile">a/Dockerfile</h3>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#b48ead;">FROM</span><span> httpd:2.4                       # (1)
+</span><span style="color:#b48ead;">RUN </span><span>echo &quot;</span><span style="color:#a3be8c;">&lt;html&gt;&lt;body&gt;&lt;h1&gt;A&lt;/h1&gt;App A works!&lt;/body&gt;&lt;/html&gt;</span><span>&quot; &gt; /usr/local/apache2/htdocs/index.html  # (2)
+</span></code></pre>
+<ol>
+<li>We import an image with an apache server.</li>
+<li>It serves a file that prints "Host A" as default page.</li>
+</ol>
+<p>The configuration for application B is pretty much the same:</p>
+<h3 id="b-dockerfile">b/Dockerfile</h3>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#b48ead;">FROM</span><span> httpd:2.4
+</span><span style="color:#b48ead;">RUN </span><span>echo &quot;</span><span style="color:#a3be8c;">&lt;html&gt;&lt;body&gt;&lt;h1&gt;B&lt;/h1&gt;App B works!&lt;/body&gt;&lt;/html&gt;</span><span>&quot; &gt; /usr/local/apache2/htdocs/index.html
+</span></code></pre>
+<h3 id="adding-domain-names-to-your-development-environment-configuration">Adding domain names to your development environment configuration</h3>
+<p>In Linux we just have to map the local address to domain names you have chosen, in the example <code>a.domain.com</code> and <code>b.domain.com</code>.</p>
+<h3 id="etc-hosts">/etc/hosts</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">127.0.0.1</span><span>    localhost.localdomain localhost
+</span><span style="color:#bf616a;">::1</span><span>          localhost6.localdomain6 localhost6
+</span><span style="color:#bf616a;">127.0.0.1</span><span>    a.domain.com         </span><span style="color:#65737e;"># (1)
+</span><span style="color:#bf616a;">127.0.0.1</span><span>    b.domain.com
+</span></code></pre>
+<ol>
+<li>We just added last 2 lines.</li>
+</ol>
+<h3 id="everything-ready">Everything ready</h3>
+<p>Now we just have to test the example:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">docker-compose</span><span> build
+</span><span style="color:#bf616a;">docker-compose</span><span> up
+</span></code></pre>
+<p>The 3 containers are running now.</p>
+<p>So we can open our favorite web browser and go to <code>a.domain.com</code>. It will show <strong>App A works!</strong>. If we go to <code>b.domain.com</code> then we will see <strong>App B works!</strong>.</p>
+<p><img src="https://carlosvin.github.io/reverse-proxy-multidomain-docker/a.screenshot.png" alt="App A works!" /></p>
+<p><img src="https://carlosvin.github.io/reverse-proxy-multidomain-docker/b.screenshot.png" alt="App B works!" /></p>
+<blockquote>
+<p><strong>Note</strong>: In most of the Linux distros you will need privileges to run Docker commands (<code>sudo</code>).</p>
+</blockquote>
+
+  </section>
+
+  <footer>
+    <script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="title"
+      theme="github-light" crossorigin="anonymous" async defer>
+      </script>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2026 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" width="32"
+      height="32" />
+  </a>
+  <a href="https://carlosvin.github.io/atom.xml">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS" width="32" height="32">
+  </a>
+</span>
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>

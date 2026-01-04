@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  
+  <title>Golang over Java for REST services</title>
+
+  
+  
+  
+  <meta name="description" content="Why I&#x27;d pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang">
+  
+  <meta name="keywords" content="golang,java,rest,api,web-services,web services,gingonic,spring">
+  
+  <meta name="robots" content="index, follow">
+
+
+  <!-- Meta tags and OpenGraph metadata for SEO, social sharing, and browser configuration -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Carlos Martin Sanchez">
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="https://carlosvin.github.io/rss.xml">
+  
+
+  
+
+
+
+
+<meta property="og:title" content="Golang over Java for REST services">
+<meta property="og:description" content="Why I&#x27;d pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang">
+
+
+
+
+<link rel="canonical" href="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;">
+<meta property="og:url" content="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;">
+
+
+<meta property="og:type" content="article">
+
+
+<meta property="og:site_name" content="My software engineering journey">
+
+
+<meta property="og:locale" content="en_US">
+
+
+
+<meta property="article:published_time" content="2020-11-01T00:00:00Z">
+
+
+
+
+
+<meta property="article:tag" content="golang">
+
+<meta property="article:tag" content="java">
+
+<meta property="article:tag" content="rest">
+
+<meta property="article:tag" content="api">
+
+<meta property="article:tag" content="web-services">
+
+<meta property="article:tag" content="web services">
+
+<meta property="article:tag" content="gingonic">
+
+<meta property="article:tag" content="spring">
+
+
+
+
+
+
+<meta property="og:image" content="&#x2F;img&#x2F;android-chrome-192x192.png">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Golang over Java for REST services">
+<meta name="twitter:description" content="Why I&#x27;d pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang">
+
+<meta name="twitter:image" content="&#x2F;img&#x2F;android-chrome-192x192.png">
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io",
+      "name": "My software engineering journey",
+      "description": "Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers.",
+      "publisher": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https:&#x2F;&#x2F;carlosvin.github.io/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person",
+      "name": "Carlos Martin Sanchez",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io",
+      "sameAs": [
+        
+      ]
+    },
+    
+    {
+      "@type": "BlogPosting",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;/#article",
+      "isPartOf": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website"
+      },
+      "author": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "headline": "Golang over Java for REST services",
+      "description": "Why I&#x27;d pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang",
+      "datePublished": "2020-11-01T00:00:00Z",
+      "dateModified": "2020-11-01T00:00:00Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;"
+      },
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;",
+      "image": "&#x2F;img&#x2F;android-chrome-192x192.png",
+      "publisher": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "articleSection": "Blog",
+      "keywords": [
+        "golang",
+        "java",
+        "rest",
+        "api",
+        "web-services",
+        "web services",
+        "gingonic",
+        "spring"
+        
+      ],
+      "inLanguage": "en",
+      "wordCount": 1590,
+      "copyrightYear": 2020,
+      "copyrightHolder": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;",
+      "name": "Golang over Java for REST services",
+      "isPartOf": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website"
+      },
+      "about": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;/#article"
+      },
+      "description": "Why I&#x27;d pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang",
+      "breadcrumb": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;/#breadcrumb"
+      },
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": ["https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;"]
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https:&#x2F;&#x2F;carlosvin.github.io"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Golang over Java for REST services",
+          "item": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;rest-service-go-vs-java&#x2F;"
+        }
+        ]
+    }
+    
+  ]
+}
+</script>
+
+  <!-- Links to files -->
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css" rel=preconnect>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.lime.min.css" rel=preconnect>
+
+  <!-- Favicons -->
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.ico" sizes="any">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://carlosvin.github.io/img/android-chrome-192x192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="https://carlosvin.github.io/img/apple-touch-icon.png">
+
+  <link rel="manifest" href="https://carlosvin.github.io/manifest.json"> <!-- Scripts -->
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="b33a381d-0843-4a11-b306-74c285c39206"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.5.0/index.js"></script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <details class="dropdown">
+        <summary role="button" class="outline"><img src="https://carlosvin.github.io/img/android-chrome-192x192.png"
+            alt="Menu" style="height:2rem;vertical-align:middle;border-radius:8px;"></summary>
+        <ul>
+          
+          <li><a href="https://carlosvin.github.io/about">About</a></li>
+          
+          <li><a href="https://carlosvin.github.io/tags">Tags</a></li>
+          <li>
+            <label>
+              Dark
+              <input type="checkbox" data-toggle-theme="dark,light" role="switch">
+            </label>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <a href="https://carlosvin.github.io">My software engineering journey</a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+    </li>
+  </ul>
+
+</nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <hgroup>
+      <h1>Golang over Java for REST services</h1>
+      <p>
+        
+
+<time datetime="2020-11-01">
+    November 01, 2020
+</time>
+• <time datetime="PT8M">8 min read</time> • <data
+    value="1590">1590 words</data>
+      </p>
+      
+
+
+<span class="tags">
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/golang/' title="All the posts in golang"
+            role="button" class="secondary outline">
+            golang
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/java/' title="All the posts in java"
+            role="button" class="secondary outline">
+            java
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/rest/' title="All the posts in rest"
+            role="button" class="secondary outline">
+            rest
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/api/' title="All the posts in api"
+            role="button" class="secondary outline">
+            api
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/web-services/' title="All the posts in web-services"
+            role="button" class="secondary outline">
+            web-services
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/web-services/' title="All the posts in web services"
+            role="button" class="secondary outline">
+            web services
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/gingonic/' title="All the posts in gingonic"
+            role="button" class="secondary outline">
+            gingonic
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/spring/' title="All the posts in spring"
+            role="button" class="secondary outline">
+            spring
+            
+        </a>
+    </small>
+    
+</span>
+
+    </hgroup>
+  </header>
+
+  
+<aside class="sidebar">
+  <details class="dropdown">
+    <summary role="button" class="secondary">📑 Contents</summary>
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/rest-service-go-vs-java/#actual-project-examples">Actual project examples</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#source-code-for-the-2-rest-services-implementations">Source code for the 2 REST services implementations</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/rest-service-go-vs-java/#the-ecosystems">The Ecosystems</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/rest-service-go-vs-java/#routing">Routing</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#go-without-framework">Go - Without framework</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#go-gin-framework">Go - Gin Framework</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#java-spring-io">Java + Spring.io</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/rest-service-go-vs-java/#validations">Validations</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#go-gin-framework-validation">Go - Gin Framework Validation</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#java-spring-io-validation">Java + Spring.io Validation</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#filtering-and-middleware">Filtering and Middleware</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/rest-service-go-vs-java/#dependency-injection-ioc">Dependency injection &#x2F; IoC</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#spring-ioc">Spring IoC</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#go">Go</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/rest-service-go-vs-java/#testing">Testing</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#unit-tests">Unit tests</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#integration-tests">Integration tests</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/rest-service-go-vs-java/#performance">Performance</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#memory">Memory</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/rest-service-go-vs-java/#speed">Speed</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/rest-service-go-vs-java/#conclusions">Conclusions</a>
+        
+      </li>
+      
+    </ul>
+  </details>
+</aside>
+
+
+  <section class="post-content">
+    <p>Lately I've been working with two different technology stacks almost in parallel, in both cases we were using them to develop <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> services.</p>
+<p>During this time I've come up with some conclusions and opinions I'd like to share.</p>
+<p>A disclaimer, few months ago, I had several years of experience with Java and 0 days of professional experience with Golang.</p>
+<h2 id="actual-project-examples">Actual project examples</h2>
+<p>Few months ago I created <a href="https://github.com/carlosvin/covid-rest-go">an API to extract and structure COVID-19 data</a> from <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">ECDC website</a>. I developed it in <a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a>.</p>
+<p>Few months later I had the luck of work on my first professional project in <a href="https://golang.org">Go</a> and I decided to create a port of <a href="https://github.com/carlosvin/covid-rest-go">the API to extract COVID-19 data</a> in <a href="https://golang.org">Go</a>, just for learning and for fun.</p>
+<p>Now we have two REST services, almost functionally identical, but developed in two different tech stacks, so we can easily compare some relevant aspects of both.</p>
+<h3 id="source-code-for-the-2-rest-services-implementations">Source code for the 2 REST services implementations</h3>
+<table><thead><tr><th><a href="https://www.java.com">Java</a> + <a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a></th><th><a href="https://golang.org">Go</a> + <a href="https://github.com/gin-gonic/gin">Gin framework</a></th></tr></thead><tbody>
+<tr><td><a href="https://github.com/carlosvin/covid-rest">https://github.com/carlosvin/covid-rest</a></td><td><a href="https://github.com/carlosvin/covid-rest-go">https://github.com/carlosvin/covid-rest-go</a></td></tr>
+</tbody></table>
+<blockquote>
+<p><strong>Note</strong>: I actually created that <a href="https://github.com/carlosvin/covid-rest-go">COVID-19 data REST API</a> to be the data source for the <a href="https://covid-stats-pwa.netlify.app">COVID19-Stats App</a>, a <a href="https://web.dev/progressive-web-apps">PWA</a> built with <a href="https://svelte.dev">Svelte</a>, but that's another topic.</p>
+</blockquote>
+<h2 id="the-ecosystems">The Ecosystems</h2>
+<p>If you want to create a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> service just in plain Java you will have extra work to do, in Golang a little bit less. That's why we use framework, because they've already solved many common problems for us.</p>
+<p>For this comparison I am going to use <a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a> for <a href="https://www.java.com">Java</a> and <a href="https://github.com/gin-gonic/gin">Gin framework</a> for <a href="https://golang.org">Go</a>, but in both languages there are a lot of production ready nice options.</p>
+<h2 id="routing">Routing</h2>
+<h3 id="go-without-framework">Go - Without framework</h3>
+<p>Go uses the concept of <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> multiplexer or router. You can specify routes using patterns and link those routes to handlers. The router will decide which handler has to execute the request based on the path received.</p>
+<h4 id="router-go-file">router.go file</h4>
+<pre data-lang="go" style="background-color:#2b303b;color:#c0c5ce;" class="language-go "><code class="language-go" data-lang="go"><span style="color:#b48ead;">package </span><span style="color:#bf616a;">main
+</span><span>
+</span><span style="color:#b48ead;">import </span><span>(
+</span><span> &quot;</span><span style="color:#a3be8c;">log</span><span>&quot;
+</span><span> &quot;</span><span style="color:#a3be8c;">net/http</span><span>&quot;
+</span><span>)
+</span><span>
+</span><span style="color:#b48ead;">func </span><span style="color:#8fa1b3;">main</span><span>() {
+</span><span> </span><span style="color:#bf616a;">router </span><span>:= </span><span style="color:#bf616a;">http</span><span>.</span><span style="color:#bf616a;">NewServeMux</span><span>()
+</span><span> </span><span style="color:#bf616a;">router</span><span>.</span><span style="color:#bf616a;">Handle</span><span>(&quot;</span><span style="color:#a3be8c;">/redirect</span><span>&quot;, </span><span style="color:#bf616a;">http</span><span>.</span><span style="color:#bf616a;">RedirectHandler</span><span>(&quot;</span><span style="color:#a3be8c;">https://carlosvin.github.io/</span><span>&quot;, </span><span style="color:#d08770;">307</span><span>))
+</span><span> </span><span style="color:#bf616a;">router</span><span>.</span><span style="color:#bf616a;">HandleFunc</span><span>(&quot;</span><span style="color:#a3be8c;">/hello</span><span>&quot;, </span><span style="color:#b48ead;">func</span><span>(</span><span style="color:#bf616a;">w http</span><span>.</span><span style="color:#b48ead;">ResponseWriter</span><span>, </span><span style="color:#bf616a;">r </span><span>*</span><span style="color:#bf616a;">http</span><span>.</span><span style="color:#b48ead;">Request</span><span>) {
+</span><span>  </span><span style="color:#bf616a;">w</span><span>.</span><span style="color:#bf616a;">Write</span><span>([]</span><span style="color:#b48ead;">byte</span><span>(&quot;</span><span style="color:#a3be8c;">Hello world!</span><span>&quot;))
+</span><span> })
+</span><span> </span><span style="color:#bf616a;">log</span><span>.</span><span style="color:#bf616a;">Println</span><span>(&quot;</span><span style="color:#a3be8c;">Listening...</span><span>&quot;)
+</span><span> </span><span style="color:#bf616a;">http</span><span>.</span><span style="color:#bf616a;">ListenAndServe</span><span>(&quot;</span><span style="color:#a3be8c;">:3000</span><span>&quot;, </span><span style="color:#bf616a;">router</span><span>)
+</span><span>}
+</span></code></pre>
+<p>Source code is already quite simple, but there might more complex routing use cases.</p>
+<h3 id="go-gin-framework">Go - Gin Framework</h3>
+<p>Happily there are frameworks that help us to keep our base code simple, for example when we need to extract path parameters, which is quite common use case in <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a>s, we can use a routing library, I've used <a href="https://github.com/gorilla/mux">Gorilla Mux</a> and <a href="https://github.com/gin-gonic/gin">Gin framework</a> and I liked more <a href="https://github.com/gin-gonic/gin">Gin framework</a>.</p>
+<h4 id="full-example"><a href="https://github.com/carlosvin/covid-rest-go/blob/master/main.go">Full example</a></h4>
+<pre data-lang="go" style="background-color:#2b303b;color:#c0c5ce;" class="language-go "><code class="language-go" data-lang="go"><span style="color:#b48ead;">import </span><span>(
+</span><span> &quot;</span><span style="color:#a3be8c;">github.com/carlosvin/covid-rest-go/handlers</span><span>&quot;
+</span><span> &quot;</span><span style="color:#a3be8c;">github.com/carlosvin/covid-rest-go/readers</span><span>&quot;
+</span><span> &quot;</span><span style="color:#a3be8c;">github.com/gin-gonic/gin</span><span>&quot;
+</span><span>)
+</span><span>
+</span><span style="color:#b48ead;">func </span><span style="color:#8fa1b3;">main</span><span>() {
+</span><span> 
+</span><span> </span><span style="color:#65737e;">// ...
+</span><span>
+</span><span> </span><span style="color:#bf616a;">r </span><span>:= </span><span style="color:#bf616a;">gin</span><span>.</span><span style="color:#bf616a;">Default</span><span>()
+</span><span> </span><span style="color:#bf616a;">r</span><span>.</span><span style="color:#bf616a;">GET</span><span>(&quot;</span><span style="color:#a3be8c;">/countries</span><span>&quot;, </span><span style="color:#bf616a;">router</span><span>.</span><span style="color:#bf616a;">Countries</span><span>)
+</span><span> </span><span style="color:#bf616a;">r</span><span>.</span><span style="color:#bf616a;">GET</span><span>(&quot;</span><span style="color:#a3be8c;">/countries/:code</span><span>&quot;, </span><span style="color:#bf616a;">router</span><span>.</span><span style="color:#bf616a;">Country</span><span>)
+</span><span> </span><span style="color:#bf616a;">r</span><span>.</span><span style="color:#bf616a;">GET</span><span>(&quot;</span><span style="color:#a3be8c;">/countries/:code/dates</span><span>&quot;, </span><span style="color:#bf616a;">router</span><span>.</span><span style="color:#bf616a;">CountryDates</span><span>)
+</span><span> </span><span style="color:#bf616a;">r</span><span>.</span><span style="color:#bf616a;">GET</span><span>(&quot;</span><span style="color:#a3be8c;">/countries/:code/dates/:date</span><span>&quot;, </span><span style="color:#bf616a;">router</span><span>.</span><span style="color:#bf616a;">CountryDate</span><span>)
+</span><span> </span><span style="color:#bf616a;">r</span><span>.</span><span style="color:#bf616a;">Run</span><span>()
+</span><span>
+</span><span>}
+</span></code></pre>
+<h4 id="and-this-is-a-handler-example-the-router-countries-one"><a href="https://github.com/carlosvin/covid-rest-go/blob/master/handlers/countries.go">And this is a handler example</a>, the router.Countries one</h4>
+<pre data-lang="go" style="background-color:#2b303b;color:#c0c5ce;" class="language-go "><code class="language-go" data-lang="go"><span style="color:#b48ead;">func </span><span>(</span><span style="color:#bf616a;">r </span><span>*</span><span style="color:#b48ead;">routerImpl</span><span>) </span><span style="color:#8fa1b3;">Countries</span><span>(</span><span style="color:#bf616a;">c</span><span>*</span><span style="color:#bf616a;">gin</span><span>.</span><span style="color:#b48ead;">Context</span><span>) {
+</span><span> </span><span style="color:#bf616a;">c</span><span>.</span><span style="color:#bf616a;">JSON</span><span>(</span><span style="color:#d08770;">200</span><span>, </span><span style="color:#bf616a;">r</span><span>.</span><span style="color:#bf616a;">countries</span><span>())
+</span><span>}
+</span></code></pre>
+<h3 id="java-spring-io">Java + Spring.io</h3>
+<p>The <a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a> is based on the concept of Controller, it is implemented using annotations on the class and methods.</p>
+<h4 id="controller-example">Controller Example</h4>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span>@</span><span style="color:#bf616a;">Validated
+</span><span>@</span><span style="color:#bf616a;">RestController </span><span style="color:#65737e;">// (1)
+</span><span>@</span><span style="color:#bf616a;">RequestMapping</span><span>(&quot;</span><span style="color:#a3be8c;">/countries</span><span>&quot;) </span><span style="color:#65737e;">// (2)
+</span><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">CountriesController </span><span style="color:#eff1f5;">{
+</span><span style="color:#eff1f5;"> 
+</span><span style="color:#eff1f5;"> </span><span style="color:#65737e;">// Some source code is not shown, you can find the complete example in the repository 
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;"> @</span><span style="color:#bf616a;">GetMapping</span><span style="color:#eff1f5;">(</span><span>&quot;</span><span style="color:#a3be8c;">/{country}/dates/{isoDateStr}</span><span>&quot;</span><span style="color:#eff1f5;">)  </span><span style="color:#65737e;">// (3)
+</span><span style="color:#eff1f5;"> </span><span style="color:#b48ead;">public </span><span style="color:#ebcb8b;">DateStatsDto </span><span style="color:#8fa1b3;">getDateByCountry</span><span style="color:#eff1f5;">(@</span><span style="color:#bf616a;">Size</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">min </span><span>= </span><span style="color:#d08770;">2</span><span style="color:#eff1f5;">, </span><span style="color:#bf616a;">max </span><span>= </span><span style="color:#d08770;">2</span><span style="color:#eff1f5;">) @</span><span style="color:#bf616a;">PathVariable </span><span style="color:#ebcb8b;">String </span><span style="color:#bf616a;">country</span><span style="color:#eff1f5;">, @</span><span style="color:#bf616a;">Size</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">min </span><span>= </span><span style="color:#d08770;">10</span><span style="color:#eff1f5;">, </span><span style="color:#bf616a;">max </span><span>= </span><span style="color:#d08770;">20</span><span style="color:#eff1f5;">) @</span><span style="color:#bf616a;">PathVariable </span><span style="color:#ebcb8b;">String </span><span style="color:#bf616a;">isoDateStr</span><span style="color:#eff1f5;">) </span><span style="color:#b48ead;">throws </span><span style="color:#ebcb8b;">NotFoundException </span><span style="color:#eff1f5;">{
+</span><span style="color:#eff1f5;">  </span><span style="color:#b48ead;">return new </span><span style="color:#ebcb8b;">DateStatsDto</span><span style="color:#eff1f5;">(service.</span><span style="color:#bf616a;">getDate</span><span style="color:#eff1f5;">(country, </span><span style="color:#ebcb8b;">DateUtils</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">convert</span><span style="color:#eff1f5;">(isoDateStr)));
+</span><span style="color:#eff1f5;"> }
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">}
+</span></code></pre>
+<ol>
+<li>Declare the class as Controller so it is registered in <a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a></li>
+<li>Controller base path definition</li>
+<li>Handler definition for a nested path under the main controller path. <a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a> makes easy to extract path variables defined in the route, you can directly use them as method arguments.</li>
+</ol>
+<h2 id="validations">Validations</h2>
+<h3 id="go-gin-framework-validation">Go - Gin Framework Validation</h3>
+<p><a href="https://github.com/gin-gonic/gin">Gin framework</a> uses an external validation package <a href="https://godoc.org/github.com/go-playground/validator">validator</a>, besides that it is fully integrated with <a href="https://github.com/gin-gonic/gin">Gin framework</a>.</p>
+<pre data-lang="go" style="background-color:#2b303b;color:#c0c5ce;" class="language-go "><code class="language-go" data-lang="go"><span style="color:#b48ead;">type </span><span>User </span><span style="color:#b48ead;">struct </span><span>{
+</span><span> </span><span style="color:#bf616a;">Name  </span><span style="color:#b48ead;">string </span><span>`</span><span style="color:#a3be8c;">validate:&quot;required&quot;</span><span>` </span><span style="color:#65737e;">// (1)
+</span><span> </span><span style="color:#bf616a;">Email </span><span style="color:#b48ead;">string </span><span>`</span><span style="color:#a3be8c;">validate:&quot;required,email&quot;</span><span>`
+</span><span>}
+</span><span>
+</span><span style="color:#bf616a;">err </span><span>:= </span><span style="color:#bf616a;">validate</span><span>.</span><span style="color:#bf616a;">Struct</span><span>(</span><span style="color:#bf616a;">user</span><span>) </span><span style="color:#65737e;">// (2)
+</span><span style="color:#bf616a;">validationErrors </span><span>:= </span><span style="color:#bf616a;">err</span><span>.(</span><span style="color:#bf616a;">validator</span><span>.</span><span style="color:#b48ead;">ValidationErrors</span><span>) </span><span style="color:#65737e;">// (3)
+</span></code></pre>
+<ol>
+<li>The validation system uses <a href="https://golang.org">Go</a> tags, it is not the same as <a href="https://www.java.com">Java</a> annotations, but in the validation case, it works in pretty same way as annotations.</li>
+<li>Executes the validation explicitly</li>
+<li>Extracts validation errors</li>
+</ol>
+<h3 id="java-spring-io-validation">Java + Spring.io Validation</h3>
+<p>You can enable the validation in the controller level, then in the handlers you can also specify the type of validation. Let's explain it using the previous example:</p>
+<h4 id="countriescontroller-java-validation-example">CountriesController.java Validation Example</h4>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span>@</span><span style="color:#bf616a;">Validated </span><span style="color:#65737e;">// (1)
+</span><span>@</span><span style="color:#bf616a;">RestController
+</span><span>@</span><span style="color:#bf616a;">RequestMapping</span><span>(&quot;</span><span style="color:#a3be8c;">/countries</span><span>&quot;)
+</span><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">CountriesController </span><span style="color:#eff1f5;">{
+</span><span style="color:#eff1f5;"> 
+</span><span style="color:#eff1f5;"> </span><span style="color:#65737e;">// Some source code is not shown, you can find the complete example in the repository 
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;"> @</span><span style="color:#bf616a;">GetMapping</span><span style="color:#eff1f5;">(</span><span>&quot;</span><span style="color:#a3be8c;">/{country}/dates/{isoDateStr}</span><span>&quot;</span><span style="color:#eff1f5;">)
+</span><span style="color:#eff1f5;"> </span><span style="color:#b48ead;">public </span><span style="color:#ebcb8b;">DateStatsDto </span><span style="color:#8fa1b3;">getDateByCountry</span><span style="color:#eff1f5;">(
+</span><span style="color:#eff1f5;">  @</span><span style="color:#bf616a;">Size</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">min </span><span>= </span><span style="color:#d08770;">2</span><span style="color:#eff1f5;">, </span><span style="color:#bf616a;">max </span><span>= </span><span style="color:#d08770;">2</span><span style="color:#eff1f5;">) @</span><span style="color:#bf616a;">PathVariable </span><span style="color:#ebcb8b;">String </span><span style="color:#bf616a;">country</span><span style="color:#eff1f5;">, </span><span style="color:#65737e;">// (2)
+</span><span style="color:#eff1f5;">  @</span><span style="color:#bf616a;">Size</span><span style="color:#eff1f5;">(</span><span style="color:#bf616a;">min </span><span>= </span><span style="color:#d08770;">10</span><span style="color:#eff1f5;">, </span><span style="color:#bf616a;">max </span><span>= </span><span style="color:#d08770;">20</span><span style="color:#eff1f5;">) @</span><span style="color:#bf616a;">PathVariable </span><span style="color:#ebcb8b;">String </span><span style="color:#bf616a;">isoDateStr</span><span style="color:#eff1f5;">) </span><span style="color:#b48ead;">throws </span><span style="color:#ebcb8b;">NotFoundException </span><span style="color:#eff1f5;">{
+</span><span style="color:#eff1f5;">  </span><span style="color:#b48ead;">return new </span><span style="color:#ebcb8b;">DateStatsDto</span><span style="color:#eff1f5;">(service.</span><span style="color:#bf616a;">getDate</span><span style="color:#eff1f5;">(country, </span><span style="color:#ebcb8b;">DateUtils</span><span style="color:#eff1f5;">.</span><span style="color:#bf616a;">convert</span><span style="color:#eff1f5;">(isoDateStr)));
+</span><span style="color:#eff1f5;"> }
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">}
+</span></code></pre>
+<ol>
+<li>Declare the class as Controller so it is registered in <a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a></li>
+<li><code>@Size</code> validates that the input argument country has 2 characters</li>
+</ol>
+<p>The validation system is more powerful than you can see in this code snippet, for example adding <code>@Valid</code> annotation opens the door to complex types validation.</p>
+<h3 id="filtering-and-middleware">Filtering and Middleware</h3>
+<p>Different approaches, pretty much the same end result.</p>
+<p>I will elaborate this topic in following days.</p>
+<h2 id="dependency-injection-ioc">Dependency injection / IoC</h2>
+<h3 id="spring-ioc"><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators">Spring IoC</a></h3>
+<p><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators">Spring IoC</a> is the most complete and powerful systems I've ever used for <a href="https://en.wikipedia.org/wiki/Inversion_of_control">IoC</a>, actually, the first time I used Spring professionally was just to deal with <a href="https://en.wikipedia.org/wiki/Inversion_of_control">IoC</a>. It supports XML configuration files or <a href="https://www.java.com">Java</a> annotations, I like annotations more, here a simple example from <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators">Spring IoC</a> documentation:</p>
+<h4 id="spring-ioc-example">Spring IoC example</h4>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span>@</span><span style="color:#bf616a;">Repository
+</span><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">JpaMovieFinder </span><span style="color:#b48ead;">implements </span><span style="color:#a3be8c;">MovieFinder </span><span style="color:#eff1f5;">{ </span><span style="color:#65737e;">// (1)
+</span><span style="color:#eff1f5;">    </span><span style="color:#65737e;">// implementation elided for clarity
+</span><span style="color:#eff1f5;">}
+</span><span>
+</span><span style="color:#65737e;">//
+</span><span>
+</span><span style="color:#b48ead;">public class </span><span style="color:#ebcb8b;">SimpleMovieLister </span><span style="color:#eff1f5;">{
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">    </span><span style="color:#b48ead;">private </span><span style="color:#ebcb8b;">MovieFinder </span><span style="color:#eff1f5;">movieFinder;
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">    @</span><span style="color:#bf616a;">Autowired </span><span style="color:#65737e;">// (2)
+</span><span style="color:#eff1f5;">    </span><span style="color:#b48ead;">public void </span><span style="color:#8fa1b3;">setMovieFinder</span><span style="color:#eff1f5;">(</span><span style="color:#ebcb8b;">MovieFinder </span><span style="color:#bf616a;">movieFinder</span><span style="color:#eff1f5;">) {
+</span><span style="color:#eff1f5;">        </span><span style="color:#bf616a;">this</span><span style="color:#eff1f5;">.movieFinder </span><span>=</span><span style="color:#eff1f5;"> movieFinder;
+</span><span style="color:#eff1f5;">    }
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">    </span><span style="color:#65737e;">// ...
+</span><span style="color:#eff1f5;">
+</span><span style="color:#eff1f5;">}
+</span></code></pre>
+<ol>
+<li><code>JpaMovieFinder</code> is instantiated by <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators">Spring IoC</a></li>
+<li>With <code>@Autowired</code> annotation <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#beans-factory-collaborators">Spring IoC</a> knows that has to inject <code>movieFinder</code> argument. It should be a class implementing <code>MovieFinder</code></li>
+</ol>
+<h3 id="go">Go</h3>
+<p>Neither <a href="https://golang.org">Go</a> nor <a href="https://github.com/gin-gonic/gin">Gin framework</a> has any <a href="https://en.wikipedia.org/wiki/Inversion_of_control">IoC</a> solution, but you can still apply <a href="https://en.wikipedia.org/wiki/Dependency_injection">Dependency Injection</a> technique to decouple your components and improve the testability of your system.</p>
+<h4 id="dependency-injection-simple-example-in-go">Dependency injection simple example in <a href="https://golang.org">Go</a></h4>
+<pre data-lang="go" style="background-color:#2b303b;color:#c0c5ce;" class="language-go "><code class="language-go" data-lang="go"><span style="color:#b48ead;">package </span><span style="color:#bf616a;">main
+</span><span>
+</span><span style="color:#b48ead;">import </span><span>&quot;</span><span style="color:#a3be8c;">fmt</span><span>&quot;
+</span><span>
+</span><span style="color:#65737e;">// Greeter interface to greet the caller
+</span><span style="color:#b48ead;">type </span><span>Greeter </span><span style="color:#b48ead;">interface </span><span>{
+</span><span> </span><span style="color:#8fa1b3;">greet</span><span>()
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">type </span><span>greeterHello </span><span style="color:#b48ead;">struct</span><span>{}
+</span><span>
+</span><span style="color:#b48ead;">func </span><span>(</span><span style="color:#bf616a;">g </span><span>*</span><span style="color:#b48ead;">greeterHello</span><span>) </span><span style="color:#8fa1b3;">greet</span><span>() { </span><span style="color:#65737e;">// (3)
+</span><span> </span><span style="color:#bf616a;">fmt</span><span>.</span><span style="color:#bf616a;">Println</span><span>(&quot;</span><span style="color:#a3be8c;">Hello!</span><span>&quot;)
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">type </span><span>greeterHi </span><span style="color:#b48ead;">struct</span><span>{}
+</span><span>
+</span><span style="color:#b48ead;">func </span><span>(</span><span style="color:#bf616a;">g </span><span>*</span><span style="color:#b48ead;">greeterHi</span><span>) </span><span style="color:#8fa1b3;">greet</span><span>() { </span><span style="color:#65737e;">// (4)
+</span><span> </span><span style="color:#bf616a;">fmt</span><span>.</span><span style="color:#bf616a;">Println</span><span>(&quot;</span><span style="color:#a3be8c;">Hi!</span><span>&quot;)
+</span><span>}
+</span><span>
+</span><span style="color:#65737e;">// App Application representation
+</span><span style="color:#b48ead;">type </span><span>App </span><span style="color:#b48ead;">struct </span><span>{
+</span><span> </span><span style="color:#bf616a;">greeters </span><span>[]</span><span style="color:#b48ead;">Greeter </span><span style="color:#65737e;">// (1)
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">func </span><span>(</span><span style="color:#bf616a;">app </span><span>*</span><span style="color:#b48ead;">App</span><span>) </span><span style="color:#8fa1b3;">startup</span><span>() {
+</span><span> </span><span style="color:#b48ead;">for </span><span style="color:#bf616a;">_</span><span>, </span><span style="color:#bf616a;">v </span><span>:= </span><span style="color:#b48ead;">range </span><span style="color:#bf616a;">app</span><span>.</span><span style="color:#bf616a;">greeters </span><span>{
+</span><span>  </span><span style="color:#bf616a;">v</span><span>.</span><span style="color:#bf616a;">greet</span><span>()
+</span><span> }
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">func </span><span style="color:#8fa1b3;">main</span><span>() {
+</span><span> </span><span style="color:#bf616a;">greeters </span><span>:= []</span><span style="color:#b48ead;">Greeter</span><span>{ </span><span style="color:#65737e;">// (2)
+</span><span>  &amp;</span><span style="color:#bf616a;">greeterHello</span><span>{},
+</span><span>  &amp;</span><span style="color:#bf616a;">greeterHi</span><span>{},
+</span><span>  &amp;</span><span style="color:#bf616a;">greeterHello</span><span>{}}
+</span><span>
+</span><span> </span><span style="color:#bf616a;">app </span><span>:= &amp;</span><span style="color:#bf616a;">App</span><span>{</span><span style="color:#bf616a;">greeters</span><span>}
+</span><span>
+</span><span> </span><span style="color:#bf616a;">app</span><span>.</span><span style="color:#bf616a;">startup</span><span>()
+</span><span>}
+</span></code></pre>
+<ol>
+<li><code>App</code> accepts an array of <code>Greeter</code></li>
+<li>During <code>App</code> instantiation we pass different implementations of <code>Greeter</code></li>
+<li>Greeter implementation that prints <strong>Hello!</strong></li>
+<li>Greeter implementation that prints <strong>Hi!</strong></li>
+</ol>
+<p>It is more verbose, but there is an advantage, there is nothing hidden, everything is explicit and you have full control of instantiation order.</p>
+<p>As soon as you use <a href="https://en.wikipedia.org/wiki/Dependency_injection">Dependency Injection</a>, I don't have any strong opinion about using <a href="https://en.wikipedia.org/wiki/Inversion_of_control">IoC</a> system or doing <a href="https://en.wikipedia.org/wiki/Dependency_injection">Dependency Injection</a> manually.</p>
+<h2 id="testing">Testing</h2>
+<h3 id="unit-tests">Unit tests</h3>
+<p>For unit tests there are no big differences.</p>
+<p><a href="https://golang.org">Go</a> comes with a standard <a href="https://golang.org/pkg/testing/">library for testing and benchmarking</a>.</p>
+<p>For <a href="https://www.java.com">Java</a> there are many well-known unit testing frameworks, but Spring already has quite big support for <a href="https://docs.spring.io/spring-batch/docs/current/reference/html/testing.html">unit testing</a>.</p>
+<h3 id="integration-tests">Integration tests</h3>
+<h4 id="go-integration-testing">Go Integration Testing</h4>
+<p>There are no support for Integration Tests in <a href="https://golang.org">Go</a>, you will have to implement everything by yourself, although it is not difficult, <a href="https://kpat.io/2019/06/testing-with-gin/">here you can find a simple example</a>.</p>
+<h4 id="spring">Spring</h4>
+<p>On the other hand, <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/testing.html">Spring has a great testing support</a>.</p>
+<p>To write integration tests for <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</a> services, <a href="https://spring.io/guides/gs/testing-web/">MockMvc</a> is really convenient.</p>
+<p>I've used <a href="https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/carlosvin/covid/CountriesControllerTest.java">MockMvc in the covid-rest project</a>.</p>
+<h4 id="mockmvc-code-snippet-from-countriescontrollertest-java">MockMvc code snippet from <a href="https://github.com/carlosvin/covid-rest/blob/master/src/test/java/com/carlosvin/covid/CountriesControllerTest.java">CountriesControllerTest.java</a></h4>
+<pre data-lang="java" style="background-color:#2b303b;color:#c0c5ce;" class="language-java "><code class="language-java" data-lang="java"><span>@</span><span style="color:#bf616a;">Autowired
+</span><span style="color:#b48ead;">private </span><span style="color:#ebcb8b;">MockMvc</span><span> mockMvc; </span><span style="color:#65737e;">// (1)
+</span><span> 
+</span><span>@</span><span style="color:#bf616a;">Test
+</span><span>void </span><span style="color:#bf616a;">getCountries</span><span>() throws </span><span style="color:#ebcb8b;">Exception </span><span>{
+</span><span> </span><span style="color:#bf616a;">this</span><span>.mockMvc.</span><span style="color:#bf616a;">perform</span><span>(</span><span style="color:#bf616a;">get</span><span>(&quot;</span><span style="color:#a3be8c;">/countries</span><span>&quot;)) </span><span style="color:#65737e;">// (2)
+</span><span>   .</span><span style="color:#bf616a;">andDo</span><span>(</span><span style="color:#bf616a;">print</span><span>()).</span><span style="color:#bf616a;">andExpect</span><span>(</span><span style="color:#bf616a;">status</span><span>().</span><span style="color:#bf616a;">isOk</span><span>()) </span><span style="color:#65737e;">// (3)
+</span><span>   .</span><span style="color:#bf616a;">andExpect</span><span>(</span><span style="color:#bf616a;">jsonPath</span><span>(&quot;</span><span style="color:#a3be8c;">$.*</span><span>&quot;, </span><span style="color:#bf616a;">hasSize</span><span>(</span><span style="color:#d08770;">144</span><span>)))
+</span><span>   .</span><span style="color:#bf616a;">andExpect</span><span>(</span><span style="color:#bf616a;">jsonPath</span><span>(&quot;</span><span style="color:#a3be8c;">$.ES.confirmedCases</span><span>&quot;,</span><span style="color:#bf616a;">comparesEqualTo</span><span>(</span><span style="color:#d08770;">9191</span><span>)))
+</span><span>   .</span><span style="color:#bf616a;">andExpect</span><span>(</span><span style="color:#bf616a;">jsonPath</span><span>(&quot;</span><span style="color:#a3be8c;">$.ES.deathsNumber</span><span>&quot;, </span><span style="color:#bf616a;">comparesEqualTo</span><span>(</span><span style="color:#d08770;">309</span><span>)))
+</span><span>   .</span><span style="color:#bf616a;">andExpect</span><span>(</span><span style="color:#bf616a;">jsonPath</span><span>(&quot;</span><span style="color:#a3be8c;">$.ES.countryCode</span><span>&quot;, </span><span style="color:#bf616a;">comparesEqualTo</span><span>(&quot;</span><span style="color:#a3be8c;">ES</span><span>&quot;)))
+</span><span>   .</span><span style="color:#bf616a;">andExpect</span><span>(</span><span style="color:#bf616a;">jsonPath</span><span>(&quot;</span><span style="color:#a3be8c;">$.ES.countryName</span><span>&quot;, </span><span style="color:#bf616a;">comparesEqualTo</span><span>(&quot;</span><span style="color:#a3be8c;">Spain</span><span>&quot;)))
+</span><span>   .</span><span style="color:#bf616a;">andExpect</span><span>(</span><span style="color:#bf616a;">jsonPath</span><span>(&quot;</span><span style="color:#a3be8c;">$.ES.path</span><span>&quot;, </span><span style="color:#bf616a;">comparesEqualTo</span><span>(&quot;</span><span style="color:#a3be8c;">/countries/ES</span><span>&quot;)))
+</span><span>   .</span><span style="color:#bf616a;">andExpect</span><span>(</span><span style="color:#bf616a;">jsonPath</span><span>(&quot;</span><span style="color:#a3be8c;">$.VC.countryName</span><span>&quot;, </span><span style="color:#bf616a;">comparesEqualTo</span><span>(&quot;</span><span style="color:#a3be8c;">Saint Vincent and the Grenadines</span><span>&quot;)))
+</span><span>   .</span><span style="color:#bf616a;">andDo</span><span>(</span><span style="color:#bf616a;">document</span><span>(&quot;</span><span style="color:#a3be8c;">countries/list</span><span>&quot;, </span><span style="color:#bf616a;">preprocessResponse</span><span>(</span><span style="color:#bf616a;">prettyPrint</span><span>(), </span><span style="color:#b48ead;">new </span><span style="color:#ebcb8b;">CropPreprocessor</span><span>())));
+</span><span>}
+</span></code></pre>
+<ol>
+<li>The Spring test runner injects the MockMvc object.</li>
+<li>We use MockMvc to call to the endpoint we have created.</li>
+<li>Then we validate the endpoint response: status code and body.</li>
+</ol>
+<h2 id="performance">Performance</h2>
+<p>Besides the languages specific differences, the main difference is the performance. The CPU consumption in <a href="https://golang.org">Go</a> is smaller, but about the memory the difference is really significant, <strong>the order of 30 times smaller fingerprint</strong>.</p>
+<h3 id="memory">Memory</h3>
+<p>Here I've found a surprising difference, just by checking the memory consumption in my laptop.</p>
+<ul>
+<li><a href="https://github.com/gin-gonic/gin">Gin framework</a> <code>15.6MB</code></li>
+<li><a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a> <code>465.9MB</code></li>
+</ul>
+<p><img src="https://carlosvin.github.io/rest-service-go-vs-java/memory-consumption-go-java.png" alt="Memory consumption" /></p>
+<h3 id="speed">Speed</h3>
+<p>Following the <a href="https://www.techempower.com/benchmarks/">TechEmpower benchmarks</a>:</p>
+<ul>
+<li><a href="https://github.com/gin-gonic/gin">Gin framework</a> is in 193 position, 9.9%.</li>
+<li><a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a> is in 284 position, 4%.</li>
+</ul>
+<p>Following the <a href="https://github.com/the-benchmarker/web-frameworks">The Benchmarker results</a>:</p>
+<ul>
+<li><a href="https://github.com/gin-gonic/gin">Gin framework</a>: position 33.</li>
+<li><a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a>: position 68.</li>
+</ul>
+<h2 id="conclusions">Conclusions</h2>
+<p>If I were you, I'd choose <a href="https://golang.org">Go</a> if:</p>
+<ul>
+<li>If you value the explicit over implicit, keep in mind that there is a cost, you will most likely have to write more lines of code.</li>
+<li>If you value the simplicity, <a href="https://golang.org">Go</a> has a quite reduced set of keywords, which reduces the learning curve and simplifies the code reviews.</li>
+<li>If RAM memory usage is critical for your project, actually I'd just keep away from <a href="https://spring.io/guides/gs/rest-service">Spring Boot (REST)</a>.</li>
+<li>If the project you are going to work on is a distributed system, specially if it is based on <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>.</li>
+</ul>
+
+  </section>
+
+  <footer>
+    <script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="title"
+      theme="github-light" crossorigin="anonymous" async defer>
+      </script>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2026 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" width="32"
+      height="32" />
+  </a>
+  <a href="https://carlosvin.github.io/atom.xml">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS" width="32" height="32">
+  </a>
+</span>
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>

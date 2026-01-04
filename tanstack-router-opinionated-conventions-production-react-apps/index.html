@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  
+  <title>TanStack Router: Opinionated Guidelines for Production React Apps</title>
+
+  
+  
+  
+  <meta name="description" content="Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture.">
+  
+  <meta name="keywords" content="react,typescript,tanstack-router,frontend,web-development,architecture,tanstack router,routing,guidelines,type-safe routing,data fetching,state management,production-ready,vite,vitest,arktype,application architecture">
+  
+  <meta name="robots" content="index, follow">
+
+
+  <!-- Meta tags and OpenGraph metadata for SEO, social sharing, and browser configuration -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Carlos Martin Sanchez">
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="https://carlosvin.github.io/rss.xml">
+  
+
+  
+
+
+
+
+<meta property="og:title" content="TanStack Router: Opinionated Guidelines for Production React Apps">
+<meta property="og:description" content="Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture.">
+
+
+
+
+<link rel="canonical" href="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;">
+<meta property="og:url" content="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;">
+
+
+<meta property="og:type" content="article">
+
+
+<meta property="og:site_name" content="My software engineering journey">
+
+
+<meta property="og:locale" content="en_US">
+
+
+
+<meta property="article:published_time" content="2025-08-15T00:00:00Z">
+
+
+<meta property="article:modified_time" content="2025-08-30T00:00:00Z">
+
+
+
+
+<meta property="article:tag" content="react">
+
+<meta property="article:tag" content="typescript">
+
+<meta property="article:tag" content="tanstack-router">
+
+<meta property="article:tag" content="frontend">
+
+<meta property="article:tag" content="web-development">
+
+<meta property="article:tag" content="architecture">
+
+<meta property="article:tag" content="tanstack router">
+
+<meta property="article:tag" content="routing">
+
+<meta property="article:tag" content="guidelines">
+
+<meta property="article:tag" content="type-safe routing">
+
+<meta property="article:tag" content="data fetching">
+
+<meta property="article:tag" content="state management">
+
+<meta property="article:tag" content="production-ready">
+
+<meta property="article:tag" content="vite">
+
+<meta property="article:tag" content="vitest">
+
+<meta property="article:tag" content="arktype">
+
+<meta property="article:tag" content="application architecture">
+
+
+
+
+
+
+<meta property="og:image" content="&#x2F;img&#x2F;android-chrome-192x192.png">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TanStack Router: Opinionated Guidelines for Production React Apps">
+<meta name="twitter:description" content="Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture.">
+
+<meta name="twitter:image" content="&#x2F;img&#x2F;android-chrome-192x192.png">
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io",
+      "name": "My software engineering journey",
+      "description": "Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers.",
+      "publisher": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https:&#x2F;&#x2F;carlosvin.github.io/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person",
+      "name": "Carlos Martin Sanchez",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io",
+      "sameAs": [
+        
+      ]
+    },
+    
+    {
+      "@type": "BlogPosting",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;/#article",
+      "isPartOf": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website"
+      },
+      "author": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "headline": "TanStack Router: Opinionated Guidelines for Production React Apps",
+      "description": "Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture.",
+      "datePublished": "2025-08-15T00:00:00Z",
+      "dateModified": "2025-08-30T00:00:00Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;"
+      },
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;",
+      "image": "&#x2F;img&#x2F;android-chrome-192x192.png",
+      "publisher": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "articleSection": "Blog",
+      "keywords": [
+        "react",
+        "typescript",
+        "tanstack-router",
+        "frontend",
+        "web-development",
+        "architecture",
+        "tanstack router",
+        "routing",
+        "guidelines",
+        "type-safe routing",
+        "data fetching",
+        "state management",
+        "production-ready",
+        "vite",
+        "vitest",
+        "arktype",
+        "application architecture"
+        
+      ],
+      "inLanguage": "en",
+      "wordCount": 1196,
+      "copyrightYear": 2025,
+      "copyrightHolder": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;",
+      "name": "TanStack Router: Opinionated Guidelines for Production React Apps",
+      "isPartOf": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website"
+      },
+      "about": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;/#article"
+      },
+      "description": "Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture.",
+      "breadcrumb": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;/#breadcrumb"
+      },
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": ["https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;"]
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https:&#x2F;&#x2F;carlosvin.github.io"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "TanStack Router: Opinionated Guidelines for Production React Apps",
+          "item": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;tanstack-router-opinionated-conventions-production-react-apps&#x2F;"
+        }
+        ]
+    }
+    
+  ]
+}
+</script>
+
+  <!-- Links to files -->
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css" rel=preconnect>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.lime.min.css" rel=preconnect>
+
+  <!-- Favicons -->
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.ico" sizes="any">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://carlosvin.github.io/img/android-chrome-192x192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="https://carlosvin.github.io/img/apple-touch-icon.png">
+
+  <link rel="manifest" href="https://carlosvin.github.io/manifest.json"> <!-- Scripts -->
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="b33a381d-0843-4a11-b306-74c285c39206"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.5.0/index.js"></script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <details class="dropdown">
+        <summary role="button" class="outline"><img src="https://carlosvin.github.io/img/android-chrome-192x192.png"
+            alt="Menu" style="height:2rem;vertical-align:middle;border-radius:8px;"></summary>
+        <ul>
+          
+          <li><a href="https://carlosvin.github.io/about">About</a></li>
+          
+          <li><a href="https://carlosvin.github.io/tags">Tags</a></li>
+          <li>
+            <label>
+              Dark
+              <input type="checkbox" data-toggle-theme="dark,light" role="switch">
+            </label>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <a href="https://carlosvin.github.io">My software engineering journey</a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+    </li>
+  </ul>
+
+</nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <hgroup>
+      <h1>TanStack Router: Opinionated Guidelines for Production React Apps</h1>
+      <p>
+        
+
+<time datetime="2025-08-30">
+    August 30, 2025
+</time>
+• <time datetime="PT6M">6 min read</time> • <data
+    value="1196">1196 words</data>
+      </p>
+      
+
+
+<span class="tags">
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/react/' title="All the posts in react"
+            role="button" class="secondary outline">
+            react
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/typescript/' title="All the posts in typescript"
+            role="button" class="secondary outline">
+            typescript
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/tanstack-router/' title="All the posts in tanstack-router"
+            role="button" class="secondary outline">
+            tanstack-router
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/frontend/' title="All the posts in frontend"
+            role="button" class="secondary outline">
+            frontend
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/web-development/' title="All the posts in web-development"
+            role="button" class="secondary outline">
+            web-development
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/architecture/' title="All the posts in architecture"
+            role="button" class="secondary outline">
+            architecture
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/tanstack-router/' title="All the posts in tanstack router"
+            role="button" class="secondary outline">
+            tanstack router
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/routing/' title="All the posts in routing"
+            role="button" class="secondary outline">
+            routing
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/guidelines/' title="All the posts in guidelines"
+            role="button" class="secondary outline">
+            guidelines
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/type-safe-routing/' title="All the posts in type-safe routing"
+            role="button" class="secondary outline">
+            type-safe routing
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/data-fetching/' title="All the posts in data fetching"
+            role="button" class="secondary outline">
+            data fetching
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/state-management/' title="All the posts in state management"
+            role="button" class="secondary outline">
+            state management
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/production-ready/' title="All the posts in production-ready"
+            role="button" class="secondary outline">
+            production-ready
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/vite/' title="All the posts in vite"
+            role="button" class="secondary outline">
+            vite
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/vitest/' title="All the posts in vitest"
+            role="button" class="secondary outline">
+            vitest
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/arktype/' title="All the posts in arktype"
+            role="button" class="secondary outline">
+            arktype
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/application-architecture/' title="All the posts in application architecture"
+            role="button" class="secondary outline">
+            application architecture
+            
+        </a>
+    </small>
+    
+</span>
+
+    </hgroup>
+  </header>
+
+  
+<aside class="sidebar">
+  <details class="dropdown">
+    <summary role="button" class="secondary">📑 Contents</summary>
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#chosen-tech-stack">Chosen tech stack</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#typescript">Typescript</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#e2e-type-safe-arktype-tanstack-router-openapi-fetch">E2E type safe: Arktype + TanStack router + openapi-fetch</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#testing-vitest-react-testing-library">Testing: Vitest + React testing library</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#project-guidelines">Project guidelines</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#use-search-params-to-keep-page-state">Use search params to keep page state</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#interacting-with-the-backend">Interacting with the backend</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#data-fetching-loaders">Data fetching - Loaders</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#mutations">Mutations</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#styling">Styling</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#leverage-nested-routing-to-show-nested-components">Leverage nested routing to show nested components</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#leverage-the-default-router-cache">Leverage the default router cache</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#using-router-history">Using router history</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/#project-structure">Project structure</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+    </ul>
+  </details>
+</aside>
+
+
+  <section class="post-content">
+    <p>This post captures a practical way to implement a React application using TanStack Router. It focuses on maintainability, predictable data flows, and ergonomics for both reading and writing code.</p>
+<ul>
+<li><a href="https://github.com/carlosvin/tanstack-router-prod-app">🔗 GitHub Repository</a></li>
+<li><a href="https://carlosvin.github.io/tanstack-router-prod-app/">🚀 Live Preview</a></li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong><br />
+The guidelines and recommendations in this guide are based on our real-world experience building a new internal application as the Sales Apps Team at <a href="https://www.mongodb.com">MongoDB</a>. They reflect lessons learned and best practices developed throughout that process.</p>
+</blockquote>
+<h2 id="chosen-tech-stack">Chosen tech stack</h2>
+<h3 id="typescript">Typescript</h3>
+<p>Faster and safer development: Our goal was to catch bugs as early as possible—ideally at compile time, together with a next level developer experience. This approach not only reduces runtime errors but also makes refactoring and onboarding significantly easier.</p>
+<blockquote>
+<p><strong>Note:</strong><br />
+In my experience, well-documented project or team guidelines have an even greater positive impact on onboarding than end-to-end typing alone.</p>
+</blockquote>
+<p>We can see some examples of next level code assistance enabled by TypeScript in tools like <a href="https://arktype.io/">Arktype</a>, <a href="https://tanstack.com/router/latest">TanStack Router</a>, or <a href="https://github.com/drwpow/openapi-typescript">openapi-typescript</a>.</p>
+<h3 id="e2e-type-safe-arktype-tanstack-router-openapi-fetch">E2E type safe: Arktype + TanStack router + openapi-fetch</h3>
+<p>Any input to our application will be validated and typed, there are different data inputs that can affect our application state:</p>
+<ul>
+<li>
+<p><strong>Search params</strong>: TanStack Router offers robust, type-safe search param validation out of the box. We use <a href="https://arktype.io/">Arktype</a> for runtime validation, which integrates seamlessly with TanStack Router—see <a href="https://tanstack.com/router/latest/docs/framework/react/guide/search-params#arktype">this concise, powerful example</a>.</p>
+</li>
+<li>
+<p><strong>Backend</strong>: In this case we generate a typed client from the backend <a href="https://swagger.io/docs/specification/v3_0/about/">OpenAPI spec</a> with <a href="https://openapi-ts.dev/openapi-fetch/"><code>openapi-fetch</code></a>. All backend interactions are handled exclusively through this generated client, ensuring type safety and consistency across the app.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong><br />
+For teams seeking an extra layer of runtime validation, tools like <a href="https://arktype.io/">Arktype</a> can be used to validate backend responses. However, in our experience—especially as maintainers of both the backend and frontend—this has proven unnecessary. With well-maintained OpenAPI specs, semantic versioning, and strong type generation, we've yet to encounter bugs caused by a mismatch between expected and actual responses. Unless your backend is managed by a separate team or you frequently encounter contract drift, runtime validation with Arktype is likely not needed in this case.</p>
+</blockquote>
+<h3 id="testing-vitest-react-testing-library">Testing: Vitest + React testing library</h3>
+<p>Here the choices are quite obvious:</p>
+<ul>
+<li><a href="https://vitest.dev/">Vitest</a> because it is the go-to testing framework if you are using <a href="https://vitejs.dev/">Vite</a>.</li>
+<li><a href="https://testing-library.com/docs/">Testing Library</a> for intuitive, user-focused component tests.</li>
+</ul>
+<h2 id="project-guidelines">Project guidelines</h2>
+<h3 id="use-search-params-to-keep-page-state">Use search params to keep <strong>page</strong> state</h3>
+<p>Favor search params over component state for sharable, restorable URLs. This reduces ad‑hoc <code>useState</code> and makes the page state linkable.</p>
+<p>This guideline is one of the easiest and most impactful decisions we have made:</p>
+<ul>
+<li>Being able for our users to share exactly the same data via URLs was really important and we get this for free.</li>
+<li>If we want to change the page state, we just navigate to change search params:</li>
+</ul>
+<pre data-lang="tsx" style="background-color:#2b303b;color:#c0c5ce;" class="language-tsx "><code class="language-tsx" data-lang="tsx"><span style="color:#b48ead;">import </span><span>{ </span><span style="color:#bf616a;">createFileRoute </span><span>} </span><span style="color:#b48ead;">from </span><span>&#39;</span><span style="color:#a3be8c;">@tanstack/react-router</span><span>&#39;
+</span><span style="color:#b48ead;">import </span><span>{ </span><span style="color:#bf616a;">type </span><span>} </span><span style="color:#b48ead;">from </span><span>&#39;</span><span style="color:#a3be8c;">arktype</span><span>&#39;
+</span><span>
+</span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">productSearchSchema </span><span>= </span><span style="color:#8fa1b3;">type</span><span>({
+</span><span>    page: &#39;</span><span style="color:#a3be8c;">number = 1</span><span>&#39;,
+</span><span>})
+</span><span>
+</span><span style="color:#b48ead;">export const </span><span style="color:#bf616a;">Route </span><span>= </span><span style="color:#8fa1b3;">createFileRoute</span><span>(&#39;</span><span style="color:#a3be8c;">/shop/products/</span><span>&#39;)({
+</span><span>    validateSearch: </span><span style="color:#bf616a;">productSearchSchema</span><span>,
+</span><span>    </span><span style="color:#8fa1b3;">loaderDeps</span><span>: ({ </span><span style="color:#bf616a;">search</span><span>: { </span><span style="color:#bf616a;">page </span><span>} }) </span><span style="color:#b48ead;">=&gt; </span><span>({ </span><span style="color:#bf616a;">page </span><span>}),
+</span><span>    </span><span style="color:#8fa1b3;">loader</span><span>: ({ </span><span style="color:#bf616a;">deps</span><span>: { </span><span style="color:#bf616a;">page </span><span>} }) </span><span style="color:#b48ead;">=&gt; </span><span style="color:#8fa1b3;">fetchProducts</span><span>({ </span><span style="color:#bf616a;">page </span><span>}),
+</span><span>})
+</span><span>
+</span><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">Products </span><span>() {
+</span><span>    </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">navigate </span><span>= </span><span style="color:#bf616a;">Route</span><span>.</span><span style="color:#8fa1b3;">useNavigate</span><span>()
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">handleChangePage</span><span>(</span><span style="color:#bf616a;">page</span><span>: number) {
+</span><span>        </span><span style="color:#65737e;">// here we are just updating the query
+</span><span>        </span><span style="color:#8fa1b3;">navigate</span><span>({ </span><span style="color:#8fa1b3;">search</span><span>: (</span><span style="color:#bf616a;">prev</span><span>) </span><span style="color:#b48ead;">=&gt; </span><span>({...</span><span style="color:#bf616a;">prev</span><span>, </span><span style="color:#bf616a;">page</span><span>})})
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>When the navigation is performed, the loader will be called again to fetch the products in the new page. If the route was already loaded, then it will use the cached data.</p>
+<p>Page state is fully type safe, always accessible, and can be as complex as needed. For example, this URL encodes all state to list products on page 2, 100 per page, sorted by ascending price, searching "water ski":<br />
+<code>/shop/products?page=2&amp;itemsPerPage=100&amp;sort=asc&amp;query=water ski&amp;sortBy=price</code><br />
+Share this URL and everyone sees the exact same state.</p>
+<p>If I want to change the state, will only have to navigate sort by date in descending order:</p>
+<pre data-lang="diff" style="background-color:#2b303b;color:#c0c5ce;" class="language-diff "><code class="language-diff" data-lang="diff"><span style="color:#bf616a;">-`/shop/products?page=2&amp;itemsPerPage=100&amp;sort=asc&amp;query=water ski&amp;sortBy=price`  
+</span><span style="color:#a3be8c;">+`/shop/products?page=2&amp;itemsPerPage=100&amp;sort=desc&amp;query=water ski&amp;sortBy=date`  
+</span></code></pre>
+<blockquote>
+<p><strong>Note:</strong><br />
+Component-level state management will still be necessary for UI interactions (e.g., form inputs, toggle states, loading indicators). This guideline specifically applies to maintaining the <strong>current page state</strong>—the data and filters that define what content is displayed and should be shareable via URL.</p>
+</blockquote>
+<h3 id="interacting-with-the-backend">Interacting with the backend</h3>
+<p>Keep backend calls thin and predictable. Recommended approach:</p>
+<ul>
+<li>Generate a typed client from your OpenAPI spec (e.g., with <code>openapi-fetch</code>).</li>
+<li>Wrap responses in a small helper that normalizes errors into a single <code>AppError</code> shape your UI can consume.</li>
+</ul>
+<p>Example shape returned by <code>processResponse</code>:</p>
+<pre data-lang="ts" style="background-color:#2b303b;color:#c0c5ce;" class="language-ts "><code class="language-ts" data-lang="ts"><span style="color:#b48ead;">type </span><span>AppError = {
+</span><span>    </span><span style="color:#bf616a;">title</span><span>: string
+</span><span>    </span><span style="color:#bf616a;">description</span><span>?: string
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">type </span><span>Processed&lt;T&gt; = { </span><span style="color:#bf616a;">data</span><span>?: T; </span><span style="color:#bf616a;">error</span><span>?: AppError }
+</span><span>
+</span><span style="color:#b48ead;">async function </span><span style="color:#8fa1b3;">getProduct</span><span>(</span><span style="color:#bf616a;">productId</span><span>: string) {
+</span><span>    </span><span style="color:#65737e;">// response.data: only present if 2XX response
+</span><span>    </span><span style="color:#65737e;">// response.error: only present if 4XX or 5XX response
+</span><span>    </span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">response </span><span>= </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">client</span><span>.</span><span style="color:#8fa1b3;">GET</span><span>(&quot;</span><span style="color:#a3be8c;">/products/{product_id}</span><span>&quot;, {
+</span><span>        params: {
+</span><span>            path: { product_id: </span><span style="color:#bf616a;">productId </span><span>},
+</span><span>        },
+</span><span>    })
+</span><span>
+</span><span>    </span><span style="color:#65737e;">// Here is where we try to convert the error into an AppError unified interface
+</span><span>    </span><span style="color:#b48ead;">const </span><span>{ </span><span style="color:#bf616a;">data</span><span>, </span><span style="color:#bf616a;">error </span><span>} = </span><span style="color:#8fa1b3;">processResponse</span><span>({ </span><span style="color:#bf616a;">response</span><span>, action: `</span><span style="color:#a3be8c;">Fetching product ${</span><span style="color:#bf616a;">productId</span><span style="color:#a3be8c;">}</span><span>`})
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">return </span><span>{
+</span><span>        </span><span style="color:#bf616a;">data</span><span>,
+</span><span>        </span><span style="color:#bf616a;">error
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<h3 id="data-fetching-loaders">Data fetching - Loaders</h3>
+<p><strong>Leverage <a href="https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#route-loaders">route loaders</a> when possible</strong> because they simplify data flows:</p>
+<ul>
+<li>Avoid most data contexts/hooks for reads; when the route renders, data is ready to pass down</li>
+<li>Built‑in caching based on declared <a href="https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#dependency-based-stale-while-revalidate-caching">dependencies</a>.</li>
+</ul>
+<h4 id="exceptions-in-loaders">Exceptions in loaders</h4>
+<p>Throw in loaders (e.g., <code>AppError</code>) so route error components handle failures consistently. Centralize error typing so UIs can show banners/toasts with <code>title</code> and <code>description</code>.</p>
+<p>This is just convenient, because of <a href="https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#handling-errors-with-routeoptionserrorcomponent">TanStack Error Components</a>.</p>
+<p>Applying this pattern, fetching a product now throws on error for cleaner loader usage:</p>
+<pre data-lang="ts" style="background-color:#2b303b;color:#c0c5ce;" class="language-ts "><code class="language-ts" data-lang="ts"><span>
+</span><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">getProduct</span><span>(</span><span style="color:#bf616a;">productId</span><span>: string) {
+</span><span>    </span><span style="color:#65737e;">// ... same code as in the example above, the only change is below
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(</span><span style="color:#bf616a;">error</span><span>) {
+</span><span>        </span><span style="color:#b48ead;">throw </span><span style="color:#bf616a;">error
+</span><span>    }
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">data
+</span><span>}
+</span></code></pre>
+<h3 id="mutations">Mutations</h3>
+<p>Mutation functions are similar to fetchers but generally <strong>should NOT throw exceptions</strong>. They're invoked from event handlers, and <strong>throwing loses error type information</strong>. Return a <code>{ data, error }</code> object instead.</p>
+<p>🚫 Ideally, we want to avoid having to inspect or discriminate error types at runtime:</p>
+<pre data-lang="ts" style="background-color:#2b303b;color:#c0c5ce;" class="language-ts "><code class="language-ts" data-lang="ts"><span style="color:#b48ead;">try </span><span>{
+</span><span>    </span><span style="color:#b48ead;">throw </span><span>new NotFoundError(&#39;</span><span style="color:#a3be8c;">Not Found</span><span>&#39;, </span><span style="color:#d08770;">404</span><span>);
+</span><span>} </span><span style="color:#b48ead;">catch </span><span>(</span><span style="color:#bf616a;">error</span><span>: unknown) {
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(</span><span style="color:#bf616a;">error </span><span>instanceof NotFoundError) {
+</span><span>        </span><span style="color:#ebcb8b;">console</span><span>.</span><span style="color:#96b5b4;">log</span><span>(&#39;</span><span style="color:#a3be8c;">The object was not found</span><span>&#39;, </span><span style="color:#bf616a;">error</span><span>.</span><span style="color:#bf616a;">objectId</span><span>);
+</span><span>    } </span><span style="color:#b48ead;">else </span><span>{
+</span><span>        </span><span style="color:#ebcb8b;">console</span><span>.</span><span style="color:#96b5b4;">log</span><span>(`</span><span style="color:#a3be8c;">Caught something else: ${</span><span style="color:#bf616a;">error</span><span style="color:#a3be8c;">}</span><span>`);
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>✅ Using the mutation in a route component:</p>
+<pre data-lang="ts" style="background-color:#2b303b;color:#c0c5ce;" class="language-ts "><code class="language-ts" data-lang="ts"><span style="color:#b48ead;">async function </span><span style="color:#8fa1b3;">handleDelete</span><span>(</span><span style="color:#bf616a;">productId</span><span>: string) {
+</span><span>    </span><span style="color:#b48ead;">const </span><span>{ </span><span style="color:#bf616a;">data</span><span>, </span><span style="color:#bf616a;">error </span><span>} = </span><span style="color:#b48ead;">await </span><span style="color:#8fa1b3;">deleteProduct</span><span>(</span><span style="color:#bf616a;">productId</span><span>)
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(</span><span style="color:#bf616a;">error</span><span>) {
+</span><span>        </span><span style="color:#65737e;">// The error has a title and description attributes
+</span><span>        </span><span style="color:#8fa1b3;">pushToast</span><span>({ variant: &#39;</span><span style="color:#a3be8c;">warning</span><span>&#39;, ...</span><span style="color:#bf616a;">error </span><span>})
+</span><span>    } </span><span style="color:#b48ead;">else </span><span>{
+</span><span>        </span><span style="color:#8fa1b3;">pushToast</span><span>({
+</span><span>            variant: &#39;</span><span style="color:#a3be8c;">success</span><span>&#39;,
+</span><span>            title: &#39;</span><span style="color:#a3be8c;">Deleted!</span><span>&#39;,
+</span><span>            description: `</span><span style="color:#a3be8c;">Product ${</span><span style="color:#bf616a;">productId</span><span style="color:#a3be8c;">}</span><span>`
+</span><span>        })
+</span><span>        </span><span style="color:#65737e;">// Invalidate so the loader re-fetches the page state
+</span><span>        </span><span style="color:#bf616a;">router</span><span>.</span><span style="color:#8fa1b3;">invalidate</span><span>()
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<h3 id="styling">Styling</h3>
+<p>Use CSS Modules for simplicity. Create <code>Component.module.css</code> next to <code>Component.tsx</code>. Vite handles it out of the box, no extra config needed.</p>
+<pre data-lang="tsx" style="background-color:#2b303b;color:#c0c5ce;" class="language-tsx "><code class="language-tsx" data-lang="tsx"><span style="color:#65737e;">// HomeLayout.tsx
+</span><span>
+</span><span style="color:#b48ead;">import </span><span style="color:#bf616a;">classes </span><span style="color:#b48ead;">from </span><span>&#39;</span><span style="color:#a3be8c;">./HomeLayout.module.css</span><span>&#39;
+</span><span>
+</span><span style="color:#b48ead;">export default function </span><span style="color:#8fa1b3;">HomeLayout</span><span>() {
+</span><span>    </span><span style="color:#b48ead;">return </span><span>(
+</span><span>        &lt;</span><span style="color:#bf616a;">div </span><span style="color:#d08770;">className</span><span>=</span><span style="color:#ab7967;">{</span><span style="color:#bf616a;">classes</span><span>.</span><span style="color:#bf616a;">homeContainer</span><span style="color:#ab7967;">}</span><span>&gt;
+</span><span>        &lt;</span><span style="color:#bf616a;">h2 </span><span style="color:#d08770;">className</span><span>=</span><span style="color:#ab7967;">{</span><span style="color:#bf616a;">classes</span><span>.</span><span style="color:#bf616a;">mainTitle</span><span style="color:#ab7967;">}</span><span>&gt;Welcome!&lt;/</span><span style="color:#bf616a;">h2</span><span>&gt;
+</span><span>        &lt;/</span><span style="color:#bf616a;">div</span><span>&gt;
+</span><span>    )
+</span><span>}
+</span></code></pre>
+<h3 id="leverage-nested-routing-to-show-nested-components">Leverage nested routing to show nested components</h3>
+<p>If a nested component isn't rendered by default (e.g., a modal), make it a nested route instead of toggling hidden UI state.</p>
+<p>Benefits:</p>
+<ul>
+<li>Clear separation of concerns; no need to render hidden components</li>
+<li>Nested routes can access parent loader data</li>
+<li>Lazy loading is straightforward</li>
+<li>Recoverable app state via URLs (e.g., <code>/products</code> vs <code>/products/new</code> for opening a modal)</li>
+</ul>
+<h4 id="avoid-calling-a-loader-when-the-parent-already-loaded-the-data">Avoid calling a loader when the parent already loaded the data</h4>
+<p>In nested routes, reuse parent data:</p>
+<pre data-lang="tsx" style="background-color:#2b303b;color:#c0c5ce;" class="language-tsx "><code class="language-tsx" data-lang="tsx"><span style="color:#b48ead;">const </span><span>{ </span><span style="color:#bf616a;">currentUser </span><span>} = </span><span style="color:#8fa1b3;">useLoaderData</span><span>({ from: &#39;</span><span style="color:#a3be8c;">__root__</span><span>&#39; })
+</span></code></pre>
+<h3 id="leverage-the-default-router-cache">Leverage the default router cache</h3>
+<p>The built‑in cache works well by default. After a mutation followed by navigation, you may want to <code>router.invalidate()</code> to refetch fresh data.</p>
+<h4 id="improve-performance-by-setting-only-the-needed-loader-deps">Improve performance by setting only the needed loader deps</h4>
+<p>The dependencies are also part of the caching mechanism, and only the selected search params will re-fetch data.</p>
+<pre data-lang="tsx" style="background-color:#2b303b;color:#c0c5ce;" class="language-tsx "><code class="language-tsx" data-lang="tsx"><span style="color:#b48ead;">const </span><span style="color:#bf616a;">productsIndexSchema </span><span>= </span><span style="color:#8fa1b3;">type</span><span>({
+</span><span>    page: &#39;</span><span style="color:#a3be8c;">number = 1</span><span>&#39;,
+</span><span>    sort: &#39;</span><span style="color:#a3be8c;">&quot;newest&quot; | &quot;oldest&quot; | &quot;price&quot; = &quot;newest&quot;</span><span>&#39;,
+</span><span>    condensedView: &#39;</span><span style="color:#a3be8c;">boolean = false</span><span>&#39;,
+</span><span>})
+</span><span>
+</span><span style="color:#65737e;">// /routes/products.tsx
+</span><span style="color:#b48ead;">export const </span><span style="color:#bf616a;">Route </span><span>= </span><span style="color:#8fa1b3;">createFileRoute</span><span>(&#39;</span><span style="color:#a3be8c;">/products</span><span>&#39;)({
+</span><span>    validateSearch: </span><span style="color:#bf616a;">productsIndexSchema</span><span>,
+</span><span>    </span><span style="color:#8fa1b3;">loaderDeps</span><span>: ({ </span><span style="color:#bf616a;">search</span><span>: { </span><span style="color:#bf616a;">page</span><span>, </span><span style="color:#bf616a;">sort </span><span>} }) </span><span style="color:#b48ead;">=&gt; </span><span>({ </span><span style="color:#bf616a;">page</span><span>, </span><span style="color:#bf616a;">sort </span><span>}),
+</span><span>    </span><span style="color:#8fa1b3;">loader</span><span>: ({ </span><span style="color:#bf616a;">deps</span><span>: { </span><span style="color:#bf616a;">page</span><span>, </span><span style="color:#bf616a;">sort </span><span>} }) </span><span style="color:#b48ead;">=&gt;
+</span><span>        </span><span style="color:#8fa1b3;">fetchProducts</span><span>({
+</span><span>            </span><span style="color:#bf616a;">page</span><span>,
+</span><span>            </span><span style="color:#bf616a;">sort</span><span>,
+</span><span>        }),
+</span><span>})
+</span></code></pre>
+<p>In this example, updating the state to display a more condensed view does not trigger a data refetch, since <code>condensedView</code> is not included in the <code>loaderDeps</code>. This means the loader will not re-run when only the view mode changes, optimizing performance by avoiding unnecessary network requests.</p>
+<pre data-lang="tsx" style="background-color:#2b303b;color:#c0c5ce;" class="language-tsx "><code class="language-tsx" data-lang="tsx"><span style="color:#65737e;">// This is not making the loader to re-fetch data, because condensedView is not defined in the loaderDeps
+</span><span style="color:#bf616a;">Route</span><span>.</span><span style="color:#96b5b4;">navigate</span><span>({ </span><span style="color:#8fa1b3;">search</span><span>: ({</span><span style="color:#bf616a;">prev</span><span>}) </span><span style="color:#b48ead;">=&gt; </span><span>({...</span><span style="color:#bf616a;">prev</span><span>, condensedView: </span><span style="color:#d08770;">true</span><span>})})
+</span></code></pre>
+<h3 id="using-router-history">Using router history</h3>
+<p>Use history navigation when it reflects user intent (e.g., closing a modal):</p>
+<ul>
+<li>Simpler than reconstructing <code>navigate</code> calls with params and search state</li>
+<li>Preserves cache/state more often; if you do need fresh data (e.g., post‑mutation), invalidate</li>
+</ul>
+<h3 id="project-structure">Project structure</h3>
+<ul>
+<li><code>src</code>
+<ul>
+<li><code>assets</code>: public assets</li>
+<li><code>components</code>: React components; each usually has its own folder with styles and tests</li>
+<li><code>hooks</code>: custom React hooks</li>
+<li><code>routes</code>: TanStack Router routes (route tree definitions and pages)</li>
+<li><code>services</code>
+<ul>
+<li><code>api</code>: wrappers around backend interactions; see fetch/mutation sections</li>
+<li><code>schemas</code>: <code>arktype</code> schema definitions</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </section>
+
+  <footer>
+    <script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="title"
+      theme="github-light" crossorigin="anonymous" async defer>
+      </script>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2026 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" width="32"
+      height="32" />
+  </a>
+  <a href="https://carlosvin.github.io/atom.xml">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS" width="32" height="32">
+  </a>
+</span>
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>

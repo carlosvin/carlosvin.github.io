@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  
+  
+  <title>Filesystem in C++17</title>
+
+  
+  
+  
+  <meta name="description" content="We are going to analyze with examples new filesystem features coming with C++17">
+  
+  <meta name="keywords" content="cpp,cpp17,filesystem,c++,c++11,c++17,io">
+  
+  <meta name="robots" content="index, follow">
+
+
+  <!-- Meta tags and OpenGraph metadata for SEO, social sharing, and browser configuration -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Carlos Martin Sanchez">
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="https://carlosvin.github.io/rss.xml">
+  
+
+  
+
+
+
+
+<meta property="og:title" content="Filesystem in C++17">
+<meta property="og:description" content="We are going to analyze with examples new filesystem features coming with C++17">
+
+
+
+
+<link rel="canonical" href="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;">
+<meta property="og:url" content="https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;">
+
+
+<meta property="og:type" content="article">
+
+
+<meta property="og:site_name" content="My software engineering journey">
+
+
+<meta property="og:locale" content="en_US">
+
+
+
+<meta property="article:published_time" content="2017-05-28T00:00:00Z">
+
+
+
+
+
+<meta property="article:tag" content="cpp">
+
+<meta property="article:tag" content="cpp17">
+
+<meta property="article:tag" content="filesystem">
+
+<meta property="article:tag" content="c++">
+
+<meta property="article:tag" content="c++11">
+
+<meta property="article:tag" content="c++17">
+
+<meta property="article:tag" content="io">
+
+
+
+
+
+
+<meta property="og:image" content="&#x2F;img&#x2F;android-chrome-192x192.png">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Filesystem in C++17">
+<meta name="twitter:description" content="We are going to analyze with examples new filesystem features coming with C++17">
+
+<meta name="twitter:image" content="&#x2F;img&#x2F;android-chrome-192x192.png">
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io",
+      "name": "My software engineering journey",
+      "description": "Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers.",
+      "publisher": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https:&#x2F;&#x2F;carlosvin.github.io/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person",
+      "name": "Carlos Martin Sanchez",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io",
+      "sameAs": [
+        
+      ]
+    },
+    
+    {
+      "@type": "BlogPosting",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;/#article",
+      "isPartOf": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website"
+      },
+      "author": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "headline": "Filesystem in C++17",
+      "description": "We are going to analyze with examples new filesystem features coming with C++17",
+      "datePublished": "2017-05-28T00:00:00Z",
+      "dateModified": "2017-05-28T00:00:00Z",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;"
+      },
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;",
+      "image": "&#x2F;img&#x2F;android-chrome-192x192.png",
+      "publisher": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      },
+      "articleSection": "Blog",
+      "keywords": [
+        "cpp",
+        "cpp17",
+        "filesystem",
+        "c++",
+        "c++11",
+        "c++17",
+        "io"
+        
+      ],
+      "inLanguage": "en",
+      "wordCount": 655,
+      "copyrightYear": 2017,
+      "copyrightHolder": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#person"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;",
+      "url": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;",
+      "name": "Filesystem in C++17",
+      "isPartOf": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io/#website"
+      },
+      "about": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;/#article"
+      },
+      "description": "We are going to analyze with examples new filesystem features coming with C++17",
+      "breadcrumb": {
+        "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;/#breadcrumb"
+      },
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": ["https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;"]
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https:&#x2F;&#x2F;carlosvin.github.io"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Filesystem in C++17",
+          "item": "https:&#x2F;&#x2F;carlosvin.github.io&#x2F;recursive-directory-iterator&#x2F;"
+        }
+        ]
+    }
+    
+  ]
+}
+</script>
+
+  <!-- Links to files -->
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css" rel=preconnect>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.lime.min.css" rel=preconnect>
+
+  <!-- Favicons -->
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.ico" sizes="any">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://carlosvin.github.io/img/android-chrome-192x192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="https://carlosvin.github.io/img/apple-touch-icon.png">
+
+  <link rel="manifest" href="https://carlosvin.github.io/manifest.json"> <!-- Scripts -->
+  <script type="speculationrules">
+    {
+    "prerender": [
+        {
+        "where": {
+            "selector_matches": "a"
+        }
+        }
+    ]
+    }
+  </script>
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="b33a381d-0843-4a11-b306-74c285c39206"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer async></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.5.0/index.js"></script>
+</head>
+
+<body class="container">
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <details class="dropdown">
+        <summary role="button" class="outline"><img src="https://carlosvin.github.io/img/android-chrome-192x192.png"
+            alt="Menu" style="height:2rem;vertical-align:middle;border-radius:8px;"></summary>
+        <ul>
+          
+          <li><a href="https://carlosvin.github.io/about">About</a></li>
+          
+          <li><a href="https://carlosvin.github.io/tags">Tags</a></li>
+          <li>
+            <label>
+              Dark
+              <input type="checkbox" data-toggle-theme="dark,light" role="switch">
+            </label>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <a href="https://carlosvin.github.io">My software engineering journey</a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <input id="search" type="search" placeholder="Search the posts" aria-label="Search">
+    </li>
+  </ul>
+
+</nav>
+    <div class="search-container">
+      <div class="search-results">
+        <div class="search-results__items"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header>
+    <hgroup>
+      <h1>Filesystem in C++17</h1>
+      <p>
+        
+
+<time datetime="2017-05-28">
+    May 28, 2017
+</time>
+• <time datetime="PT4M">4 min read</time> • <data
+    value="655">655 words</data>
+      </p>
+      
+
+
+<span class="tags">
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/cpp/' title="All the posts in cpp"
+            role="button" class="secondary outline">
+            cpp
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/cpp17/' title="All the posts in cpp17"
+            role="button" class="secondary outline">
+            cpp17
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/filesystem/' title="All the posts in filesystem"
+            role="button" class="secondary outline">
+            filesystem
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/c/' title="All the posts in c++"
+            role="button" class="secondary outline">
+            c++
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/c-11/' title="All the posts in c++11"
+            role="button" class="secondary outline">
+            c++11
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/c-17/' title="All the posts in c++17"
+            role="button" class="secondary outline">
+            c++17
+            
+        </a>
+    </small>
+    
+    
+    <small>
+        <a href='https://carlosvin.github.io/tags/io/' title="All the posts in io"
+            role="button" class="secondary outline">
+            io
+            
+        </a>
+    </small>
+    
+</span>
+
+    </hgroup>
+  </header>
+
+  
+<aside class="sidebar">
+  <details class="dropdown">
+    <summary role="button" class="secondary">📑 Contents</summary>
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/recursive-directory-iterator/#introduction">Introduction</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/recursive-directory-iterator/#gettting-started-with-experimental-filesystem-features-c-17-g">Gettting started with Experimental Filesystem Features C++17 (g++)</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/recursive-directory-iterator/#compile-and-run-basic-c-17-example">Compile and run: Basic C++17 example</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/recursive-directory-iterator/#c-17-filesystem-features">C++17 Filesystem Features</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/recursive-directory-iterator/#std-filesystem-path">std::filesystem::path</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/recursive-directory-iterator/#directory-separator">Directory separator</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/recursive-directory-iterator/#directory-separator-operator">Directory Separator Operator</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/recursive-directory-iterator/#create-remove-directories">Create&#x2F;Remove Directories</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/recursive-directory-iterator/#full-example-recursive-directory-iterator">Full example: Recursive Directory Iterator</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/recursive-directory-iterator/#c-11">C++11</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/recursive-directory-iterator/#c-17">C++17</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+    </ul>
+  </details>
+</aside>
+
+
+  <section class="post-content">
+    <h2 id="introduction">Introduction</h2>
+<p>Since C++17 new filesystem abstractions will be added to C++ environment. So far they are available as <a href="https://en.cppreference.com/w/cpp/experimental">Experimental C++ Features</a>. If you want to dig more about this new library, here it is the <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4100.pdf">final draft of File System Technical Specification</a>.</p>
+<h2 id="gettting-started-with-experimental-filesystem-features-c-17-g">Gettting started with Experimental Filesystem Features C++17 (g++)</h2>
+<p>We just have to "tell" compiler that:</p>
+<ul>
+<li>we write C++17 (<code>-c++1z</code>) and</li>
+<li>it has to add <em>standard library with filesystem library</em> (<code>-lstdc++fs</code>).</li>
+</ul>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">g++ -std</span><span>=c++1z main.cpp</span><span style="color:#bf616a;"> -lstdc</span><span>++fs &amp;&amp; </span><span style="color:#bf616a;">./a.out
+</span></code></pre>
+<p>Let's see a simple example with <code>std::filesystem::path</code> class.</p>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">experimental/filesystem</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">namespace </span><span>fs = std::experimental::filesystem;
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main</span><span>()
+</span><span>{
+</span><span>    fs::path </span><span style="color:#bf616a;">aPath </span><span>{&quot;</span><span style="color:#a3be8c;">./path/to/file.txt</span><span>&quot;};
+</span><span>
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">Parent path: </span><span>&quot; &lt;&lt; aPath.</span><span style="color:#bf616a;">parent_path</span><span>() &lt;&lt; endl;
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">Filename: </span><span>&quot; &lt;&lt; aPath.</span><span style="color:#bf616a;">filename</span><span>() &lt;&lt; endl;
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">Extension: </span><span>&quot; &lt;&lt; aPath.</span><span style="color:#bf616a;">extension</span><span>() &lt;&lt; endl;
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<h3 id="compile-and-run-basic-c-17-example"><a href="https://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7">Compile and run: Basic C++17 example</a></h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">$</span><span> g++</span><span style="color:#bf616a;"> -std</span><span>=c++1z main.cpp</span><span style="color:#bf616a;"> -lstdc</span><span>++fs &amp;&amp; </span><span style="color:#bf616a;">./a.out
+</span><span style="color:#bf616a;">$</span><span> ./a.out
+</span><span>
+</span><span style="color:#bf616a;">Parent</span><span> path: &quot;</span><span style="color:#a3be8c;">./path/to</span><span>&quot;
+</span><span style="color:#bf616a;">Filename: </span><span>&quot;</span><span style="color:#a3be8c;">file.txt</span><span>&quot;
+</span><span style="color:#bf616a;">Extension: </span><span>&quot;</span><span style="color:#a3be8c;">.txt</span><span>&quot;
+</span></code></pre>
+<h2 id="c-17-filesystem-features">C++17 Filesystem Features</h2>
+<p>In this section, we are going to explain some <a href="https://en.cppreference.com/w/cpp/filesystem">std::filesystem</a> features with examples, which will help us to highlight differences between C++11 and C++17 so we can get a better idea about what this new library will supply and how it might make developer's work easier.</p>
+<h3 id="std-filesystem-path">std::filesystem::path</h3>
+<p>Upper we have seen a tiny <a href="https://coliru.stacked-crooked.com/a/9f8bebb8b7f0fbe7">use case for std::filesystem::path</a>. That is a quite powerful and convenient feature that supplies an multi-platform abstraction for paths to files using the correct directory path separator depending on the platform we are building our application for (<code>\</code> for Windows based systems and <code>/</code> for Unix based systems).</p>
+<h3 id="directory-separator">Directory separator</h3>
+<p>When we want our application to use the correct directory separator in C++11, we could use conditional macro declaration:</p>
+<h4 id="platform-independent-directory-separator-in-c-11">Platform independent directory separator in C++11</h4>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span>
+</span><span style="color:#b48ead;">#ifdef</span><span> _WIN32
+</span><span style="color:#b48ead;">const</span><span> string SEP = &quot;</span><span style="color:#96b5b4;">\\</span><span>&quot;;
+</span><span style="color:#b48ead;">#else
+</span><span style="color:#b48ead;">const</span><span> string SEP = &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;;
+</span><span style="color:#b48ead;">#endif
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main</span><span>()
+</span><span>{
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">Separator in my system </span><span>&quot; &lt;&lt; SEP &lt;&lt; endl;
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<p><a href="https://coliru.stacked-crooked.com/a/5023ee989105fc54">Compile and run: C++11 separator example</a>.</p>
+<h4 id="platform-independent-directory-separator-in-c-17-cleaner-and-simpler">Platform independent directory separator in C++17. Cleaner and simpler</h4>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">experimental/filesystem</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">namespace </span><span>fs = std::experimental::filesystem;
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main</span><span>()
+</span><span>{
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">Separator in my system </span><span>&quot; &lt;&lt; fs::path::preferred_separator &lt;&lt; endl;
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<p><a href="https://coliru.stacked-crooked.com/a/1f2f63b3f5597d05">Compile and run: C++17 separator example</a>.</p>
+<h3 id="directory-separator-operator">Directory Separator Operator</h3>
+<p><a href="https://en.cppreference.com/w/cpp/filesystem/path">std::filesystem::path</a> implements <code>/</code> operator, which allows to easily concatenate paths to files and directories.</p>
+<p>When we want to concatenate paths in C++11, we have to add extra logic to avoid adding duplicate separators and to select the correct separator for target platform:</p>
+<h4 id="concatenate-paths-in-c-11">Concatenate paths in C++11</h4>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span>
+</span><span style="color:#b48ead;">#ifdef</span><span> _WIN32
+</span><span style="color:#b48ead;">const</span><span> string SEP = &quot;</span><span style="color:#96b5b4;">\\</span><span>&quot;;
+</span><span style="color:#b48ead;">#else
+</span><span style="color:#b48ead;">const</span><span> string SEP = &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;;
+</span><span style="color:#b48ead;">#endif
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main</span><span>()
+</span><span>{
+</span><span>    string </span><span style="color:#bf616a;">root </span><span>{&quot;</span><span style="color:#a3be8c;">/</span><span>&quot;};
+</span><span>    string </span><span style="color:#bf616a;">dir </span><span>{&quot;</span><span style="color:#a3be8c;">var/www/</span><span>&quot;};
+</span><span>    string </span><span style="color:#bf616a;">index </span><span>{&quot;</span><span style="color:#a3be8c;">index.html</span><span>&quot;};
+</span><span>
+</span><span>    string </span><span style="color:#bf616a;">pathToIndex</span><span>{};
+</span><span>    pathToIndex.</span><span style="color:#bf616a;">append</span><span>(root).</span><span style="color:#bf616a;">append</span><span>(SEP).</span><span style="color:#bf616a;">append</span><span>(dir).</span><span style="color:#bf616a;">append</span><span>(SEP).</span><span style="color:#bf616a;">append</span><span>(index);
+</span><span>
+</span><span>    cout &lt;&lt; pathToIndex &lt;&lt; endl;
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<h4 id="compile-and-run-concatenate-paths-in-c-11"><a href="https://coliru.stacked-crooked.com/a/290b278ec1de9573">Compile and run: Concatenate paths in C++11</a></h4>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">//var/www//index.html
+</span></code></pre>
+<p>Checking program output we notice it is not fully correct, we should have checked whether path parts already contains a separator so we don't append another separator again. That logic is already implemented in <a href="https://en.cppreference.com/w/cpp/filesystem/path">std::filesystem::path</a>, so C++17 can be like:</p>
+<h4 id="concatenate-paths-in-c-17">Concatenate paths in C++17</h4>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">experimental/filesystem</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">namespace </span><span>fs = std::experimental::filesystem;
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main</span><span>()
+</span><span>{
+</span><span>    fs::path </span><span style="color:#bf616a;">root </span><span>{&quot;</span><span style="color:#a3be8c;">/</span><span>&quot;};
+</span><span>    fs::path </span><span style="color:#bf616a;">dir </span><span>{&quot;</span><span style="color:#a3be8c;">var/www/</span><span>&quot;};
+</span><span>    fs::path </span><span style="color:#bf616a;">index </span><span>{&quot;</span><span style="color:#a3be8c;">index.html</span><span>&quot;};
+</span><span>
+</span><span>    fs::path pathToIndex = root / dir / index;
+</span><span>
+</span><span>    cout &lt;&lt; pathToIndex &lt;&lt; endl;
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<h4 id="compile-and-run-concatenate-paths-in-c-17"><a href="https://coliru.stacked-crooked.com/a/a24d50875b4daad1">Compile and run: Concatenate paths in C++17</a></h4>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span>&quot;</span><span style="color:#a3be8c;">/var/www/index.html</span><span>&quot;
+</span></code></pre>
+<p>Code is cleaner and just correct, there are no duplicated separators.</p>
+<h3 id="create-remove-directories">Create/Remove Directories</h3>
+<p><a href="https://en.cppreference.com/w/cpp/filesystem">std::filesystem</a> comes with some utilities to create and remove files and directories, but firstly let's try to do so in C++11.</p>
+<h4 id="create-and-remove-nested-directories-in-c-11">Create and remove nested directories in C++11</h4>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">cstdio</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">sys/stat.h</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main</span><span>()
+</span><span>{
+</span><span>    </span><span style="color:#b48ead;">auto</span><span> opts = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
+</span><span>    </span><span style="color:#bf616a;">mkdir</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox</span><span>&quot;, opts);
+</span><span>    </span><span style="color:#bf616a;">mkdir</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/a</span><span>&quot;, opts);
+</span><span>    </span><span style="color:#bf616a;">mkdir</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/a/b</span><span>&quot;, opts);
+</span><span>    </span><span style="color:#bf616a;">mkdir</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/c</span><span>&quot;, opts);
+</span><span>    </span><span style="color:#bf616a;">mkdir</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/c/d</span><span>&quot;, opts);
+</span><span>
+</span><span>    </span><span style="color:#96b5b4;">system</span><span>(&quot;</span><span style="color:#a3be8c;">ls -la sandbox/*</span><span>&quot;);
+</span><span>
+</span><span>    </span><span style="color:#96b5b4;">remove</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/c/d</span><span>&quot;);
+</span><span>    </span><span style="color:#96b5b4;">remove</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/a/b</span><span>&quot;);
+</span><span>    </span><span style="color:#96b5b4;">remove</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/c</span><span>&quot;);
+</span><span>    </span><span style="color:#96b5b4;">remove</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/a</span><span>&quot;);
+</span><span>    </span><span style="color:#96b5b4;">remove</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox</span><span>&quot;);
+</span><span>
+</span><span>    </span><span style="color:#96b5b4;">system</span><span>(&quot;</span><span style="color:#a3be8c;">ls -la</span><span>&quot;);
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<h4 id="compile-and-run-create-and-remove-directories-c-11"><a href="https://coliru.stacked-crooked.com/a/26f4763ec5b42adb">Compile and run: Create and remove directories C++11</a></h4>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">g++-4.9 -std</span><span>=c++11 main.cpp</span><span style="color:#bf616a;"> -lm </span><span>&amp;&amp; </span><span style="color:#bf616a;">./a.out
+</span><span style="color:#bf616a;">sandbox/a:
+</span><span style="color:#bf616a;">total</span><span> 12
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 3 2001 2000 4096 May 28 12:27 .
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 4 2001 2000 4096 May 28 12:27 ..
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 2 2001 2000 4096 May 28 12:27 b
+</span><span>
+</span><span style="color:#bf616a;">sandbox/c:
+</span><span style="color:#bf616a;">total</span><span> 12
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 3 2001 2000 4096 May 28 12:27 .
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 4 2001 2000 4096 May 28 12:27 ..
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 2 2001 2000 4096 May 28 12:27 d
+</span><span style="color:#bf616a;">total</span><span> 8012
+</span><span style="color:#bf616a;">drwxrwxrwx</span><span> 2 2001 2000    4096 May 28 12:27 .
+</span><span style="color:#bf616a;">drwxrwxrwx</span><span> 3 2002 2000 8175616 May 28 12:27 ..
+</span><span style="color:#bf616a;">-rwxr-xr-x</span><span> 1 2001 2000    8168 May 28 12:27 a.out
+</span><span style="color:#bf616a;">-rw-rw-rw-</span><span> 1 2001 2000     517 May 28 12:27 main.cpp
+</span></code></pre>
+<p>We have to create/remove one by one. We could rewrite this code snippet with less lines (using a loop), but we still have to pay attention to creation/deletion order, we cannot remove parent directory before we have removed all children.</p>
+<p>Since C++17, we can create and remove nested directories with just one call.</p>
+<h4 id="create-and-remove-nested-directories-c-17">Create and remove nested directories C++17</h4>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">experimental/filesystem</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">namespace </span><span>fs = std::experimental::filesystem;
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main</span><span>()
+</span><span>{
+</span><span>    fs::</span><span style="color:#bf616a;">create_directories</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/a/b</span><span>&quot;);
+</span><span>    fs::</span><span style="color:#bf616a;">create_directories</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/c/d</span><span>&quot;);
+</span><span>    </span><span style="color:#96b5b4;">system</span><span>(&quot;</span><span style="color:#a3be8c;">ls -la sandbox/*</span><span>&quot;);
+</span><span>
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">Were directories removed? </span><span>&quot; &lt;&lt; fs::</span><span style="color:#bf616a;">remove_all</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox</span><span>&quot;) &lt;&lt; endl;
+</span><span>    </span><span style="color:#96b5b4;">system</span><span>(&quot;</span><span style="color:#a3be8c;">ls -la</span><span>&quot;);
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<h4 id="compile-and-run-create-and-remove-nested-directories-c-17"><a href="https://coliru.stacked-crooked.com/a/62c2d22fa0e7144c">Compile and run: Create and remove nested directories C++17</a></h4>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">g++ -std</span><span>=c++1z</span><span style="color:#bf616a;"> -fconcepts -fgnu-tm  -O2 -Wall -Wextra -pedantic -pthread -pedantic-errors</span><span> main.cpp</span><span style="color:#bf616a;"> -lm  -latomic -lstdc</span><span>++fs &amp;&amp; </span><span style="color:#bf616a;">./a.out
+</span><span style="color:#bf616a;">sandbox/a:
+</span><span style="color:#bf616a;">total</span><span> 12
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 3 2001 2000 4096 May 28 16:45 .
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 4 2001 2000 4096 May 28 16:45 ..
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 2 2001 2000 4096 May 28 16:45 b
+</span><span>
+</span><span style="color:#bf616a;">sandbox/c:
+</span><span style="color:#bf616a;">total</span><span> 12
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 3 2001 2000 4096 May 28 16:45 .
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 4 2001 2000 4096 May 28 16:45 ..
+</span><span style="color:#bf616a;">drwxr-xr-x</span><span> 2 2001 2000 4096 May 28 16:45 d
+</span><span style="color:#bf616a;">Were</span><span> directories removed? 1
+</span><span style="color:#bf616a;">total</span><span> 10132
+</span><span style="color:#bf616a;">drwxrwxrwx</span><span> 2 2001 2000    4096 May 28 16:45 .
+</span><span style="color:#bf616a;">drwxrwxrwx</span><span> 3 2002 2000 8175616 May 28 16:45 ..
+</span><span style="color:#bf616a;">-rwxr-xr-x</span><span> 1 2001 2000 2170976 May 28 16:45 a.out
+</span><span style="color:#bf616a;">-rw-rw-rw-</span><span> 1 2001 2000     393 May 28 16:45 main.cpp
+</span></code></pre>
+<h2 id="full-example-recursive-directory-iterator">Full example: Recursive Directory Iterator</h2>
+<p>This example consists of iterate recursively through dicrectories fintering files by extension.</p>
+<h3 id="c-11">C++11</h3>
+<p>To keep C++11 example simple, I haven't added filtering  logic, but filtering logic is present in C++17 example:</p>
+<h4 id="filesystem-11-cpp">filesystem.11.cpp</h4>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">dirent.h</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">cstring</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">iostream</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">fstream</span><span>&gt; </span><span style="color:#65737e;">// std::ofstream
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">vector</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">memory</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">system_error</span><span>&gt;
+</span><span style="color:#b48ead;">#include </span><span>&lt;</span><span style="color:#a3be8c;">sys/stat.h</span><span>&gt;
+</span><span>
+</span><span style="color:#b48ead;">using namespace</span><span> std;
+</span><span>
+</span><span style="color:#b48ead;">const</span><span> string UP_DIR = &quot;</span><span style="color:#a3be8c;">..</span><span>&quot;;
+</span><span style="color:#b48ead;">const</span><span> string CURRENT_DIR = &quot;</span><span style="color:#a3be8c;">.</span><span>&quot;;
+</span><span style="color:#b48ead;">const</span><span> string SEP = &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;;
+</span><span>
+</span><span>
+</span><span>string </span><span style="color:#8fa1b3;">path</span><span>(initializer_list&lt;string&gt; </span><span style="color:#bf616a;">parts</span><span>) 
+</span><span>{
+</span><span>    string </span><span style="color:#bf616a;">pathTmp </span><span>{};
+</span><span>    string separator = &quot;&quot;;
+</span><span>    </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">auto </span><span>&amp; part: parts) 
+</span><span>    {
+</span><span>        pathTmp.</span><span style="color:#bf616a;">append</span><span>(separator).</span><span style="color:#bf616a;">append</span><span>(part);
+</span><span>        separator = SEP;
+</span><span>    }
+</span><span>    </span><span style="color:#b48ead;">return</span><span> pathTmp;
+</span><span>}
+</span><span>
+</span><span>vector&lt;string&gt; </span><span style="color:#8fa1b3;">getDirectoryFiles</span><span>(</span><span style="color:#b48ead;">const</span><span> string&amp; </span><span style="color:#bf616a;">dir</span><span>, </span><span style="color:#b48ead;">const</span><span> vector&lt;string&gt; &amp; </span><span style="color:#bf616a;">extensions</span><span>) 
+</span><span>{
+</span><span>    vector&lt;string&gt; files;
+</span><span>    shared_ptr&lt;DIR&gt; </span><span style="color:#bf616a;">directory_ptr</span><span>(</span><span style="color:#bf616a;">opendir</span><span>(dir.</span><span style="color:#bf616a;">c_str</span><span>()), [](DIR* dir){ dir &amp;&amp; </span><span style="color:#bf616a;">closedir</span><span>(dir); });
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(!directory_ptr) 
+</span><span>    {
+</span><span>        </span><span style="color:#b48ead;">throw </span><span style="color:#bf616a;">system_error</span><span>(</span><span style="color:#bf616a;">error_code</span><span>(errno, </span><span style="color:#bf616a;">system_category</span><span>()), &quot;</span><span style="color:#a3be8c;">Error opening : </span><span>&quot; + dir);
+</span><span>    }
+</span><span> 
+</span><span>    </span><span style="color:#b48ead;">struct</span><span> dirent *dirent_ptr;
+</span><span>    </span><span style="color:#b48ead;">while </span><span>((dirent_ptr = </span><span style="color:#bf616a;">readdir</span><span>(directory_ptr.</span><span style="color:#bf616a;">get</span><span>())) != </span><span style="color:#d08770;">nullptr</span><span>) 
+</span><span>    {
+</span><span>        </span><span style="color:#b48ead;">const</span><span> string </span><span style="color:#bf616a;">fileName </span><span>{dirent_ptr-&gt;</span><span style="color:#bf616a;">d_name</span><span>};
+</span><span>        </span><span style="color:#b48ead;">if </span><span>(dirent_ptr-&gt;</span><span style="color:#bf616a;">d_type </span><span>== DT_DIR) 
+</span><span>        {
+</span><span>            </span><span style="color:#b48ead;">if </span><span>(CURRENT_DIR != fileName &amp;&amp; UP_DIR != fileName) 
+</span><span>            {
+</span><span>                </span><span style="color:#b48ead;">auto</span><span> subFiles = </span><span style="color:#bf616a;">getDirectoryFiles</span><span>(</span><span style="color:#bf616a;">path</span><span>({dir, fileName}), extensions);
+</span><span>                files.</span><span style="color:#bf616a;">insert</span><span>(</span><span style="color:#bf616a;">end</span><span>(files), </span><span style="color:#bf616a;">begin</span><span>(subFiles), </span><span style="color:#bf616a;">end</span><span>(subFiles));
+</span><span>            }
+</span><span>        } 
+</span><span>        </span><span style="color:#b48ead;">else if </span><span>(dirent_ptr-&gt;</span><span style="color:#bf616a;">d_type </span><span>== DT_REG) 
+</span><span>        {
+</span><span>            </span><span style="color:#65737e;">// here we should check also if filename has an extension in extensions vector
+</span><span>            files.</span><span style="color:#bf616a;">push_back</span><span>(</span><span style="color:#bf616a;">path</span><span>({dir, fileName}));
+</span><span>        }
+</span><span>    }
+</span><span>    </span><span style="color:#b48ead;">return</span><span> files;
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">main </span><span>()
+</span><span>{
+</span><span>    </span><span style="color:#b48ead;">auto</span><span> opt = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
+</span><span>    </span><span style="color:#bf616a;">mkdir</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox</span><span>&quot;, opt);
+</span><span>    </span><span style="color:#bf616a;">mkdir</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/a</span><span>&quot;, opt);
+</span><span>    </span><span style="color:#bf616a;">mkdir</span><span>(&quot;</span><span style="color:#a3be8c;">sandbox/a/b</span><span>&quot;, opt);
+</span><span>
+</span><span> vector&lt;string&gt; e_files = {
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/a/b/file1.rst</span><span>&quot;, 
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/a/b/file1.txt</span><span>&quot;,
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/a/file2.RST</span><span>&quot;, 
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/file3.md</span><span>&quot;,
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/will_be.ignored</span><span>&quot;
+</span><span> };
+</span><span> 
+</span><span> </span><span style="color:#65737e;">// create files
+</span><span> </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">auto </span><span>&amp;f: e_files)
+</span><span> {
+</span><span>  ofstream </span><span style="color:#bf616a;">of</span><span>(f, ofstream::out);
+</span><span>  of &lt;&lt; &quot;</span><span style="color:#a3be8c;">test</span><span>&quot;;
+</span><span> }
+</span><span>
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">filtered files: </span><span>&quot; &lt;&lt; endl;
+</span><span> </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">auto </span><span>&amp;f: </span><span style="color:#bf616a;">getDirectoryFiles</span><span>(&quot;</span><span style="color:#a3be8c;">.</span><span>&quot;, {&quot;</span><span style="color:#a3be8c;">.rst</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">.RST</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">.md</span><span>&quot;})){
+</span><span>     cout &lt;&lt; &quot;</span><span style="color:#96b5b4;">\t</span><span>&quot; &lt;&lt; f &lt;&lt; endl;
+</span><span> }
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<h4 id="compile-and-run-c-11-example"><a href="https://coliru.stacked-crooked.com/a/af4228e039a281b3">Compile and run C++11 example</a></h4>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">g++ -std</span><span>=c++11</span><span style="color:#bf616a;"> -O2 -Wall -Wextra -pedantic -pthread -pedantic-errors</span><span> main.cpp</span><span style="color:#bf616a;"> -lm  -latomic -lstdc</span><span>++fs &amp;&amp; </span><span style="color:#bf616a;">./a.out
+</span><span style="color:#bf616a;">filtered</span><span> files: 
+</span><span> </span><span style="color:#bf616a;">./main.cpp
+</span><span> </span><span style="color:#bf616a;">./sandbox/file3.md
+</span><span> </span><span style="color:#bf616a;">./sandbox/will_be.ignored
+</span><span> </span><span style="color:#bf616a;">./sandbox/a/b/file1.rst
+</span><span> </span><span style="color:#bf616a;">./sandbox/a/b/file1.txt
+</span><span> </span><span style="color:#bf616a;">./sandbox/a/file2.RST
+</span><span> </span><span style="color:#bf616a;">./a.out
+</span></code></pre>
+<h3 id="c-17">C++17</h3>
+<p>Following example also filters files by extension.</p>
+<h4 id="filesystem-17-cpp">filesystem.17.cpp</h4>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;">#include &lt;dirent.h&gt;
+</span><span style="color:#65737e;">#include &lt;cstring&gt;
+</span><span style="color:#65737e;">#include &lt;iostream&gt;
+</span><span style="color:#65737e;">#include &lt;fstream&gt; // std::ofstream
+</span><span style="color:#65737e;">#include &lt;vector&gt;
+</span><span style="color:#65737e;">#include &lt;memory&gt;
+</span><span style="color:#65737e;">#include &lt;system_error&gt;
+</span><span style="color:#65737e;">#include &lt;sys/stat.h&gt;
+</span><span>
+</span><span style="color:#bf616a;">using</span><span> namespace std;
+</span><span>
+</span><span style="color:#bf616a;">const</span><span> string UP_DIR = &quot;</span><span style="color:#a3be8c;">..</span><span>&quot;;
+</span><span style="color:#bf616a;">const</span><span> string CURRENT_DIR = &quot;</span><span style="color:#a3be8c;">.</span><span>&quot;;
+</span><span style="color:#bf616a;">const</span><span> string SEP = &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;;
+</span><span>
+</span><span>
+</span><span style="color:#bf616a;">string</span><span> path(initializer_list&lt;string&gt; parts) 
+</span><span>{
+</span><span>    </span><span style="color:#bf616a;">string</span><span> pathTmp {};
+</span><span>    </span><span style="color:#bf616a;">string</span><span> separator = &quot;&quot;;
+</span><span>    </span><span style="color:#b48ead;">for</span><span> (auto &amp; </span><span style="color:#bf616a;">part:</span><span> parts) 
+</span><span>    {
+</span><span>        </span><span style="color:#bf616a;">pathTmp.append</span><span>(separator)</span><span style="color:#bf616a;">.append</span><span>(part);
+</span><span>        </span><span style="color:#bf616a;">separator</span><span> = SEP;
+</span><span>    }
+</span><span>    </span><span style="color:#b48ead;">return</span><span> pathTmp;
+</span><span>}
+</span><span>
+</span><span style="color:#bf616a;">vector</span><span>&lt;string&gt; getDirectoryFiles(const string&amp; </span><span style="color:#bf616a;">dir,</span><span> const vector&lt;string&gt; &amp; </span><span style="color:#bf616a;">extensions</span><span>) 
+</span><span>{
+</span><span>    </span><span style="color:#bf616a;">vector</span><span>&lt;string&gt; files;
+</span><span>    </span><span style="color:#bf616a;">shared_ptr</span><span>&lt;DIR&gt; directory_ptr(opendir(dir.c_str())</span><span style="color:#bf616a;">, </span><span style="color:#b48ead;">[]</span><span>(DIR* dir){ </span><span style="color:#bf616a;">dir </span><span>&amp;&amp; </span><span style="color:#bf616a;">closedir</span><span>(dir); });
+</span><span>    </span><span style="color:#b48ead;">if </span><span>(!</span><span style="color:#bf616a;">directory_ptr</span><span>) 
+</span><span>    {
+</span><span>        </span><span style="color:#bf616a;">throw</span><span> system_error(error_code(errno, system_category())</span><span style="color:#bf616a;">, </span><span>&quot;</span><span style="color:#a3be8c;">Error opening : </span><span>&quot; + dir);
+</span><span>    }
+</span><span> 
+</span><span>    </span><span style="color:#bf616a;">struct</span><span> dirent *dirent_ptr;
+</span><span>    </span><span style="color:#b48ead;">while </span><span>((dirent_ptr = readdir(directory_ptr.get())) != nullptr) 
+</span><span>    {
+</span><span>        const string fileName {dirent_ptr-&gt;d_name};
+</span><span>        if (dirent_ptr-&gt;d_type == DT_DIR) 
+</span><span>        {
+</span><span>            if (CURRENT_DIR != fileName &amp;&amp; UP_DIR != fileName) 
+</span><span>            {
+</span><span>                auto subFiles = getDirectoryFiles(path({dir, fileName}), extensions);
+</span><span>                files.insert(end(files), begin(subFiles), end(subFiles));
+</span><span>            }
+</span><span>        } 
+</span><span>        else if (dirent_ptr-&gt;d_type == DT_REG) 
+</span><span>        {
+</span><span>            // here we should check also if filename has an extension in extensions vector
+</span><span>            files.push_back(path({dir, fileName}));
+</span><span>        }
+</span><span>    }
+</span><span>    return files;
+</span><span>}
+</span><span>
+</span><span>int main ()
+</span><span>{
+</span><span>    auto opt = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
+</span><span>    mkdir(&quot;</span><span style="color:#a3be8c;">sandbox</span><span>&quot;, opt);
+</span><span>    mkdir(&quot;</span><span style="color:#a3be8c;">sandbox/a</span><span>&quot;, opt);
+</span><span>    mkdir(&quot;</span><span style="color:#a3be8c;">sandbox/a/b</span><span>&quot;, opt);
+</span><span>
+</span><span> vector&lt;string&gt; e_files = {
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/a/b/file1.rst</span><span>&quot;, 
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/a/b/file1.txt</span><span>&quot;,
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/a/file2.RST</span><span>&quot;, 
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/file3.md</span><span>&quot;,
+</span><span>     &quot;</span><span style="color:#a3be8c;">./sandbox/will_be.ignored</span><span>&quot;
+</span><span> };
+</span><span> 
+</span><span> // create files
+</span><span> for (auto &amp;f: e_files)
+</span><span> {
+</span><span>  ofstream of(f, ofstream::out);
+</span><span>  of &lt;&lt; &quot;</span><span style="color:#a3be8c;">test</span><span>&quot;;
+</span><span> }
+</span><span>
+</span><span>    cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">filtered files: </span><span>&quot; &lt;&lt; endl;
+</span><span> for (auto &amp;f: getDirectoryFiles(&quot;</span><span style="color:#a3be8c;">.</span><span>&quot;, {&quot;</span><span style="color:#a3be8c;">.rst</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">.RST</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">.md</span><span>&quot;})){
+</span><span>     cout &lt;&lt; &quot;</span><span style="color:#a3be8c;">\t</span><span>&quot; &lt;&lt; f &lt;&lt; endl;
+</span><span> }
+</span><span>
+</span><span>    return </span><span style="color:#d08770;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<h4 id="compile-and-run-c-17-example"><a href="https://coliru.stacked-crooked.com/a/af4228e039a281b3">Compile and run C++17 example</a></h4>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">g++ -std</span><span>=c++11</span><span style="color:#bf616a;"> -O2 -Wall -Wextra -pedantic -pthread -pedantic-errors</span><span> main.cpp</span><span style="color:#bf616a;"> -lm  -latomic -lstdc</span><span>++fs &amp;&amp; </span><span style="color:#bf616a;">./a.out
+</span><span style="color:#bf616a;">filtered</span><span> files: 
+</span><span> </span><span style="color:#bf616a;">./main.cpp
+</span><span> </span><span style="color:#bf616a;">./sandbox/file3.md
+</span><span> </span><span style="color:#bf616a;">./sandbox/will_be.ignored
+</span><span> </span><span style="color:#bf616a;">./sandbox/a/b/file1.rst
+</span><span> </span><span style="color:#bf616a;">./sandbox/a/b/file1.txt
+</span><span> </span><span style="color:#bf616a;">./sandbox/a/file2.RST
+</span><span> </span><span style="color:#bf616a;">./a.out
+</span></code></pre>
+
+  </section>
+
+  <footer>
+    <script src="https://utteranc.es/client.js" repo="carlosvin/carlosvin.github.io" issue-term="title"
+      theme="github-light" crossorigin="anonymous" async defer>
+      </script>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2026 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <span style="display: flex; gap: 1rem; align-items: flex-end;">
+  <a href="https://github.com/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub" width="32"
+      height="32" />
+  </a>
+  <a href="https://linkedin.com/in/carlosvin" target="_blank" rel="noopener">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" width="32"
+      height="32" />
+  </a>
+  <a href="https://carlosvin.github.io/atom.xml">
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS" width="32" height="32">
+  </a>
+</span>
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/search.js"></script>
+</body>
+
+</html>
