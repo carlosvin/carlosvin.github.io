@@ -6,6 +6,7 @@ keywords: Docker, Microservices
 description: How to create different Docker containers with different domain names in the same host
 toc: true
 aliases: ["/langs/en/posts/reverse-proxy-multidomain-docker", "/langs/es/posts/reverse-proxy-multidomain-docker", "/posts/reverse-proxy-multidomain-docker"]
+tags: ["docker", "microservices", "reverse-proxy", "nginx"]
 ---
 
 ## Use case

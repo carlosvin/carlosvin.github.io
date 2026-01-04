@@ -6,6 +6,7 @@ lang: en
 keywords: TanStack Router, React, TypeScript, Routing, Guidelines, Type-Safe Routing, Data Fetching, State Management, Production-Ready, Vite, Vitest, Arktype, Application Architecture
 description: "Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture."
 toc: true
+tags: ["react", "typescript", "tanstack-router", "frontend", "web-development", "architecture"]
 ---
 
 This post captures a practical way to implement a React application using TanStack Router. It focuses on maintainability, predictable data flows, and ergonomics for both reading and writing code.

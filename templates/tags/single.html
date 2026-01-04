@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block og %}
+<meta property="og:title" content="Posts tagged with &quot;{{ term.name }}&quot; - {{ config.title }}">
+<meta property="og:description"
+    content="{{ term.pages | length }} post{% if term.pages | length != 1 %}s{% endif %} found">
+<meta property="og:url" content="{{ current_url }}">
+<meta property="og:type" content="website">
+{% endblock %}
+
+{% block jsonld %}{% endblock %}
+
+{% block content %}
+<div class="taxonomy-single">
+    <header>
+        <h1>Posts tagged with "{{ term.name }}"</h1>
+        <p>{{ term.pages | length }} post{% if term.pages | length != 1 %}s{% endif %} found</p>
+    </header>
+
+    <div class="blog">
+        {% for page in term.pages %}
+        <article>
+            <header>
+                <h2><a href="{{ page.permalink }}">{{ page.title }}</a></h2>
+                <time datetime="{{ page.date | date(format='%Y-%m-%d') }}">
+                    {{ page.date | date(format="%B %d, %Y") }}
+                </time>
+            </header>
+            {% if page.description %}
+            <p>{{ page.description }}</p>
+            {% elif page.summary %}
+            <p>{{ page.summary }}</p>
+            {% endif %}
+            {% if page.tags %}
+            <div class="post-tags">
+                {% for tag in page.tags %}
+                <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="tag">#{{ tag }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .taxonomy-single {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .taxonomy-single header {
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 1rem;
+    }
+
+    .taxonomy-single .blog article {
+        padding: 1.5rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fafafa;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .taxonomy-single .blog article:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .taxonomy-single .blog article h2 {
+        margin-top: 0;
+    }
+
+    .taxonomy-single .blog article h2 a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .taxonomy-single .blog article h2 a:hover {
+        color: #0066cc;
+    }
+</style>
+{% endblock content %}
