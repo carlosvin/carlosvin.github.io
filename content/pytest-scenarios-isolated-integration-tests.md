@@ -9,7 +9,6 @@ aliases: ["/posts/pytest-scenarios-integration-tests"]
 tags: ["Testing", "Python", "Pytest", "MongoDB"]
 ---
 
-# Isolated Integration Tests with pytest-scenarios
 
 Integration tests are essential for catching bugs that unit tests miss—but they come with a notorious problem: **shared state**. When tests share a database, they become flaky, order-dependent, and painful to debug.
 
