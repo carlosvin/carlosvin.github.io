@@ -1,7 +1,6 @@
 ---
 title: "Isolated Integration Tests with pytest-scenarios"
 date: 2026-01-03
-keywords: Testing, Pytest, MongoDB, Python
 lang: en
 description: "Use pytest-scenarios to create isolated integration test data that cleans itself up automatically."
 toc: true

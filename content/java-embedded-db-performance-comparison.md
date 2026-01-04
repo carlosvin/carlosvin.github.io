@@ -2,11 +2,10 @@
 title: Embedded Java Databases - Performance Comparison
 date: 2014-06-07
 lang: en
-keywords: Java, database, embedded
 description: Performance comparison in Java between three embedded databases like Derby/JavaDB, Sqlite, and ObjectDB
 toc: true
 aliases: ["/langs/en/posts/java-embedded-db-performance-comparison", "/langs/es/posts/java-embedded-db-performance-comparison"]
-tags: ["java", "database", "performance", "sqlite"]
+tags: ["java", "database", "performance", "sqlite", "embedded"]
 ---
 
 ## Embedded Databases

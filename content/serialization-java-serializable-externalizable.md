@@ -3,7 +3,6 @@ title: "Java serialization ways: Performance Comparison"
 date: 2014-05-13
 lang: en
 description: "Java serialization ways, performance comparison"
-keywords: Java, Performance
 toc: true
 aliases: ["/langs/en/posts/serialization-java-serializable-externalizable", "/langs/es/posts/serialization-java-serializable-externalizable"]
 tags: ["java", "performance", "serialization"]

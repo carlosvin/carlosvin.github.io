@@ -1,7 +1,6 @@
 ---
 title: "Parameterized Tests in Cypress"
 date: 2021-01-06
-keywords: Testing, Cypress, Javascript
 lang: en
 description: "How to write parameterized tests in Cypress"
 preview_image: ./html-validation.png

@@ -1,10 +1,9 @@
 ---
 title: "Debugging library generated with libtool"
 date: 2013-02-01T15:30:00
-keywords: ["C++", "Autotools", "GNU", "Tips and Tricks"]
 description: "How to debug a library generated with libtool"
 lang: "en"
-tags: ["cpp", "debugging", "autotools", "build-systems"]
+tags: ["cpp", "debugging", "autotools", "build-systems", "["c++"", ""autotools"", ""gnu"", ""tips and tricks"]"]
 ---
 
 When debugging an executable that uses a library generated with [libtool](https://www.gnu.org/software/libtool/libtool.html)[^1], you might encounter the following error:

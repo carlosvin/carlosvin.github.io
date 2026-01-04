@@ -3,11 +3,10 @@ title: Choosing a Modern C++ stack
 date: 2017-09-15
 lang: en
 updated: 2020-06-13
-keywords: C++, Unit Testing, Build System, Meson, Catch, doctest
 description: Why I'd choose Meson+Doctest tech stack to create a new C++ project with a reusable and easy-to-run example.
 toc: true
 aliases: ["/langs/en/posts/choosing-modern-cpp-stack", "/langs/es/posts/choosing-modern-cpp-stack"]
-tags: ["cpp", "build-systems", "meson", "testing", "doctest"]
+tags: ["cpp", "build-systems", "meson", "testing", "doctest", "c++", "unit testing", "build system", "catch"]
 ---
 
 I'm starting a new project in C++, but I've run into a couple of questions before starting:
