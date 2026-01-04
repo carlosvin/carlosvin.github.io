@@ -3,9 +3,10 @@ title: "Java serialization ways: Performance Comparison"
 date: 2014-05-13
 lang: en
 description: "Java serialization ways, performance comparison"
-keywords: Java, Performance
 toc: true
 aliases: ["/langs/en/posts/serialization-java-serializable-externalizable", "/langs/es/posts/serialization-java-serializable-externalizable"]
+taxonomies:
+  tags: ["java", "performance", "serialization"]
 ---
 
 Recently I've had to serialize/deserialize some data in [Java](https://www.java.com) binary format. Lately I use [JSON](https://www.json.org) or [XML](https://en.wikipedia.org/wiki/XML) formats.

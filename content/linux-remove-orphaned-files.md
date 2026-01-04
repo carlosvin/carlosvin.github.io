@@ -3,9 +3,10 @@ title: Remove orphaned packages (Linux)
 date: 2012-10-02
 lang: en
 description: How to remove unused packages in Linux
-keywords: Linux, Archlinux, Debian, Tips and Tricks
 toc: true
 aliases: ["/langs/en/posts/linux-remove-orphaned-files", "/langs/es/posts/linux-remove-orphaned-files"]
+taxonomies:
+  tags: ["linux", "package-management", "system-administration", "archlinux", "debian", "tips and tricks"]
 ---
 
 When we install a package in most Linux distributions, the package system installs other packages needed by the package that we are installing. If we uninstall the package, its dependencies might not be uninstalled; these unused dependencies are called orphaned packages.

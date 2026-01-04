@@ -2,10 +2,11 @@
 title: Build C++ project with Gradle
 date: 2014-09-27
 lang: en
-keywords: Gradle, C++, Build Software, Build System, Dependency Management
 description: How to build a C++ project using Gradle
 toc: true
 aliases: ["/langs/en/posts/gradle-cpp", "/langs/es/posts/gradle-cpp"]
+taxonomies:
+  tags: ["cpp", "gradle", "build-systems", "c++", "build software", "build system", "dependency management"]
 ---
 
 ## Introduction

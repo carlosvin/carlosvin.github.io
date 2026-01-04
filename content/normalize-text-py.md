@@ -1,9 +1,10 @@
 ---
 title: "Text Normalization in Python"
 date: 2012-10-02T18:00:00
-keywords: ["Python", "Tips and Tricks"]
 description: "Avoiding problems with texts containing non-ASCII characters"
 lang: "en"
+taxonomies:
+  tags: ["python", "text-processing", "tips and tricks"]
 ---
 
 In many languages, such as Spanish, there are characters that do not have [ASCII](https://en.wikipedia.org/wiki/ASCII) representation, such as **á**, which does have representation in [Unicode](https://en.wikipedia.org/wiki/Unicode).

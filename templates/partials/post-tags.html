@@ -1,0 +1,19 @@
+{#
+Displays a list of tags.
+Variables:
+- tags: List of tag names or taxonomy objects (optional, defaults to page.taxonomies.tags)
+#}
+{% set tags_list = tags | default(value=page.taxonomies.tags | default(value=[])) %}
+{% if tags_list %}
+<div class="post-tags">
+    {% for tag in tags_list %}
+    {% set tag_name = tag.name | default(value=tag) %}
+    <a href='{{ get_taxonomy_url(kind="tags", name=tag_name) }}' class="tag" title="All the posts in {{ tag_name }}">
+        {{ tag_name }}
+        {% if tag.pages %}
+        <i>({{ tag.pages | length }})</i>
+        {% endif %}
+    </a>
+    {% endfor %}
+</div>
+{% endif %}

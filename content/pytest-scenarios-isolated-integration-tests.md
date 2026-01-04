@@ -1,14 +1,14 @@
 ---
 title: "Isolated Integration Tests with pytest-scenarios"
 date: 2026-01-03
-keywords: Testing, Pytest, MongoDB, Python
 lang: en
 description: "Use pytest-scenarios to create isolated integration test data that cleans itself up automatically."
 toc: true
 aliases: ["/posts/pytest-scenarios-integration-tests"]
+taxonomies:
+  tags: ["python", "testing", "pytest", "mongodb", "integration-testing"]
 ---
 
-# Isolated Integration Tests with pytest-scenarios
 
 Integration tests are essential for catching bugs that unit tests miss—but they come with a notorious problem: **shared state**. When tests share a database, they become flaky, order-dependent, and painful to debug.
 
@@ -19,6 +19,7 @@ That's what [`pytest-scenarios`](https://github.com/carlosvin/pytest-scenarios) 
 ## The Problem
 
 Consider testing an e-commerce checkout system. You need to verify that:
+
 - Active customers can complete orders
 - Suspended customers are rejected  
 - Out-of-stock items fail gracefully
@@ -79,6 +80,7 @@ I've created a complete runnable example that demonstrates `pytest-scenarios` wi
 👉 **[View the example on GitHub](https://github.com/carlosvin/pytest-scenarios/tree/main/examples)**
 
 The example includes:
+
 - A [`Checkout` class](https://github.com/carlosvin/pytest-scenarios/blob/main/examples/src/checkout.py) with real business logic
 - [Integration tests](https://github.com/carlosvin/pytest-scenarios/blob/main/examples/tests/integration/test_checkout.py) covering happy paths and edge cases
 - [Templates](https://github.com/carlosvin/pytest-scenarios/tree/main/examples/tests/templates) for customers, products, and orders

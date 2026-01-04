@@ -1,12 +1,13 @@
 ---
 title: "Parameterized Tests in Cypress"
 date: 2021-01-06
-keywords: Testing, Cypress, Javascript
 lang: en
 description: "How to write parameterized tests in Cypress"
 preview_image: ./html-validation.png
 toc: true
 aliases: ["/langs/en/posts/cypress-parametrized-dynamic-tests"]
+taxonomies:
+  tags: ["testing", "cypress", "javascript", "e2e"]
 ---
 
 [Cypress](https://www.cypress.io/) is a testing framework for anything running on a web browser. I am using it to test this site and I've talked before about it in the post ["This is Sapper"](https://carlosvin.github.io/posts/this-is-sapper/en#_testing).

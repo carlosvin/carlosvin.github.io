@@ -2,10 +2,11 @@
 title: Convert files formats - Windows to Unix
 date: 2016-02-12
 lang: en
-keywords: Useful Commands, Unix, Windows
 description: Convert Windows formatted files to Unix format per directory recursively
 toc: true
 aliases: ["/langs/en/posts/recursive-dos-unix", "/langs/es/posts/recursive-dos-unix"]
+taxonomies:
+  tags: ["unix", "linux", "tools", "windows", "useful commands"]
 ---
 
 If you are developing from a Windows environment to a Unix target environment, most likely you have had this issue: You install source files in Windows format in your Unix environment.

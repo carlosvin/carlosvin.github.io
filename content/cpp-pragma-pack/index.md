@@ -2,10 +2,11 @@
 title: "C++ Struct memory alignment"
 date: 2012-11-26
 lang: en
-keywords: ["C++", "Performance", "Compilers", "Memory"]
 description: "Understanding pragma pack preprocessor directive and how it affects to memory alignment"
 toc: true
 aliases: ["/langs/en/posts/cpp-pragma-pack", "/langs/es/posts/cpp-pragma-pack"]
+taxonomies:
+  tags: ["cpp", "performance", "memory-management", "c++", "compilers", "memory"]
 ---
 
 A C++ struct is an element that groups attributes with different types so we can manipulate them all together using same reference. It is like a class with public visibility by default for functions and attributes.
