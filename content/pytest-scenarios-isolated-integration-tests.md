@@ -9,6 +9,7 @@ taxonomies:
   tags: ["python", "testing", "pytest", "mongodb", "integration-testing"]
 ---
 
+
 Integration tests are essential for catching bugs that unit tests miss—but they come with a notorious problem: **shared state**. When tests share a database, they become flaky, order-dependent, and painful to debug.
 
 What if each test could start with a clean slate, with exactly the data it needs, without manual cleanup or complex fixtures?
