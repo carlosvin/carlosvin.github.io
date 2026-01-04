@@ -5,7 +5,8 @@ lang: en
 description: Why I'd pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang
 toc: true
 aliases: ["/langs/en/posts/rest-service-go-vs-java", "/langs/es/posts/rest-service-go-vs-java"]
-tags: ["golang", "java", "rest", "api", "web-services", "web services", "gingonic", "spring"]
+taxonomies:
+  tags: ["golang", "java", "rest", "api", "web-services", "web services", "gingonic", "spring"]
 ---
 
 Lately I've been working with two different technology stacks almost in parallel, in both cases we were using them to develop [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) services.
