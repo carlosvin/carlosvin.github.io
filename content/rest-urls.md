@@ -5,7 +5,8 @@ lang: en
 description: "Design REST API: URLs"
 toc: true
 aliases: ["/blog/rest-urls","/langs/en/posts/rest-urls", "/langs/es/posts/rest-urls"]
-tags: ["rest", "api", "web-services", "architecture", "web services"]
+taxonomies:
+  tags: ["rest", "api", "web-services", "architecture", "web services"]
 ---
 
 First time I designed a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) [API](https://en.wikipedia.org/wiki/Application_programming_interface) I made several mistakes, of course. Following I'm going to explain common mistakes and what I've learned about [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) [URL](https://en.wikipedia.org/wiki/Uniform_resource_locator) with examples.

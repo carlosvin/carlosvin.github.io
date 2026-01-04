@@ -3,7 +3,8 @@ title: "Git Proxy Configuration"
 date: 2012-11-15T12:00:00Z
 description: "Quick guide to configure Git to work through HTTP/HTTPS proxies"
 aliases: ["/langs/en/posts/git-proxy-config", "/langs/es/posts/git-proxy-config"]
-tags: ["git", "configuration", "tools", "["git"", ""proxy"", ""configuration"", ""tips"]"]
+taxonomies:
+  tags: ["git", "configuration", "tools", "proxy", "tips"]
 ---
 
 Working with Git through a corporate proxy can be challenging. Here's a quick guide to configure Git proxy settings.

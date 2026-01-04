@@ -7,7 +7,8 @@ description: "Lessons learned while developing a PWA with CRA: Budget Tracker"
 toc: true
 aliases: ["/blog/pwa-lessons-learned-cra", "/langs/en/posts/pwa-lessons-learned-cra", "/langs/es/posts/pwa-lessons-learned-cra"]
 link: https://btapp.netlify.com
-tags: ["react", "typescript", "pwa", "firebase", "frontend", "web-development", "cra", "create react app", "firestore", "svelte", "sapper"]
+taxonomies:
+  tags: ["react", "typescript", "pwa", "firebase", "frontend", "web-development", "cra", "create react app", "firestore", "svelte", "sapper"]
 ---
 
 I started working with [React](https://reactjs.org) few year ago, always the project creation was from scratch, not using any template/scaffolding. Regarding bundlers normally I used either [Webpack](https://webpack.js.org) at work or [Parcel](https://parceljs.org) for personal projects.

@@ -7,7 +7,8 @@ description: Example project how to create a Single Page Application with React,
 toc: true
 aliases: ["/langs/en/posts/react-typescript-parcel", "/langs/es/posts/react-typescript-parcel"]
 link: https://github.com/carlosvin/react-typescript-parcel-template
-tags: ["react", "typescript", "parcel", "frontend", "web-development", "spa"]
+taxonomies:
+  tags: ["react", "typescript", "parcel", "frontend", "web-development", "spa"]
 ---
 
 I was about to start yet another personal project, it consists of a SPA (Single Page Application) for a travel journal.

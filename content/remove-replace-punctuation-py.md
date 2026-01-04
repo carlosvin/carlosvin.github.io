@@ -6,7 +6,8 @@ updated: 2012-05-09
 description: An example of how to remove or replace punctuation symbols of a Python string
 toc: true
 aliases: ["/langs/en/posts/remove-replace-punctuation-py", "/langs/es/posts/remove-replace-punctuation-py"]
-tags: ["python", "text-processing", "tips and tricks"]
+taxonomies:
+  tags: ["python", "text-processing", "tips and tricks"]
 ---
 
 Below is an explanation of how to replace punctuation symbols with whitespace in Python.

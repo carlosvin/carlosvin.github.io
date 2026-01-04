@@ -5,7 +5,8 @@ lang: en
 description: "Use pytest-scenarios to create isolated integration test data that cleans itself up automatically."
 toc: true
 aliases: ["/posts/pytest-scenarios-integration-tests"]
-tags: ["python", "testing", "pytest", "mongodb", "integration-testing"]
+taxonomies:
+  tags: ["python", "testing", "pytest", "mongodb", "integration-testing"]
 ---
 
 Integration tests are essential for catching bugs that unit tests miss—but they come with a notorious problem: **shared state**. When tests share a database, they become flaky, order-dependent, and painful to debug.

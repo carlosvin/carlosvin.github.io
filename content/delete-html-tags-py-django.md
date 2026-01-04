@@ -3,7 +3,8 @@ title: "Remove HTML Tags"
 date: 2012-10-02T11:30:00
 description: "How to remove HTML tags using Python or even easier, using Django"
 lang: "en"
-tags: ["python", "django", "html", "text-processing", "["python"", ""django"", ""html"]"]
+taxonomies:
+  tags: ["python", "django", "html", "text-processing"]
 ---
 
 Below we'll see how to remove HTML tags from a character string.
