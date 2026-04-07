@@ -181,6 +181,24 @@ pnpm install
 pnpm dev
 ```
 
+## Install The Skill (npx skills)
+
+You can install this repository's generated Agent Skill directly from GitHub:
+
+```bash
+# List skills available in this repository
+npx skills add carlosvin/tanstack-fullstack-ai-template --list
+
+# Install the TanStack fullstack pattern skill
+npx skills add carlosvin/tanstack-fullstack-ai-template --skill tanstack-fullstack-pattern
+
+# Optional: install globally (available across projects)
+npx skills add carlosvin/tanstack-fullstack-ai-template --skill tanstack-fullstack-pattern -g
+
+# Optional: verify installed skills
+npx skills list
+```
+
 You can also try the [live demo](https://leafy-manatee-16b96c.netlify.app) without cloning.
 
 For a new project you can run `rm -rf .git && git init` after cloning to start fresh history. Use `pnpm build`, `pnpm test`, and `pnpm lint` (and `pnpm format`) to validate your fork. To run in production via Docker: `docker build -t my-app .` then `docker run --rm -p 3000:3000 my-app`.
