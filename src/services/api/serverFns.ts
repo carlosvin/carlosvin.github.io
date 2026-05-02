@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { staticFunctionMiddleware } from "@tanstack/start-static-server-functions";
 import { aiAdapterService } from "../ai/adapter";
 import { getMissingConfigChatResponse } from "../ai/responses";
 import { ChatRequestSchema, ChatResponseSchema } from "../ai/schemas";
@@ -11,6 +12,7 @@ import { PostSlugInputSchema, PostsFilterInputSchema } from "../tools/schemas";
  * Query server function — throws on validation failure.
  */
 export const getPostsServerFn = createServerFn({ method: "GET" })
+  .middleware([staticFunctionMiddleware])
   .inputValidator((input: unknown) => PostsFilterInputSchema.parse(input))
   .handler(async ({ data: filter }) => {
     const posts = await postRepository.getPosts(filter);
@@ -22,6 +24,7 @@ export const getPostsServerFn = createServerFn({ method: "GET" })
  * Query server function — throws on validation failure.
  */
 export const getPostServerFn = createServerFn({ method: "GET" })
+  .middleware([staticFunctionMiddleware])
   .inputValidator((input: unknown) => PostSlugInputSchema.parse(input))
   .handler(async ({ data: { slug } }) => {
     const post = await postRepository.getPost(slug);
@@ -36,6 +39,7 @@ export const getPostServerFn = createServerFn({ method: "GET" })
  * Useful for static sections such as /about that should not appear in post listings.
  */
 export const getPageServerFn = createServerFn({ method: "GET" })
+  .middleware([staticFunctionMiddleware])
   .inputValidator((input: unknown) => PostSlugInputSchema.parse(input))
   .handler(async ({ data: { slug } }) => {
     const post = await postRepository.getPost(slug, { includeUnlisted: true });
@@ -49,9 +53,11 @@ export const getPageServerFn = createServerFn({ method: "GET" })
  * Fetches the list of all distinct tags.
  * Query server function — no input required.
  */
-export const getTagsServerFn = createServerFn({ method: "GET" }).handler(async () => {
-  return postRepository.getTags();
-});
+export const getTagsServerFn = createServerFn({ method: "GET" })
+  .middleware([staticFunctionMiddleware])
+  .handler(async () => {
+    return postRepository.getTags();
+  });
 
 /**
  * URL-aware AI chat endpoint as a server function.

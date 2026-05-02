@@ -18,6 +18,10 @@ export default defineConfig({
   },
   plugins: [
     tanstackStart({
+      prerender: {
+        routes: ["/"],
+        crawlLinks: true,
+      },
       srcDirectory: "src",
       client: {
         entry: "./client.tsx",

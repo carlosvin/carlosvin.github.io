@@ -1,11 +1,9 @@
-import { readFile, readdir } from "node:fs/promises";
-import { basename, extname, join } from "node:path";
+import { basename, dirname, extname } from "node:path";
 import GithubSlugger from "github-slugger";
 import matter from "gray-matter";
 import { type PostFilter, PostFrontMatterSchema, type RepoPost } from "../schemas/schemas";
 import type { ReadPostRepository } from "./types";
 
-const CONTENT_DIR = join(process.cwd(), "content");
 const SKIPPED_FILES = new Set(["_index.md"]);
 
 /**
@@ -53,45 +51,22 @@ export class FileSystemPostRepository implements ReadPostRepository {
   }
 
   /**
-   * Reads all posts from the content directory.
-   * Recursively walks top-level Markdown files and directories with index.md.
+   * Reads all posts from the content directory using Vite's static analysis.
    * Excludes _index.md and respects unlisted flag.
    * Internal helper: returns sorted results (date descending).
    */
   private async readAllPosts(includeUnlisted = false): Promise<RepoPost[]> {
-    const entries = await readdir(CONTENT_DIR, { withFileTypes: true });
-    const postPromises: Promise<RepoPost | null>[] = [];
+    const files = import.meta.glob("/content/**/*.md", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    }) as Record<string, string>;
+    const posts: RepoPost[] = [];
 
-    for (const entry of entries) {
-      if (entry.isFile() && entry.name.endsWith(".md")) {
-        if (!SKIPPED_FILES.has(entry.name)) {
-          postPromises.push(
-            this.readPostFile(join(CONTENT_DIR, entry.name), undefined, includeUnlisted),
-          );
-        }
-      } else if (entry.isDirectory()) {
-        const indexPath = join(CONTENT_DIR, entry.name, "index.md");
-        postPromises.push(this.readPostFile(indexPath, entry.name, includeUnlisted));
-      }
-    }
+    for (const [filePath, raw] of Object.entries(files)) {
+      const fileName = basename(filePath);
+      if (SKIPPED_FILES.has(fileName)) continue;
 
-    const results = await Promise.all(postPromises);
-    return results
-      .filter((p): p is RepoPost => p !== null)
-      .sort((a, b) => {
-        const dateA = a.date?.getTime() ?? 0;
-        const dateB = b.date?.getTime() ?? 0;
-        return dateB - dateA;
-      });
-  }
-
-  private async readPostFile(
-    filePath: string,
-    directorySlug?: string,
-    includeUnlisted = false,
-  ): Promise<RepoPost | null> {
-    try {
-      const raw = await readFile(filePath, "utf-8");
       const { data, content } = matter(raw);
 
       const frontMatterResult = PostFrontMatterSchema.safeParse(data);
@@ -100,25 +75,37 @@ export class FileSystemPostRepository implements ReadPostRepository {
           `Skipping ${filePath}: invalid front matter`,
           frontMatterResult.error.flatten(),
         );
-        return null;
+        continue;
       }
 
       const frontMatter = frontMatterResult.data;
 
       // Skip unlisted posts (honoring the flag) unless explicitly included.
-      if (!includeUnlisted && frontMatter.unlisted) return null;
+      if (!includeUnlisted && frontMatter.unlisted) continue;
 
-      const slug = frontMatter.slug ?? directorySlug ?? basename(filePath, extname(filePath));
+      let slug = frontMatter.slug;
+      if (!slug) {
+        if (fileName === "index.md") {
+          // If it's a directory structure like `/content/my-post/index.md`, use the directory name.
+          slug = basename(dirname(filePath));
+        } else {
+          // Top-level file: `/content/my-post.md`
+          slug = basename(filePath, extname(filePath));
+        }
+      }
 
-      return {
+      posts.push({
         ...frontMatter,
         slug,
         rawContent: content.trim(),
-      };
-    } catch {
-      // File does not exist or cannot be read
-      return null;
+      });
     }
+
+    return posts.sort((a, b) => {
+      const dateA = a.date?.getTime() ?? 0;
+      const dateB = b.date?.getTime() ?? 0;
+      return dateB - dateA;
+    });
   }
 
   private applyFilter(posts: RepoPost[], filter?: PostFilter): RepoPost[] {

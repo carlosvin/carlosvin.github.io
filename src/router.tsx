@@ -10,6 +10,7 @@ export function getRouter() {
   return createTanStackRouter({
     routeTree,
     defaultPreload: "intent",
+    defaultStaleTime: 1000 * 60 * 5, // 5 minutes
     parseSearch: parseRouterSearch,
     scrollRestoration: true,
     stringifySearch: stringifyRouterSearch,
