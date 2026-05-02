@@ -5,7 +5,7 @@ lang: en
 description: "Let's see how to easily and quickly create a command line tool in golang"
 toc: true
 aliases: ["/langs/en/posts/create-cmd-tool-golang", "/langs/es/posts/create-cmd-tool-golang/"]
-preview_image: "https://golang.org/lib/godoc/images/go-logo-blue.svg"
+preview_image: "https://go.dev/images/go-logo-blue.svg"
 taxonomies:
   tags: ["golang", "cli", "tools", "cmd"]
 ---

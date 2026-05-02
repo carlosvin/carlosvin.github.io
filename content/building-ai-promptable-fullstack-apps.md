@@ -3,6 +3,16 @@ title: "Building AI-Promptable Full-Stack Apps: A Reproducible Architecture"
 slug: building-ai-promptable-fullstack-apps
 description: "How we extracted a reproducible full-stack architecture for AI-promptable web apps with TanStack Start, interfaces for every external service, and Zod schemas as single source of truth."
 date: 2026-03-08
+taxonomies:
+  tags:
+    - ai
+    - full-stack
+    - architecture
+    - tanstack-start
+    - tanstack-router
+    - typescript
+    - zod
+    - mongodb
 ---
 
 Every time our team started a new full-stack app, we faced the same problem: rebuild the same architecture from scratch. Authentication, database access, UI shell, AI integration — all the plumbing that has nothing to do with the actual business logic.
@@ -210,7 +220,7 @@ When you're ready to add real backends, set the relevant variables. The repo inc
 | Variable | Purpose |
 | -------- | ------ |
 | `MONGODB_URI` | Use a real database instead of in-memory seed data |
-| `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT` | Enable the AI chat assistant (OpenAI-compatible) |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | Enable the AI chat assistant (Google Gemini) |
 | `VITE_SENTRY_DSN` | Enable error and performance monitoring |
 | `AUTH_HEADER_NAME` | HTTP header for the JWT (default: `Authorization`) |
 

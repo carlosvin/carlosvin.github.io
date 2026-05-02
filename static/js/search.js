@@ -58,10 +58,10 @@ function makeTeaser(body, terms) {
       }
 
       index += word.length;
-      index += 1;  // ' ' or '.' if last word in sentence
+      index += 1; // ' ' or '.' if last word in sentence
     }
 
-    index += 1;  // because we split at a two-char boundary '. '
+    index += 1; // because we split at a two-char boundary '. '
   }
 
   if (weighted.length === 0) {
@@ -143,58 +143,58 @@ function initSearch() {
     fields: {
       title: { boost: 2 },
       body: { boost: 1 },
-    }
+    },
   };
   var currentTerm = "";
   var index;
 
   var initIndex = async function () {
     if (index === undefined) {
-      index = fetch("/search_index.en.json")
-        .then(
-          async function (response) {
-            return await elasticlunr.Index.load(await response.json());
-          }
-        );
+      index = fetch("/search_index.en.json").then(async function (response) {
+        return await elasticlunr.Index.load(await response.json());
+      });
     }
     let res = await index;
     return res;
-  }
+  };
 
-  $searchInput.addEventListener("keyup", debounce(async function () {
-    var term = $searchInput.value.trim();
-    if (term === currentTerm) {
-      return;
-    }
-    $searchResults.style.display = term === "" ? "none" : "block";
-    $searchResultsItems.innerHTML = "";
-    currentTerm = term;
-    if (term === "") {
-      return;
-    }
+  $searchInput.addEventListener(
+    "keyup",
+    debounce(async function () {
+      var term = $searchInput.value.trim();
+      if (term === currentTerm) {
+        return;
+      }
+      $searchResults.style.display = term === "" ? "none" : "block";
+      $searchResultsItems.innerHTML = "";
+      currentTerm = term;
+      if (term === "") {
+        return;
+      }
 
-    var results = (await initIndex()).search(term, options);
-    if (results.length === 0) {
-      $searchResults.style.display = "none";
-      return;
-    }
+      var results = (await initIndex()).search(term, options);
+      if (results.length === 0) {
+        $searchResults.style.display = "none";
+        return;
+      }
 
-    for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
-      var item = document.createElement("li");
-      item.innerHTML = formatSearchResultItem(results[i], term.split(" "));
-      $searchResultsItems.appendChild(item);
-    }
-  }, 150));
+      for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
+        var item = document.createElement("li");
+        item.innerHTML = formatSearchResultItem(results[i], term.split(" "));
+        $searchResultsItems.appendChild(item);
+      }
+    }, 150),
+  );
 
-  window.addEventListener('click', function (e) {
+  window.addEventListener("click", function (e) {
     if ($searchResults.style.display == "block" && !$searchResults.contains(e.target)) {
       $searchResults.style.display = "none";
     }
   });
 }
 
-
-if (document.readyState === "complete" ||
+if (
+  document.readyState === "complete" ||
   (document.readyState !== "loading" && !document.documentElement.doScroll)
 ) {
   initSearch();
