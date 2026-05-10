@@ -88,7 +88,11 @@ function PostPage() {
         </Box>
       </Stack>
 
-      <Box w={260} visibleFrom="md" style={{ alignSelf: "flex-start", position: "sticky", top: 88 }}>
+      <Box
+        w={260}
+        visibleFrom="md"
+        style={{ alignSelf: "flex-start", position: "sticky", top: 88 }}
+      >
         {headings.length > 0 && (
           <Card withBorder radius="md" p="md">
             <Text fw={600} mb="sm">
