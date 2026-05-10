@@ -5,6 +5,7 @@ import "@mantine/core/styles.css";
 
 import {
   ActionIcon,
+  Anchor,
   AppShell,
   Box,
   ColorSchemeScript,
@@ -130,17 +131,17 @@ function RootLayout() {
         <AppShell.Header>
           <Container h="100%" size="lg">
             <Group justify="space-between" h="100%">
-              <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+              <Anchor component={Link} to="/" underline="never" style={{ color: "inherit" }}>
                 <Title order={4}>{siteConfig.title}</Title>
-              </Link>
+              </Anchor>
               <Group gap="sm">
-                <Link to="/" style={{ color: "inherit" }}>
+                <Anchor component={Link} to="/" underline="hover">
                   Posts
-                </Link>
+                </Anchor>
                 {siteConfig.navSections.map((section) => (
-                  <a key={section.path} href={`/${section.path}`} style={{ color: "inherit" }}>
+                  <Anchor key={section.path} href={`/${section.path}`} underline="hover">
                     {section.title}
-                  </a>
+                  </Anchor>
                 ))}
                 <ColorSchemeToggle />
               </Group>

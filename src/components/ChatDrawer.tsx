@@ -9,6 +9,7 @@ import {
   Button,
   Drawer,
   Group,
+  Paper,
   ScrollArea,
   Stack,
   Text,
@@ -154,16 +155,23 @@ export function ChatDrawer({ isOpen, onClose }: ChatDrawerProps) {
       position="left"
       size="md"
       styles={{
+        content: { display: "flex", flexDirection: "column" },
         header: { marginBottom: 0 },
-        body: { display: "flex", flexDirection: "column", height: "100%" },
+        body: {
+          display: "flex",
+          flex: 1,
+          flexDirection: "column",
+          minHeight: 0,
+          paddingBottom: "calc(var(--mantine-spacing-md) + env(safe-area-inset-bottom, 0px))",
+        },
       }}
     >
-      <Stack gap="md" h="100%" justify="space-between">
+      <Stack gap="md" h="100%" flex={1} mih={0}>
         {/* Messages Area */}
-        <ScrollArea h="100%" type="always">
+        <ScrollArea type="always" flex={1} mih={0}>
           <Stack gap="sm" pr="md" pb="md">
             {messages.length === 0 ? (
-              <Stack gap="md" align="center" justify="center" style={{ minHeight: 200 }}>
+              <Stack gap="md" align="center" justify="center" mih={200}>
                 <ThemeIcon size="lg" radius="md" variant="light">
                   <MessageCircle size={24} />
                 </ThemeIcon>
@@ -176,30 +184,22 @@ export function ChatDrawer({ isOpen, onClose }: ChatDrawerProps) {
               </Stack>
             ) : (
               messages.map((message, index) => (
-                <div
+                <Group
                   key={`${message.role}-${index}`}
-                  style={{
-                    display: "flex",
-                    justifyContent: message.role === "user" ? "flex-end" : "flex-start",
-                  }}
+                  justify={message.role === "user" ? "flex-end" : "flex-start"}
                 >
-                  <div
-                    style={{
-                      maxWidth: "85%",
-                      padding: "8px 12px",
-                      borderRadius: "8px",
-                      backgroundColor:
-                        message.role === "user"
-                          ? "var(--mantine-color-blue-6)"
-                          : "var(--mantine-color-gray-2)",
-                      textAlign: "left",
-                    }}
+                  <Paper
+                    maw="85%"
+                    px="sm"
+                    py="xs"
+                    radius="md"
+                    bg={message.role === "user" ? "blue.6" : "gray.2"}
+                    ta="left"
                   >
                     <Text
                       size="xs"
                       c={message.role === "user" ? "white" : "dimmed"}
                       mb={4}
-                      style={{ opacity: message.role === "user" ? 0.85 : 1 }}
                     >
                       {message.role === "user" ? "You" : "Assistant"}
                     </Text>
@@ -210,15 +210,15 @@ export function ChatDrawer({ isOpen, onClose }: ChatDrawerProps) {
                     >
                       {renderMessageContent(message)}
                     </Text>
-                  </div>
-                </div>
+                  </Paper>
+                </Group>
               ))
             )}
           </Stack>
         </ScrollArea>
 
         {/* Input Area */}
-        <Stack gap="sm">
+        <Stack gap="sm" pt="xs" bg="var(--mantine-color-body)">
           {messages.length > 0 && (
             <Button variant="subtle" size="xs" onClick={onClear} color="gray">
               Clear conversation
@@ -237,7 +237,7 @@ export function ChatDrawer({ isOpen, onClose }: ChatDrawerProps) {
                 }
               }}
               disabled={isLoading}
-              style={{ flex: 1 }}
+              flex={1}
             />
             <Button
               onClick={() => void onSend()}
