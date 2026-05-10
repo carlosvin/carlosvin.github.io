@@ -60,6 +60,18 @@ export const getTagsServerFn = createServerFn({ method: "GET" })
   });
 
 /**
+ * Returns whether the AI assistant is configured and ready to answer requests.
+ * Root-level UI uses this to avoid rendering unavailable chat entry points.
+ */
+export const getAIAvailabilityServerFn = createServerFn({ method: "GET" })
+  .middleware([staticFunctionMiddleware])
+  .handler(async () => {
+    return {
+      available: aiAdapterService.isConfigured(),
+    };
+  });
+
+/**
  * URL-aware AI chat endpoint as a server function.
  */
 export const chatServerFn = createServerFn({ method: "POST" })

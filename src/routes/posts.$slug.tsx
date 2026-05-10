@@ -1,8 +1,9 @@
+import { Link } from "@/components/Link/Link";
 import { siteConfig } from "@/config";
 import { getPostServerFn } from "@/services/api/serverFns";
 import { formatPostDate } from "@/utils/date";
 import { Anchor, Badge, Box, Card, Group, Stack, Text, Title, Typography } from "@mantine/core";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/posts/$slug")({
   loader: async ({ params: { slug } }) => {

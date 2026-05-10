@@ -1,5 +1,7 @@
 import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
+import { Link } from "@/components/Link/Link";
 import { siteConfig } from "@/config";
+import { getAIAvailabilityServerFn } from "@/services/api/serverFns";
 import "@/styles/markdown.css";
 import "@mantine/core/styles.css";
 
@@ -19,7 +21,7 @@ import {
   localStorageColorSchemeManager,
   mantineHtmlProps,
 } from "@mantine/core";
-import { HeadContent, Link, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
 import { Suspense, lazy, useEffect, useState } from "react";
 import type { ReactNode } from "react";
@@ -30,6 +32,13 @@ const LazyChatDrawer = lazy(async () => {
 });
 
 export const Route = createRootRoute({
+  loader: async () => {
+    const { available } = await getAIAvailabilityServerFn();
+
+    return {
+      isAIAvailable: available,
+    };
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -82,10 +91,15 @@ function RootDocument({ children }: { children: ReactNode }) {
 }
 
 function RootLayout() {
+  const { isAIAvailable } = Route.useLoaderData();
   const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
   const [chatDrawerLoaded, setChatDrawerLoaded] = useState(false);
 
   function openChatDrawer() {
+    if (!isAIAvailable) {
+      return;
+    }
+
     setChatDrawerLoaded(true);
     setChatDrawerOpen(true);
   }
@@ -95,6 +109,10 @@ function RootLayout() {
    * Prevents default browser behavior (e.g., Cmd+K opens browser search).
    */
   useEffect(() => {
+    if (!isAIAvailable) {
+      return;
+    }
+
     function handleKeyDown(event: KeyboardEvent) {
       const isCmdOrCtrl = event.metaKey || event.ctrlKey;
       if (isCmdOrCtrl && event.key === "k") {
@@ -111,7 +129,7 @@ function RootLayout() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [isAIAvailable]);
 
   return (
     <MantineProvider
@@ -139,7 +157,7 @@ function RootLayout() {
                   Posts
                 </Anchor>
                 {siteConfig.navSections.map((section) => (
-                  <Anchor key={section.path} href={`/${section.path}`} underline="hover">
+                  <Anchor component={Link} key={section.path} to={`/${section.path}`} underline="hover">
                     {section.title}
                   </Anchor>
                 ))}
@@ -163,29 +181,33 @@ function RootLayout() {
         </AppShell.Main>
       </AppShell>
 
-      <ActionIcon
-        aria-label="Open AI assistant"
-        variant="filled"
-        color="blue"
-        radius="xl"
-        size="xl"
-        onClick={openChatDrawer}
-        style={{
-          position: "fixed",
-          left: 16,
-          bottom: 16,
-          zIndex: chatDrawerOpen ? 100 : 400,
-          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
-        }}
-      >
-        <MessageCircle size={20} />
-      </ActionIcon>
+      {isAIAvailable ? (
+        <>
+          <ActionIcon
+            aria-label="Open AI assistant"
+            variant="filled"
+            color="blue"
+            radius="xl"
+            size="xl"
+            onClick={openChatDrawer}
+            style={{
+              position: "fixed",
+              left: 16,
+              bottom: 16,
+              zIndex: chatDrawerOpen ? 100 : 400,
+              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            <MessageCircle size={20} />
+          </ActionIcon>
 
-      {chatDrawerLoaded ? (
-        <Suspense fallback={null}>
-          {/* Persistent ChatDrawer - rendered outside Outlet so it survives navigation */}
-          <LazyChatDrawer isOpen={chatDrawerOpen} onClose={() => setChatDrawerOpen(false)} />
-        </Suspense>
+          {chatDrawerLoaded ? (
+            <Suspense fallback={null}>
+              {/* Persistent ChatDrawer - rendered outside Outlet so it survives navigation */}
+              <LazyChatDrawer isOpen={chatDrawerOpen} onClose={() => setChatDrawerOpen(false)} />
+            </Suspense>
+          ) : null}
+        </>
       ) : null}
     </MantineProvider>
   );

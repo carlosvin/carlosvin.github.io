@@ -153,7 +153,7 @@ export function ChatDrawer({ isOpen, onClose }: ChatDrawerProps) {
       onClose={onClose}
       title="AI Assistant"
       position="left"
-      size="md"
+      size="50%"
       styles={{
         content: { display: "flex", flexDirection: "column" },
         header: { marginBottom: 0 },
@@ -193,7 +193,7 @@ export function ChatDrawer({ isOpen, onClose }: ChatDrawerProps) {
                     px="sm"
                     py="xs"
                     radius="md"
-                    bg={message.role === "user" ? "blue.6" : "gray.2"}
+                    bg={message.role === "user" ? "blue.6" : "var(--mantine-color-default-hover)"}
                     ta="left"
                   >
                     <Text
@@ -203,13 +203,7 @@ export function ChatDrawer({ isOpen, onClose }: ChatDrawerProps) {
                     >
                       {message.role === "user" ? "You" : "Assistant"}
                     </Text>
-                    <Text
-                      component="div"
-                      size="sm"
-                      c={message.role === "user" ? "white" : "inherit"}
-                    >
-                      {renderMessageContent(message)}
-                    </Text>
+                    {renderMessageContent(message)}
                   </Paper>
                 </Group>
               ))

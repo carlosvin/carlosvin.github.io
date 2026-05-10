@@ -1,9 +1,9 @@
 "use client";
 
+import { Link } from "@/components/Link/Link";
 import type { PostSummary } from "@/types";
 import { formatPostDate } from "@/utils/date";
 import { Badge, Card, Divider, Group, Image, Stack, Text } from "@mantine/core";
-import { Link } from "@tanstack/react-router";
 
 type PostCardProps = {
   post: PostSummary;

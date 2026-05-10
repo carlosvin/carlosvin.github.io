@@ -3,12 +3,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChatRequest } from "./schemas";
 
 const chatMock = vi.fn();
+const maxIterationsMock = vi.fn();
 const streamToTextMock = vi.fn();
 const geminiFactoryMock = vi.fn();
 const toolDefinitionMock = vi.fn();
 
 vi.mock("@tanstack/ai", () => ({
   chat: chatMock,
+  maxIterations: maxIterationsMock,
   streamToText: streamToTextMock,
   toolDefinition: toolDefinitionMock,
 }));
@@ -34,6 +36,7 @@ describe("GeminiAdapterService", () => {
     process.env.GEMINI_MODEL = undefined;
 
     geminiFactoryMock.mockReturnValue("adapter-instance");
+    maxIterationsMock.mockReturnValue("loop-strategy");
     chatMock.mockReturnValue("stream-instance");
     streamToTextMock.mockResolvedValue("Generated answer");
     toolDefinitionMock.mockImplementation((config: { name: string }) => ({
@@ -81,20 +84,28 @@ describe("GeminiAdapterService", () => {
     expect(chatMock).toHaveBeenCalledTimes(1);
     expect(chatMock.mock.calls[0]?.[0]).toMatchObject({
       adapter: "adapter-instance",
+      agentLoopStrategy: "loop-strategy",
       messages: [
         { role: "assistant", content: "Hi" },
         { role: "user", content: "List latest posts" },
       ],
     });
+    expect(maxIterationsMock).toHaveBeenCalledWith(10);
     expect(chatMock.mock.calls[0]?.[0]).toHaveProperty("systemPrompts");
     expect(chatMock.mock.calls[0]?.[0]).toHaveProperty("tools");
     expect(chatMock.mock.calls[0]?.[0]?.systemPrompts).toEqual(
-      expect.arrayContaining([expect.stringContaining("Use the available tools")]),
+      expect.arrayContaining([expect.stringContaining("helpful software engineering assistant")]),
+    );
+    expect(chatMock.mock.calls[0]?.[0]?.systemPrompts).toEqual(
+      expect.arrayContaining([expect.stringContaining("/about")]),
+    );
+    expect(chatMock.mock.calls[0]?.[0]?.systemPrompts).toEqual(
+      expect.arrayContaining([expect.stringContaining("Search params: search, tag")]),
     );
     expect(chatMock.mock.calls[0]?.[0]?.systemPrompts).toEqual(
       expect.arrayContaining([expect.stringContaining("/posts/cpp-mutex")]),
     );
-    expect(chatMock.mock.calls[0]?.[0]?.tools).toHaveLength(4);
+    expect(chatMock.mock.calls[0]?.[0]?.tools).toHaveLength(5);
     expect(response.answer).toBe("Generated answer");
     expect(response.usedTools).toEqual([]);
   });
