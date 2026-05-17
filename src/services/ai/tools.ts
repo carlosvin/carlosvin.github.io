@@ -54,6 +54,17 @@ export async function getPostTool(input: unknown) {
   });
 }
 
+export async function getPageTool(input: unknown) {
+  const parsed = PostSlugInputSchema.parse(input);
+  return safeToolHandler(async () => {
+    const page = await postRepository.getPost(parsed.slug, { includeUnlisted: true });
+    if (!page) {
+      throw new Error(`Page not found: ${parsed.slug}`);
+    }
+    return toPostDetail(page);
+  });
+}
+
 export async function getTagsTool() {
   return safeToolHandler(async () => {
     return postRepository.getTags();
@@ -85,6 +96,15 @@ export function createAITools(usedToolNames: Set<string>) {
     }).server(async (args) => {
       usedToolNames.add("getPost");
       return unwrapToolResult(await getPostTool(args), "getPost");
+    }),
+    toolDefinition({
+      name: "getPage",
+      description: "Get a static site page, such as the about page, by slug.",
+      inputSchema: PostSlugInputSchema,
+      outputSchema: PostDetailSchema,
+    }).server(async (args) => {
+      usedToolNames.add("getPage");
+      return unwrapToolResult(await getPageTool(args), "getPage");
     }),
     toolDefinition({
       name: "getTags",

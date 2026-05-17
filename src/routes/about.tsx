@@ -1,6 +1,6 @@
 import { siteConfig } from "@/config";
 import { getPageServerFn } from "@/services/api/serverFns";
-import { Box, Stack, Text, Title, Typography } from "@mantine/core";
+import { Anchor, Box, Stack, Text, Title, Typography } from "@mantine/core";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/about")({
@@ -25,9 +25,9 @@ function AboutPage() {
 
   return (
     <Stack component="article" gap="md" maw={860}>
-      <Link to="/" style={{ fontSize: "0.9rem" }}>
+      <Anchor component={Link} to="/" size="sm">
         Back to posts
-      </Link>
+      </Anchor>
 
       <Title order={1}>{page.title}</Title>
 

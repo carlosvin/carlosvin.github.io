@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { chat, streamToText } from "@tanstack/ai";
+import { chat, maxIterations, streamToText } from "@tanstack/ai";
 import { type GeminiTextModel, createGeminiChat } from "@tanstack/ai-gemini";
 import { navigationManifest } from "./navigationManifest";
 import { getMissingConfigChatResponse } from "./responses";
@@ -111,7 +111,13 @@ export class GeminiAdapterService implements AIAdapterService {
 
   private buildSystemPrompts(input: ChatRequest): string[] {
     const routeHints = navigationManifest
-      .map((route) => `- ${route.path}: ${route.title}. ${route.description}`)
+      .map((route) => {
+        const searchParams = route.searchParams?.length
+          ? ` Search params: ${route.searchParams.join(", ")}.`
+          : "";
+
+        return `- ${route.path}: ${route.title}. ${route.description}${searchParams}`;
+      })
       .join("\n");
     const browserContext = input.browserContext
       ? JSON.stringify(input.browserContext, null, 2)
@@ -121,8 +127,9 @@ export class GeminiAdapterService implements AIAdapterService {
       : "No user context was provided by the client.";
 
     return [
-      "You are the AI assistant for Carlos Martin Sanchez's software engineering blog.",
-      "Use the available tools whenever the answer depends on site content, post slugs, tags, routes, metadata, or navigation. Do not invent facts when a tool can verify them.",
+      "You are a helpful software engineering assistant embedded in Carlos Martin Sanchez's technical blog.",
+      "You can answer general software engineering questions, generate code snippets, explain concepts, and compare technologies. When the question is related to blog content (posts, tags, navigation), use the available tools to ground your answer in real site data rather than inventing facts.",
+      "When generating code examples, prefer patterns, languages, or libraries that are discussed in the blog posts when relevant — use the tools to fetch relevant post content if it would improve the answer.",
       "Ground your answer in the current client context when it is provided. Use browser and user context (location, timezone, locale, platform, and date/time) to disambiguate navigation advice and format responses.",
       "Prefer concise markdown answers. Use site-relative markdown links for internal pages such as /about or /posts/some-slug. Use tables only when they improve readability.",
       `Known routes:\n${routeHints}`,
@@ -148,6 +155,7 @@ export class GeminiAdapterService implements AIAdapterService {
         messages: this.toMessages(input),
         systemPrompts: this.buildSystemPrompts(input),
         tools: createAITools(usedToolNames),
+        agentLoopStrategy: maxIterations(10),
       });
       const answer = await streamToText(stream);
 

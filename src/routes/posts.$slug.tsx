@@ -1,8 +1,9 @@
+import { Link } from "@/components/Link/Link";
 import { siteConfig } from "@/config";
 import { getPostServerFn } from "@/services/api/serverFns";
 import { formatPostDate } from "@/utils/date";
 import { Anchor, Badge, Box, Card, Group, Stack, Text, Title, Typography } from "@mantine/core";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/posts/$slug")({
   loader: async ({ params: { slug } }) => {
@@ -31,9 +32,9 @@ function PostPage() {
   return (
     <Group align="flex-start" wrap="nowrap" gap="lg">
       <Stack component="article" gap="md" maw={860} style={{ flex: 1 }}>
-        <Link to="/" style={{ fontSize: "0.9rem" }}>
+        <Anchor component={Link} to="/" size="sm">
           Back to posts
-        </Link>
+        </Anchor>
 
         <Title order={1}>{post.title}</Title>
 
@@ -88,9 +89,13 @@ function PostPage() {
         </Box>
       </Stack>
 
-      <Box w={260} visibleFrom="md" style={{ minHeight: 1 }}>
+      <Box
+        w={260}
+        visibleFrom="md"
+        style={{ alignSelf: "flex-start", position: "sticky", top: 88 }}
+      >
         {headings.length > 0 && (
-          <Card withBorder radius="md" p="md" style={{ position: "sticky", top: 88 }}>
+          <Card withBorder radius="md" p="md">
             <Text fw={600} mb="sm">
               On this page
             </Text>
