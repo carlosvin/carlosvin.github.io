@@ -6,8 +6,10 @@
 
 import { readFileSync } from "node:fs";
 import { basename, dirname, extname } from "node:path";
-import { glob } from "glob";
+import globPkg from "glob";
 import matter from "gray-matter";
+
+const { sync: globSync } = globPkg;
 
 const SKIPPED_FILES = new Set(["_index.md"]);
 
@@ -33,7 +35,7 @@ function deriveSlug(filePath, frontMatter) {
  */
 async function extractPostMetadata() {
   const contentGlob = "content/**/*.md";
-  const files = await glob(contentGlob);
+  const files = globSync(contentGlob);
 
   const posts = [];
   for (const filePath of files) {
