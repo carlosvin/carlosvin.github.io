@@ -196,11 +196,7 @@ export function ChatDrawer({ isOpen, onClose }: ChatDrawerProps) {
                     bg={message.role === "user" ? "blue.6" : "var(--mantine-color-default-hover)"}
                     ta="left"
                   >
-                    <Text
-                      size="xs"
-                      c={message.role === "user" ? "white" : "dimmed"}
-                      mb={4}
-                    >
+                    <Text size="xs" c={message.role === "user" ? "white" : "dimmed"} mb={4}>
                       {message.role === "user" ? "You" : "Assistant"}
                     </Text>
                     {renderMessageContent(message)}
