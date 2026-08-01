@@ -6,10 +6,8 @@
 
 import { readFileSync } from "node:fs";
 import { basename, dirname, extname } from "node:path";
-import globPkg from "glob";
+import { globSync } from "glob";
 import matter from "gray-matter";
-
-const { sync: globSync } = globPkg;
 
 const SKIPPED_FILES = new Set(["_index.md"]);
 
