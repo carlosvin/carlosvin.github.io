@@ -2,6 +2,8 @@
 
 **Status:** proposal only — this document is the deliverable. Implementation should follow it in a later change.
 
+**Worth migrating?** Zola is the better blog compiler. TanStack Start SSG is worth it only if you want this site as a TypeScript product (skills, typed content API, React UI, later AI). See [Is this better than Zola?](#is-this-better-than-zola-is-the-migration-worth-it).
+
 **Current site:** [Zola](https://www.getzola.org/) static blog in this repo (`config.toml`, `content/`, `templates/`, `static/`), published to GitHub Pages at `https://carlosvin.github.io` via `.github/workflows/main.yml` (Zola → `gh-pages`).
 
 **Target:** a TanStack Start app that keeps the same public URLs and content, built as a **fully generated static site**, still deployable to GitHub Pages.
@@ -18,6 +20,72 @@ These are **not required** and must **not** be added in the first implementation
 | **TanStack AI** | **Next iteration only.** No `@tanstack/ai`, no chat drawer, no `toolDefinition` / `createSafeServerTool`, no OpenAI keys. Do not stub a disabled chat UI. |
 
 The architecture skill still applies: interface-first `ReadRepository`, schema layers, thin routes, isomorphic loaders, env parse-once. Contract items that exist only for mutations, auth tickets, and AI tool coverage are **deferred**, not implemented as no-ops.
+
+---
+
+## Is this better than Zola? Is the migration worth it?
+
+**Zola is the better static-site generator for this blog’s current job.** It already turns markdown into HTML, taxonomies, feeds, sitemap, search index, and aliases, then GitHub Pages serves the files. A TanStack Start SSG rewrite does not make that pipeline simpler, faster to build, or lighter in the browser.
+
+**The migration is worth it only as a product/stack choice**, not as an SSG upgrade. It pays off if you want this site to live in the same TanStack architecture as the rest of your work and to grow (UI, typed content API, later AI) without a second rewrite. It is not worth it if the goal is a cheaper, faster, or more “correct” blog engine.
+
+### What Zola already does well
+
+This repo is a good fit for Zola:
+
+- Markdown + frontmatter in git is the CMS; no database is needed.
+- Taxonomies, pagination, RSS/Atom, sitemap, robots, aliases, syntax highlighting, and a search index are **built in**.
+- The publish path is one binary in CI (`shalzz/zola-deploy-action`) → `gh-pages`.
+- Output is mostly HTML/CSS with a small amount of JS (search, theme, analytics, Utterances). That is the right weight for a reading site.
+- You already ship speculation rules for link prerender, OG/JSON-LD, and stable slugs.
+
+On **time-to-first-byte, JS payload, build time, and operational surface**, Zola wins. Replacing it with Vite + React + Mantine + prerender will almost certainly **increase** bundle size and CI complexity. Static server functions are also **experimental**; Zola’s generator is not.
+
+This repo has already moved generators before (`hugo`, `sveltekit`, `zola` branches). Each swap costs alias/URL work. That cost is real again here.
+
+### Where TanStack Start SSG is actually better
+
+It is better at **being an application**, not at being a blog compiler:
+
+| Dimension | Zola | TanStack Start SSG |
+| --- | --- | --- |
+| Mental model | Templates + config; content is first-class | Typed routes, loaders, schemas; content is a repository |
+| UI | Pico + Tera + ad hoc JS | Mantine, one component model, color scheme, search UX |
+| Content API | Implicit (only exists at generate time inside templates) | Explicit GET server functions, reused by loaders and (later) AI tools |
+| Agent/skill fit | Weak — Tera/Zola is off the template’s contract | Strong — same skills as `tanstack-fullstack-ai-template` |
+| Tests | Markdown lint, maybe HTML snapshots | Vitest on parsers/mappers, Playwright on prerendered URLs |
+| Future AI | Would be a separate app or a glued-on script | Same `getPosts` / `getPost` functions become tools later |
+| Interactive features | Hand-written JS in `static/` / templates | Client navigations, `validateSearch`, preload, shared layout |
+| Hosting | GitHub Pages (already) | GitHub Pages **if** fully prerendered (this plan) |
+
+The honest “better” list is:
+
+1. **One stack.** Posts on this blog already argue for TanStack Router and the promptable fullstack template. The site itself would dogfood that architecture instead of being a Rust SSG island.
+2. **A stable content interface.** `ReadRepository` + Zod + static `createServerFn` is a typed API over the same markdown. Zola does not give you that API; it only gives HTML. That interface is what a later AI iteration would wrap — without re-parsing files in a new way.
+3. **UI that can grow.** Rich search, tag filters in the URL, TOC, theme, and any future widgets stay in React instead of accumulating jQuery-era scripts next to Tera.
+4. **Agent-operable changes.** Skills encode invariants (loaders must not import `fs`, env parsed once, thin routes). That is a weak story in Zola templates and a strong one in this stack.
+
+None of those improve **reader** outcomes on day one. Readers mostly get the same articles, hopefully with the same URLs. They may get a heavier page.
+
+### What is *not* a reason to migrate
+
+- **SEO / SSG purity.** Zola already emits static HTML. TanStack prerender matches that; it does not beat it. SPA mode would be worse.
+- **GitHub Pages.** You are already there. The new stack must work *around* Pages, not because of it.
+- **Performance.** Expect a regression unless you are strict (prerendered HTML, no Shiki in the client, code-split, watch Lighthouse against current Pico pages).
+- **Mongo, JWT, Netlify.** Out of scope; they are not advantages here.
+- **AI now.** Deferred. Do not migrate “for AI” unless you accept that the first cutover ships **without** it, and that GitHub Pages still cannot run `chat()` later without a new host or a separate API.
+
+### Verdict
+
+| If you care most about… | Decision |
+| --- | --- |
+| Publishing markdown with minimal tooling | **Keep Zola.** The migration is not worth it. |
+| Matching Zola’s features with a “modern” SSG for its own sake | **Keep Zola.** Astro or similar would still be a closer SSG than Start. |
+| Dogfooding the TanStack skills, a typed content API, richer UI, and a path to AI later | **Migrate.** The cost is justified as platform work on *your* site, not as a better blog engine. |
+
+**Recommendation:** treat this as **worth doing only if the platform goals matter to you**. Technically, Zola remains the better blog compiler. TanStack Start SSG is the better **home** for this site if you want it to be a small TypeScript product that happens to generate static pages.
+
+If you proceed, success is **parity for readers** plus **leverage for you** (typed content, skills, later AI). If the implementation cannot keep URLs, aliases, and article HTML in view-source, it is a downgrade — stop and stay on Zola.
 
 ---
 
@@ -359,4 +427,4 @@ AI (and any host that could run it) is a **later iteration**, after the static s
 
 ## Recommended decision
 
-**Proceed with migration on GitHub Pages using TanStack Start prerender + static server functions + a markdown `ReadRepository`.** Use the three skills as the contract for routing, schemas, loaders, and env. **Do not implement MongoDB, JWT, Netlify, or AI in this cutover.** AI can be designed later against the same GET server functions.
+**Zola is the better SSG; migrate only for platform reasons** (TanStack skills, typed content API, React UI, later AI). If those matter, proceed on GitHub Pages with prerender + static server functions + a markdown `ReadRepository`. **Do not implement MongoDB, JWT, Netlify, or AI in this cutover.** If they do not matter, do not migrate.
