@@ -6,6 +6,19 @@
 
 **Target:** a TanStack Start app that keeps the same public URLs and content, built as a **fully generated static site**, still deployable to GitHub Pages.
 
+## Explicitly out of scope (this migration)
+
+These are **not required** and must **not** be added in the first implementation:
+
+| Item | Status |
+| --- | --- |
+| **MongoDB** | Out of scope. Content stays files in `content/`. No database, no `MONGODB_URI`, no mongo repository. |
+| **JWT / auth** | Out of scope. Public read-only site. No `jose`, no auth middleware, no `requireAuthMiddleware`, no `TraceabilityContext` writes. |
+| **Netlify** | Out of scope. Production host remains **GitHub Pages**. No `@netlify/vite-plugin`, no `netlify.toml`, no Netlify Functions. |
+| **TanStack AI** | **Next iteration only.** No `@tanstack/ai`, no chat drawer, no `toolDefinition` / `createSafeServerTool`, no OpenAI keys. Do not stub a disabled chat UI. |
+
+The architecture skill still applies: interface-first `ReadRepository`, schema layers, thin routes, isomorphic loaders, env parse-once. Contract items that exist only for mutations, auth tickets, and AI tool coverage are **deferred**, not implemented as no-ops.
+
 ---
 
 ## Direct answers
@@ -22,17 +35,17 @@ npx skills add carlosvin/tanstack-fullstack-ai-template --skill observability-an
 npx skills add carlosvin/tanstack-fullstack-ai-template --skill reference-tech-stack
 ```
 
-| Skill | Use for this blog | Do not copy blindly |
+| Skill | Use for this blog | Leave unused this iteration |
 | --- | --- | --- |
-| `tanstack-promptable-fullstack-app-template` | Interface-first repository, Zod schema layers, thin file routes, loaders that only call `createServerFn`, URL-as-state for filters/search, parent layouts, import protection | Task CRUD, JWT auth ticket, Mongo, POST mutations, AI tools for every repo method unless you explicitly want a chat assistant over posts |
-| `observability-and-env` | Parse env once, `webEnvMiddleware`, `shellSession` / `getBrowserShellSession`, optional Sentry + pino behind `ObservabilityService` | Assuming a Node server at runtime on GitHub Pages (there is none) |
-| `reference-tech-stack` | Zod, Mantine, lucide-react, Biome, Vitest, Playwright, pnpm | **Netlify + Mongo + OpenAI as required production pieces.** Those are the *reference app* defaults. This blog’s production host should stay GitHub Pages unless you later add a live backend |
+| `tanstack-promptable-fullstack-app-template` | Interface-first **read** repository, Zod schema layers, thin file routes, loaders that only call `createServerFn`, URL-as-state for filters/search, parent layouts, import protection | Task CRUD, JWT, Mongo, POST mutations, AI tools, auth tickets |
+| `observability-and-env` | Parse env once, `webEnvMiddleware`, `shellSession` / `getBrowserShellSession`, optional Sentry + pino behind `ObservabilityService` | Runtime Node server assumptions; secrets that do not exist on GitHub Pages |
+| `reference-tech-stack` | Zod, Mantine, lucide-react, Biome, Vitest, Playwright, pnpm | MongoDB, jose JWT, OpenAI adapter, Netlify deploy plugin |
 
-The architecture skill is **vendor-agnostic** for database and deploy. Swapping “Mongo repository + Netlify SSR” for “markdown filesystem repository + static prerender + GitHub Pages” is an allowed swap, not a contract violation.
+The architecture skill is **vendor-agnostic** for database and deploy. A markdown `ReadRepository` + GitHub Pages SSG is the chosen stack, not a temporary stand-in for Mongo/Netlify.
 
 ### Can it be deployed to GitHub Pages?
 
-**Yes, if and only if the production build is static HTML + assets.** GitHub Pages is a static file host. It cannot run TanStack Start SSR, Nitro, Netlify Functions, Mongo, or SSE chat.
+**Yes, if and only if the production build is static HTML + assets.** GitHub Pages is a static file host. It cannot run TanStack Start SSR or a live Node server. That is acceptable: this migration does not need those.
 
 This user/org site (`carlosvin.github.io`) is served from the **site root** (`/`), so there is no project-pages `basename` problem. The existing workflow already publishes a generated tree to `gh-pages`.
 
@@ -60,7 +73,7 @@ This user/org site (`carlosvin.github.io`) is served from the **site root** (`/`
 
 That matches how a blog works: content is files in git; nothing needs a runtime server.
 
-Do **not** put POST mutations, auth, or streaming chat on those functions if GitHub Pages is the only host. Those need a server.
+All content server functions are **GET-only**. There are no POST mutations, auth, or streaming endpoints in this migration.
 
 ---
 
@@ -114,15 +127,15 @@ interface ReadRepository {
 }
 ```
 
-- **Seed / filesystem implementation:** read `content/` at build time (`gray-matter` / `unified` + `remark`/`rehype`). This is the production implementation for GitHub Pages.
-- **Optional later:** a `WritableRepository` + CMS/Mongo only if you add a host that can run server functions (Netlify). Not required for v1.
+- **Filesystem implementation (production):** read `content/` at build time (`gray-matter` / `unified` + `remark`/`rehype`). This is the only repository implementation.
+- **No `WritableRepository`.** The site is read-only. Do not add Mongo, a CMS, or write APIs.
 
-No JWT, no `TraceabilityContext` writes, no `requireAuthMiddleware` on the public blog. Auth contract items in the skill apply **when you add mutations**. For a read-only site, skip writable repo and AI write tools.
+No JWT, no `TraceabilityContext`, no `requireAuthMiddleware`. Skill items about auth tickets and mutations stay unused until a future iteration that actually adds writes.
 
 ### Schema layers
 
 1. **Repository:** raw frontmatter + HTML/AST, file path, aliases, unlisted flag.
-2. **Tools / server fn:** `PostListItem`, `PostDetail` (html, toc, tags, dates), `Tag`, `SearchDoc`, `SiteConfig`.
+2. **Server-fn (API-shaped):** `PostListItem`, `PostDetail` (html, toc, tags, dates), `Tag`, `SearchDoc`, `SiteConfig`. Same schemas the loaders consume. No AI `toolDefinition` layer in this iteration.
 3. **Router search:** `{ q?: string; tag?: string; page?: number }` on list/search routes; debounced free-text search (skill special pattern).
 
 ### Server functions (all GET + static middleware)
@@ -152,14 +165,13 @@ Centralize in `src/services/api/serverFns.ts`:
 
 **Prerender dynamic `$slug` / `$tag`:** automatic discovery skips param routes. Enable `prerender.enabled` + `crawlLinks: true`, and/or pass explicit `pages: [{ path }]` from a small Node script that lists slugs/tags/aliases before Vite prerender.
 
-### AI (optional, phase 2)
+### AI — later iteration (not this migration)
 
-The architecture skill wants every repo method exposed as a tool. For a **static GitHub Pages** site:
+Do not implement TanStack AI now:
 
-- **v1:** omit TanStack AI chat. `getAIAvailability()` returns `{ available: false }` so the root layout never mounts chat (skill: no disabled stub).
-- **v2 (only with a server host):** Netlify (reference stack) or a tiny worker; then add read-only tools (`listPosts`, `getPost`, `listTags`) + client `navigate`. Streaming `chat()` cannot run on GitHub Pages.
-
-Do not ship `OPENAI_API_KEY` to the static client.
+- No chat UI, no `/api/chat`, no `getAIAvailability`, no client tools (`navigate` / `invalidateRouter` for an assistant).
+- Do not add AI packages or API keys.
+- A later iteration can wrap the existing GET server functions as read-only tools. That work needs a **runtime server** (or a separate API), which this GitHub Pages site does not have — so it is a separate project decision, not a hidden dependency of the SSG cutover.
 
 ### Observability
 
@@ -206,7 +218,7 @@ Vite / TanStack Start prerender should emit a tree like:
 
 ### Aliases
 
-GitHub Pages has **no** Netlify `_redirects`. For each Zola `aliases` entry, prerender a tiny HTML file:
+GitHub Pages has **no** platform redirect file. For each Zola `aliases` entry, prerender a tiny HTML file:
 
 ```html
 <!doctype html>
@@ -242,11 +254,12 @@ Disable Jekyll: add `.nojekyll` in the publish root so `_assets` / files startin
 ## What not to do
 
 1. **Do not scaffold the full task app** into this repo and then delete tasks. Start from `npx @tanstack/cli` / Start app, then apply skill layers for **Post**.
-2. **Do not enable SPA mode as the production site.** Optional: SPA for unpublished local experiments only.
-3. **Do not call live `createServerFn` RPC in production** on GitHub Pages. If a function is missing `staticFunctionMiddleware`, client navigations will 404 on `/_serverFn/*`.
-4. **Do not import `fs` / gray-matter in route loaders.** Loaders are isomorphic (skill: server execution boundaries). Parsing lives in `*.server.ts` behind server fns.
-5. **Do not keep Zola templates as the renderer** while adding React. One generator.
-6. **Do not change `base_url` / post slugs** without redirects.
+2. **Do not add MongoDB, JWT, Netlify, or TanStack AI** in this migration.
+3. **Do not enable SPA mode as the production site.** Optional: SPA for unpublished local experiments only.
+4. **Do not call live `createServerFn` RPC in production** on GitHub Pages. If a function is missing `staticFunctionMiddleware`, client navigations will 404 on `/_serverFn/*`.
+5. **Do not import `fs` / gray-matter in route loaders.** Loaders are isomorphic (skill: server execution boundaries). Parsing lives in `*.server.ts` behind server fns.
+6. **Do not keep Zola templates as the renderer** while adding React. One generator.
+7. **Do not change `base_url` / post slugs** without redirects.
 
 ---
 
@@ -295,7 +308,8 @@ Disable Jekyll: add `.nojekyll` in the publish root so `_assets` / files startin
 
 - Merge to `main`; confirm `https://carlosvin.github.io` and a sample of alias URLs.
 - Remove `config.toml` / `templates/` once unused (keep `content/` and `static/` as sources, or move assets into `public/` + `content/`).
-- Optional follow-up: Netlify **only if** you want live AI search/chat; keep GH Pages as the canonical URL via DNS or don’t split hosts.
+
+AI (and any host that could run it) is a **later iteration**, after the static site is live.
 
 ---
 
@@ -311,7 +325,10 @@ Disable Jekyll: add `.nojekyll` in the publish root so `_assets` / files startin
 | Search | MiniSearch (or elasticlunr) over prerendered JSON |
 | Lint | Biome |
 | Tests | Vitest (frontmatter parser, mappers) + Playwright (prerendered URLs) |
-| Deploy | GitHub Pages (`gh-pages` branch), **not** Netlify for v1 |
+| Deploy | GitHub Pages (`gh-pages` branch) |
+| Database | None |
+| Auth | None |
+| AI | None this iteration |
 | Package manager | pnpm |
 
 ---
@@ -336,10 +353,10 @@ Disable Jekyll: add `.nojekyll` in the publish root so `_assets` / files startin
 - View-source on a post contains the article HTML (not an empty SPA shell).
 - Loaders never import `fs` or the markdown parser.
 - Skills checklists that apply (schema boundaries, thin routes, env parse-once, no `window.__ENV__`) hold.
-- AI chat is absent in v1 (`getAIAvailability` false) rather than a broken control.
+- The built app has no Mongo, JWT, Netlify, or TanStack AI dependencies.
 
 ---
 
 ## Recommended decision
 
-**Proceed with migration on GitHub Pages using TanStack Start prerender + static server functions + a markdown `ReadRepository`.** Use the three skills as the contract. Treat Mongo, JWT, Netlify, and TanStack AI as **optional later upgrades**, not part of the first cutover.
+**Proceed with migration on GitHub Pages using TanStack Start prerender + static server functions + a markdown `ReadRepository`.** Use the three skills as the contract for routing, schemas, loaders, and env. **Do not implement MongoDB, JWT, Netlify, or AI in this cutover.** AI can be designed later against the same GET server functions.
