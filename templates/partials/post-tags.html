@@ -3,7 +3,13 @@ Displays a list of tags.
 Variables:
 - tags: List of tag names or taxonomy objects (optional, defaults to page.taxonomies.tags)
 #}
-{% set tags_list = tags | default(value=page.taxonomies.tags | default(value=[])) %}
+{% if tags is defined %}
+{% set tags_list = tags %}
+{% elif page is defined %}
+{% set tags_list = page.taxonomies.tags | default(value=[]) %}
+{% else %}
+{% set tags_list = [] %}
+{% endif %}
 {% if tags_list %}
 <span class="tags">
     {% for tag in tags_list %}
