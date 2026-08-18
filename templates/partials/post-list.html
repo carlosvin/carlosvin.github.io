@@ -4,7 +4,13 @@ Variables:
 - post_list: List of page objects to display (optional, defaults to section.pages)
 #}
 <div class="blog">
-    {% set pages = post_list | default(value=section.pages | default(value=[])) %}
+    {% if post_list is defined %}
+    {% set pages = post_list %}
+    {% elif section is defined %}
+    {% set pages = section.pages %}
+    {% else %}
+    {% set pages = [] %}
+    {% endif %}
     {% for page in pages %}
     {% if page.title != "About" %}
     {% include "partials/post-card.html" %}
