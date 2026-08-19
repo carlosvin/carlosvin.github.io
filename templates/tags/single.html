@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block title %}Posts tagged with "{{ term.name }}" - {{ config.title }}{% endblock %}
+{% block description %}{{ term.pages | length }} post{% if term.pages | length != 1 %}s{% endif %} tagged "{{ term.name }}"{% endblock %}
 
 {% block og %}
-<meta property="og:title" content="Posts tagged with &quot;{{ term.name }}&quot; - {{ config.title }}">
-<meta property="og:description"
-    content="{{ term.pages | length }} post{% if term.pages | length != 1 %}s{% endif %} found">
-<meta property="og:url" content="{{ current_url }}">
-<meta property="og:type" content="website">
+{% set title = "Posts tagged with '" ~ term.name ~ "' - " ~ config.title %}
+{% set tagged_count = term.pages | length %}
+{% set description = tagged_count ~ " posts tagged '" ~ term.name ~ "'" %}
+{% include "partials/og.html" %}
 {% endblock %}
 
 {% block jsonld %}{% endblock %}

@@ -4,8 +4,10 @@ lang: en
 description: "A little bit about this blog, who I am and what I do."
 aliases: ["/langs/en/about"]
 date: 2025-08-15
-toc: false
-unlisted: true
+template: page.html
+in_search_index: false
+extra:
+  unlisted: true
 ---
 
 ## About this blog

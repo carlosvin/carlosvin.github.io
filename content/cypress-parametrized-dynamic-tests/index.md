@@ -3,9 +3,9 @@ title: "Parameterized Tests in Cypress"
 date: 2021-01-06
 lang: en
 description: "How to write parameterized tests in Cypress"
-preview_image: ./html-validation.png
-toc: true
 aliases: ["/langs/en/posts/cypress-parametrized-dynamic-tests"]
+extra:
+  preview_image: ./html-validation.png
 taxonomies:
   tags: ["testing", "cypress", "javascript", "e2e"]
 ---

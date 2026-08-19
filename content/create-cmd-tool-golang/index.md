@@ -3,9 +3,9 @@ title: "Easily creating a golang command line tool"
 date: 2021-02-14
 lang: en
 description: "Let's see how to easily and quickly create a command line tool in golang"
-toc: true
 aliases: ["/langs/en/posts/create-cmd-tool-golang", "/langs/es/posts/create-cmd-tool-golang/"]
-preview_image: "https://golang.org/lib/godoc/images/go-logo-blue.svg"
+extra:
+  preview_image: "https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg"
 taxonomies:
   tags: ["golang", "cli", "tools", "cmd"]
 ---
