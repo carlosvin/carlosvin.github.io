@@ -167,9 +167,10 @@ function initSearch() {
       }
 
       var fragment = document.createDocumentFragment();
+      var terms = term.split(" ");
       for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
         var item = document.createElement("li");
-        item.innerHTML = formatSearchResultItem(results[i], term.split(" "));
+        item.innerHTML = formatSearchResultItem(results[i], terms);
         fragment.appendChild(item);
       }
       $searchResultsItems.appendChild(fragment);
