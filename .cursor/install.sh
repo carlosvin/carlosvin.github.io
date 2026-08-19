@@ -26,11 +26,16 @@ ZOLA_EGRESS_DOMAINS=(
 if ! command -v zola >/dev/null 2>&1 || [ "$(zola --version)" != "zola ${ZOLA_VERSION#v}" ]; then
   tmp="$(mktemp -d)"
   trap 'rm -rf "${tmp}"' EXIT
-  # -f: fail on HTTP errors, -L: follow the release CDN redirect, with retries
-  # and timeouts so transient network issues do not abort environment setup.
-  if ! curl -fL --retry 5 --retry-delay 2 --retry-all-errors \
-        --connect-timeout 30 --max-time 300 \
-        -o "${tmp}/zola.tar.gz" "${ZOLA_URL}"; then
+  # -f: fail on HTTP errors, -sS: quiet but still show errors, -L: follow the
+  # release CDN redirect. Retries/timeouts keep transient network issues from
+  # aborting setup. --retry-all-errors needs curl >= 7.71, so feature-detect it
+  # rather than passing an unknown flag (which would fail on older curl).
+  curl_opts=(-fsSL --retry 5 --retry-delay 2 --connect-timeout 30 --max-time 300)
+  if curl --help all 2>/dev/null | grep -q -- '--retry-all-errors' \
+     || curl --help 2>/dev/null | grep -q -- '--retry-all-errors'; then
+    curl_opts+=(--retry-all-errors)
+  fi
+  if ! curl "${curl_opts[@]}" -o "${tmp}/zola.tar.gz" "${ZOLA_URL}"; then
     {
       echo "ERROR: Failed to download Zola ${ZOLA_VERSION} from:"
       echo "  ${ZOLA_URL}"
