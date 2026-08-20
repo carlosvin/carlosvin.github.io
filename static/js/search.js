@@ -117,8 +117,8 @@ function makeTeaser(body, terms) {
   return teaser.join("");
 }
 
-function formatSearchResultItem(item, terms, id) {
-  return '<a id="' + id + '" href="' + escapeHtml(item.ref) + '"><strong>' +
+function formatSearchResultItem(item, terms) {
+  return '<a href="' + escapeHtml(item.ref) + '"><strong>' +
     escapeHtml(item.doc.title) + "</strong><p>" + makeTeaser(item.doc.body, terms) + "</p></a>";
 }
 
@@ -175,12 +175,13 @@ function initSearch() {
     var items = $searchResultsItems.querySelectorAll("li");
     activeIndex = index;
     for (var i = 0; i < items.length; i++) {
-      items[i].classList.toggle("is-active", i === index);
+      var isActive = i === index;
+      items[i].classList.toggle("is-active", isActive);
+      items[i].setAttribute("aria-selected", isActive ? "true" : "false");
     }
     if (index >= 0 && items[index]) {
-      var link = items[index].querySelector("a");
-      if (link && link.id) {
-        $searchInput.setAttribute("aria-activedescendant", link.id);
+      if (items[index].id) {
+        $searchInput.setAttribute("aria-activedescendant", items[index].id);
       }
       items[index].scrollIntoView({ block: "nearest" });
     } else {
@@ -234,8 +235,10 @@ function initSearch() {
       var terms = term.split(" ");
       for (var i = 0; i < shown; i++) {
         var item = document.createElement("li");
+        item.id = "search-result-" + i;
         item.setAttribute("role", "option");
-        item.innerHTML = formatSearchResultItem(results[i], terms, "search-result-" + i);
+        item.setAttribute("aria-selected", "false");
+        item.innerHTML = formatSearchResultItem(results[i], terms);
         fragment.appendChild(item);
       }
       $searchResultsItems.appendChild(fragment);
