@@ -118,9 +118,8 @@ function makeTeaser(body, terms) {
 }
 
 function formatSearchResultItem(item, terms) {
-  return '<article><header><a href="' + escapeHtml(item.ref) + '">' +
-    escapeHtml(item.doc.title) + "</a></header><p>" +
-    makeTeaser(item.doc.body, terms) + "</p></article>";
+  return '<a href="' + escapeHtml(item.ref) + '"><strong>' +
+    escapeHtml(item.doc.title) + "</strong><p>" + makeTeaser(item.doc.body, terms) + "</p></a>";
 }
 
 function initSearch() {
@@ -128,6 +127,7 @@ function initSearch() {
   var $searchInput = document.getElementById("search");
   var $searchResults = document.querySelector(".search-results");
   var $searchResultsItems = document.querySelector(".search-results__items");
+  var $searchStatus = document.querySelector(".search-results__status");
   if (!$searchInput || !$searchResults || !$searchResultsItems) {
     return;
   }
@@ -143,10 +143,15 @@ function initSearch() {
   };
   var currentTerm = "";
   var indexPromise;
+  var activeIndex = -1;
+  var resultCount = 0;
 
   var initIndex = function () {
     if (!indexPromise) {
       indexPromise = fetch(indexUrl).then(function (response) {
+        if (!response.ok) {
+          throw new Error("Search index request failed");
+        }
         return response.json().then(function (json) {
           return elasticlunr.Index.load(json);
         });
@@ -155,44 +160,158 @@ function initSearch() {
     return indexPromise;
   };
 
-  $searchInput.addEventListener("focus", initIndex, { once: true });
+  function setExpanded(open) {
+    $searchInput.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) {
+      $searchResults.hidden = false;
+    } else {
+      $searchResults.hidden = true;
+      $searchInput.removeAttribute("aria-activedescendant");
+      activeIndex = -1;
+    }
+  }
 
-  $searchInput.addEventListener("keyup", debounce(function () {
+  function setActive(index) {
+    var items = $searchResultsItems.querySelectorAll("li");
+    activeIndex = index;
+    for (var i = 0; i < items.length; i++) {
+      var isActive = i === index;
+      items[i].classList.toggle("is-active", isActive);
+      items[i].setAttribute("aria-selected", isActive ? "true" : "false");
+    }
+    if (index >= 0 && items[index]) {
+      if (items[index].id) {
+        $searchInput.setAttribute("aria-activedescendant", items[index].id);
+      }
+      items[index].scrollIntoView({ block: "nearest" });
+    } else {
+      $searchInput.removeAttribute("aria-activedescendant");
+    }
+  }
+
+  function renderStatus(text) {
+    if ($searchStatus) {
+      $searchStatus.textContent = text;
+    }
+  }
+
+  function runSearch() {
     var term = $searchInput.value.trim();
-    if (term === currentTerm) {
+    if (term === currentTerm && term !== "") {
+      setExpanded(true);
       return;
     }
-    $searchResults.style.display = term === "" ? "none" : "block";
-    $searchResultsItems.innerHTML = "";
     currentTerm = term;
+    $searchResultsItems.innerHTML = "";
+    resultCount = 0;
+    activeIndex = -1;
+
     if (term === "") {
+      renderStatus("");
+      setExpanded(false);
       return;
     }
+
+    renderStatus("Searching…");
+    setExpanded(true);
 
     initIndex().then(function (idx) {
       if (term !== currentTerm) {
         return;
       }
       var results = idx.search(term, options);
+      $searchResultsItems.innerHTML = "";
+      resultCount = results.length;
+
       if (results.length === 0) {
-        $searchResults.style.display = "none";
+        renderStatus("No matching posts");
         return;
       }
 
-      var html = "";
-      var terms = term.split(" ");
-      var limit = Math.min(results.length, MAX_ITEMS);
-      for (var i = 0; i < limit; i++) {
-        html += "<li>" + formatSearchResultItem(results[i], terms) + "</li>";
-      }
-      $searchResultsItems.innerHTML = html;
-    });
-  }, 150));
+      var shown = Math.min(results.length, MAX_ITEMS);
+      renderStatus(results.length === 1 ? "1 post" : shown + " of " + results.length + " posts");
 
-  window.addEventListener("click", function (e) {
-    if ($searchResults.style.display == "block" && !$searchResults.contains(e.target)) {
-      $searchResults.style.display = "none";
+      var fragment = document.createDocumentFragment();
+      var terms = term.split(" ");
+      for (var i = 0; i < shown; i++) {
+        var item = document.createElement("li");
+        item.id = "search-result-" + i;
+        item.setAttribute("role", "option");
+        item.setAttribute("aria-selected", "false");
+        item.innerHTML = formatSearchResultItem(results[i], terms);
+        fragment.appendChild(item);
+      }
+      $searchResultsItems.appendChild(fragment);
+    }).catch(function () {
+      if (term !== currentTerm) {
+        return;
+      }
+      renderStatus("Search is unavailable");
+    });
+  }
+
+  $searchInput.addEventListener("focus", initIndex, { once: true });
+  $searchInput.addEventListener("input", debounce(runSearch, 150));
+
+  $searchInput.addEventListener("focus", function () {
+    if ($searchInput.value.trim() !== "") {
+      runSearch();
     }
+  });
+
+  $searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if (!$searchResults.hidden) {
+        e.preventDefault();
+        setExpanded(false);
+      }
+      return;
+    }
+
+    if ($searchResults.hidden || resultCount === 0) {
+      return;
+    }
+
+    var items = $searchResultsItems.querySelectorAll("li");
+    if (!items.length) {
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive(activeIndex < items.length - 1 ? activeIndex + 1 : 0);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive(activeIndex > 0 ? activeIndex - 1 : items.length - 1);
+    } else if (e.key === "Enter" && activeIndex >= 0) {
+      var link = items[activeIndex].querySelector("a");
+      if (link) {
+        e.preventDefault();
+        window.location.href = link.href;
+      }
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) {
+      return;
+    }
+    var tag = (e.target && e.target.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (e.target && e.target.isContentEditable)) {
+      return;
+    }
+    e.preventDefault();
+    $searchInput.focus();
+  });
+
+  document.addEventListener("click", function (e) {
+    if ($searchResults.hidden) {
+      return;
+    }
+    if ($searchResults.contains(e.target) || $searchInput.contains(e.target)) {
+      return;
+    }
+    setExpanded(false);
   });
 }
 
