@@ -1,12 +1,11 @@
-{% import "macros.html" as macros %}
 {% set page_title = title | default(value=config.title) %}
 {% set page_description = description | default(value=config.description) %}
 {% if page is defined %}
 {% set canonical_url = page.permalink | default(value=current_url) | default(value=config.base_url) %}
-{% set og_image = macros::preview_url(page=page) %}
+{% set og_image = <preview_url config={config} page_path={page.path} page_preview_image={page.extra.preview_image | default(value='')} /> %}
 {% else %}
 {% set canonical_url = current_url | default(value=config.base_url) %}
-{% set og_image = macros::preview_url() %}
+{% set og_image = <preview_url config={config} /> %}
 {% endif %}
 
 <script type="application/ld+json">

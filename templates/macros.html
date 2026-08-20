@@ -1,16 +1,16 @@
-{% macro preview_url(page=false) -%}
+{% component preview_url(config, page_path="", page_preview_image="") -%}
 {%- set raw = config.extra.preview_image -%}
-{%- if page and page.extra.preview_image -%}
-{%- set raw = page.extra.preview_image -%}
+{%- if page_preview_image -%}
+{%- set raw = page_preview_image -%}
 {%- endif -%}
-{%- if raw is starting_with("http://") or raw is starting_with("https://") -%}
+{%- if raw is starting_with(pat="http://") or raw is starting_with(pat="https://") -%}
 {{ raw }}
-{%- elif raw is starting_with("/") -%}
+{%- elif raw is starting_with(pat="/") -%}
 {{ get_url(path=raw) }}
-{%- elif page -%}
-{%- set rel = raw | trim_start_matches(pat="./") -%}
-{{ get_url(path=page.path ~ rel) }}
+{%- elif page_path -%}
+{%- set rel = raw | trim_start(pat="./") -%}
+{{ get_url(path=page_path ~ rel) }}
 {%- else -%}
 {{ get_url(path=raw) }}
 {%- endif -%}
-{%- endmacro %}
+{%- endcomponent preview_url %}
