@@ -32,7 +32,9 @@ test.describe("golden flows", () => {
     const postLinks = page.locator(".blog article header a");
     await expect(postLinks.first()).toBeVisible();
     expect(await postLinks.count()).toBeGreaterThan(0);
-    await expect(postLinks).not.toHaveText(["About"]);
+    await expect(
+      page.locator(".blog article header a", { hasText: /^About$/ }),
+    ).toHaveCount(0);
 
     const title = await firstPostTitle(postLinks);
     await postLinks.first().click();
