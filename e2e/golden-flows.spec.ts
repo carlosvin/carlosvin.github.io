@@ -1,10 +1,17 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page, type Locator } from "@playwright/test";
 
-async function openNavMenu(page: Page) {
-  const menu = page.locator("header details.dropdown").first();
-  await menu.locator("summary").click();
-  await expect(menu).toHaveAttribute("open", "");
-  return menu;
+function headerNav(page: Page) {
+  return page.locator("header nav");
+}
+
+function postHeading(page: Page) {
+  return page.locator("article.post h1");
+}
+
+async function firstPostTitle(links: Locator) {
+  const title = (await links.first().innerText()).trim();
+  expect(title.length).toBeGreaterThan(0);
+  return title;
 }
 
 test.describe("golden flows", () => {
@@ -14,24 +21,25 @@ test.describe("golden flows", () => {
     await page.goto("/");
 
     await expect(
-      page.getByRole("heading", { level: 1, name: "List of blog posts" }),
+      page.getByRole("heading", { level: 1, name: "Posts" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "My software engineering journey" }),
+      headerNav(page).getByRole("link", {
+        name: "My software engineering journey",
+      }),
     ).toBeVisible();
 
     const postLinks = page.locator(".blog article header a");
     await expect(postLinks.first()).toBeVisible();
-    const postCount = await postLinks.count();
-    expect(postCount).toBeGreaterThan(0);
+    expect(await postLinks.count()).toBeGreaterThan(0);
     await expect(postLinks).not.toHaveText(["About"]);
 
-    const title = (await postLinks.first().innerText()).trim();
+    const title = await firstPostTitle(postLinks);
     await postLinks.first().click();
 
     await expect(page).toHaveURL(/\/.+/);
     await expect(page.locator("article.post")).toBeVisible();
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
+    await expect(postHeading(page)).toHaveText(title);
     await expect(page.locator(".post-content")).not.toBeEmpty();
     await expect(page.locator("article.post time").first()).toBeVisible();
   });
@@ -39,29 +47,28 @@ test.describe("golden flows", () => {
   test("search finds a post and opens it", async ({ page }) => {
     await page.goto("/");
 
-    const search = page.getByRole("searchbox", { name: "Search" });
+    const search = page.getByRole("searchbox", { name: "Search posts" });
     await search.click();
     await search.pressSequentially("python", { delay: 30 });
 
-    const results = page.locator(".search-results__items a");
-    await expect(results.first()).toBeVisible({ timeout: 15_000 });
-    const resultTitle = (await results.first().innerText()).trim();
+    const firstResult = page.locator(".search-results__items a").first();
+    await expect(firstResult).toBeVisible({ timeout: 15_000 });
+    const resultTitle = (await firstResult.locator("strong").innerText()).trim();
     expect(resultTitle.length).toBeGreaterThan(0);
 
-    await results.first().click();
+    await firstResult.click();
     await expect(page.locator("article.post")).toBeVisible();
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      resultTitle,
-    );
+    await expect(postHeading(page)).toHaveText(resultTitle);
   });
 
-  test("menu opens the About page", async ({ page }) => {
+  test("nav opens the About page", async ({ page }) => {
     await page.goto("/");
-    const menu = await openNavMenu(page);
 
-    await menu.getByRole("link", { name: "About", exact: true }).click();
+    await headerNav(page).getByRole("link", { name: "About", exact: true }).click();
     await expect(page).toHaveURL(/\/about\/?$/);
-    await expect(page.getByRole("heading", { level: 1, name: "About" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: "About" }),
+    ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "About this blog" }),
     ).toBeVisible();
@@ -69,9 +76,8 @@ test.describe("golden flows", () => {
 
   test("browse tags, filter, then open a tagged post", async ({ page }) => {
     await page.goto("/");
-    const menu = await openNavMenu(page);
 
-    await menu.getByRole("link", { name: "Tags", exact: true }).click();
+    await headerNav(page).getByRole("link", { name: "Tags", exact: true }).click();
     await expect(page).toHaveURL(/\/tags\/?$/);
     await expect(
       page.getByRole("heading", { level: 1, name: "All Tags" }),
@@ -88,11 +94,11 @@ test.describe("golden flows", () => {
 
     const taggedPosts = page.locator(".blog article header a");
     await expect(taggedPosts.first()).toBeVisible();
-    const title = (await taggedPosts.first().innerText()).trim();
+    const title = await firstPostTitle(taggedPosts);
     await taggedPosts.first().click();
 
     await expect(page.locator("article.post")).toBeVisible();
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
+    await expect(postHeading(page)).toHaveText(title);
   });
 
   test("a tag on the home listing opens that tag's posts", async ({
