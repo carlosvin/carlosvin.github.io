@@ -2,16 +2,36 @@
 <html lang="en">
 
 <head>
-  {% if page is defined and page.title %}
-  {% set title = page.title %}
-  {% else %}
-  {% set title = config.title %}
-  {% endif %}
-  {% if page is defined and page.description %}
-  {% set description = page.description %}
-  {% else %}
-  {% set description = config.description %}
-  {% endif %}
+  {%- if page is defined and page.title %}
+  {%- set title = page.title %}
+  {%- elif term is defined %}
+  {%- set title = "Posts tagged with '" ~ term.name ~ "' - " ~ config.title %}
+  {%- elif taxonomy is defined %}
+  {%- set title = "All Tags - " ~ config.title %}
+  {%- else %}
+  {%- set title = config.title %}
+  {%- endif %}
+  {%- if page is defined and page.description %}
+  {%- set description = page.description %}
+  {%- elif term is defined %}
+  {%- set tagged_count = term.pages | length %}
+  {%- if tagged_count == 1 %}
+  {%- set description = "1 post tagged '" ~ term.name ~ "'" %}
+  {%- else %}
+  {%- set description = tagged_count ~ " posts tagged '" ~ term.name ~ "'" %}
+  {%- endif %}
+  {%- elif taxonomy is defined %}
+  {%- set description = "Browse posts by tag" %}
+  {%- else %}
+  {%- set description = config.description %}
+  {%- endif %}
+  {%- if page is defined %}
+  {%- set og_url = page.permalink %}
+  {%- set og_image = <preview_url config={config} page_path={page.path} page_preview_image={page.extra.preview_image | default(value='')} /> %}
+  {%- else %}
+  {%- set og_url = current_url | default(value=config.base_url) %}
+  {%- set og_image = <preview_url config={config} /> %}
+  {%- endif %}
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">

@@ -13,6 +13,14 @@ function debounce(func, wait) {
   };
 }
 
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 // Taken from mdbook: score a sliding window of words so the teaser
 // centers on search-term matches (stemmer-aware).
 function makeTeaser(body, terms) {
@@ -38,10 +46,12 @@ function makeTeaser(body, terms) {
       var word = words[j];
 
       if (word.length > 0) {
+        var stemmedWord = elasticlunr.stemmer(word);
         for (var k = 0; k < stemmedTerms.length; k++) {
-          if (elasticlunr.stemmer(word).startsWith(stemmedTerms[k])) {
+          if (stemmedWord.startsWith(stemmedTerms[k])) {
             value = TERM_WEIGHT;
             termFound = true;
+            break;
           }
         }
         weighted.push([word, value, index]);
@@ -56,7 +66,7 @@ function makeTeaser(body, terms) {
   }
 
   if (weighted.length === 0) {
-    return body;
+    return escapeHtml(body);
   }
 
   var windowWeights = [];
@@ -89,7 +99,7 @@ function makeTeaser(body, terms) {
   for (var i = maxSumIndex; i < maxSumIndex + windowSize; i++) {
     var word = weighted[i];
     if (startIndex < word[2]) {
-      teaser.push(body.substring(startIndex, word[2]));
+      teaser.push(escapeHtml(body.substring(startIndex, word[2])));
       startIndex = word[2];
     }
 
@@ -97,7 +107,7 @@ function makeTeaser(body, terms) {
       teaser.push("<b>");
     }
     startIndex = word[2] + word[0].length;
-    teaser.push(body.substring(word[2], startIndex));
+    teaser.push(escapeHtml(body.substring(word[2], startIndex)));
 
     if (word[1] === TERM_WEIGHT) {
       teaser.push("</b>");
@@ -108,8 +118,9 @@ function makeTeaser(body, terms) {
 }
 
 function formatSearchResultItem(item, terms) {
-  return '<article><header><a href="' + item.ref + '">' + item.doc.title +
-    "</a></header><p>" + makeTeaser(item.doc.body, terms) + "</p></article>";
+  return '<article><header><a href="' + escapeHtml(item.ref) + '">' +
+    escapeHtml(item.doc.title) + "</a></header><p>" +
+    makeTeaser(item.doc.body, terms) + "</p></article>";
 }
 
 function initSearch() {
@@ -144,6 +155,8 @@ function initSearch() {
     return indexPromise;
   };
 
+  $searchInput.addEventListener("focus", initIndex, { once: true });
+
   $searchInput.addEventListener("keyup", debounce(function () {
     var term = $searchInput.value.trim();
     if (term === currentTerm) {
@@ -166,14 +179,13 @@ function initSearch() {
         return;
       }
 
-      var fragment = document.createDocumentFragment();
+      var html = "";
       var terms = term.split(" ");
-      for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
-        var item = document.createElement("li");
-        item.innerHTML = formatSearchResultItem(results[i], terms);
-        fragment.appendChild(item);
+      var limit = Math.min(results.length, MAX_ITEMS);
+      for (var i = 0; i < limit; i++) {
+        html += "<li>" + formatSearchResultItem(results[i], terms) + "</li>";
       }
-      $searchResultsItems.appendChild(fragment);
+      $searchResultsItems.innerHTML = html;
     });
   }, 150));
 
