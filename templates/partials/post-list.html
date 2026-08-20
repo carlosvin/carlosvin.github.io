@@ -6,20 +6,29 @@
 {% set pages = [] %}
 {% endif %}
 
-{% set year_links = [] %}
+{% set_global jump_year = "" %}
+{% set_global jump_count = 0 %}
 {% for page in pages %}
   {% if not page.extra.unlisted and page.date %}
     {% set y = page.date | date(format="%Y") %}
-    {% if year_links is not containing(y) %}
-      {% set_global year_links = year_links | concat(with=y) %}
+    {% if y != jump_year %}
+      {% set_global jump_year = y %}
+      {% set_global jump_count = jump_count + 1 %}
     {% endif %}
   {% endif %}
 {% endfor %}
 
-{% if year_links | length > 1 %}
+{% if jump_count > 1 %}
 <nav class="year-index" aria-label="Jump to year">
-  {% for y in year_links %}
-  <a href="#year-{{ y }}">{{ y }}</a>
+  {% set_global jump_year = "" %}
+  {% for page in pages %}
+    {% if not page.extra.unlisted and page.date %}
+      {% set y = page.date | date(format="%Y") %}
+      {% if y != jump_year %}
+        {% set_global jump_year = y %}
+        <a href="#year-{{ y }}">{{ y }}</a>
+      {% endif %}
+    {% endif %}
   {% endfor %}
 </nav>
 {% endif %}

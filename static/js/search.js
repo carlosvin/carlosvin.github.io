@@ -46,10 +46,12 @@ function makeTeaser(body, terms) {
       var word = words[j];
 
       if (word.length > 0) {
+        var stemmedWord = elasticlunr.stemmer(word);
         for (var k = 0; k < stemmedTerms.length; k++) {
-          if (elasticlunr.stemmer(word).startsWith(stemmedTerms[k])) {
+          if (stemmedWord.startsWith(stemmedTerms[k])) {
             value = TERM_WEIGHT;
             termFound = true;
+            break;
           }
         }
         weighted.push([word, value, index]);
@@ -245,6 +247,7 @@ function initSearch() {
     });
   }
 
+  $searchInput.addEventListener("focus", initIndex, { once: true });
   $searchInput.addEventListener("input", debounce(runSearch, 150));
 
   $searchInput.addEventListener("focus", function () {

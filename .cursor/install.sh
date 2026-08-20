@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Pin the same Zola as .github/workflows/main.yml (shalzz/zola-deploy-action@v0.21.0).
-ZOLA_VERSION="v0.21.0"
+# Pin the same Zola as .github/workflows/main.yml (shalzz/zola-deploy-action@v0.23.3).
+ZOLA_VERSION="v0.23.3"
 ZOLA_ARCHIVE="zola-${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz"
 ZOLA_URL="https://github.com/getzola/zola/releases/download/${ZOLA_VERSION}/${ZOLA_ARCHIVE}"
 
