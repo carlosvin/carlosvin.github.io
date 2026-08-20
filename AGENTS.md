@@ -1,51 +1,48 @@
-# Agent guidance
+# Agent Guidelines
 
-This is a static blog built with **Zola** and styled with **Pico CSS**. Prefer those stack defaults over custom implementations. The goal is lower maintenance and consistent, professional results—not one-off solutions.
+Static engineering blog built with **Zola** and styled with **Pico CSS (v2, Lime theme)**.
 
-## Tech stack
+The primary goal is **minimal maintenance burden** and **bulletproof, standard results**. Stick strictly to our chosen stack primitives instead of writing bespoke, one-off solutions.
 
-- **SSG:** [Zola](https://www.getzola.org/) (pinned in `.github/workflows/main.yml` and `.cursor/install.sh`)
-- **CSS:** [Pico CSS](https://picocss.com/) v2, lime theme (`pico.lime.min.css` in `templates/base.html`)
-- **Site-specific CSS only:** `static/css/base.css` (gaps Pico does not cover)
-- **Templates:** Tera in `templates/`
-- **Content:** Markdown in `content/`
+---
 
-Do not introduce another SSG, CSS framework, component library, or JS UI kit unless the task explicitly requires it.
+## Tech Stack & Architecture
 
-## Prefer the stack over reinventing the wheel
+- **Engine:** [Zola](https://www.getzola.org/) (pinned in `.github/workflows/main.yml` and `.cursor/install.sh`)
+- **Styling:** [Pico CSS](https://picocss.com/) (`pico.lime.min.css` in `templates/base.html`)
+- **Overrides:** `static/css/base.css` (keep minimal; only for site-specific glue Pico cannot handle)
+- **Templates:** Tera templates in `templates/` with reusable partials in `templates/partials/`
+- **Content:** Markdown in `content/` with TOML front matter
+- **Search:** Built-in elasticlunr (`config.toml` index + `static/js/search.js`)
 
-When a Zola or Pico CSS feature already solves the problem, use it. Do not implement a parallel version in custom HTML, CSS, or JavaScript.
+---
 
-### Zola first
+## Core Rules: Prefer the Stack over Reinvention
 
-Use Zola’s built-ins before writing custom logic:
+1. **Leverage Zola Native Features**
+   - **URLs & Assets:** Always use `get_url(path=...)` and `get_taxonomy_url(kind="tags", name=...)`. Never hardcode relative/absolute site paths.
+   - **Taxonomies:** Use Zola's built-in `tags` taxonomy (`config.toml`). Do not hand-roll tag listing, tag pages, or post grouping.
+   - **Metadata & SEO:** Rely on `page.summary`, `page.reading_time`, `page.word_count`, and `config.extra` for social/meta tags (`templates/partials/og.html`, `json-ld.html`).
+   - **Reusable Components:** Put reusable template snippets in `templates/partials/` or use Tera components/macros in `templates/macros.html` (e.g., `preview_url`).
+   - **Markdown Highlighting:** Configured via `config.toml` `[markdown.highlighting]`; do not pull external client-side syntax highlighters.
 
-- Templates, inheritance, includes, and macros (`templates/`)
-- Sections, pages, front matter, and `extra` for site-specific metadata
-- Taxonomies (tags are already configured in `config.toml`)
-- `get_url`, `get_taxonomy_url`, pagination, feeds, sitemap, search index
-- Markdown rendering and syntax highlighting (`config.toml` `[markdown]`)
-- Shortcodes for reusable content snippets
+2. **Leverage Pico CSS Native Patterns**
+   - **Semantic HTML First:** Use `<main class="container">`, `<header>`, `<article>`, `<nav>`, `<aside>`, `<figure>`, and `<hgroup>`. Pico styles semantic tags out of the box.
+   - **Built-in UI Controls:** Use Pico standard patterns:
+     - Buttons: `<a role="button" class="secondary outline">`
+     - Dropdowns: `<details class="dropdown"><summary>...</summary>...</details>`
+     - Switches: `<input type="checkbox" role="switch">`
+     - Forms: Standard `<input type="search">`, labels, and fieldsets.
+   - **Theme Support:** Use standard `data-theme="dark|light"` with `theme-change`. Do not write custom color/dark mode systems.
+   - **Minimal CSS Overrides:** Never create a secondary design system in `static/css/base.css`. Only add rules for layout glue (e.g., flex-wrap on cards, sticky sidebar) or minor tweaks that Pico does not natively provide.
 
-Avoid hand-rolled listing/pagination, ad-hoc URL construction, duplicate metadata plumbing, or extra build tools that Zola already provides.
+3. **Content Conventions**
+   - New posts go under `content/` with valid front matter (`title`, `date`, `description`, optional `taxonomies.tags`, optional `extra.preview_image`).
+   - Use standard Markdown formatting. Keep elements clean and accessible.
 
-### Pico CSS first
+---
 
-Use Pico’s classless/semantic patterns before adding custom CSS or JS widgets:
+## Development & Verification
 
-- Semantic HTML (`header`, `nav`, `main`, `article`, `footer`, `hgroup`)
-- Layout helpers Pico already supports (`container`, grid/flex utilities it documents)
-- Native form controls, `role="button"`, `secondary` / `outline`, `dropdown`, `switch`
-- Theme attributes Pico and `theme-change` already honor (`data-theme`)
-
-Existing UI already follows this (nav dropdown, search input, tag buttons, post cards). Extend those patterns instead of inventing new ones.
-
-`static/css/base.css` is for **small, site-specific** gaps (search results, blog card wrap, tag spacing, theme-aware icons). Do not grow it into a second design system.
-
-### When custom code is acceptable
-
-Add custom CSS or JS only when Zola or Pico cannot reasonably cover the need (for example Zola’s search index wiring in `static/js/search.js`). Keep that code minimal, documented by usage, and aligned with existing templates.
-
-## Cursor Cloud
-
-Local preview: `zola serve --interface 0.0.0.0 --port 1111` (see `.cursor/environment.json`). Install/build uses `.cursor/install.sh` (same Zola version as CI).
+- **Install/Verify:** Run `.cursor/install.sh` or `zola build` to verify templates and content compile cleanly without broken links or syntax errors.
+- **Local Dev Server:** `zola serve --interface 0.0.0.0 --port 1111`
