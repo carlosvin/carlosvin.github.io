@@ -1,14 +1,3 @@
-{% import "macros.html" as macros %}
-{% set page_title = title | default(value=config.title) %}
-{% set page_description = description | default(value=config.description) %}
-{% if page is defined %}
-{% set canonical_url = page.permalink | default(value=current_url) | default(value=config.base_url) %}
-{% set og_image = macros::preview_url(page=page) %}
-{% else %}
-{% set canonical_url = current_url | default(value=config.base_url) %}
-{% set og_image = macros::preview_url() %}
-{% endif %}
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -37,15 +26,15 @@
     {% if page is defined %}
     ,{
       "@type": "BlogPosting",
-      "@id": "{{ canonical_url }}/#article",
+      "@id": "{{ og_url }}/#article",
       "isPartOf": { "@id": "{{ config.base_url }}/#website" },
       "author": { "@id": "{{ config.base_url }}/#person" },
-      "headline": "{{ page_title }}",
-      "description": "{{ page_description }}",
+      "headline": "{{ title }}",
+      "description": "{{ description }}",
       "datePublished": "{{ page.date | date(format='%Y-%m-%dT%H:%M:%SZ') }}",
       "dateModified": "{% if page.updated %}{{ page.updated | date(format='%Y-%m-%dT%H:%M:%SZ') }}{% else %}{{ page.date | date(format='%Y-%m-%dT%H:%M:%SZ') }}{% endif %}",
-      "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ canonical_url }}" },
-      "url": "{{ canonical_url }}",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ og_url }}" },
+      "url": "{{ og_url }}",
       "image": "{{ og_image }}",
       "publisher": { "@id": "{{ config.base_url }}/#person" },
       "articleSection": "Blog",
@@ -56,28 +45,28 @@
         {% endfor %}
       ],
       {% endif -%}
-      "inLanguage": "{{ page.lang | default(value=config.default_language) | default(value='en') }}",
-      "wordCount": {{ page.word_count | default(value=0) }}
+      "inLanguage": "{{ page.lang | default(value=config.default_language) }}",
+      "wordCount": {{ page.word_count }}
     },
     {
       "@type": "WebPage",
-      "@id": "{{ canonical_url }}",
-      "url": "{{ canonical_url }}",
-      "name": "{{ page_title }}",
+      "@id": "{{ og_url }}",
+      "url": "{{ og_url }}",
+      "name": "{{ title }}",
       "isPartOf": { "@id": "{{ config.base_url }}/#website" },
-      "about": { "@id": "{{ canonical_url }}/#article" },
-      "description": "{{ page_description }}",
-      "inLanguage": "{{ page.lang | default(value=config.default_language) | default(value='en') }}"
+      "about": { "@id": "{{ og_url }}/#article" },
+      "description": "{{ description }}",
+      "inLanguage": "{{ page.lang | default(value=config.default_language) }}"
     }
     {% else %}
     ,{
       "@type": "WebPage",
-      "@id": "{{ canonical_url }}",
-      "url": "{{ canonical_url }}",
-      "name": "{{ page_title }}",
+      "@id": "{{ og_url }}",
+      "url": "{{ og_url }}",
+      "name": "{{ title }}",
       "isPartOf": { "@id": "{{ config.base_url }}/#website" },
-      "description": "{{ page_description }}",
-      "inLanguage": "{{ config.default_language | default(value='en') }}",
+      "description": "{{ description }}",
+      "inLanguage": "{{ config.default_language }}",
       "image": "{{ og_image }}"
     }
     {% endif %}
