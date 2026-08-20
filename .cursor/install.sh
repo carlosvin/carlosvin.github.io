@@ -44,3 +44,12 @@ fi
 
 zola --version
 zola build
+
+# Cloud Agents load ~/.cursor/skills on the VM; they do not sync laptop home dirs.
+skill_src="$(cd "$(dirname "$0")" && pwd)/skills/engineering-practices"
+if [ -d "$skill_src" ]; then
+  mkdir -p "${HOME}/.cursor/skills" "${HOME}/.agents/skills"
+  rm -rf "${HOME}/.cursor/skills/engineering-practices" "${HOME}/.agents/skills/engineering-practices"
+  cp -a "$skill_src" "${HOME}/.cursor/skills/engineering-practices"
+  cp -a "$skill_src" "${HOME}/.agents/skills/engineering-practices"
+fi
