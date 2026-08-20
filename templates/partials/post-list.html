@@ -1,15 +1,50 @@
+{% if post_list is defined %}
+{% set pages = post_list %}
+{% elif section is defined %}
+{% set pages = section.pages %}
+{% else %}
+{% set pages = [] %}
+{% endif %}
+
+{% set_global jump_year = "" %}
+{% set_global jump_count = 0 %}
+{% for page in pages %}
+  {% if not page.extra.unlisted and page.date %}
+    {% set y = page.date | date(format="%Y") %}
+    {% if y != jump_year %}
+      {% set_global jump_year = y %}
+      {% set_global jump_count = jump_count + 1 %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if jump_count > 1 %}
+<nav class="year-index" aria-label="Jump to year">
+  {% set_global jump_year = "" %}
+  {% for page in pages %}
+    {% if not page.extra.unlisted and page.date %}
+      {% set y = page.date | date(format="%Y") %}
+      {% if y != jump_year %}
+        {% set_global jump_year = y %}
+        <a href="#year-{{ y }}">{{ y }}</a>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</nav>
+{% endif %}
+
 <div class="blog">
-    {% if post_list is defined %}
-    {% set pages = post_list %}
-    {% elif section is defined %}
-    {% set pages = section.pages %}
-    {% else %}
-    {% set pages = [] %}
+  {% set_global current_year = "" %}
+  {% for page in pages %}
+    {% if not page.extra.unlisted %}
+      {% if page.date %}
+        {% set y = page.date | date(format="%Y") %}
+        {% if y != current_year %}
+          {% set_global current_year = y %}
+          <h2 class="archive-year" id="year-{{ y }}">{{ y }}</h2>
+        {% endif %}
+      {% endif %}
+      {% include "partials/post-card.html" %}
     {% endif %}
-    {% for page in pages %}
-    {% if page.extra.unlisted %}
-    {% else %}
-    {% include "partials/post-card.html" %}
-    {% endif %}
-    {% endfor %}
+  {% endfor %}
 </div>
