@@ -13,6 +13,14 @@ function debounce(func, wait) {
   };
 }
 
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 // Taken from mdbook: score a sliding window of words so the teaser
 // centers on search-term matches (stemmer-aware).
 function makeTeaser(body, terms) {
@@ -56,7 +64,7 @@ function makeTeaser(body, terms) {
   }
 
   if (weighted.length === 0) {
-    return body;
+    return escapeHtml(body);
   }
 
   var windowWeights = [];
@@ -89,7 +97,7 @@ function makeTeaser(body, terms) {
   for (var i = maxSumIndex; i < maxSumIndex + windowSize; i++) {
     var word = weighted[i];
     if (startIndex < word[2]) {
-      teaser.push(body.substring(startIndex, word[2]));
+      teaser.push(escapeHtml(body.substring(startIndex, word[2])));
       startIndex = word[2];
     }
 
@@ -97,7 +105,7 @@ function makeTeaser(body, terms) {
       teaser.push("<b>");
     }
     startIndex = word[2] + word[0].length;
-    teaser.push(body.substring(word[2], startIndex));
+    teaser.push(escapeHtml(body.substring(word[2], startIndex)));
 
     if (word[1] === TERM_WEIGHT) {
       teaser.push("</b>");
@@ -107,9 +115,9 @@ function makeTeaser(body, terms) {
   return teaser.join("");
 }
 
-function formatSearchResultItem(item, terms) {
-  return '<article><header><a href="' + item.ref + '">' + item.doc.title +
-    "</a></header><p>" + makeTeaser(item.doc.body, terms) + "</p></article>";
+function formatSearchResultItem(item, terms, id) {
+  return '<a id="' + id + '" href="' + escapeHtml(item.ref) + '"><strong>' +
+    escapeHtml(item.doc.title) + "</strong><p>" + makeTeaser(item.doc.body, terms) + "</p></a>";
 }
 
 function initSearch() {
@@ -117,6 +125,7 @@ function initSearch() {
   var $searchInput = document.getElementById("search");
   var $searchResults = document.querySelector(".search-results");
   var $searchResultsItems = document.querySelector(".search-results__items");
+  var $searchStatus = document.querySelector(".search-results__status");
   if (!$searchInput || !$searchResults || !$searchResultsItems) {
     return;
   }
@@ -132,10 +141,15 @@ function initSearch() {
   };
   var currentTerm = "";
   var indexPromise;
+  var activeIndex = -1;
+  var resultCount = 0;
 
   var initIndex = function () {
     if (!indexPromise) {
       indexPromise = fetch(indexUrl).then(function (response) {
+        if (!response.ok) {
+          throw new Error("Search index request failed");
+        }
         return response.json().then(function (json) {
           return elasticlunr.Index.load(json);
         });
@@ -144,43 +158,154 @@ function initSearch() {
     return indexPromise;
   };
 
-  $searchInput.addEventListener("keyup", debounce(function () {
+  function setExpanded(open) {
+    $searchInput.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) {
+      $searchResults.hidden = false;
+    } else {
+      $searchResults.hidden = true;
+      $searchInput.removeAttribute("aria-activedescendant");
+      activeIndex = -1;
+    }
+  }
+
+  function setActive(index) {
+    var items = $searchResultsItems.querySelectorAll("li");
+    activeIndex = index;
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.toggle("is-active", i === index);
+    }
+    if (index >= 0 && items[index]) {
+      var link = items[index].querySelector("a");
+      if (link && link.id) {
+        $searchInput.setAttribute("aria-activedescendant", link.id);
+      }
+      items[index].scrollIntoView({ block: "nearest" });
+    } else {
+      $searchInput.removeAttribute("aria-activedescendant");
+    }
+  }
+
+  function renderStatus(text) {
+    if ($searchStatus) {
+      $searchStatus.textContent = text;
+    }
+  }
+
+  function runSearch() {
     var term = $searchInput.value.trim();
-    if (term === currentTerm) {
+    if (term === currentTerm && term !== "") {
+      setExpanded(true);
       return;
     }
-    $searchResults.style.display = term === "" ? "none" : "block";
-    $searchResultsItems.innerHTML = "";
     currentTerm = term;
+    $searchResultsItems.innerHTML = "";
+    resultCount = 0;
+    activeIndex = -1;
+
     if (term === "") {
+      renderStatus("");
+      setExpanded(false);
       return;
     }
+
+    renderStatus("Searching…");
+    setExpanded(true);
 
     initIndex().then(function (idx) {
       if (term !== currentTerm) {
         return;
       }
       var results = idx.search(term, options);
+      $searchResultsItems.innerHTML = "";
+      resultCount = results.length;
+
       if (results.length === 0) {
-        $searchResults.style.display = "none";
+        renderStatus("No matching posts");
         return;
       }
 
+      var shown = Math.min(results.length, MAX_ITEMS);
+      renderStatus(results.length === 1 ? "1 post" : shown + " of " + results.length + " posts");
+
       var fragment = document.createDocumentFragment();
       var terms = term.split(" ");
-      for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
+      for (var i = 0; i < shown; i++) {
         var item = document.createElement("li");
-        item.innerHTML = formatSearchResultItem(results[i], terms);
+        item.setAttribute("role", "option");
+        item.innerHTML = formatSearchResultItem(results[i], terms, "search-result-" + i);
         fragment.appendChild(item);
       }
       $searchResultsItems.appendChild(fragment);
+    }).catch(function () {
+      if (term !== currentTerm) {
+        return;
+      }
+      renderStatus("Search is unavailable");
     });
-  }, 150));
+  }
 
-  window.addEventListener("click", function (e) {
-    if ($searchResults.style.display == "block" && !$searchResults.contains(e.target)) {
-      $searchResults.style.display = "none";
+  $searchInput.addEventListener("input", debounce(runSearch, 150));
+
+  $searchInput.addEventListener("focus", function () {
+    if ($searchInput.value.trim() !== "") {
+      runSearch();
     }
+  });
+
+  $searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if (!$searchResults.hidden) {
+        e.preventDefault();
+        setExpanded(false);
+      }
+      return;
+    }
+
+    if ($searchResults.hidden || resultCount === 0) {
+      return;
+    }
+
+    var items = $searchResultsItems.querySelectorAll("li");
+    if (!items.length) {
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive(activeIndex < items.length - 1 ? activeIndex + 1 : 0);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive(activeIndex > 0 ? activeIndex - 1 : items.length - 1);
+    } else if (e.key === "Enter" && activeIndex >= 0) {
+      var link = items[activeIndex].querySelector("a");
+      if (link) {
+        e.preventDefault();
+        window.location.href = link.href;
+      }
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) {
+      return;
+    }
+    var tag = (e.target && e.target.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (e.target && e.target.isContentEditable)) {
+      return;
+    }
+    e.preventDefault();
+    $searchInput.focus();
+  });
+
+  document.addEventListener("click", function (e) {
+    if ($searchResults.hidden) {
+      return;
+    }
+    if ($searchResults.contains(e.target) || $searchInput.contains(e.target)) {
+      return;
+    }
+    setExpanded(false);
   });
 }
 
