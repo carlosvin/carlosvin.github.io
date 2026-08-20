@@ -1,9 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
 
 async function openNavMenu(page: Page) {
-  const menu = page.locator("details.dropdown").first();
+  const menu = page.locator("header details.dropdown").first();
   await menu.locator("summary").click();
   await expect(menu).toHaveAttribute("open", "");
+  return menu;
 }
 
 test.describe("golden flows", () => {
@@ -56,21 +57,21 @@ test.describe("golden flows", () => {
 
   test("menu opens the About page", async ({ page }) => {
     await page.goto("/");
-    await openNavMenu(page);
+    const menu = await openNavMenu(page);
 
-    await page.getByRole("link", { name: "About" }).click();
+    await menu.getByRole("link", { name: "About", exact: true }).click();
     await expect(page).toHaveURL(/\/about\/?$/);
     await expect(page.getByRole("heading", { level: 1, name: "About" })).toBeVisible();
     await expect(
-      page.getByText("My Software Engineering Journey", { exact: false }),
+      page.getByRole("heading", { name: "About this blog" }),
     ).toBeVisible();
   });
 
   test("browse tags, filter, then open a tagged post", async ({ page }) => {
     await page.goto("/");
-    await openNavMenu(page);
+    const menu = await openNavMenu(page);
 
-    await page.getByRole("link", { name: "Tags" }).click();
+    await menu.getByRole("link", { name: "Tags", exact: true }).click();
     await expect(page).toHaveURL(/\/tags\/?$/);
     await expect(
       page.getByRole("heading", { level: 1, name: "All Tags" }),
