@@ -1,0 +1,47 @@
+name: PR preview
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+concurrency: preview-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  deployments: read
+
+jobs:
+  preview:
+    name: deploy GitHub Pages preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Install Zola
+        if: github.event.action != 'closed'
+        run: |
+          set -euo pipefail
+          ZOLA_VERSION="v0.23.3"
+          curl -fsSL --retry 5 --retry-delay 2 \
+            "https://github.com/getzola/zola/releases/download/${ZOLA_VERSION}/zola-${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar -xz
+          sudo install -m 0755 zola /usr/local/bin/zola
+          zola --version
+
+      - name: Build preview site
+        if: github.event.action != 'closed'
+        run: |
+          set -euo pipefail
+          PREVIEW_URL="https://carlosvin.github.io/pr-preview/pr-${{ github.event.number }}"
+          zola build --base-url "${PREVIEW_URL}"
+
+      - name: Deploy or remove preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: public
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          pages-base-url: carlosvin.github.io
+          wait-for-pages-deployment: true
