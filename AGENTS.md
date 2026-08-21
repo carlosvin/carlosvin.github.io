@@ -6,7 +6,7 @@ Zola + Pico CSS v2 classless lime (`templates/base.html`). Prefer semantic HTML 
 
 - **Templates:** Tera in `templates/`. Posts use `blog-page.html`; static pages use `page.html`; shared UI lives in `templates/partials/`.
 - **Content:** Markdown in `content/` with YAML front matter (`---`). The section file `content/_index.md` uses TOML (`+++`).
-- **CSS:** Pico classless first, then `static/css/base.css` for gaps Pico does not cover (card wrap, sticky TOC, search dropdown, icon filters).
+- **CSS:** Pico classless first, then `static/css/base.css` for gaps Pico does not cover (card wrap, search dropdown, icon filters).
 - **Search:** Zola elasticlunr (`config.toml`) plus `static/js/search.js`. Do not replace it.
 - **Config / pin:** `config.toml` (tags, feeds, sitemap, highlighting). Keep the Zola version in `.github/workflows/main.yml` and `.cursor/install.sh` in sync.
 
