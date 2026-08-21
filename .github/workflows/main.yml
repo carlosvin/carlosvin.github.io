@@ -53,12 +53,20 @@ jobs:
     steps:
       - name: 'checkout'
         uses: actions/checkout@v7.0.1
-      - name: 'build and deploy'
+      - name: 'build'
         uses: shalzz/zola-deploy-action@v0.23.3
         env:
           PAGES_BRANCH: gh-pages
           BUILD_DIR: .
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: carlosvin/carlosvin.github.io
+          BUILD_ONLY: true
+      - name: 'deploy'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: public
+          branch: gh-pages
+          # Keep live PR preview sites under /pr-preview/; do not force-push.
+          clean-exclude: pr-preview/
+          force: false
       - name: Notify IndexNow
         run: curl -o /dev/null -w "%{http_code}\n" "https://api.indexnow.org/indexnow?url=https://carlosvin.github.io&key=58k0hy1db4"

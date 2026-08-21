@@ -28,3 +28,5 @@ Zola + Pico CSS v2 lime (`templates/base.html`). Prefer those primitives over cu
 ## Verify
 
 `zola build` (or `.cursor/install.sh`). Preview: `zola serve --interface 0.0.0.0 --port 1111`.
+
+Open pull requests get a temporary GitHub Pages site at `/pr-preview/pr-<number>/` (see `.github/workflows/preview.yml`). Production deploys must keep that `pr-preview/` folder on `gh-pages`.
