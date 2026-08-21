@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Easily creating a golang command line tool</title>
+  <meta name="description" content="Let&#39;s see how to easily and quickly create a command line tool in golang">
+  
+  <meta name="keywords" content="golang,cli,tools,cmd">
+  
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Carlos Martin Sanchez">
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="https://carlosvin.github.io/rss.xml">
+  
+
+  <meta property="og:title" content="Easily creating a golang command line tool">
+<meta property="og:description" content="Let&#39;s see how to easily and quickly create a command line tool in golang">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="My software engineering journey">
+<meta property="og:url" content="https://carlosvin.github.io/create-cmd-tool-golang/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg">
+<link rel="canonical" href="https://carlosvin.github.io/create-cmd-tool-golang/">
+
+
+
+<meta property="article:published_time" content="2021-02-14T00:00:00Z">
+
+
+
+
+<meta property="article:tag" content="golang">
+
+<meta property="article:tag" content="cli">
+
+<meta property="article:tag" content="tools">
+
+<meta property="article:tag" content="cmd">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Easily creating a golang command line tool">
+<meta name="twitter:description" content="Let&#39;s see how to easily and quickly create a command line tool in golang">
+<meta name="twitter:image" content="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://carlosvin.github.io/#website",
+      "url": "https://carlosvin.github.io",
+      "name": "My software engineering journey",
+      "description": "Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers.",
+      "publisher": { "@id": "https://carlosvin.github.io/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://carlosvin.github.io/#person",
+      "name": "Carlos Martin Sanchez",
+      "url": "https://carlosvin.github.io",
+      "sameAs": [
+        "https://github.com/carlosvin",
+        "https://linkedin.com/in/carlosvin",
+        "https://carlosvin.github.io/atom.xml"
+        
+      ]
+    }
+    
+    ,{
+      "@type": "BlogPosting",
+      "@id": "https://carlosvin.github.io/create-cmd-tool-golang//#article",
+      "isPartOf": { "@id": "https://carlosvin.github.io/#website" },
+      "author": { "@id": "https://carlosvin.github.io/#person" },
+      "headline": "Easily creating a golang command line tool",
+      "description": "Let&#39;s see how to easily and quickly create a command line tool in golang",
+      "datePublished": "2021-02-14T00:00:00Z",
+      "dateModified": "2021-02-14T00:00:00Z",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://carlosvin.github.io/create-cmd-tool-golang/" },
+      "url": "https://carlosvin.github.io/create-cmd-tool-golang/",
+      "image": "https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg",
+      "publisher": { "@id": "https://carlosvin.github.io/#person" },
+      "articleSection": "Blog",
+      "keywords": [
+        "golang",
+        "cli",
+        "tools",
+        "cmd"
+        
+      ],
+      "inLanguage": "en",
+      "wordCount": 380
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://carlosvin.github.io/create-cmd-tool-golang/",
+      "url": "https://carlosvin.github.io/create-cmd-tool-golang/",
+      "name": "Easily creating a golang command line tool",
+      "isPartOf": { "@id": "https://carlosvin.github.io/#website" },
+      "about": { "@id": "https://carlosvin.github.io/create-cmd-tool-golang//#article" },
+      "description": "Let&#39;s see how to easily and quickly create a command line tool in golang",
+      "inLanguage": "en"
+    }
+    
+  ]
+}
+</script>
+
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.classless.lime.min.css">
+  <link rel="stylesheet" href="https://carlosvin.github.io/css/base.css">
+  <link rel="stylesheet" href="https://carlosvin.github.io/giallo-light.css" id="syntax-light">
+  <link rel="stylesheet" href="https://carlosvin.github.io/giallo-dark.css" id="syntax-dark" disabled>
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("theme");
+        var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (theme !== "dark" && theme !== "light") theme = "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.style.colorScheme = theme;
+        var darkSheet = document.getElementById("syntax-dark");
+        var lightSheet = document.getElementById("syntax-light");
+        if (darkSheet && lightSheet) {
+          darkSheet.disabled = theme !== "dark";
+          lightSheet.disabled = theme === "dark";
+        }
+      } catch (e) { }
+    })();
+  </script>
+
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon.ico" sizes="any">
+  <link rel="icon" href="https://carlosvin.github.io/img/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://carlosvin.github.io/img/android-chrome-192x192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="https://carlosvin.github.io/img/apple-touch-icon.png">
+  <link rel="manifest" href="https://carlosvin.github.io/manifest.json">
+
+  <script type="speculationrules">
+    {
+      "prerender": [{
+        "where": {
+          "and": [
+            { "href_matches": "/*" },
+            { "not": { "href_matches": "https://*/*" } }
+          ]
+        }
+      }]
+    }
+  </script>
+  <script>
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="b33a381d-0843-4a11-b306-74c285c39206"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/theme-change@3.0.4/index.js"></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <a class="brand" href="https://carlosvin.github.io">
+        <img src="https://carlosvin.github.io/img/android-chrome-192x192.png" alt="" width="32" height="32">
+        <span>My software engineering journey</span>
+      </a>
+    </li>
+  </ul>
+  <ul>
+    
+    <li><a href="https://carlosvin.github.io/about">About</a></li>
+    
+    <li><a href="https://carlosvin.github.io/tags">Tags</a></li>
+    <li>
+      <label>
+        Dark
+        <input type="checkbox" data-toggle-theme="dark,light" role="switch" aria-label="Dark mode">
+      </label>
+    </li>
+    <li>
+      <input id="search" type="search" placeholder="Search posts" aria-label="Search posts"
+        autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-controls="search-results"
+        aria-expanded="false" title="Press / to search">
+      <div id="search-results" hidden>
+        <p role="status" aria-live="polite"></p>
+        <ul role="listbox" aria-label="Search results"></ul>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+  </header>
+
+  <main id="main-content">
+    
+<article>
+  <header>
+    <hgroup>
+      <h1>Easily creating a golang command line tool</h1>
+      <p>
+        
+
+
+<time datetime="PT2M">2 min read</time>
+
+
+ · <data value="380">380 words</data>
+
+
+      </p>
+      
+
+
+
+<nav aria-label="Tags">
+  <ul>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/tags/golang/" title="All the posts in golang">
+        golang
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/tags/cli/" title="All the posts in cli">
+        cli
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/tags/tools/" title="All the posts in tools">
+        tools
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/tags/cmd/" title="All the posts in cmd">
+        cmd
+        
+      </a>
+    </li>
+    
+  </ul>
+</nav>
+
+
+    </hgroup>
+  </header>
+
+  
+<figure>
+  <img src="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg" alt="Easily creating a golang command line tool" width="1200" height="630">
+</figure>
+
+
+  
+<aside>
+  <details>
+    <summary>Contents</summary>
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/create-cmd-tool-golang/#flags">Flags</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#print-help-menu">Print help menu</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#use-default-value">Use default value</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#pass-a-value-to-the-command-tool">Pass a value to the command tool</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#pass-an-invalid-value">Pass an invalid value</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/create-cmd-tool-golang/#viper">Viper</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/create-cmd-tool-golang/#meta-viper">Meta-Viper</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#firstly-create-a-go-modules-project-with-the-meta-viper-dependency">Firstly, create a go modules project with the meta-viper dependency</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#print-usage-help">Print usage (help)</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#run-with-default-values">Run with default values</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#read-the-port-from-environment-variable-and-host-from-input-param">Read the port from environment variable and host from input param</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/create-cmd-tool-golang/#read-configuration-from-the-config-json-file-from-environment-and-from-input-params">Read configuration from the-config.json file, from environment and from input params</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+    </ul>
+  </details>
+</aside>
+
+
+
+  <section>
+    <p><a rel="external" href="https://golang.org/">Golang</a> is one of the most useful technologies I've recently learned. Golang has pretty nice support for networking, command line, or logging out of the box—you don't need any dependency. But there are libraries making developers' life even easier.</p>
+<p>I've already talked about <a href="/langs/en/posts/rest-service-go-vs-java/">creating REST service in go</a>, today I'd like to focus on creating a command line tool.</p>
+<h2 id="flags">Flags</h2>
+<p>Command line tool to read number of lines as an input integer parameter (Golang):</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="go"><span class="giallo-l"><span class="z-l-5 z-d-5">package</span><span class="z-l-8 z-d-8"> main</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">import</span><span> (</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">flag</span><span class="z-l-2 z-d-2">&quot;</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">fmt</span><span class="z-l-2 z-d-2">&quot;</span></span>
+<span class="giallo-l"><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">func</span><span class="z-l-1 z-d-1"> main</span><span>(</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5"> var</span><span class="z-l-1 z-d-1"> nFlag</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> flag</span><span>.</span><span class="z-l-1 z-d-1">Int</span><span>(</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-2 z-d-2">lines</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span><span class="z-l-9 z-d-9"> 1234</span><span>,</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">number of lines</span><span class="z-l-2 z-d-2">&quot;</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> flag</span><span>.</span><span class="z-l-1 z-d-1">Parse</span><span>(</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> fmt</span><span>.</span><span class="z-l-1 z-d-1">Printf</span><span>(</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-2 z-d-2">Lines </span><span class="z-l-8 z-d-8">%d</span><span class="z-l-8 z-d-8">\n</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span><span class="z-l-5 z-d-5"> *</span><span class="z-l-1 z-d-1">nFlag</span><span>)</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>With previous simple code we have already some useful capabilities:</p>
+<h3 id="print-help-menu">Print help menu</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">$</span><span class="z-l-2 z-d-2"> cmd</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-help</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">&gt;</span><span> Usage of cmd:</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    -lines</span><span class="z-l-2 z-d-2"> int</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        number</span><span class="z-l-2 z-d-2"> of</span><span class="z-l-2 z-d-2"> lines</span><span> (default</span><span class="z-l-9 z-d-9"> 1234</span><span>)</span></span></code></pre><h3 id="use-default-value">Use default value</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">$</span><span class="z-l-2 z-d-2"> cmd</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">&gt;</span><span> Lines 1234</span></span></code></pre><h3 id="pass-a-value-to-the-command-tool">Pass a value to the command tool</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">$</span><span class="z-l-2 z-d-2"> cmd</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-lines=2</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">&gt;</span><span> Lines 2</span></span></code></pre><h3 id="pass-an-invalid-value">Pass an invalid value</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">$</span><span class="z-l-2 z-d-2"> cmd</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-lines=asdf</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">&gt;</span><span> invalid value </span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-2 z-d-2">asdf</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-5 z-d-5"> for</span><span> flag -lines: parse error</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">Usage</span><span class="z-l-2 z-d-2"> of</span><span class="z-l-2 z-d-2"> cmd:</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    -lines</span><span class="z-l-2 z-d-2"> int</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        number</span><span class="z-l-2 z-d-2"> of</span><span class="z-l-2 z-d-2"> lines</span><span> (default</span><span class="z-l-9 z-d-9"> 1234</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">exit</span><span class="z-l-2 z-d-2"> status</span><span class="z-l-9 z-d-9"> 2</span></span></code></pre>
+<p>For a simple command line tool, in most cases, we will have enough with the default language support. But if we want to bring more features to the combo like reading configuration from environment variables or from files, then a library like the awesome <a rel="external" href="https://github.com/spf13/viper">Viper</a> will come really handy.</p>
+<h2 id="viper">Viper</h2>
+<p>Viper is a very powerful and well-documented library widely used in many projects. I will not get into the details of how to use it, because I've created an abstraction to simplify its usage, I named it <a rel="external" href="https://github.com/carlosvin/meta-viper">Meta-Viper</a>.</p>
+<h2 id="meta-viper">Meta-Viper</h2>
+<p><a rel="external" href="https://github.com/carlosvin/meta-viper">Meta-Viper</a> abstracts you from the details of reading configuration from files, environment, or flags. This extra simplicity comes with a tradeoff: we are missing some flexibility.</p>
+<p>Let's see some features with an example.</p>
+<h3 id="firstly-create-a-go-modules-project-with-the-meta-viper-dependency">Firstly, create a go modules project with the meta-viper dependency</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">go</span><span class="z-l-2 z-d-2"> mod</span><span class="z-l-2 z-d-2"> init</span><span class="z-l-2 z-d-2"> example.com/meta-viper</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> #</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Create a go modules project</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">go</span><span class="z-l-2 z-d-2"> get</span><span class="z-l-2 z-d-2"> github.com/carlosvin/meta-viper</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> #</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Install the meta-viper dependency</span></span></code></pre>
+<p>Now let's create a program that is configurable from files, command line params, and environment variables.</p>
+<p><strong>main.go</strong></p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="go"><span class="giallo-l"><span class="z-l-5 z-d-5">package</span><span class="z-l-8 z-d-8"> main</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">import</span><span> (</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">log</span><span class="z-l-2 z-d-2">&quot;</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">os</span><span class="z-l-2 z-d-2">&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> config</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">github.com/carlosvin/meta-viper</span><span class="z-l-2 z-d-2">&quot;</span></span>
+<span class="giallo-l"><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">//</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Here is where you define the struct that will hold the configuration values</span></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">//</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> cfg_name is the parameter name</span></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">//</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> cfg_desc is the parameter description that will be shown in the command line help</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">type</span><span class="z-l-8 z-d-8"> appConfig</span><span class="z-l-5 z-d-5"> struct</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> Host</span><span class="z-l-3 z-l-b z-d-6 z-d-b">      string</span><span class="z-l-2 z-d-2"> `</span><span class="z-l-2 z-d-2">cfg_name:&quot;host&quot; cfg_desc:&quot;Server host&quot;</span><span class="z-l-2 z-d-2">`</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> Port</span><span class="z-l-3 z-l-b z-d-6 z-d-b">      int</span><span class="z-l-2 z-d-2">    `</span><span class="z-l-2 z-d-2">cfg_name:&quot;port&quot; cfg_desc:&quot;Server port&quot;</span><span class="z-l-2 z-d-2">`</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> SearchAPI</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> string</span><span class="z-l-2 z-d-2"> `</span><span class="z-l-2 z-d-2">cfg_name:&quot;apis.search&quot; cfg_desc:&quot;Search API endpoint&quot;</span><span class="z-l-2 z-d-2">`</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">func</span><span class="z-l-1 z-d-1"> main</span><span>(</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i"> //</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Instantiate the structure with default values</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> cfg</span><span class="z-l-5 z-d-5"> :=</span><span class="z-l-5 z-d-5"> &amp;</span><span class="z-l-8 z-d-8">appConfig</span><span>{</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  Host</span><span>:</span><span class="z-l-2 z-d-2">      &quot;</span><span class="z-l-2 z-d-2">localhost</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  Port</span><span>:</span><span class="z-l-9 z-d-9">      6000</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  SearchAPI</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">google</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span> }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i"> //</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Meta-Viper instance is loading the configuration from wherever is available: files, env, or input params</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> _</span><span>,</span><span class="z-l-1 z-d-1"> err</span><span class="z-l-5 z-d-5"> :=</span><span class="z-l-1 z-d-1"> config</span><span>.</span><span class="z-l-1 z-d-1">New</span><span>(</span><span class="z-l-1 z-d-1">cfg</span><span>,</span><span class="z-l-1 z-d-1"> os</span><span>.</span><span class="z-l-1 z-d-1">Args</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5"> if</span><span class="z-l-1 z-d-1"> err</span><span class="z-l-5 z-d-5"> !=</span><span class="z-l-7 z-d-7"> nil</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  panic</span><span>(</span><span class="z-l-1 z-d-1">err</span><span>)</span></span>
+<span class="giallo-l"><span> }</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1"> log</span><span>.</span><span class="z-l-1 z-d-1">Printf</span><span>(</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-2 z-d-2">Loaded Configuration </span><span class="z-l-8 z-d-8">%v</span><span class="z-l-2 z-d-2">...</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span><span class="z-l-1 z-d-1"> cfg</span><span>)</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Now let's see some examples of how this command line tool is able to load configuration.</p>
+<h3 id="print-usage-help">Print usage (help)</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">$</span><span class="z-l-2 z-d-2"> cmd</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-help</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">Usage</span><span class="z-l-2 z-d-2"> of</span><span class="z-l-2 z-d-2"> flagsConfig:</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    --apis.search</span><span class="z-l-2 z-d-2"> string</span><span class="z-l-2 z-d-2">    Search</span><span class="z-l-2 z-d-2"> API</span><span class="z-l-2 z-d-2"> endpoint</span><span> (default</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">google</span><span class="z-l-2 z-d-2">&quot;</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    --config</span><span class="z-l-2 z-d-2"> string</span><span class="z-l-2 z-d-2">         Configuration</span><span class="z-l-2 z-d-2"> name</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    --config-dirs</span><span class="z-l-2 z-d-2"> strings</span><span class="z-l-2 z-d-2">   Configuration</span><span class="z-l-2 z-d-2"> directories</span><span class="z-l-2 z-d-2"> search</span><span class="z-l-2 z-d-2"> paths</span><span> (default [.,config,configs,cfg</span><span>])</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    --host</span><span class="z-l-2 z-d-2"> string</span><span class="z-l-2 z-d-2">           Server</span><span class="z-l-2 z-d-2"> host</span><span> (default</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">localhost</span><span class="z-l-2 z-d-2">&quot;</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    --port</span><span class="z-l-2 z-d-2"> int</span><span class="z-l-2 z-d-2">              Server</span><span class="z-l-2 z-d-2"> port</span><span> (default</span><span class="z-l-9 z-d-9"> 6000</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">pflag:</span><span class="z-l-2 z-d-2"> help</span><span class="z-l-2 z-d-2"> requested</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">exit</span><span class="z-l-2 z-d-2"> status</span><span class="z-l-9 z-d-9"> 2</span></span></code></pre><h3 id="run-with-default-values">Run with default values</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">$</span><span class="z-l-2 z-d-2"> cmd</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">2021/02/15</span><span class="z-l-2 z-d-2"> 23:12:48</span><span class="z-l-2 z-d-2"> No</span><span class="z-l-2 z-d-2"> configuration</span><span class="z-l-2 z-d-2"> name</span><span class="z-l-2 z-d-2"> has</span><span class="z-l-2 z-d-2"> been</span><span class="z-l-2 z-d-2"> specified,</span><span class="z-l-2 z-d-2"> so</span><span class="z-l-2 z-d-2"> no</span><span class="z-l-2 z-d-2"> configuration</span><span class="z-l-2 z-d-2"> file</span><span class="z-l-2 z-d-2"> will</span><span class="z-l-2 z-d-2"> be</span><span class="z-l-2 z-d-2"> loaded.</span><span class="z-l-2 z-d-2"> Using</span><span class="z-l-2 z-d-2"> flags</span><span class="z-l-2 z-d-2"> and</span><span class="z-l-2 z-d-2"> environment</span><span class="z-l-2 z-d-2"> variables.</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">2021/02/15</span><span class="z-l-2 z-d-2"> 23:12:48</span><span class="z-l-2 z-d-2"> Loaded</span><span class="z-l-2 z-d-2"> Configuration</span><span> &amp;</span><span>{localhost 6000 google}...</span></span></code></pre><h3 id="read-the-port-from-environment-variable-and-host-from-input-param">Read the port from environment variable and host from input param</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">$</span><span class="z-l-2 z-d-2"> PORT=</span><span class="z-l-9 z-d-9">9999</span><span class="z-l-2 z-d-2"> cmd</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-host=myhost</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">2021/02/15</span><span class="z-l-2 z-d-2"> 23:15:47</span><span class="z-l-2 z-d-2"> No</span><span class="z-l-2 z-d-2"> configuration</span><span class="z-l-2 z-d-2"> name</span><span class="z-l-2 z-d-2"> has</span><span class="z-l-2 z-d-2"> been</span><span class="z-l-2 z-d-2"> specified,</span><span class="z-l-2 z-d-2"> so</span><span class="z-l-2 z-d-2"> no</span><span class="z-l-2 z-d-2"> configuration</span><span class="z-l-2 z-d-2"> file</span><span class="z-l-2 z-d-2"> will</span><span class="z-l-2 z-d-2"> be</span><span class="z-l-2 z-d-2"> loaded.</span><span class="z-l-2 z-d-2"> Using</span><span class="z-l-2 z-d-2"> flags</span><span class="z-l-2 z-d-2"> and</span><span class="z-l-2 z-d-2"> environment</span><span class="z-l-2 z-d-2"> variables.</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">2021/02/15</span><span class="z-l-2 z-d-2"> 23:15:47</span><span class="z-l-2 z-d-2"> Loaded</span><span class="z-l-2 z-d-2"> Configuration</span><span> &amp;</span><span>{myhost 9999 google}...</span></span></code></pre>
+<p>The last example will aggregate all the possible sources of configuration, it will extend the previous one adding configuration from a file. So let's create a configuration file:</p>
+<p><strong>the-config.json</strong></p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="json"><span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5"> &quot;</span><span class="z-l-5 z-d-5">apis</span><span class="z-l-5 z-d-5">&quot;</span><span>:</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">  &quot;</span><span class="z-l-5 z-d-5">search</span><span class="z-l-5 z-d-5">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">duckduckgo</span><span class="z-l-2 z-d-2">&quot;</span></span>
+<span class="giallo-l"><span> }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><h3 id="read-configuration-from-the-config-json-file-from-environment-and-from-input-params">Read configuration from the-config.json file, from environment and from input params</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">$</span><span class="z-l-2 z-d-2"> PORT=</span><span class="z-l-9 z-d-9">9999</span><span class="z-l-2 z-d-2"> cmd</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-host=myhost</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-config=the-config</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">2021/02/15</span><span class="z-l-2 z-d-2"> 23:22:17</span><span class="z-l-2 z-d-2"> Loaded</span><span class="z-l-2 z-d-2"> Configuration</span><span> &amp;</span><span>{myhost 9999 duckduckgo}...</span></span></code></pre>
+<p>TIP: Here you can find a <a rel="external" href="https://github.com/carlosvin/meta-viper/tree/master/examples/multi-env">multi-environment example</a> a little bit more complete.</p>
+
+  </section>
+
+  
+<nav aria-label="Adjacent posts">
+  
+  <a href="https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/">
+    <small>Newer</small>
+    <span>TanStack Router: Opinionated Guidelines for Production React Apps</span>
+  </a>
+  
+  
+  <a href="https://carlosvin.github.io/cypress-parametrized-dynamic-tests/">
+    <small>Older</small>
+    <span>Parameterized Tests in Cypress</span>
+  </a>
+  
+</nav>
+
+
+
+  <footer>
+    <div id="comments"></div>
+    <script>
+      (function () {
+        var theme = document.documentElement.getAttribute("data-theme") === "dark" ? "github-dark" : "github-light";
+        var script = document.createElement("script");
+        script.src = "https://utteranc.es/client.js";
+        script.setAttribute("repo", "carlosvin/carlosvin.github.io");
+        script.setAttribute("issue-term", "title");
+        script.setAttribute("theme", theme);
+        script.setAttribute("crossorigin", "anonymous");
+        script.async = true;
+        document.getElementById("comments").appendChild(script);
+      })();
+    </script>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2026 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <ul>
+  
+  <li>
+    <a href="https://github.com/carlosvin"
+      target="_blank" rel="noopener">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub"
+        width="32" height="32">
+    </a>
+  </li>
+  
+  <li>
+    <a href="https://linkedin.com/in/carlosvin"
+      target="_blank" rel="noopener">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn"
+        width="32" height="32">
+    </a>
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/atom.xml"
+      >
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS"
+        width="32" height="32">
+    </a>
+  </li>
+  
+</ul>
+
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/js/theme.js" defer></script>
+  <script src="https://carlosvin.github.io/js/search.js" defer
+    data-search-index="https://carlosvin.github.io/search_index.en.json"></script>
+</body>
+
+</html>
