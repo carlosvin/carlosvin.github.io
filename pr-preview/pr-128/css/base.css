@@ -37,16 +37,27 @@ header nav {
   row-gap: 0.5rem;
 }
 
-/* Sticky top nav so section/tag/search are always reachable on long pages. */
+/* Top bar spans the full viewport; only the nav row is padded in. */
 body > header {
   position: sticky;
   top: 0;
   z-index: 50;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
   background: var(--pico-background-color);
   border-bottom: 1px solid var(--pico-muted-border-color);
 }
 
-/* Brand shows the full site title; wrap on narrow viewports instead of truncating. */
+header nav {
+  padding: 0 var(--pico-spacing);
+}
+
+header nav > ul:last-of-type {
+  margin-right: calc(var(--pico-nav-element-spacing-horizontal) * -1);
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -343,8 +354,11 @@ main > article {
 }
 
 @media (min-width: 1024px) {
+  /* Remove Pico's card padding so the Contents outline can sit at the left
+     edge of the main column instead of being clipped by 1.25rem of padding. */
   main > article:has(> aside) {
-    grid-template-columns: 13rem minmax(0, 1fr);
+    padding: 0;
+    grid-template-columns: 15rem minmax(0, 1fr);
     grid-template-areas:
       "header header"
       "figure figure"
