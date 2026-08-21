@@ -125,9 +125,9 @@ function formatSearchResultItem(item, terms) {
 function initSearch() {
   var searchScript = document.querySelector("script[data-search-index]");
   var $searchInput = document.getElementById("search");
-  var $searchResults = document.querySelector(".search-results");
-  var $searchResultsItems = document.querySelector(".search-results__items");
-  var $searchStatus = document.querySelector(".search-results__status");
+  var $searchResults = document.getElementById("search-results");
+  var $searchResultsItems = document.querySelector("#search-results [role='listbox']");
+  var $searchStatus = document.querySelector("#search-results [role='status']");
   if (!$searchInput || !$searchResults || !$searchResultsItems) {
     return;
   }

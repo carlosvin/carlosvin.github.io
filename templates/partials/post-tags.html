@@ -6,11 +6,19 @@
 {% set tags_list = [] %}
 {% endif %}
 {% if tags_list %}
-<div class="tags">
+<nav aria-label="Tags">
+  <ul>
     {% for tag in tags_list %}
     {% set tag_name = tag.name | default(value=tag) %}
-    <a href='{{ get_taxonomy_url(kind="tags", name=tag_name) }}' title="All the posts in {{ tag_name }}"
-        role="button" class="secondary outline">{{ tag_name }}{% if tag.pages %} <small>({{ tag.pages | length }})</small>{% endif %}</a>
+    <li>
+      <a href="{{ get_taxonomy_url(kind='tags', name=tag_name) }}" title="All the posts in {{ tag_name }}">
+        {{ tag_name }}
+        {% if tag.pages %}
+        <small>({{ tag.pages | length }})</small>
+        {% endif %}
+      </a>
+    </li>
     {% endfor %}
-</div>
+  </ul>
+</nav>
 {% endif %}
