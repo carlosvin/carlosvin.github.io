@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building AI-Promptable Full-Stack Apps: A Reproducible Architecture</title>
+  <meta name="description" content="How we extracted a reproducible full-stack architecture for AI-promptable web apps with TanStack Start, interfaces for every external service, and Zod schemas as single source of truth.">
+  
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Carlos Martin Sanchez">
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="https://carlosvin.github.io/pr-preview/pr-127/rss.xml">
+  
+
+  <meta property="og:title" content="Building AI-Promptable Full-Stack Apps: A Reproducible Architecture">
+<meta property="og:description" content="How we extracted a reproducible full-stack architecture for AI-promptable web apps with TanStack Start, interfaces for every external service, and Zod schemas as single source of truth.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="My software engineering journey">
+<meta property="og:url" content="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png">
+<link rel="canonical" href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/">
+
+
+
+<meta property="article:published_time" content="2026-03-08T00:00:00Z">
+
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Building AI-Promptable Full-Stack Apps: A Reproducible Architecture">
+<meta name="twitter:description" content="How we extracted a reproducible full-stack architecture for AI-promptable web apps with TanStack Start, interfaces for every external service, and Zod schemas as single source of truth.">
+<meta name="twitter:image" content="https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-127/#website",
+      "url": "https://carlosvin.github.io/pr-preview/pr-127",
+      "name": "My software engineering journey",
+      "description": "Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers.",
+      "publisher": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-127/#person",
+      "name": "Carlos Martin Sanchez",
+      "url": "https://carlosvin.github.io/pr-preview/pr-127",
+      "sameAs": [
+        "https://github.com/carlosvin",
+        "https://linkedin.com/in/carlosvin",
+        "https://carlosvin.github.io/pr-preview/pr-127/atom.xml"
+        
+      ]
+    }
+    
+    ,{
+      "@type": "BlogPosting",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps//#article",
+      "isPartOf": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#website" },
+      "author": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#person" },
+      "headline": "Building AI-Promptable Full-Stack Apps: A Reproducible Architecture",
+      "description": "How we extracted a reproducible full-stack architecture for AI-promptable web apps with TanStack Start, interfaces for every external service, and Zod schemas as single source of truth.",
+      "datePublished": "2026-03-08T00:00:00Z",
+      "dateModified": "2026-03-08T00:00:00Z",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/" },
+      "url": "https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/",
+      "image": "https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png",
+      "publisher": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#person" },
+      "articleSection": "Blog",
+      "inLanguage": "en",
+      "wordCount": 1771
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/",
+      "url": "https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/",
+      "name": "Building AI-Promptable Full-Stack Apps: A Reproducible Architecture",
+      "isPartOf": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#website" },
+      "about": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps//#article" },
+      "description": "How we extracted a reproducible full-stack architecture for AI-promptable web apps with TanStack Start, interfaces for every external service, and Zod schemas as single source of truth.",
+      "inLanguage": "en"
+    }
+    
+  ]
+}
+</script>
+
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.classless.lime.min.css">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-127/css/base.css">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-127/giallo-light.css" id="syntax-light">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-127/giallo-dark.css" id="syntax-dark" disabled>
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("theme");
+        var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (theme !== "dark" && theme !== "light") theme = "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.style.colorScheme = theme;
+        var darkSheet = document.getElementById("syntax-dark");
+        var lightSheet = document.getElementById("syntax-light");
+        if (darkSheet && lightSheet) {
+          darkSheet.disabled = theme !== "dark";
+          lightSheet.disabled = theme === "dark";
+        }
+      } catch (e) { }
+    })();
+  </script>
+
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-127/img/favicon.ico" sizes="any">
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-127/img/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="https://carlosvin.github.io/pr-preview/pr-127/img/apple-touch-icon.png">
+  <link rel="manifest" href="https://carlosvin.github.io/pr-preview/pr-127/manifest.json">
+
+  <script type="speculationrules">
+    {
+      "prerender": [{
+        "where": {
+          "and": [
+            { "href_matches": "/*" },
+            { "not": { "href_matches": "https://*/*" } }
+          ]
+        }
+      }]
+    }
+  </script>
+  <script>
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="b33a381d-0843-4a11-b306-74c285c39206"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/theme-change@3.0.4/index.js"></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <a class="brand" href="https://carlosvin.github.io/pr-preview/pr-127">
+        <img src="https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png" alt="" width="32" height="32">
+        <span>My software engineering journey</span>
+      </a>
+    </li>
+  </ul>
+  <ul>
+    
+    <li><a href="https://carlosvin.github.io/pr-preview/pr-127/about">About</a></li>
+    
+    <li><a href="https://carlosvin.github.io/pr-preview/pr-127/tags">Tags</a></li>
+    <li>
+      <label>
+        Dark
+        <input type="checkbox" data-toggle-theme="dark,light" role="switch" aria-label="Dark mode">
+      </label>
+    </li>
+    <li>
+      <input id="search" type="search" placeholder="Search posts" aria-label="Search posts"
+        autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-controls="search-results"
+        aria-expanded="false" title="Press / to search">
+      <div id="search-results" hidden>
+        <p role="status" aria-live="polite"></p>
+        <ul role="listbox" aria-label="Search results"></ul>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+  </header>
+
+  <main id="main-content">
+    
+<article>
+  <header>
+    <hgroup>
+      <h1>Building AI-Promptable Full-Stack Apps: A Reproducible Architecture</h1>
+      <p>
+        
+
+
+<time datetime="PT8M">8 min read</time>
+
+
+ · <data value="1771">1771 words</data>
+
+
+      </p>
+      
+
+
+
+
+    </hgroup>
+  </header>
+
+  
+
+  
+<aside>
+  <details>
+    <summary>Contents</summary>
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#the-problem">The Problem</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#the-stack">The Stack</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#architecture-everything-behind-an-interface">Architecture: Everything Behind an Interface</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#the-repository-pattern">The Repository Pattern</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#auth-via-global-middleware">Auth via Global Middleware</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#promptable-by-design">Promptable by Design</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#observability-as-a-plugin">Observability as a Plugin</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#data-flow-and-conventions">Data Flow and Conventions</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#zod-schemas-as-the-single-source-of-truth">Zod Schemas as the Single Source of Truth</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#project-structure">Project structure</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#getting-started-in-30-seconds">Getting Started in 30 Seconds</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#install-the-skill-npx-skills">Install The Skill (npx skills)</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#extending-the-template">Extending the Template</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/building-ai-promptable-fullstack-apps/#conclusion">Conclusion</a>
+        
+      </li>
+      
+    </ul>
+  </details>
+</aside>
+
+
+
+  <section>
+    <p>Every time our team started a new full-stack app, we faced the same problem: rebuild the same architecture from scratch. Authentication, database access, UI shell, AI integration — all the plumbing that has nothing to do with the actual business logic.</p>
+<p>It started with internal tools, but we quickly realized the patterns apply to any full-stack web application — whether it's a customer-facing product, a dashboard, or a side project. After building several applications this way, we extracted the common patterns into a template. This post explains the architecture and the reasoning behind each decision.</p>
+<blockquote>
+<p><strong><a rel="external" href="https://leafy-manatee-16b96c.netlify.app">Live demo</a></strong> | <strong><a rel="external" href="https://github.com/carlosvin/tanstack-fullstack-ai-template">Source code</a></strong></p>
+</blockquote>
+<h2 id="the-problem">The Problem</h2>
+<p>Full-stack web applications share a remarkable amount of infrastructure:</p>
+<ul>
+<li>A database-backed API with CRUD operations</li>
+<li>Authentication from a JWT in request headers</li>
+<li>A component library with dark/light mode</li>
+<li>Error monitoring and performance tracing</li>
+<li>Increasingly, an AI assistant that can query the data</li>
+</ul>
+<p>Yet every project starts from <code>npm init</code> and rebuilds all of this. The code looks similar but is never quite the same, making it hard to maintain patterns across a growing portfolio of applications.</p>
+<h2 id="the-stack">The Stack</h2>
+<p>We chose <a rel="external" href="https://tanstack.com/start">TanStack Start</a> as the foundation — a full-stack React meta-framework that gives us:</p>
+<ul>
+<li><strong>Server functions</strong> (<code>createServerFn</code>) that act as type-safe RPC endpoints</li>
+<li><strong>File-based routing</strong> with TanStack Router</li>
+<li><strong>SSR</strong> via Nitro, deployable anywhere</li>
+<li><strong>Middleware</strong> that runs on every request, perfect for auth</li>
+</ul>
+<p>For the UI, <a rel="external" href="https://mantine.dev/">Mantine</a> gives us 120+ production-ready components, dark/light mode out of the box, and a theme system that keeps things consistent without writing custom CSS.</p>
+<p>For AI, <a rel="external" href="https://tanstack.com/ai">TanStack AI</a> provides a unified interface across OpenAI, Anthropic, Gemini, and more — with first-class support for tool calling and streaming.</p>
+<h2 id="architecture-everything-behind-an-interface">Architecture: Everything Behind an Interface</h2>
+<p>The core principle is simple: <strong>every external service is accessed through an interface</strong>. This makes each piece swappable without touching application code.</p>
+<h3 id="the-repository-pattern">The Repository Pattern</h3>
+<p>All data access goes through a <code>ReadRepository</code> + <code>WritableRepository</code> interface:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> interface</span><span class="z-l-8 z-d-8"> ReadRepository</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  getTasks</span><span>(</span><span>filter</span><span class="z-l-5 z-d-5">?</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TaskFilter</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">Task</span><span>[</span><span>]</span><span>&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  getTask</span><span>(</span><span>taskId</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">Task</span><span class="z-l-5 z-d-5"> |</span><span class="z-l-5 z-d-5"> null</span><span>&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  getAssignees</span><span>(</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-5 z-d-5">string</span><span>[</span><span>]</span><span>&gt;</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> interface</span><span class="z-l-8 z-d-8"> WritableRepository</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  createTask</span><span>(</span><span>input</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TaskInput</span><span>,</span><span> createdBy</span><span class="z-l-5 z-d-5">?</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">Task</span><span>&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  updateTask</span><span>(</span><span>taskId</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>,</span><span> input</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Partial</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskInput</span><span>&gt;</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">Task</span><span class="z-l-5 z-d-5"> |</span><span class="z-l-5 z-d-5"> null</span><span>&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  deleteTask</span><span>(</span><span>taskId</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-5 z-d-5">boolean</span><span>&gt;</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Two implementations ship with the template:</p>
+<ol>
+<li><strong>SeedRepository</strong> — in-memory with sample data. Zero configuration, works instantly.</li>
+<li><strong>MongoRepository</strong> — production MongoDB implementation.</li>
+</ol>
+<p>A factory function auto-detects which to use based on whether <code>MONGODB_URI</code> is set. For development, you never need a database.</p>
+<h3 id="auth-via-global-middleware">Auth via Global Middleware</h3>
+<p>TanStack Start supports <a rel="external" href="https://tanstack.com/start/latest/docs/framework/react/guide/middleware">global middleware</a> — functions that run on every request before any handler executes.</p>
+<p>We use this for authentication: the middleware reads the JWT from the configured header, decodes the identity, and when the user is authenticated it loads their profile from the repository. Both are attached to the request context:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">//</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> src/middleware/auth.ts</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> const</span><span class="z-l-1 z-d-1"> authMiddleware</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> createMiddleware</span><span>(</span><span>)</span><span>.</span><span class="z-l-1 z-d-1">server</span><span>(</span><span class="z-l-3 z-l-b z-d-6 z-d-b">async</span><span> (</span><span>{</span><span> next</span><span>,</span><span> request</span><span> }</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> =&gt;</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">  const</span><span class="z-l-1 z-d-1"> authHeader</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> request</span><span>.</span><span class="z-l-1 z-d-1">headers</span><span>.</span><span class="z-l-1 z-d-1">get</span><span>(</span><span class="z-l-1 z-d-1">AUTH_HEADER_NAME</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">  const</span><span class="z-l-1 z-d-1"> identity</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> extractIdentityFromJwt</span><span>(</span><span class="z-l-1 z-d-1">authHeader</span><span>)</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">  const</span><span class="z-l-1 z-d-1"> user</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> identity</span><span>.</span><span class="z-l-1 z-d-1">email</span><span class="z-l-5 z-d-5"> ?</span><span class="z-l-1 z-d-1"> identity</span><span class="z-l-5 z-d-5"> :</span><span class="z-l-1 z-d-1"> ANONYMOUS_USER</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">  let</span><span class="z-l-1 z-d-1"> userProfile</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-7 z-d-7"> null</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">  if</span><span> (</span><span class="z-l-1 z-d-1">user</span><span>.</span><span class="z-l-1 z-d-1">email</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    userProfile</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-5 z-d-5"> await</span><span class="z-l-1 z-d-1"> getReadRepository</span><span>(</span><span>)</span><span>.</span><span class="z-l-1 z-d-1">getUserProfile</span><span>(</span><span class="z-l-1 z-d-1">user</span><span>.</span><span class="z-l-1 z-d-1">email</span><span>)</span></span>
+<span class="giallo-l"><span>  }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">  return</span><span class="z-l-1 z-d-1"> next</span><span>(</span><span>{</span><span> context</span><span>:</span><span> {</span><span class="z-l-1 z-d-1"> user</span><span>,</span><span class="z-l-1 z-d-1"> userProfile</span><span> }</span><span> }</span><span>)</span></span>
+<span class="giallo-l"><span>}</span><span>)</span></span></code></pre>
+<p>Registered globally in <code>src/start.ts</code>:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> const</span><span class="z-l-1 z-d-1"> startInstance</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> createStart</span><span>(</span><span>(</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> =&gt;</span><span> (</span><span>{</span></span>
+<span class="giallo-l"><span>  requestMiddleware</span><span>:</span><span> [</span><span class="z-l-1 z-d-1">authMiddleware</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>}</span><span>)</span><span>)</span></span></code></pre>
+<p>Every server function automatically receives <code>context.user</code> and <code>context.userProfile</code> — no manual header extraction. For mutations, we chain a function-level <strong>requireAuthMiddleware</strong> (<code>src/middleware/requireAuth.ts</code>) so only POST server functions require authentication; read-only queries stay unauthenticated. The handler can then assume <code>context.user</code> is defined. For other cases, use the composable guards <code>requireAuth(context)</code> and <code>requireGroup(context, group)</code> from <code>src/utils/auth.ts</code>; they throw with 401/403 so your handler code stays minimal.</p>
+<h3 id="promptable-by-design">Promptable by Design</h3>
+<p>This is the pattern we are most excited about. AI tools call the <strong>same server functions</strong> that route loaders and event handlers use — a single code path for validation, auth, observability, and data access. Tool handlers are wrapped with <code>withErrorHandling()</code> so that failures return <code>{ error: string, code?: number }</code> instead of crashing the agent loop:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">const</span><span class="z-l-1 z-d-1"> getTasksToolDef</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> toolDefinition</span><span>(</span><span>{</span></span>
+<span class="giallo-l"><span>  name</span><span>:</span><span class="z-l-2 z-d-2"> &#39;</span><span class="z-l-2 z-d-2">getTasks</span><span class="z-l-2 z-d-2">&#39;</span><span>,</span></span>
+<span class="giallo-l"><span>  description</span><span>:</span><span class="z-l-2 z-d-2"> &#39;</span><span class="z-l-2 z-d-2">Get all tasks with optional filters...</span><span class="z-l-2 z-d-2">&#39;</span><span>,</span></span>
+<span class="giallo-l"><span>  inputSchema</span><span>:</span><span class="z-l-1 z-d-1"> TaskFilterSchema</span><span>,</span><span class="z-l-6 z-l-i z-d-3 z-d-i">  //</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Zod schema with .describe()</span></span>
+<span class="giallo-l"><span>}</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> const</span><span class="z-l-1 z-d-1"> getTasksTool</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> getTasksToolDef</span><span>.</span><span class="z-l-1 z-d-1">server</span><span>(</span><span>(</span><span>args</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> =&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  withErrorHandling</span><span>(</span><span>(</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> =&gt;</span><span class="z-l-1 z-d-1"> getTasks</span><span>(</span><span>{</span><span> data</span><span>:</span><span class="z-l-1 z-d-1"> TaskFilterSchema</span><span>.</span><span class="z-l-1 z-d-1">parse</span><span>(</span><span class="z-l-1 z-d-1">args</span><span>)</span><span> }</span><span>)</span><span>)</span></span>
+<span class="giallo-l"><span>)</span></span></code></pre>
+<p>Because we use Zod schemas with <code>.describe()</code> on every field, the AI model receives rich JSON Schema metadata explaining what each parameter means. The model can then compose tool calls to answer complex queries.</p>
+<p>We also expose <strong>create</strong>, <strong>update</strong>, and <strong>delete</strong> as AI tools. Since these call the same server functions used by the UI — which already have <code>requireAuthMiddleware</code> chained in — auth and creator checks happen automatically. A <strong>getCurrentUserContext</strong> tool lets the AI check who is logged in and what they can do. When the user is not allowed, mutation server functions throw with 401 or 403, <code>withErrorHandling()</code> catches this and returns <code>{ error, code }</code>, and the AI explains it in plain language: “You need to log in to create tasks” or “Only the task creator can edit that task.”</p>
+<p>The template also uses <a rel="external" href="https://tanstack.com/ai/latest/docs/guides/client-tools">TanStack AI client tools</a> — tools that execute in the browser instead of on the server. <strong>navigate</strong> triggers <code>router.navigate()</code> to open a page, and <strong>invalidateRouter</strong> calls <code>router.invalidate()</code> so the UI refreshes after AI-driven mutations. Their definitions live in <code>tools.ts</code> (shared with the server), but the implementations run in the chat drawer component via <code>@tanstack/ai-client</code>.</p>
+<p>A chat drawer talks to the backend via <code>POST /api/chat</code> with Server-Sent Events (SSE) streaming. The client sends browser context plus current location (<code>currentPathname</code>, <code>currentSearch</code>, <code>currentHref</code>), and the server injects this into the system prompt as <code>Current Location</code> context.</p>
+<p>We also keep a navigation manifest in sync with the route tree (<code>src/services/ai/navigationManifest.ts</code>) so the model understands URL structure, including dynamic routes like <code>/tasks/$taskId</code> (concrete URLs: <code>/tasks/&lt;taskId&gt;</code>). This lets the assistant interpret references such as "this page" and "this task" using the route the user is currently viewing.</p>
+<p>Users get a natural language interface to their data — and to create, edit, and delete tasks when permitted — with permission-aware error handling.</p>
+<h3 id="observability-as-a-plugin">Observability as a Plugin</h3>
+<p>Monitoring is important but vendor lock-in is not. We define a minimal interface:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> interface</span><span class="z-l-8 z-d-8"> ObservabilityService</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  startSpan</span><span>&lt;</span><span class="z-l-8 z-d-8">T</span><span>&gt;</span><span>(</span><span>name</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>,</span><span class="z-l-1 z-d-1"> fn</span><span class="z-l-5 z-d-5">:</span><span> (</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> =&gt;</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">T</span><span>&gt;</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">T</span><span>&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  setUser</span><span>(</span><span>user</span><span class="z-l-5 z-d-5">:</span><span> {</span><span> email</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>;</span><span> name</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span> }</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> void</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  captureError</span><span>(</span><span>error</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> unknown</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> void</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Sentry is the default implementation. If <code>VITE_SENTRY_DSN</code> is not set, a no-op implementation is used — the app works perfectly fine without any observability configured. To switch to Datadog, New Relic, or anything else, implement the three methods.</p>
+<h3 id="data-flow-and-conventions">Data Flow and Conventions</h3>
+<p>A few conventions keep the app predictable. <strong>Loaders-first</strong>: all data is fetched in route loaders, not in <code>useEffect</code> + <code>useState</code>; loaders give you caching, SSR, and parallel fetching for free. <strong>URL-as-state</strong>: filters, tabs, and modal open/close live in URL search params so state is shareable, bookmarkable, and survives refresh. <strong>Mutations</strong>: POST server functions chain <code>invalidateMiddleware</code>, so after a mutation the client automatically calls <code>router.invalidate()</code> and refetches; components never invalidate manually. Mutation server functions <strong>throw</strong> on error; route callers wrap with <code>processResponse()</code> for a <code>{ data, error }</code> result, so the UI can show toasts or inline errors without try/catch in every handler. <strong>E2E tested</strong>: Playwright tests run the full app against the seed repository, covering routes, filters, CRUD, and auth gating — no database needed.</p>
+<h2 id="zod-schemas-as-the-single-source-of-truth">Zod Schemas as the Single Source of Truth</h2>
+<p>Every domain type starts as a Zod schema:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> const</span><span class="z-l-1 z-d-1"> TaskSchema</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> TaskInputSchema</span><span>.</span><span class="z-l-1 z-d-1">extend</span><span>(</span><span>{</span></span>
+<span class="giallo-l"><span>  id</span><span>:</span><span class="z-l-1 z-d-1"> z</span><span>.</span><span class="z-l-1 z-d-1">string</span><span>(</span><span>)</span><span>.</span><span class="z-l-1 z-d-1">describe</span><span>(</span><span class="z-l-2 z-d-2">&#39;</span><span class="z-l-2 z-d-2">Unique identifier for the task</span><span class="z-l-2 z-d-2">&#39;</span><span>)</span><span>,</span></span>
+<span class="giallo-l"><span>  createdAt</span><span>:</span><span class="z-l-1 z-d-1"> z</span><span>.</span><span class="z-l-1 z-d-1">string</span><span>(</span><span>)</span><span>.</span><span class="z-l-1 z-d-1">describe</span><span>(</span><span class="z-l-2 z-d-2">&#39;</span><span class="z-l-2 z-d-2">ISO 8601 timestamp when created</span><span class="z-l-2 z-d-2">&#39;</span><span>)</span><span>,</span></span>
+<span class="giallo-l"><span>  updatedAt</span><span>:</span><span class="z-l-1 z-d-1"> z</span><span>.</span><span class="z-l-1 z-d-1">string</span><span>(</span><span>)</span><span>.</span><span class="z-l-1 z-d-1">describe</span><span>(</span><span class="z-l-2 z-d-2">&#39;</span><span class="z-l-2 z-d-2">ISO 8601 timestamp when last updated</span><span class="z-l-2 z-d-2">&#39;</span><span>)</span><span>,</span></span>
+<span class="giallo-l"><span>}</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> type</span><span class="z-l-8 z-d-8"> Task</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-8 z-d-8"> z</span><span>.</span><span class="z-l-8 z-d-8">infer</span><span>&lt;</span><span class="z-l-5 z-d-5">typeof</span><span class="z-l-1 z-d-1"> TaskSchema</span><span>&gt;</span></span></code></pre>
+<p>This single definition serves four purposes:</p>
+<ol>
+<li><strong>TypeScript types</strong> — inferred via <code>z.infer&lt;&gt;</code></li>
+<li><strong>Server function validation</strong> — passed to <code>.inputValidator(Schema)</code></li>
+<li><strong>AI tool schemas</strong> — converted to JSON Schema automatically</li>
+<li><strong>Documentation</strong> — <code>.describe()</code> metadata is embedded everywhere</li>
+</ol>
+<p>No more maintaining separate interfaces, validation logic, and documentation that inevitably drift apart.</p>
+<p><strong>Why Zod?</strong> <a rel="external" href="https://arktype.io/">ArkType</a> is a very good alternative and I personally prefer its syntax; we went with Zod here because it is more widely known. Zod v4 also lets you add extra metadata on fields—formatting hints, units, etc.—which is useful for formatting in the UI and for giving better hints to the AI when it uses your schemas.</p>
+<h3 id="project-structure">Project structure</h3>
+<p>The important pieces live under <code>src/</code>: <code>middleware/</code> (auth, invalidation), <code>services/schemas/</code> (Zod as single source of truth), <code>services/repository/</code> (interface plus seed and Mongo implementations), <code>services/api/</code> (server functions), <code>services/ai/</code> (adapter and tool definitions), and <code>routes/</code> (file-based pages). The repo README has the full tree.</p>
+<h2 id="getting-started-in-30-seconds">Getting Started in 30 Seconds</h2>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">git</span><span class="z-l-2 z-d-2"> clone</span><span class="z-l-2 z-d-2"> https://github.com/carlosvin/tanstack-fullstack-ai-template.git</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">cd</span><span class="z-l-2 z-d-2"> tanstack-fullstack-ai-template</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">pnpm</span><span class="z-l-2 z-d-2"> install</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">pnpm</span><span class="z-l-2 z-d-2"> dev</span></span></code></pre><h2 id="install-the-skill-npx-skills">Install The Skill (npx skills)</h2>
+<p>You can install this repository's generated Agent Skill directly from GitHub:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">#</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> List skills available in this repository</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">npx</span><span class="z-l-2 z-d-2"> skills</span><span class="z-l-2 z-d-2"> add</span><span class="z-l-2 z-d-2"> carlosvin/tanstack-fullstack-ai-template</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-list</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">#</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Install the TanStack fullstack pattern skill</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">npx</span><span class="z-l-2 z-d-2"> skills</span><span class="z-l-2 z-d-2"> add</span><span class="z-l-2 z-d-2"> carlosvin/tanstack-fullstack-ai-template</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-skill</span><span class="z-l-2 z-d-2"> tanstack-fullstack-pattern</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">#</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Optional: install globally (available across projects)</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">npx</span><span class="z-l-2 z-d-2"> skills</span><span class="z-l-2 z-d-2"> add</span><span class="z-l-2 z-d-2"> carlosvin/tanstack-fullstack-ai-template</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">-skill</span><span class="z-l-2 z-d-2"> tanstack-fullstack-pattern</span><span class="z-l-8 z-d-8"> -</span><span class="z-l-8 z-d-8">g</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">#</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Optional: verify installed skills</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">npx</span><span class="z-l-2 z-d-2"> skills</span><span class="z-l-2 z-d-2"> list</span></span></code></pre>
+<p>You can also try the <a rel="external" href="https://leafy-manatee-16b96c.netlify.app">live demo</a> without cloning.</p>
+<p>For a new project you can run <code>rm -rf .git &amp;&amp; git init</code> after cloning to start fresh history. Use <code>pnpm build</code>, <code>pnpm test</code>, and <code>pnpm lint</code> (and <code>pnpm format</code>) to validate your fork. To run in production via Docker: <code>docker build -t my-app .</code> then <code>docker run --rm -p 3000:3000 my-app</code>.</p>
+<p>The app starts with seed data — a working task management system with dashboard, list views, detail pages, dark/light mode, and an AI chat drawer. No database, no API keys, no environment variables needed.</p>
+<p>When you're ready to add real backends, set the relevant variables. The repo includes an <code>.env.example</code> with full documentation; the main ones are:</p>
+<table><thead><tr><th>Variable</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>MONGODB_URI</code></td><td>Use a real database instead of in-memory seed data</td></tr>
+<tr><td><code>AZURE_OPENAI_API_KEY</code>, <code>AZURE_OPENAI_ENDPOINT</code>, <code>AZURE_OPENAI_DEPLOYMENT</code></td><td>Enable the AI chat assistant (OpenAI-compatible)</td></tr>
+<tr><td><code>VITE_SENTRY_DSN</code></td><td>Enable error and performance monitoring</td></tr>
+<tr><td><code>AUTH_HEADER_NAME</code></td><td>HTTP header for the JWT (default: <code>Authorization</code>)</td></tr>
+</tbody></table>
+<p>Each capability layers on independently. You can clone and replace the Task domain with your own, use the generated Cursor/Windsurf skill for AI-assisted setup, or adopt layers incrementally; the repo README has the details.</p>
+<h2 id="extending-the-template">Extending the Template</h2>
+<p>Adding a new domain entity is a six-step process:</p>
+<ol>
+<li><strong>Zod schema</strong> in <code>schemas.ts</code> with <code>.describe()</code> annotations</li>
+<li><strong>Repository methods</strong> in the interface, then implement in seed and MongoDB</li>
+<li><strong>Server functions</strong> wrapping the repository (GET for loaders, POST with <code>invalidateMiddleware</code> for mutations)</li>
+<li><strong>AI tools</strong> that call the server functions (wrapped with <code>withErrorHandling()</code>), plus a <strong>getCurrentUserContext</strong> tool so the AI knows who is logged in and what they can do</li>
+<li><strong>Routes</strong> for the UI pages</li>
+<li><strong>Tests</strong> for the seed repository, new utilities, and E2E flows (Playwright runs against seed data)</li>
+</ol>
+<p>Because every layer follows the same pattern, adding a new entity takes minutes, not hours. The database, AI provider, and observability layer are behind interfaces; to swap one, implement the interface and update the factory (e.g. <code>getRepository.ts</code> for the repository, the AI adapter factory, or the observability factory in the repo).</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The goal is not a framework — it's a <strong>starting point</strong>. Fork the template, replace the Task domain with your own, and you have a production-ready full-stack application with:</p>
+<ul>
+<li>Type-safe server functions</li>
+<li>JWT authentication via middleware (mutations use requireAuthMiddleware)</li>
+<li>AI-powered data querying and task create/edit/delete with permission-aware errors (401/403)</li>
+<li>Dark/light mode UI</li>
+<li>Swappable database, AI provider, and observability</li>
+<li>E2E tests via Playwright against seed data (no database needed)</li>
+<li>Docker-ready deployment</li>
+</ul>
+<p>All with zero configuration for local development.</p>
+<p>The template is open source at <a rel="external" href="https://github.com/carlosvin/tanstack-fullstack-ai-template">github.com/carlosvin/tanstack-fullstack-ai-template</a>. You can try the <a rel="external" href="https://leafy-manatee-16b96c.netlify.app">live demo</a> to see it in action before cloning. We hope it saves you the same weeks of scaffolding it saved us.</p>
+<hr />
+<p><em>Built with TanStack Start, Mantine, TanStack AI, MongoDB, Zod, Sentry, Vitest, Playwright, and Biome.</em></p>
+
+  </section>
+
+  
+<nav aria-label="Adjacent posts">
+  
+  <span></span>
+  
+  
+  <a href="https://carlosvin.github.io/pr-preview/pr-127/pytest-scenarios-isolated-integration-tests/">
+    <small>Older</small>
+    <span>Isolated Integration Tests with pytest-scenarios</span>
+  </a>
+  
+</nav>
+
+
+
+  <footer>
+    <div id="comments"></div>
+    <script>
+      (function () {
+        var theme = document.documentElement.getAttribute("data-theme") === "dark" ? "github-dark" : "github-light";
+        var script = document.createElement("script");
+        script.src = "https://utteranc.es/client.js";
+        script.setAttribute("repo", "carlosvin/carlosvin.github.io");
+        script.setAttribute("issue-term", "title");
+        script.setAttribute("theme", theme);
+        script.setAttribute("crossorigin", "anonymous");
+        script.async = true;
+        document.getElementById("comments").appendChild(script);
+      })();
+    </script>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2026 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <ul>
+  
+  <li>
+    <a href="https://github.com/carlosvin"
+      target="_blank" rel="noopener">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub"
+        width="32" height="32">
+    </a>
+  </li>
+  
+  <li>
+    <a href="https://linkedin.com/in/carlosvin"
+      target="_blank" rel="noopener">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn"
+        width="32" height="32">
+    </a>
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/pr-preview/pr-127/atom.xml"
+      >
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS"
+        width="32" height="32">
+    </a>
+  </li>
+  
+</ul>
+
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/pr-preview/pr-127/js/theme.js" defer></script>
+  <script src="https://carlosvin.github.io/pr-preview/pr-127/js/search.js" defer
+    data-search-index="https://carlosvin.github.io/pr-preview/pr-127/search_index.en.json"></script>
+</body>
+
+</html>

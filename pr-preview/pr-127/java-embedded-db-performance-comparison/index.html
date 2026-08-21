@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Embedded Java Databases - Performance Comparison</title>
+  <meta name="description" content="Performance comparison in Java between three embedded databases like Derby/JavaDB, Sqlite, and ObjectDB">
+  
+  <meta name="keywords" content="java,database,performance,sqlite,embedded">
+  
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Carlos Martin Sanchez">
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="https://carlosvin.github.io/pr-preview/pr-127/rss.xml">
+  
+
+  <meta property="og:title" content="Embedded Java Databases - Performance Comparison">
+<meta property="og:description" content="Performance comparison in Java between three embedded databases like Derby/JavaDB, Sqlite, and ObjectDB">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="My software engineering journey">
+<meta property="og:url" content="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png">
+<link rel="canonical" href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/">
+
+
+
+<meta property="article:published_time" content="2014-06-07T00:00:00Z">
+
+
+
+
+<meta property="article:tag" content="java">
+
+<meta property="article:tag" content="database">
+
+<meta property="article:tag" content="performance">
+
+<meta property="article:tag" content="sqlite">
+
+<meta property="article:tag" content="embedded">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Embedded Java Databases - Performance Comparison">
+<meta name="twitter:description" content="Performance comparison in Java between three embedded databases like Derby/JavaDB, Sqlite, and ObjectDB">
+<meta name="twitter:image" content="https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-127/#website",
+      "url": "https://carlosvin.github.io/pr-preview/pr-127",
+      "name": "My software engineering journey",
+      "description": "Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers.",
+      "publisher": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-127/#person",
+      "name": "Carlos Martin Sanchez",
+      "url": "https://carlosvin.github.io/pr-preview/pr-127",
+      "sameAs": [
+        "https://github.com/carlosvin",
+        "https://linkedin.com/in/carlosvin",
+        "https://carlosvin.github.io/pr-preview/pr-127/atom.xml"
+        
+      ]
+    }
+    
+    ,{
+      "@type": "BlogPosting",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison//#article",
+      "isPartOf": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#website" },
+      "author": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#person" },
+      "headline": "Embedded Java Databases - Performance Comparison",
+      "description": "Performance comparison in Java between three embedded databases like Derby/JavaDB, Sqlite, and ObjectDB",
+      "datePublished": "2014-06-07T00:00:00Z",
+      "dateModified": "2014-06-07T00:00:00Z",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/" },
+      "url": "https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/",
+      "image": "https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png",
+      "publisher": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#person" },
+      "articleSection": "Blog",
+      "keywords": [
+        "java",
+        "database",
+        "performance",
+        "sqlite",
+        "embedded"
+        
+      ],
+      "inLanguage": "en",
+      "wordCount": 707
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/",
+      "url": "https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/",
+      "name": "Embedded Java Databases - Performance Comparison",
+      "isPartOf": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/#website" },
+      "about": { "@id": "https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison//#article" },
+      "description": "Performance comparison in Java between three embedded databases like Derby/JavaDB, Sqlite, and ObjectDB",
+      "inLanguage": "en"
+    }
+    
+  ]
+}
+</script>
+
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.classless.lime.min.css">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-127/css/base.css">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-127/giallo-light.css" id="syntax-light">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-127/giallo-dark.css" id="syntax-dark" disabled>
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("theme");
+        var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (theme !== "dark" && theme !== "light") theme = "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.style.colorScheme = theme;
+        var darkSheet = document.getElementById("syntax-dark");
+        var lightSheet = document.getElementById("syntax-light");
+        if (darkSheet && lightSheet) {
+          darkSheet.disabled = theme !== "dark";
+          lightSheet.disabled = theme === "dark";
+        }
+      } catch (e) { }
+    })();
+  </script>
+
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-127/img/favicon.ico" sizes="any">
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-127/img/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="https://carlosvin.github.io/pr-preview/pr-127/img/apple-touch-icon.png">
+  <link rel="manifest" href="https://carlosvin.github.io/pr-preview/pr-127/manifest.json">
+
+  <script type="speculationrules">
+    {
+      "prerender": [{
+        "where": {
+          "and": [
+            { "href_matches": "/*" },
+            { "not": { "href_matches": "https://*/*" } }
+          ]
+        }
+      }]
+    }
+  </script>
+  <script>
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="b33a381d-0843-4a11-b306-74c285c39206"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/theme-change@3.0.4/index.js"></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <a class="brand" href="https://carlosvin.github.io/pr-preview/pr-127">
+        <img src="https://carlosvin.github.io/pr-preview/pr-127/img/android-chrome-192x192.png" alt="" width="32" height="32">
+        <span>My software engineering journey</span>
+      </a>
+    </li>
+  </ul>
+  <ul>
+    
+    <li><a href="https://carlosvin.github.io/pr-preview/pr-127/about">About</a></li>
+    
+    <li><a href="https://carlosvin.github.io/pr-preview/pr-127/tags">Tags</a></li>
+    <li>
+      <label>
+        Dark
+        <input type="checkbox" data-toggle-theme="dark,light" role="switch" aria-label="Dark mode">
+      </label>
+    </li>
+    <li>
+      <input id="search" type="search" placeholder="Search posts" aria-label="Search posts"
+        autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-controls="search-results"
+        aria-expanded="false" title="Press / to search">
+      <div id="search-results" hidden>
+        <p role="status" aria-live="polite"></p>
+        <ul role="listbox" aria-label="Search results"></ul>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+  </header>
+
+  <main id="main-content">
+    
+<article>
+  <header>
+    <hgroup>
+      <h1>Embedded Java Databases - Performance Comparison</h1>
+      <p>
+        
+
+
+<time datetime="PT3M">3 min read</time>
+
+
+ · <data value="707">707 words</data>
+
+
+      </p>
+      
+
+
+
+<nav aria-label="Tags">
+  <ul>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-127/tags/java/" title="All the posts in java">
+        java
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-127/tags/database/" title="All the posts in database">
+        database
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-127/tags/performance/" title="All the posts in performance">
+        performance
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-127/tags/sqlite/" title="All the posts in sqlite">
+        sqlite
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-127/tags/embedded/" title="All the posts in embedded">
+        embedded
+        
+      </a>
+    </li>
+    
+  </ul>
+</nav>
+
+
+    </hgroup>
+  </header>
+
+  
+
+  
+<aside>
+  <details>
+    <summary>Contents</summary>
+    <ul>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/#embedded-databases">Embedded Databases</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/#sqlitedb">SqliteDB</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/#derbydb-or-javadb">DerbyDB or JavaDB</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/#objectdb">ObjectDB</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/#the-tests">The Tests</a>
+        
+        <ul>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/#jdbc-databases">JDBC Databases</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/#source-code">Source Code</a>
+          </li>
+          
+          <li>
+            <a href="https://carlosvin.github.io/pr-preview/pr-127/java-embedded-db-performance-comparison/#test-results">Test Results</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+    </ul>
+  </details>
+</aside>
+
+
+
+  <section>
+    <h2 id="embedded-databases">Embedded Databases</h2>
+<p>These are databases that do not require a server, are embedded within the application itself, and are usually stored in local files. This, combined with the fact that they often have a mode where data is kept in memory, can result in very high performance.</p>
+<p>However, this high degree of coupling to the application means they perform worse when shared between multiple applications due to access collisions.</p>
+<p>Another advantage is that you don't have to maintain and manage a database server.</p>
+<p>I'm going to do a performance comparison between 3 transactional embedded databases (ACID). NoSQL databases are not included in this comparison as they are in a different performance league.</p>
+<p>Contents</p>
+<h3 id="sqlitedb">SqliteDB</h3>
+<p>This is a library written in <a rel="external" href="https://es.wikipedia.org/wiki/ANSI_C">ANSI C</a>, less than 500KB, multi-platform, with no external dependencies, and stores all database content in a single file.</p>
+<p>It gives the best performance in the test results below.</p>
+<p>It can be used from C and C++, but also <a rel="external" href="https://es.wikipedia.org/wiki/Sqlite#Lenguajes_de_programaci.C3.B3n">from other programming languages</a> (PHP, Python, Java, .NET ...).</p>
+<p>In the case of Java, we can manage this database through JDBC. The library can be obtained from <a rel="external" href="https://bitbucket.org/xerial/sqlite-jdbc">here</a>.</p>
+<p>Here is an example of inserting a series of objects of the class <a href="../java_embedded_databases/blob/master/src/main/java/domain/Price.java">Price.java</a>:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="java"><span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> class</span><span class="z-l-8 z-d-8"> JdbcDb</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> implements</span><span class="z-l-4 z-d-4"> DB</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    enum</span><span class="z-l-8 z-d-8"> Column</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-8 z-d-8">        INSTRUMENT</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-8 z-d-8">        MARKET</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-8 z-d-8">        PRICE</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-8 z-d-8">        DATE</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> static</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> final</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> String</span><span class="z-l-1 z-d-1"> TABLE_NAME</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">PRICES</span><span class="z-l-2 z-d-2">&quot;</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> static</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> final</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> String</span><span class="z-l-1 z-d-1"> SQL_INSERT</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">INSERT INTO </span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-5 z-d-5"> +</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> TABLE_NAME</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">            +</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2"> (INSTRUMENT, MARKET, PRICE, DATE) VALUES (?,?,?,?)</span><span class="z-l-2 z-d-2">&quot;</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">    //</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> ...</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    private</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> void</span><span class="z-l-1 z-d-1"> insert</span><span>(</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Price</span><span> p</span><span>,</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> PreparedStatement</span><span> preparedStatement</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> throws</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> SQLException</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        preparedStatement</span><span>.</span><span class="z-l-1 z-d-1">setString</span><span>(</span><span class="z-l-9 z-d-9">1</span><span>,</span><span class="z-l-1 z-d-1"> p</span><span>.</span><span class="z-l-1 z-d-1">getInstrument</span><span>(</span><span>)</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        preparedStatement</span><span>.</span><span class="z-l-1 z-d-1">setString</span><span>(</span><span class="z-l-9 z-d-9">2</span><span>,</span><span class="z-l-1 z-d-1"> p</span><span>.</span><span class="z-l-1 z-d-1">getMarket</span><span>(</span><span>)</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        preparedStatement</span><span>.</span><span class="z-l-1 z-d-1">setDouble</span><span>(</span><span class="z-l-9 z-d-9">3</span><span>,</span><span class="z-l-1 z-d-1"> p</span><span>.</span><span class="z-l-1 z-d-1">getPrice</span><span>(</span><span>)</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        preparedStatement</span><span>.</span><span class="z-l-1 z-d-1">setTimestamp</span><span>(</span><span class="z-l-9 z-d-9">4</span><span>,</span><span class="z-l-5 z-d-5"> new</span><span class="z-l-1 z-d-1"> Timestamp</span><span>(</span><span class="z-l-1 z-d-1">p</span><span>.</span><span class="z-l-1 z-d-1">getDate</span><span>(</span><span>)</span><span>.</span><span class="z-l-1 z-d-1">getTime</span><span>(</span><span>)</span><span>)</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        preparedStatement</span><span>.</span><span class="z-l-1 z-d-1">addBatch</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    @</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Override</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> void</span><span class="z-l-1 z-d-1"> insert</span><span>(</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Price</span><span>...</span><span> prices</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> throws</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> SQLException</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">        PreparedStatement</span><span class="z-l-1 z-d-1"> preparedStatement</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-1 z-d-1"> conn</span><span>.</span><span class="z-l-1 z-d-1">prepareStatement</span><span>(</span><span>SQL_INSERT</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">        for</span><span> (</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Price</span><span class="z-l-1 z-d-1"> p</span><span class="z-l-5 z-d-5"> :</span><span> prices</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">            insert</span><span>(</span><span>p</span><span>,</span><span> preparedStatement</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        preparedStatement</span><span>.</span><span class="z-l-1 z-d-1">executeBatch</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        preparedStatement</span><span>.</span><span class="z-l-1 z-d-1">close</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        conn</span><span>.</span><span class="z-l-1 z-d-1">commit</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">    //</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> ...</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><h3 id="derbydb-or-javadb">DerbyDB or JavaDB</h3>
+<p>JavaDB is an Oracle distribution of the open-source DerbyDB database. It supports the <a rel="external" href="https://es.wikipedia.org/wiki/SQL">ANSI/ISO SQL</a> standard via JDBC and <a rel="external" href="https://es.wikipedia.org/wiki/Java_EE">Java EE</a>. These libraries are included in the JDK.</p>
+<p>It stores the database in multiple files, which can be useful for scaling storage.</p>
+<p>It can only be used in Java, not from other languages.</p>
+<p>As we will see later, it was the slowest in the test results.</p>
+<p>The example implementation for inserting a series of objects of the class <a href="../java_embedded_databases/blob/master/src/main/java/domain/Price.java">Price.java</a> is exactly the same as above for SqliteDB. This is one of the benefits of JDBC, which allows us to obtain a connection for a specific database, but from there we can almost always forget about the specific database as long as it supports our SQL queries.</p>
+<h3 id="objectdb">ObjectDB</h3>
+<p>This is an <a rel="external" href="https://es.wikipedia.org/wiki/Base_de_datos_orientada_a_objetos">object-oriented database</a> that allows access via <a rel="external" href="https://es.wikipedia.org/wiki/Java_Persistence_API">JPA</a>, a Java standard that aims to retain the advantages of object orientation, which are often lost when dealing with persistence layers.</p>
+<p>It is really easy to perform typical database actions, abstracting away from SQL. For example, here is how you would insert an array of Price objects with ObjectDB:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="java"><span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> void</span><span class="z-l-1 z-d-1"> insert</span><span>(</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Price</span><span>.</span><span>.</span><span>.</span><span class="z-l-1 z-d-1"> prices</span><span>)</span><span> throws SQLException </span><span>{</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    em</span><span>.</span><span class="z-l-1 z-d-1">getTransaction</span><span>(</span><span>)</span><span>.</span><span class="z-l-1 z-d-1">begin</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">    for</span><span> (</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Price</span><span class="z-l-1 z-d-1"> p</span><span class="z-l-5 z-d-5"> :</span><span> prices</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">        em</span><span>.</span><span class="z-l-1 z-d-1">persist</span><span>(</span><span>p</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    em</span><span>.</span><span class="z-l-1 z-d-1">getTransaction</span><span>(</span><span>)</span><span>.</span><span class="z-l-1 z-d-1">commit</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>If you add this ease of use to the fact that its performance in the test results was very good (close to SqliteDB), I can say that I have discovered an embedded database to consider for future Java projects. However, as with JavaDB, it is only useful if you are programming in Java.</p>
+<h2 id="the-tests">The Tests</h2>
+<p>The tests simply consist of repeatedly performing a series of <a rel="external" href="https://es.wikipedia.org/wiki/CRUD">CRUD</a> operations. For each database, the test performs a series of inserts, selects, updates, and deletions of objects of the Price class.</p>
+<p>I used 100,000 instances of the <a href="../java_embedded_databases/blob/master/src/main/java/domain/Price.java">Price.java</a> class, the same for each type of database.</p>
+<p>For this, I created a <a href="../java_embedded_databases/blob/master/src/main/java/db/DB.java">DB.java</a> interface that each implementation for each database shares.</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="java"><span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> interface</span><span class="z-l-8 z-d-8"> DB</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> void</span><span class="z-l-1 z-d-1"> insert</span><span>(</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Price</span><span>...</span><span> prices</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> throws</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> SQLException</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> void</span><span class="z-l-1 z-d-1"> createTable</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> void</span><span class="z-l-1 z-d-1"> deleteAll</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> void</span><span class="z-l-1 z-d-1"> update</span><span>(</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Price</span><span>...</span><span> prices</span><span>)</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> throws</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> SQLException</span><span>;</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">    public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> Set</span><span>&lt;</span><span class="z-l-3 z-l-b z-d-6 z-d-b">Price</span><span>&gt;</span><span class="z-l-1 z-d-1"> selectAll</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><h3 id="jdbc-databases">JDBC Databases</h3>
+<p>Only the data needed to obtain the driver and the database connection changes, so all the logic is in the <a href="../java_embedded_databases/blob/master/src/main/java/db/JdbcDb.java">JdbcDb.java</a> class, from which SqliteDB and DerbyDB inherit.</p>
+<h3 id="source-code">Source Code</h3>
+<p>You can download the source code from <a rel="external" href="https://github.com/carlosvin/java_embedded_databases">here</a>.</p>
+<p>It is a Gradle project, so to run the tests you just have to execute: <code>gradle test</code>.</p>
+<p>Gradle will automatically download the necessary libraries, compile, and run the tests.</p>
+<p>You can also see the execution directly at <a rel="external" href="https://travis-ci.org/carlosvin/java_embedded_databases">Travis CI</a>.</p>
+<p><img src="https://travis-ci.org/carlosvin/java_embedded_databases.svg" alt="Build Status" /></p>
+<h3 id="test-results">Test Results</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">db.DbTest</span><span class="z-l-5 z-d-5"> &gt;</span><span class="z-l-2 z-d-2"> testSqliteDB</span><span class="z-l-2 z-d-2"> STANDARD_OUT</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    Testing</span><span class="z-l-2 z-d-2"> with</span><span class="z-l-9 z-d-9"> 100000</span><span class="z-l-2 z-d-2"> elements</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    100000</span><span class="z-l-2 z-d-2"> Prices</span><span class="z-l-2 z-d-2"> SqliteDB,</span><span class="z-l-2 z-d-2"> total</span><span class="z-l-2 z-d-2"> time</span><span class="z-l-9 z-d-9"> 3455</span><span class="z-l-2 z-d-2"> ms</span><span class="z-l-5 z-d-5"> &lt;</span><span>1</span><span class="z-l-5 z-d-5">&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Insert:</span><span class="z-l-9 z-d-9">  1508</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Select:</span><span class="z-l-9 z-d-9">  605</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Update:</span><span class="z-l-9 z-d-9">  1319</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Delete:</span><span class="z-l-9 z-d-9">  23</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    ----------------------------------------------</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">db.DbTest</span><span class="z-l-5 z-d-5"> &gt;</span><span class="z-l-2 z-d-2"> testObjectDB</span><span class="z-l-2 z-d-2"> STANDARD_OUT</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    Testing</span><span class="z-l-2 z-d-2"> with</span><span class="z-l-9 z-d-9"> 100000</span><span class="z-l-2 z-d-2"> elements</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    100000</span><span class="z-l-2 z-d-2"> Prices</span><span class="z-l-2 z-d-2"> ObjectDB,</span><span class="z-l-2 z-d-2"> total</span><span class="z-l-2 z-d-2"> time</span><span class="z-l-9 z-d-9"> 6467</span><span class="z-l-2 z-d-2"> ms</span><span class="z-l-5 z-d-5"> &lt;</span><span>2</span><span class="z-l-5 z-d-5">&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Insert:</span><span class="z-l-9 z-d-9">  2579</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Select:</span><span class="z-l-9 z-d-9">  1126</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Update:</span><span class="z-l-9 z-d-9">  1698</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Delete:</span><span class="z-l-9 z-d-9">  1064</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    ----------------------------------------------</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">db.DbTest</span><span class="z-l-5 z-d-5"> &gt;</span><span class="z-l-2 z-d-2"> testDerbyDB</span><span class="z-l-2 z-d-2"> STANDARD_OUT</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    Testing</span><span class="z-l-2 z-d-2"> with</span><span class="z-l-9 z-d-9"> 100000</span><span class="z-l-2 z-d-2"> elements</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">    100000</span><span class="z-l-2 z-d-2"> Prices</span><span class="z-l-2 z-d-2"> DerbyDB,</span><span class="z-l-2 z-d-2"> total</span><span class="z-l-2 z-d-2"> time</span><span class="z-l-9 z-d-9"> 24808</span><span class="z-l-2 z-d-2"> ms</span><span class="z-l-5 z-d-5"> &lt;</span><span>3</span><span class="z-l-5 z-d-5">&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Insert:</span><span class="z-l-9 z-d-9">  11467</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Select:</span><span class="z-l-9 z-d-9">  695</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Update:</span><span class="z-l-9 z-d-9">  6983</span><span class="z-l-2 z-d-2"> ms</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">     Delete:</span><span class="z-l-9 z-d-9">  5663</span><span class="z-l-2 z-d-2"> ms</span></span></code></pre>
+<p>&lt;1&gt; SqliteDB is the fastest.
+&lt;2&gt; ObjectDB is twice as slow as SqliteDB.
+&lt;3&gt; JavaDB or DerbyDB is the slowest, about 8 times slower than SqliteDB.</p>
+
+  </section>
+
+  
+<nav aria-label="Adjacent posts">
+  
+  <a href="https://carlosvin.github.io/pr-preview/pr-127/gradle-cpp/">
+    <small>Newer</small>
+    <span>Build C++ project with Gradle</span>
+  </a>
+  
+  
+  <a href="https://carlosvin.github.io/pr-preview/pr-127/serialization-java-serializable-externalizable/">
+    <small>Older</small>
+    <span>Java serialization ways: Performance Comparison</span>
+  </a>
+  
+</nav>
+
+
+
+  <footer>
+    <div id="comments"></div>
+    <script>
+      (function () {
+        var theme = document.documentElement.getAttribute("data-theme") === "dark" ? "github-dark" : "github-light";
+        var script = document.createElement("script");
+        script.src = "https://utteranc.es/client.js";
+        script.setAttribute("repo", "carlosvin/carlosvin.github.io");
+        script.setAttribute("issue-term", "title");
+        script.setAttribute("theme", theme);
+        script.setAttribute("crossorigin", "anonymous");
+        script.async = true;
+        document.getElementById("comments").appendChild(script);
+      })();
+    </script>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2026 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <ul>
+  
+  <li>
+    <a href="https://github.com/carlosvin"
+      target="_blank" rel="noopener">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub"
+        width="32" height="32">
+    </a>
+  </li>
+  
+  <li>
+    <a href="https://linkedin.com/in/carlosvin"
+      target="_blank" rel="noopener">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn"
+        width="32" height="32">
+    </a>
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/pr-preview/pr-127/atom.xml"
+      >
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS"
+        width="32" height="32">
+    </a>
+  </li>
+  
+</ul>
+
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/pr-preview/pr-127/js/theme.js" defer></script>
+  <script src="https://carlosvin.github.io/pr-preview/pr-127/js/search.js" defer
+    data-search-index="https://carlosvin.github.io/pr-preview/pr-127/search_index.en.json"></script>
+</body>
+
+</html>
