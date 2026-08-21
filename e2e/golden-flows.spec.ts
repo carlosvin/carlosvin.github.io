@@ -5,7 +5,7 @@ function headerNav(page: Page) {
 }
 
 function postHeading(page: Page) {
-  return page.locator("article.post h1");
+  return page.locator("main > article h1");
 }
 
 async function firstPostTitle(links: Locator) {
@@ -29,21 +29,25 @@ test.describe("golden flows", () => {
       }),
     ).toBeVisible();
 
-    const postLinks = page.locator(".blog article header a");
+    const postLinks = page.locator(
+      "section[aria-label='Posts'] article header a",
+    );
     await expect(postLinks.first()).toBeVisible();
     expect(await postLinks.count()).toBeGreaterThan(0);
     await expect(
-      page.locator(".blog article header a", { hasText: /^About$/ }),
+      page.locator("section[aria-label='Posts'] article header a", {
+        hasText: /^About$/,
+      }),
     ).toHaveCount(0);
 
     const title = await firstPostTitle(postLinks);
     await postLinks.first().click();
 
     await expect(page).toHaveURL(/\/.+/);
-    await expect(page.locator("article.post")).toBeVisible();
+    await expect(page.locator("main > article")).toBeVisible();
     await expect(postHeading(page)).toHaveText(title);
-    await expect(page.locator(".post-content")).not.toBeEmpty();
-    await expect(page.locator("article.post time").first()).toBeVisible();
+    await expect(page.locator("main > article > section")).not.toBeEmpty();
+    await expect(page.locator("main > article time").first()).toBeVisible();
   });
 
   test("search finds a post and opens it", async ({ page }) => {
@@ -53,13 +57,15 @@ test.describe("golden flows", () => {
     await search.click();
     await search.pressSequentially("python", { delay: 30 });
 
-    const firstResult = page.locator(".search-results__items a").first();
+    const firstResult = page
+      .locator("#search-results [role='listbox'] a")
+      .first();
     await expect(firstResult).toBeVisible({ timeout: 15_000 });
     const resultTitle = (await firstResult.locator("strong").innerText()).trim();
     expect(resultTitle.length).toBeGreaterThan(0);
 
     await firstResult.click();
-    await expect(page.locator("article.post")).toBeVisible();
+    await expect(page.locator("main > article")).toBeVisible();
     await expect(postHeading(page)).toHaveText(resultTitle);
   });
 
@@ -85,7 +91,7 @@ test.describe("golden flows", () => {
       page.getByRole("heading", { level: 1, name: "All Tags" }),
     ).toBeVisible();
 
-    const tagLink = page.locator(".tags a").first();
+    const tagLink = page.locator("nav[aria-label='Tags'] a").first();
     await expect(tagLink).toBeVisible();
     await tagLink.click();
 
@@ -94,12 +100,14 @@ test.describe("golden flows", () => {
       page.getByRole("heading", { level: 1, name: /Posts tagged with/ }),
     ).toBeVisible();
 
-    const taggedPosts = page.locator(".blog article header a");
+    const taggedPosts = page.locator(
+      "section[aria-label='Posts'] article header a",
+    );
     await expect(taggedPosts.first()).toBeVisible();
     const title = await firstPostTitle(taggedPosts);
     await taggedPosts.first().click();
 
-    await expect(page.locator("article.post")).toBeVisible();
+    await expect(page.locator("main > article")).toBeVisible();
     await expect(postHeading(page)).toHaveText(title);
   });
 
@@ -108,7 +116,9 @@ test.describe("golden flows", () => {
   }) => {
     await page.goto("/");
 
-    const tagOnCard = page.locator(".blog article .tags a").first();
+    const tagOnCard = page
+      .locator("section[aria-label='Posts'] article nav[aria-label='Tags'] a")
+      .first();
     await expect(tagOnCard).toBeVisible();
     const tagLabel = (await tagOnCard.innerText()).trim();
     await tagOnCard.click();
@@ -117,6 +127,8 @@ test.describe("golden flows", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: /Posts tagged with/ }),
     ).toContainText(tagLabel);
-    await expect(page.locator(".blog article").first()).toBeVisible();
+    await expect(
+      page.locator("section[aria-label='Posts'] article").first(),
+    ).toBeVisible();
   });
 });
