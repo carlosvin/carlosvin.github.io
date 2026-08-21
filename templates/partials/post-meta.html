@@ -1,7 +1,13 @@
-{% set display_date = page.updated | default(value=page.date | default(value="")) %}
-{% if display_date %}
-<time datetime="{{ display_date | date(format='%Y-%m-%d') }}">
-    {{ display_date | date(format="%B %d, %Y") }}
-</time>
-• {% endif %}<time datetime="PT{{ page.reading_time }}M">{{ page.reading_time }} min read</time> • <data
-    value="{{ page.word_count }}">{{ page.word_count }} words</data>
+{%- set published = page.date | default(value="") -%}
+{%- set updated = page.updated | default(value="") -%}
+<span class="post-meta">
+    {%- if published -%}
+    <time datetime="{{ published | date(format='%Y-%m-%d') }}">{{ published | date(format="%b %-d, %Y") }}</time>
+    {%- endif -%}
+    {%- if published and updated and updated | date(format="%Y-%m-%d") > published | date(format="%Y-%m-%d") %}
+    · <span class="post-meta__updated">Updated <time datetime="{{ updated | date(format='%Y-%m-%d') }}">{{ updated | date(format="%b %-d, %Y") }}</time></span>
+    {%- endif -%}
+    {%- if page.reading_time %}
+    · <time datetime="PT{{ page.reading_time }}M">{{ page.reading_time }} min read</time>
+    {%- endif %}
+</span>

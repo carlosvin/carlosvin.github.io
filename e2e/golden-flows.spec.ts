@@ -36,6 +36,16 @@ test.describe("golden flows", () => {
       page.locator(".blog article header a", { hasText: /^About$/ }),
     ).toHaveCount(0);
 
+    // Cards show the publication date and reading time in their meta line.
+    const cardMeta = page.locator(".blog article .post-meta").first();
+    await expect(cardMeta).toBeVisible();
+    await expect(cardMeta.locator("time").first()).toHaveAttribute(
+      "datetime",
+      /^\d{4}-\d{2}-\d{2}$/,
+    );
+    await expect(cardMeta).toContainText(/\b\d{4}\b/);
+    await expect(cardMeta).toContainText(/min read/);
+
     const title = await firstPostTitle(postLinks);
     await postLinks.first().click();
 
@@ -43,7 +53,14 @@ test.describe("golden flows", () => {
     await expect(page.locator("article.post")).toBeVisible();
     await expect(postHeading(page)).toHaveText(title);
     await expect(page.locator(".post-content")).not.toBeEmpty();
-    await expect(page.locator("article.post time").first()).toBeVisible();
+    // The post page shows the publication date in its meta line.
+    const postMeta = page.locator("article.post .post-meta");
+    await expect(postMeta).toBeVisible();
+    await expect(postMeta.locator("time").first()).toHaveAttribute(
+      "datetime",
+      /^\d{4}-\d{2}-\d{2}$/,
+    );
+    await expect(postMeta).toContainText(/min read/);
   });
 
   test("search finds a post and opens it", async ({ page }) => {
