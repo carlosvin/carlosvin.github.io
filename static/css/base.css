@@ -317,10 +317,99 @@ nav[aria-label="Tags"] a {
   text-decoration: none;
 }
 
-main > article > aside {
-  position: sticky;
-  top: 4.5rem;
-  height: fit-content;
+/* Post layout: Contents is a reserved column, never overlaid on the body. */
+main > article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 1.5rem;
+  row-gap: 0;
+}
+
+main > article > header { grid-area: header; }
+main > article > figure { grid-area: figure; }
+main > article > aside { grid-area: toc; }
+main > article > section { grid-area: content; }
+main > article > nav { grid-area: nav; }
+main > article > footer { grid-area: footer; }
+
+main > article {
+  grid-template-areas:
+    "header"
+    "figure"
+    "toc"
+    "content"
+    "nav"
+    "footer";
+}
+
+@media (min-width: 1024px) {
+  main > article:has(> aside) {
+    grid-template-columns: 13rem minmax(0, 1fr);
+    grid-template-areas:
+      "header header"
+      "figure figure"
+      "toc content"
+      "toc nav"
+      "toc footer";
+  }
+
+  main > article > aside {
+    position: sticky;
+    top: 4.5rem;
+    align-self: start;
+    max-height: calc(100vh - 5.5rem);
+    overflow: auto;
+  }
+
+  /* Outline, not a disclosure: always visible beside the post. */
+  main > article > aside summary {
+    pointer-events: none;
+  }
+
+  main > article > aside summary::-webkit-details-marker,
+  main > article > aside summary::marker {
+    content: "";
+    display: none;
+  }
+
+  main > article > aside summary::after {
+    display: none;
+  }
+}
+
+/* Compact Google-Docs-like outline. Reset Pico aside li padding. */
+main > article > aside summary {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--pico-muted-color);
+}
+
+main > article > aside ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+main > article > aside li {
+  margin: 0;
+  padding: 0;
+}
+
+main > article > aside li ul {
+  padding-left: 0.75rem;
+}
+
+main > article > aside a {
+  display: block;
+  padding: 0.2rem 0;
+  color: var(--pico-muted-color);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+main > article > aside a:hover {
+  color: var(--pico-primary);
 }
 
 /* Social icons - adapt to theme */

@@ -150,4 +150,24 @@ test.describe("golden flows", () => {
       page.locator("section[aria-label='Posts'] article").first(),
     ).toBeVisible();
   });
+
+  test("post table of contents sits beside the article, not over it", async ({
+    page,
+  }) => {
+    await page.goto("/pytest-scenarios-isolated-integration-tests/");
+
+    const toc = page.getByRole("navigation", { name: "Contents" });
+    const body = page.locator("main > article > section");
+    await expect(toc).toBeVisible();
+    await expect(body).toBeVisible();
+    await expect(body).toContainText("The Problem");
+
+    const tocBox = await toc.boundingBox();
+    const bodyBox = await body.boundingBox();
+    expect(tocBox).toBeTruthy();
+    expect(bodyBox).toBeTruthy();
+    // Desktop: outline is a left column; it must not cover the post text.
+    expect(tocBox!.x + tocBox!.width).toBeLessThanOrEqual(bodyBox!.x + 2);
+    expect(tocBox!.y).toBeLessThan(bodyBox!.y + bodyBox!.height);
+  });
 });
