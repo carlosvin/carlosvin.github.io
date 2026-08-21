@@ -40,6 +40,18 @@ test.describe("golden flows", () => {
       }),
     ).toHaveCount(0);
 
+    // Cards show the publication date and reading time in their meta line.
+    const cardMeta = page
+      .locator("section[aria-label='Posts'] article .post-meta")
+      .first();
+    await expect(cardMeta).toBeVisible();
+    await expect(cardMeta.locator("time").first()).toHaveAttribute(
+      "datetime",
+      /^\d{4}-\d{2}-\d{2}$/,
+    );
+    await expect(cardMeta).toContainText(/\b\d{4}\b/);
+    await expect(cardMeta).toContainText(/min read/);
+
     const title = await firstPostTitle(postLinks);
     await postLinks.first().click();
 
@@ -47,7 +59,14 @@ test.describe("golden flows", () => {
     await expect(page.locator("main > article")).toBeVisible();
     await expect(postHeading(page)).toHaveText(title);
     await expect(page.locator("main > article > section")).not.toBeEmpty();
-    await expect(page.locator("main > article time").first()).toBeVisible();
+    // The post page shows the publication date in its meta line.
+    const postMeta = page.locator("main > article .post-meta");
+    await expect(postMeta).toBeVisible();
+    await expect(postMeta.locator("time").first()).toHaveAttribute(
+      "datetime",
+      /^\d{4}-\d{2}-\d{2}$/,
+    );
+    await expect(postMeta).toContainText(/min read/);
   });
 
   test("search finds a post and opens it", async ({ page }) => {
@@ -130,5 +149,25 @@ test.describe("golden flows", () => {
     await expect(
       page.locator("section[aria-label='Posts'] article").first(),
     ).toBeVisible();
+  });
+
+  test("post table of contents sits beside the article, not over it", async ({
+    page,
+  }) => {
+    await page.goto("/pytest-scenarios-isolated-integration-tests/");
+
+    const toc = page.getByRole("navigation", { name: "Contents" });
+    const body = page.locator("main > article > section");
+    await expect(toc).toBeVisible();
+    await expect(body).toBeVisible();
+    await expect(body).toContainText("The Problem");
+
+    const tocBox = await toc.boundingBox();
+    const bodyBox = await body.boundingBox();
+    expect(tocBox).toBeTruthy();
+    expect(bodyBox).toBeTruthy();
+    // Desktop: outline is a left column; it must not cover the post text.
+    expect(tocBox!.x + tocBox!.width).toBeLessThanOrEqual(bodyBox!.x + 2);
+    expect(tocBox!.y).toBeLessThan(bodyBox!.y + bodyBox!.height);
   });
 });
