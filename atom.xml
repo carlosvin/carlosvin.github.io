@@ -5,12 +5,12 @@
     <link rel="self" type="application/atom+xml" href="https://carlosvin.github.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://carlosvin.github.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2026-03-08T00:00:00+00:00</updated>
+    <updated>2026-08-22T00:00:00+00:00</updated>
     <id>https://carlosvin.github.io/atom.xml</id>
     <entry xml:lang="en">
-        <title>Building AI-Promptable Full-Stack Apps: A Reproducible Architecture</title>
+        <title>Building AI-Promptable Full-Stack Apps with TanStack Start</title>
         <published>2026-03-08T00:00:00+00:00</published>
-        <updated>2026-03-08T00:00:00+00:00</updated>
+        <updated>2026-08-22T00:00:00+00:00</updated>
         
         <author>
           <name>Carlos Martin Sanchez</name>
@@ -19,8 +19,8 @@
         <link rel="alternate" type="text/html" href="https://carlosvin.github.io/building-ai-promptable-fullstack-apps/"/>
         <id>https://carlosvin.github.io/building-ai-promptable-fullstack-apps/</id>
         
-        <content type="html" xml:base="https://carlosvin.github.io/building-ai-promptable-fullstack-apps/">&lt;p&gt;Every time our team started a new full-stack app, we faced the same problem: rebuild the same architecture from scratch. Authentication, database access, UI shell, AI integration — all the plumbing that has nothing to do with the actual business logic.&lt;/p&gt;
-&lt;p&gt;It started with internal tools, but we quickly realized the patterns apply to any full-stack web application — whether it&#39;s a customer-facing product, a dashboard, or a side project. After building several applications this way, we extracted the common patterns into a template. This post explains the architecture and the reasoning behind each decision.&lt;/p&gt;
+        <content type="html" xml:base="https://carlosvin.github.io/building-ai-promptable-fullstack-apps/">&lt;p&gt;Every time our team started a new full-stack React app, we faced the same problem: rebuild the same architecture from scratch. JWT authentication, database access, UI shell, TanStack AI integration — all the plumbing that has nothing to do with the actual business logic.&lt;/p&gt;
+&lt;p&gt;It started with internal tools, but the patterns apply to any full-stack web application — a customer-facing product, a dashboard, or a side project. After shipping several apps this way, we extracted them into a &lt;a rel=&quot;external&quot; href=&quot;https://github.com/carlosvin/tanstack-fullstack-ai-template&quot;&gt;TanStack Start template&lt;/a&gt; that is &lt;strong&gt;promptable by design&lt;/strong&gt;: the same server functions power the UI and AI tools, with Zod schemas as the single source of truth. This post explains the architecture and the reasoning behind each decision.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a rel=&quot;external&quot; href=&quot;https://leafy-manatee-16b96c.netlify.app&quot;&gt;Live demo&lt;/a&gt;&lt;/strong&gt; | &lt;strong&gt;&lt;a rel=&quot;external&quot; href=&quot;https://github.com/carlosvin/tanstack-fullstack-ai-template&quot;&gt;Source code&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -34,18 +34,18 @@
 &lt;li&gt;Increasingly, an AI assistant that can query the data&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Yet every project starts from &lt;code&gt;npm init&lt;/code&gt; and rebuilds all of this. The code looks similar but is never quite the same, making it hard to maintain patterns across a growing portfolio of applications.&lt;/p&gt;
-&lt;h2 id=&quot;the-stack&quot;&gt;The Stack&lt;/h2&gt;
+&lt;h2 id=&quot;the-stack-tanstack-start-mantine-and-tanstack-ai&quot;&gt;The Stack: TanStack Start, Mantine, and TanStack AI&lt;/h2&gt;
 &lt;p&gt;We chose &lt;a rel=&quot;external&quot; href=&quot;https://tanstack.com/start&quot;&gt;TanStack Start&lt;/a&gt; as the foundation — a full-stack React meta-framework that gives us:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Server functions&lt;/strong&gt; (&lt;code&gt;createServerFn&lt;/code&gt;) that act as type-safe RPC endpoints&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;File-based routing&lt;/strong&gt; with TanStack Router&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;File-based routing&lt;/strong&gt; with &lt;a rel=&quot;external&quot; href=&quot;https://tanstack.com/router&quot;&gt;TanStack Router&lt;/a&gt; (see also our &lt;a href=&quot;https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/&quot;&gt;production TanStack Router conventions&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;SSR&lt;/strong&gt; via Nitro, deployable anywhere&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Middleware&lt;/strong&gt; that runs on every request, perfect for auth&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;For the UI, &lt;a rel=&quot;external&quot; href=&quot;https://mantine.dev/&quot;&gt;Mantine&lt;/a&gt; gives us 120+ production-ready components, dark/light mode out of the box, and a theme system that keeps things consistent without writing custom CSS.&lt;/p&gt;
 &lt;p&gt;For AI, &lt;a rel=&quot;external&quot; href=&quot;https://tanstack.com/ai&quot;&gt;TanStack AI&lt;/a&gt; provides a unified interface across OpenAI, Anthropic, Gemini, and more — with first-class support for tool calling and streaming.&lt;/p&gt;
-&lt;h2 id=&quot;architecture-everything-behind-an-interface&quot;&gt;Architecture: Everything Behind an Interface&lt;/h2&gt;
-&lt;p&gt;The core principle is simple: &lt;strong&gt;every external service is accessed through an interface&lt;/strong&gt;. This makes each piece swappable without touching application code.&lt;/p&gt;
+&lt;h2 id=&quot;architecture-interfaces-for-every-external-service&quot;&gt;Architecture: Interfaces for Every External Service&lt;/h2&gt;
+&lt;p&gt;The core principle is simple: &lt;strong&gt;every external service is accessed through an interface&lt;/strong&gt;. This makes the database, auth, AI provider, and observability layer swappable without touching application code.&lt;/p&gt;
 &lt;h3 id=&quot;the-repository-pattern&quot;&gt;The Repository Pattern&lt;/h3&gt;
 &lt;p&gt;All data access goes through a &lt;code&gt;ReadRepository&lt;/code&gt; + &lt;code&gt;WritableRepository&lt;/code&gt; interface:&lt;/p&gt;
 &lt;pre class=&quot;giallo z-l-code z-d-code&quot; &gt;&lt;code data-lang=&quot;typescript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span class=&quot;z-l-5 z-d-5&quot;&gt;export&lt;/span&gt;&lt;span class=&quot;z-l-3 z-l-b z-d-6 z-d-b&quot;&gt; interface&lt;/span&gt;&lt;span class=&quot;z-l-8 z-d-8&quot;&gt; ReadRepository&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
@@ -86,8 +86,8 @@
 &lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  requestMiddleware&lt;/span&gt;&lt;span&gt;:&lt;/span&gt;&lt;span&gt; [&lt;/span&gt;&lt;span class=&quot;z-l-1 z-d-1&quot;&gt;authMiddleware&lt;/span&gt;&lt;span&gt;]&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Every server function automatically receives &lt;code&gt;context.user&lt;/code&gt; and &lt;code&gt;context.userProfile&lt;/code&gt; — no manual header extraction. For mutations, we chain a function-level &lt;strong&gt;requireAuthMiddleware&lt;/strong&gt; (&lt;code&gt;src/middleware/requireAuth.ts&lt;/code&gt;) so only POST server functions require authentication; read-only queries stay unauthenticated. The handler can then assume &lt;code&gt;context.user&lt;/code&gt; is defined. For other cases, use the composable guards &lt;code&gt;requireAuth(context)&lt;/code&gt; and &lt;code&gt;requireGroup(context, group)&lt;/code&gt; from &lt;code&gt;src/utils/auth.ts&lt;/code&gt;; they throw with 401/403 so your handler code stays minimal.&lt;/p&gt;
-&lt;h3 id=&quot;promptable-by-design&quot;&gt;Promptable by Design&lt;/h3&gt;
-&lt;p&gt;This is the pattern we are most excited about. AI tools call the &lt;strong&gt;same server functions&lt;/strong&gt; that route loaders and event handlers use — a single code path for validation, auth, observability, and data access. Tool handlers are wrapped with &lt;code&gt;withErrorHandling()&lt;/code&gt; so that failures return &lt;code&gt;{ error: string, code?: number }&lt;/code&gt; instead of crashing the agent loop:&lt;/p&gt;
+&lt;h3 id=&quot;promptable-by-design-ai-tools-on-the-same-server-functions&quot;&gt;Promptable by Design: AI Tools on the Same Server Functions&lt;/h3&gt;
+&lt;p&gt;This is the pattern we are most excited about. TanStack AI tools call the &lt;strong&gt;same server functions&lt;/strong&gt; that route loaders and event handlers use — a single code path for validation, auth, observability, and data access. Tool handlers are wrapped with &lt;code&gt;withErrorHandling()&lt;/code&gt; so that failures return &lt;code&gt;{ error: string, code?: number }&lt;/code&gt; instead of crashing the agent loop:&lt;/p&gt;
 &lt;pre class=&quot;giallo z-l-code z-d-code&quot; &gt;&lt;code data-lang=&quot;typescript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span class=&quot;z-l-3 z-l-b z-d-6 z-d-b&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;z-l-1 z-d-1&quot;&gt; getTasksToolDef&lt;/span&gt;&lt;span class=&quot;z-l-5 z-d-5&quot;&gt; =&lt;/span&gt;&lt;span class=&quot;z-l-1 z-d-1&quot;&gt; toolDefinition&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span&gt;{&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  name&lt;/span&gt;&lt;span&gt;:&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt; &amp;#39;&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt;getTasks&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  description&lt;/span&gt;&lt;span&gt;:&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt; &amp;#39;&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt;Get all tasks with optional filters...&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
@@ -133,7 +133,7 @@
 &lt;p&gt;&lt;strong&gt;Why Zod?&lt;/strong&gt; &lt;a rel=&quot;external&quot; href=&quot;https://arktype.io/&quot;&gt;ArkType&lt;/a&gt; is a very good alternative and I personally prefer its syntax; we went with Zod here because it is more widely known. Zod v4 also lets you add extra metadata on fields—formatting hints, units, etc.—which is useful for formatting in the UI and for giving better hints to the AI when it uses your schemas.&lt;/p&gt;
 &lt;h3 id=&quot;project-structure&quot;&gt;Project structure&lt;/h3&gt;
 &lt;p&gt;The important pieces live under &lt;code&gt;src/&lt;/code&gt;: &lt;code&gt;middleware/&lt;/code&gt; (auth, invalidation), &lt;code&gt;services/schemas/&lt;/code&gt; (Zod as single source of truth), &lt;code&gt;services/repository/&lt;/code&gt; (interface plus seed and Mongo implementations), &lt;code&gt;services/api/&lt;/code&gt; (server functions), &lt;code&gt;services/ai/&lt;/code&gt; (adapter and tool definitions), and &lt;code&gt;routes/&lt;/code&gt; (file-based pages). The repo README has the full tree.&lt;/p&gt;
-&lt;h2 id=&quot;getting-started-in-30-seconds&quot;&gt;Getting Started in 30 Seconds&lt;/h2&gt;
+&lt;h2 id=&quot;getting-started-clone-the-tanstack-full-stack-ai-template&quot;&gt;Getting Started: Clone the TanStack Full-Stack AI Template&lt;/h2&gt;
 &lt;pre class=&quot;giallo z-l-code z-d-code&quot; &gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span class=&quot;z-l-1 z-d-1&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt; clone&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt; https://github.com/carlosvin/tanstack-fullstack-ai-template.git&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;giallo-l&quot;&gt;&lt;span class=&quot;z-l-1 z-d-1&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt; tanstack-fullstack-ai-template&lt;/span&gt;&lt;/span&gt;
 &lt;span class=&quot;giallo-l&quot;&gt;&lt;span class=&quot;z-l-1 z-d-1&quot;&gt;pnpm&lt;/span&gt;&lt;span class=&quot;z-l-2 z-d-2&quot;&gt; install&lt;/span&gt;&lt;/span&gt;
@@ -173,7 +173,7 @@
 &lt;/ol&gt;
 &lt;p&gt;Because every layer follows the same pattern, adding a new entity takes minutes, not hours. The database, AI provider, and observability layer are behind interfaces; to swap one, implement the interface and update the factory (e.g. &lt;code&gt;getRepository.ts&lt;/code&gt; for the repository, the AI adapter factory, or the observability factory in the repo).&lt;/p&gt;
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;The goal is not a framework — it&#39;s a &lt;strong&gt;starting point&lt;/strong&gt;. Fork the template, replace the Task domain with your own, and you have a production-ready full-stack application with:&lt;/p&gt;
+&lt;p&gt;The goal is not a framework — it&#39;s a &lt;strong&gt;starting point&lt;/strong&gt; for AI-promptable full-stack apps. Fork the template, replace the Task domain with your own, and you have a production-ready TanStack Start application with:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Type-safe server functions&lt;/li&gt;
 &lt;li&gt;JWT authentication via middleware (mutations use requireAuthMiddleware)&lt;/li&gt;
