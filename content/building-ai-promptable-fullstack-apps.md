@@ -1,13 +1,18 @@
 ---
-title: "Building AI-Promptable Full-Stack Apps: A Reproducible Architecture"
+title: "Building AI-Promptable Full-Stack Apps with TanStack Start"
 slug: building-ai-promptable-fullstack-apps
-description: "How we extracted a reproducible full-stack architecture for AI-promptable web apps with TanStack Start, interfaces for every external service, and Zod schemas as single source of truth."
+description: "A TanStack Start and TanStack AI template for promptable full-stack React apps: Zod as the single source of truth, JWT auth, MongoDB, and swappable services."
 date: 2026-03-08
+updated: 2026-08-22
+lang: en
+toc: true
+taxonomies:
+  tags: ["ai", "react", "typescript", "tanstack-start", "tanstack-ai", "zod", "fullstack", "architecture", "mongodb", "mantine", "tanstack-router", "web-development", "playwright"]
 ---
 
-Every time our team started a new full-stack app, we faced the same problem: rebuild the same architecture from scratch. Authentication, database access, UI shell, AI integration — all the plumbing that has nothing to do with the actual business logic.
+Every time our team started a new full-stack React app, we faced the same problem: rebuild the same architecture from scratch. JWT authentication, database access, UI shell, TanStack AI integration — all the plumbing that has nothing to do with the actual business logic.
 
-It started with internal tools, but we quickly realized the patterns apply to any full-stack web application — whether it's a customer-facing product, a dashboard, or a side project. After building several applications this way, we extracted the common patterns into a template. This post explains the architecture and the reasoning behind each decision.
+It started with internal tools, but the patterns apply to any full-stack web application — a customer-facing product, a dashboard, or a side project. After shipping several apps this way, we extracted them into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) that is **promptable by design**: the same server functions power the UI and AI tools, with Zod schemas as the single source of truth. This post explains the architecture and the reasoning behind each decision.
 
 > **[Live demo](https://leafy-manatee-16b96c.netlify.app)** | **[Source code](https://github.com/carlosvin/tanstack-fullstack-ai-template)**
 
@@ -23,12 +28,12 @@ Full-stack web applications share a remarkable amount of infrastructure:
 
 Yet every project starts from `npm init` and rebuilds all of this. The code looks similar but is never quite the same, making it hard to maintain patterns across a growing portfolio of applications.
 
-## The Stack
+## The Stack: TanStack Start, Mantine, and TanStack AI
 
 We chose [TanStack Start](https://tanstack.com/start) as the foundation — a full-stack React meta-framework that gives us:
 
 - **Server functions** (`createServerFn`) that act as type-safe RPC endpoints
-- **File-based routing** with TanStack Router
+- **File-based routing** with [TanStack Router](https://tanstack.com/router) (see also our [production TanStack Router conventions](@/tanstack-router-opinionated-conventions-production-react-apps.md))
 - **SSR** via Nitro, deployable anywhere
 - **Middleware** that runs on every request, perfect for auth
 
@@ -36,9 +41,9 @@ For the UI, [Mantine](https://mantine.dev/) gives us 120+ production-ready compo
 
 For AI, [TanStack AI](https://tanstack.com/ai) provides a unified interface across OpenAI, Anthropic, Gemini, and more — with first-class support for tool calling and streaming.
 
-## Architecture: Everything Behind an Interface
+## Architecture: Interfaces for Every External Service
 
-The core principle is simple: **every external service is accessed through an interface**. This makes each piece swappable without touching application code.
+The core principle is simple: **every external service is accessed through an interface**. This makes the database, auth, AI provider, and observability layer swappable without touching application code.
 
 ### The Repository Pattern
 
@@ -97,9 +102,9 @@ export const startInstance = createStart(() => ({
 
 Every server function automatically receives `context.user` and `context.userProfile` — no manual header extraction. For mutations, we chain a function-level **requireAuthMiddleware** (`src/middleware/requireAuth.ts`) so only POST server functions require authentication; read-only queries stay unauthenticated. The handler can then assume `context.user` is defined. For other cases, use the composable guards `requireAuth(context)` and `requireGroup(context, group)` from `src/utils/auth.ts`; they throw with 401/403 so your handler code stays minimal.
 
-### Promptable by Design
+### Promptable by Design: AI Tools on the Same Server Functions
 
-This is the pattern we are most excited about. AI tools call the **same server functions** that route loaders and event handlers use — a single code path for validation, auth, observability, and data access. Tool handlers are wrapped with `withErrorHandling()` so that failures return `{ error: string, code?: number }` instead of crashing the agent loop:
+This is the pattern we are most excited about. TanStack AI tools call the **same server functions** that route loaders and event handlers use — a single code path for validation, auth, observability, and data access. Tool handlers are wrapped with `withErrorHandling()` so that failures return `{ error: string, code?: number }` instead of crashing the agent loop:
 
 ```typescript
 const getTasksToolDef = toolDefinition({
@@ -172,7 +177,7 @@ No more maintaining separate interfaces, validation logic, and documentation tha
 
 The important pieces live under `src/`: `middleware/` (auth, invalidation), `services/schemas/` (Zod as single source of truth), `services/repository/` (interface plus seed and Mongo implementations), `services/api/` (server functions), `services/ai/` (adapter and tool definitions), and `routes/` (file-based pages). The repo README has the full tree.
 
-## Getting Started in 30 Seconds
+## Getting Started: Clone the TanStack Full-Stack AI Template
 
 ```bash
 git clone https://github.com/carlosvin/tanstack-fullstack-ai-template.git
@@ -231,7 +236,7 @@ Because every layer follows the same pattern, adding a new entity takes minutes,
 
 ## Conclusion
 
-The goal is not a framework — it's a **starting point**. Fork the template, replace the Task domain with your own, and you have a production-ready full-stack application with:
+The goal is not a framework — it's a **starting point** for AI-promptable full-stack apps. Fork the template, replace the Task domain with your own, and you have a production-ready TanStack Start application with:
 
 - Type-safe server functions
 - JWT authentication via middleware (mutations use requireAuthMiddleware)
