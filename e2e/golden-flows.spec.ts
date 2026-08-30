@@ -40,7 +40,7 @@ test.describe("golden flows", () => {
       }),
     ).toHaveCount(0);
 
-    // Cards show the publication date and reading time in their meta line.
+    // Cards show the publication date and reading time in their meta line, but not word count.
     const cardMeta = page
       .locator("section[aria-label='Posts'] article .post-meta")
       .first();
@@ -51,6 +51,7 @@ test.describe("golden flows", () => {
     );
     await expect(cardMeta).toContainText(/\b\d{4}\b/);
     await expect(cardMeta).toContainText(/min read/);
+    await expect(cardMeta).not.toContainText(/words/);
 
     const title = await firstPostTitle(postLinks);
     await postLinks.first().click();
@@ -59,7 +60,7 @@ test.describe("golden flows", () => {
     await expect(page.locator("main > article")).toBeVisible();
     await expect(postHeading(page)).toHaveText(title);
     await expect(page.locator("main > article > section")).not.toBeEmpty();
-    // The post page shows the publication date in its meta line.
+    // The post page shows the publication date, reading time, and word count.
     const postMeta = page.locator("main > article .post-meta");
     await expect(postMeta).toBeVisible();
     await expect(postMeta.locator("time").first()).toHaveAttribute(
@@ -67,6 +68,7 @@ test.describe("golden flows", () => {
       /^\d{4}-\d{2}-\d{2}$/,
     );
     await expect(postMeta).toContainText(/min read/);
+    await expect(postMeta).toContainText(/\b\d+\s+words\b/);
   });
 
   test("search finds a post and opens it", async ({ page }) => {
@@ -169,5 +171,53 @@ test.describe("golden flows", () => {
     // Desktop: outline is a left column; it must not cover the post text.
     expect(tocBox!.x + tocBox!.width).toBeLessThanOrEqual(bodyBox!.x + 2);
     expect(tocBox!.y).toBeLessThan(bodyBox!.y + bodyBox!.height);
+  });
+
+  test("code blocks have working copy button with feedback", async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/tanstack-router-opinionated-conventions-production-react-apps/");
+
+    const firstPre = page.locator("main > article pre").first();
+    await expect(firstPre).toBeVisible();
+
+    const copyBtn = firstPre.locator(".copy-code-btn");
+    await expect(copyBtn).toBeAttached();
+    await expect(copyBtn).toHaveText("Copy");
+
+    await firstPre.hover();
+    await page.screenshot({ path: "/opt/cursor/artifacts/article_word_count_and_copy_button.png" });
+
+    await copyBtn.click();
+    await expect(copyBtn).toHaveText("Copied!");
+    await expect(copyBtn).toHaveClass(/is-copied/);
+    await page.screenshot({ path: "/opt/cursor/artifacts/code_block_copied_feedback.png" });
+
+    // Toggle dark mode and screenshot dark theme code block
+    await page.locator("input[data-toggle-theme]").click();
+    await firstPre.hover();
+    await page.screenshot({ path: "/opt/cursor/artifacts/dark_mode_code_block.png" });
+  });
+
+  test("about page internal post link resolves properly without 404", async ({
+    page,
+  }) => {
+    await page.goto("/about/");
+
+    const postLink = page.getByRole("link", {
+      name: "Choosing a Modern C++ stack",
+    });
+    await expect(postLink).toBeVisible();
+    await postLink.click();
+
+    await expect(page).toHaveURL(/\/choosing-modern-cpp-stack\/?$/);
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: "Choosing a Modern C++ stack",
+      }),
+    ).toBeVisible();
   });
 });

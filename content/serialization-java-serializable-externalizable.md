@@ -39,7 +39,7 @@ private void readObject(ObjectInputStream ois)
 
 When we use [Externalizable](https://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html) interface, we decide how to serialize/deserialize, namely we have to write the code that does it. We've lost ease, but also we avoid that [Java](https://www.java.com) does some tasks, so if we override the methods properly, we'll get a performance improvement.
 
-To know how big is the performance difference between both interfaces, I've written a [tiny example in which we serialize an object with 2 collections with 100000 elements each one](https://github.com/carlosvin/serializations-performance-java). Here you can find the [tests execution results](http://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html). There are 3 different implementations:
+To know how big is the performance difference between both interfaces, I've written a [tiny example in which we serialize an object with 2 collections with 100000 elements each one](https://github.com/carlosvin/serializations-performance-java). Here you can find the [tests execution results](https://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html). There are 3 different implementations:
 
 ### Implementing Serializable
 
@@ -120,5 +120,5 @@ We gain performance because [Externalizable](#externalizable) interface forces u
 
 As we have seen at [Implementing Externalizable (wrong way)](#implementing-externalizable-wrong-way), si no tenemos cuidado, conseguiremos una mejora poco significativa a costa de complicar nuestro código fuente.
 
-* [Test results](http://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html).
+* [Test results](https://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html).
 * [Code in Github](https://github.com/carlosvin/serializations-performance-java/).
