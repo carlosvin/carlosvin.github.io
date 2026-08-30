@@ -31,7 +31,7 @@ It can be used from C and C++, but also [from other programming languages](https
 
 In the case of Java, we can manage this database through JDBC. The library can be obtained from [here](https://bitbucket.org/xerial/sqlite-jdbc).
 
-Here is an example of inserting a series of objects of the class [Price.java](../java_embedded_databases/blob/master/src/main/java/domain/Price.java):
+Here is an example of inserting a series of objects of the class [Price.java](https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java):
 
 ```java
 public class JdbcDb implements DB {
@@ -80,7 +80,7 @@ It can only be used in Java, not from other languages.
 
 As we will see later, it was the slowest in the test results.
 
-The example implementation for inserting a series of objects of the class [Price.java](../java_embedded_databases/blob/master/src/main/java/domain/Price.java) is exactly the same as above for SqliteDB. This is one of the benefits of JDBC, which allows us to obtain a connection for a specific database, but from there we can almost always forget about the specific database as long as it supports our SQL queries.
+The example implementation for inserting a series of objects of the class [Price.java](https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java) is exactly the same as above for SqliteDB. This is one of the benefits of JDBC, which allows us to obtain a connection for a specific database, but from there we can almost always forget about the specific database as long as it supports our SQL queries.
 
 ### ObjectDB
 
@@ -104,9 +104,9 @@ If you add this ease of use to the fact that its performance in the test results
 
 The tests simply consist of repeatedly performing a series of [CRUD](https://es.wikipedia.org/wiki/CRUD) operations. For each database, the test performs a series of inserts, selects, updates, and deletions of objects of the Price class.
 
-I used 100,000 instances of the [Price.java](../java_embedded_databases/blob/master/src/main/java/domain/Price.java) class, the same for each type of database.
+I used 100,000 instances of the [Price.java](https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/domain/Price.java) class, the same for each type of database.
 
-For this, I created a [DB.java](../java_embedded_databases/blob/master/src/main/java/db/DB.java) interface that each implementation for each database shares.
+For this, I created a [DB.java](https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/DB.java) interface that each implementation for each database shares.
 
 ```java
 public interface DB {
@@ -120,7 +120,7 @@ public interface DB {
 
 ### JDBC Databases
 
-Only the data needed to obtain the driver and the database connection changes, so all the logic is in the [JdbcDb.java](../java_embedded_databases/blob/master/src/main/java/db/JdbcDb.java) class, from which SqliteDB and DerbyDB inherit.
+Only the data needed to obtain the driver and the database connection changes, so all the logic is in the [JdbcDb.java](https://github.com/carlosvin/java_embedded_databases/blob/master/src/main/java/db/JdbcDb.java) class, from which SqliteDB and DerbyDB inherit.
 
 ### Source Code
 

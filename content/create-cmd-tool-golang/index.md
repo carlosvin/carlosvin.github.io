@@ -12,7 +12,7 @@ taxonomies:
 
 [Golang](https://golang.org/) is one of the most useful technologies I've recently learned. Golang has pretty nice support for networking, command line, or logging out of the box—you don't need any dependency. But there are libraries making developers' life even easier.
 
-I've already talked about [creating REST service in go](/langs/en/posts/rest-service-go-vs-java/), today I'd like to focus on creating a command line tool.
+I've already talked about [creating REST service in go](@/rest-service-go-vs-java/index.md), today I'd like to focus on creating a command line tool.
 
 ## Flags
 

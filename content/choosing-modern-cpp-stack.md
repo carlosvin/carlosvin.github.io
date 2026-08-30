@@ -22,7 +22,7 @@ I'm starting a new project in C++, but I've run into a couple of questions befor
 I have used before [Make](https://www.gnu.org/software/make/manual/make.html), [Maven](https://maven.apache.org/), [Scons](https://scons.org/), [Gradle](https://gradle.org/) and [Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html), but I have some reasons to try something else:
 
 - **Autotools:** It is not easy to configure and maintain. There are several configuration files and several configuration steps.
-- **Gradle:** CPP feature is still incubating. Not very fast. You can check a similar example project at [Build C++ project with Gradle](/langs/en/posts/gradle-cpp).
+- **Gradle:** CPP feature is still incubating. Not very fast. You can check a similar example project at [Build C++ project with Gradle](@/gradle-cpp.md).
 - **Make:** I don't love the syntax. Files tend to get messy as the project grows.
 - **Scons:** It is just slower and not as easy to understand as Meson.
 - **Maven:** It is slow and you might end up "Javatizing" your C++ project structure.
@@ -75,7 +75,7 @@ If you want to know more about Catch, I recommend you to give it a try; it takes
 
 ### [Doctest](https://github.com/onqtam/doctest): A Catch alternative
 
-There is another testing framework named Doctest, with the same benefits as Catch, but it promises to be faster and lighter ([performance results](/content/blog/serialization-java-serializable-externalizable.en.md)) than Catch.
+There is another testing framework named Doctest, with the same benefits as Catch, but it promises to be faster and lighter ([performance results](@/serialization-java-serializable-externalizable.md)) than Catch.
 
 Doctest is modeled after Catch and some parts of the code have been taken directly, but there are [differences](https://github.com/onqtam/doctest/blob/master/doc/markdown/faq.md#how-is-doctest-different-from-catch).
 
@@ -102,7 +102,7 @@ constexpr int MAX_ITERS = 100;
 +SCENARIO("UUID creation")
 ```
 
-I've finally chosen Doctest because it promises to be faster: [performance results](/content/blog/serialization-java-serializable-externalizable.en.md).
+I've finally chosen Doctest because it promises to be faster: [performance results](@/serialization-java-serializable-externalizable.md).
 
 > **Note**: I've created the project using both frameworks; you can find them in the corresponding branches: [doctest branch](https://github.com/carlosvin/uuid-cpp/tree/doctest) or [catch branch](https://github.com/carlosvin/uuid-cpp/tree/catch).
 

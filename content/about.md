@@ -12,9 +12,9 @@ extra:
 
 ## About this blog
 
-Welcome to 'My Software Engineering Journey' [blog](/), a personal blog where I document my adventures in the world of code. Here, I dive deep into topics I'm passionate about, especially within software engineering, AI, programming languages, code examples, coding practices, recent learnings and more. From deep dives into performance and efficiency to practical guides on building and deploying applications, my goal is to share what I've learned along the way. Whether you're a seasoned developer or just starting out, I hope you'll find something valuable and inspiring in [these posts](/). Join me as I explore the ever-evolving landscape of software engineering, one line of code at a time.
+Welcome to 'My Software Engineering Journey' [blog](@/_index.md), a personal blog where I document my adventures in the world of code. Here, I dive deep into topics I'm passionate about, especially within software engineering, AI, programming languages, code examples, coding practices, recent learnings and more. From deep dives into performance and efficiency to practical guides on building and deploying applications, my goal is to share what I've learned along the way. Whether you're a seasoned developer or just starting out, I hope you'll find something valuable and inspiring in [these posts](@/_index.md). Join me as I explore the ever-evolving landscape of software engineering, one line of code at a time.
 
-<small>Note that there are some old posts, that are kind of legacy, I keep them for reference, one example can be [Choosing a Modern C++ stack](./choosing-modern-cpp-stack), it was written in 2017, updated on 2020, but I guess today is not modern anymore :smile:.</small>
+<small>Note that there are some old posts, that are kind of legacy, I keep them for reference, one example can be [Choosing a Modern C++ stack](@/choosing-modern-cpp-stack.md), it was written in 2017, updated on 2020, but I guess today is not modern anymore :smile:.</small>
 
 ## About me
 

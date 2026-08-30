@@ -9,7 +9,7 @@ taxonomies:
   tags: ["java", "maven", "build-systems", "plugins", "build systems", "maven plugins"]
 ---
 
-I explained in previous article [Example how to create custom Maven Plugin](/langs/en/posts/creating-custom-maven-plugin) which [overrides site lifecycle](https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle).
+I explained in previous article [Example how to create custom Maven Plugin](@/creating-custom-maven-plugin.md) which [overrides site lifecycle](https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle).
 
 I have created another example to demonstrate how to override [default Maven build lifecycle](https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#default_Lifecycle). Default build lifecycle is used to construct your software project, for example, it is executed when you run `mvn install` in a `jar` type project.
 
