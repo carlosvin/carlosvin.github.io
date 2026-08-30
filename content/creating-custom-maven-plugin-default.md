@@ -5,8 +5,10 @@ lang: en
 description: How to create a custom Maven plugin which overrides default build lifecycle
 toc: true
 aliases: ["/langs/en/posts/creating-custom-maven-plugin-default", "/langs/es/posts/creating-custom-maven-plugin-default"]
+extra:
+  keywords: ["plugins", "build systems"]
 taxonomies:
-  tags: ["java", "maven", "build-systems", "plugins", "build systems", "maven plugins"]
+  tags: ["java", "maven", "build-systems", "maven plugins"]
 ---
 
 I explained in previous article [Example how to create custom Maven Plugin](@/creating-custom-maven-plugin.md) which [overrides site lifecycle](https://maven.apache.org/ref/3.5.3/maven-core/lifecycles.html#site_Lifecycle).

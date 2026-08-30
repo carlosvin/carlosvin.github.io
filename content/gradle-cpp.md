@@ -5,8 +5,10 @@ lang: en
 description: How to build a C++ project using Gradle
 toc: true
 aliases: ["/langs/en/posts/gradle-cpp", "/langs/es/posts/gradle-cpp"]
+extra:
+  keywords: ["c++", "build software", "build system"]
 taxonomies:
-  tags: ["cpp", "gradle", "build-systems", "c++", "build software", "build system", "dependency management"]
+  tags: ["cpp", "gradle", "build-systems", "dependency management"]
 ---
 
 ## Introduction

@@ -220,4 +220,72 @@ test.describe("golden flows", () => {
       }),
     ).toBeVisible();
   });
+
+  test("tag pages list each post only once", async ({ page }) => {
+    // Two front-matter tags that slugify to the same term (e.g. "build-systems"
+    // and "build systems") used to render the same post twice on its tag page.
+    for (const tag of ["build-systems", "web-services", "cpp"]) {
+      await page.goto(`/tags/${tag}/`);
+
+      const hrefs = await page
+        .locator("section[aria-label='Posts'] article header a")
+        .evaluateAll((links) =>
+          links.map((a) => (a as HTMLAnchorElement).getAttribute("href")),
+        );
+
+      expect(hrefs.length).toBeGreaterThan(0);
+      expect(hrefs).toEqual([...new Set(hrefs)]);
+    }
+  });
+
+  test("the tag index has no duplicate or empty-slug tag entries", async ({
+    page,
+  }) => {
+    await page.goto("/tags/");
+
+    const tagLinks = page.locator("nav[aria-label='Tags'] a");
+    const labels = (
+      await tagLinks.evaluateAll((links) =>
+        links.map((a) => (a.textContent ?? "").trim()),
+      )
+    ).map((label) => label.replace(/\s*\(\d+\)$/, "").trim());
+
+    expect(labels.length).toBeGreaterThan(0);
+    expect(labels).toEqual([...new Set(labels)]);
+
+    // "c++" slugified to the single-letter URL /tags/c/, and its variants to
+    // /tags/c-11/ and /tags/c-17/. C++ content belongs under /tags/cpp/.
+    const hrefs = await tagLinks.evaluateAll((links) =>
+      links.map((a) => (a as HTMLAnchorElement).getAttribute("href") ?? ""),
+    );
+    for (const dead of ["/tags/c/", "/tags/c-11/", "/tags/c-17/"]) {
+      expect(hrefs.some((href) => href.endsWith(dead))).toBe(false);
+    }
+    expect(hrefs.some((href) => href.endsWith("/tags/cpp/"))).toBe(true);
+  });
+
+  test("keywords meta keeps SEO phrases that were removed from tags", async ({
+    page,
+  }) => {
+    await page.goto("/cpp-mutex/");
+
+    const keywords = await page
+      .locator('meta[name="keywords"]')
+      .getAttribute("content");
+    const terms = (keywords ?? "").split(",");
+
+    // Navigational tag is present...
+    expect(terms).toContain("cpp");
+    // ...and the phrase moved to extra.keywords is still advertised.
+    expect(terms).toContain("c++");
+
+    // The tag pill nav, unlike the meta, must not show the duplicate.
+    const tagLabels = await page
+      .locator("main > article header nav[aria-label='Tags'] a")
+      .evaluateAll((links) =>
+        links.map((a) => (a.textContent ?? "").trim()),
+      );
+    expect(tagLabels).toContain("cpp");
+    expect(tagLabels).not.toContain("c++");
+  });
 });
