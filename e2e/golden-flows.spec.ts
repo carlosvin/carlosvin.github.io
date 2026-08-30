@@ -264,6 +264,27 @@ test.describe("golden flows", () => {
     expect(hrefs.some((href) => href.endsWith("/tags/cpp/"))).toBe(true);
   });
 
+  test("twitter card type matches whether the post has a preview image", async ({
+    page,
+  }) => {
+    const cardType = async (path: string) => {
+      await page.goto(path);
+      return page
+        .locator('meta[name="twitter:card"]')
+        .getAttribute("content");
+    };
+
+    // A 192x192 favicon fallback must not be advertised as a large-image card.
+    expect(await cardType("/cpp-mutex/")).toBe("summary");
+    expect(await cardType("/")).toBe("summary");
+    expect(await cardType("/tags/cpp/")).toBe("summary");
+
+    // This post declares extra.preview_image, so the large card is correct.
+    expect(await cardType("/cypress-parametrized-dynamic-tests/")).toBe(
+      "summary_large_image",
+    );
+  });
+
   test("keywords meta keeps SEO phrases that were removed from tags", async ({
     page,
   }) => {
