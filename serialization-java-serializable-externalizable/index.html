@@ -208,8 +208,10 @@
 <article>
   <header>
     <h1>Java serialization ways: Performance Comparison</h1>
+    
     <span class="post-meta"><time datetime="2014-05-13">May 13, 2014</time>
     · <time datetime="PT3M">3 min read</time>
+    · <span>664 words</span>
 </span>
 
     
@@ -321,7 +323,7 @@
 <span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">private</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> void</span><span class="z-l-1 z-d-1"> readObject</span><span>(</span><span class="z-l-3 z-l-b z-d-6 z-d-b">ObjectInputStream</span><span> ois</span><span>)</span></span></code></pre><h2 id="performance-tests-serializable-vs-externalizable">Performance tests (Serializable vs. Externalizable)</h2>
 <p><a rel="external" href="https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a>: Java, through introspection, guesses the types of class attributes to know how to serialize/deserialize them, but this "magic" is not free, it has a performance penalty.</p>
 <p>When we use <a rel="external" href="https://docs.oracle.com/javase/7/docs/api/java/io/Externalizable.html">Externalizable</a> interface, we decide how to serialize/deserialize, namely we have to write the code that does it. We've lost ease, but also we avoid that <a rel="external" href="https://www.java.com">Java</a> does some tasks, so if we override the methods properly, we'll get a performance improvement.</p>
-<p>To know how big is the performance difference between both interfaces, I've written a <a rel="external" href="https://github.com/carlosvin/serializations-performance-java">tiny example in which we serialize an object with 2 collections with 100000 elements each one</a>. Here you can find the <a rel="external" href="http://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html">tests execution results</a>. There are 3 different implementations:</p>
+<p>To know how big is the performance difference between both interfaces, I've written a <a rel="external" href="https://github.com/carlosvin/serializations-performance-java">tiny example in which we serialize an object with 2 collections with 100000 elements each one</a>. Here you can find the <a rel="external" href="https://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html">tests execution results</a>. There are 3 different implementations:</p>
 <h3 id="implementing-serializable">Implementing Serializable</h3>
 <p>As we mentioned above, <a rel="external" href="https://www.java.com">Java</a> has to guess certain things. During this process it sacrifices some of performance (slowest way), in exchange we get really simple source code, the class to serialize just has to implement the <a rel="external" href="https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html">Serializable</a> interface.</p>
 <pre class="giallo z-l-code z-d-code" ><code data-lang="java"><span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">public</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> class</span><span class="z-l-8 z-d-8"> Contacts</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> implements</span><span class="z-l-4 z-d-4"> Serializable</span><span> {</span></span>
@@ -385,7 +387,7 @@
 <p>We gain performance because <a href="https://carlosvin.github.io/serialization-java-serializable-externalizable/#externalizable">Externalizable</a> interface forces us to implement ourselves the guessing code, so <a rel="external" href="https://www.java.com">Java</a> doesn't have to do that.</p>
 <p>As we have seen at <a href="https://carlosvin.github.io/serialization-java-serializable-externalizable/#implementing-externalizable-wrong-way">Implementing Externalizable (wrong way)</a>, si no tenemos cuidado, conseguiremos una mejora poco significativa a costa de complicar nuestro código fuente.</p>
 <ul>
-<li><a rel="external" href="http://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html">Test results</a>.</li>
+<li><a rel="external" href="https://carlosvin.github.io/serializations-performance-java/classes/com.github.carlosvin.contacts.SerializationTest.html">Test results</a>.</li>
 <li><a rel="external" href="https://github.com/carlosvin/serializations-performance-java/">Code in Github</a>.</li>
 </ul>
 
