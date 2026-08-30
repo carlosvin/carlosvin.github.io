@@ -1,0 +1,528 @@
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: fade 0.3s ease both;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+:root {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -3.5rem;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+header nav {
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+}
+
+/* Top bar spans the full viewport; only the nav row is padded in. */
+body > header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: var(--pico-background-color);
+  border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+header nav {
+  padding: 0 var(--pico-spacing);
+}
+
+header nav > ul:last-of-type {
+  margin-right: calc(var(--pico-nav-element-spacing-horizontal) * -1);
+}
+
+/* Use the full viewport so the Contents outline can sit in the left margin. */
+body > main,
+body > footer {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: var(--pico-spacing);
+  padding-right: var(--pico-spacing);
+}
+
+@media (min-width: 1024px) {
+  body > main,
+  body > footer {
+    padding-left: calc(var(--pico-spacing) * 1.5);
+    padding-right: calc(var(--pico-spacing) * 1.5);
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: min(100%, 22rem);
+  font-weight: 600;
+}
+
+.brand img {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.brand span {
+  line-height: 1.25;
+}
+
+header nav label:has([role="switch"]) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+header nav li:has(#search) {
+  position: relative;
+  flex: 1 1 12rem;
+  min-width: min(100%, 12rem);
+}
+
+#search-results {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.35rem);
+  width: min(90vw, 28rem);
+  max-height: min(70vh, 28rem);
+  overflow: auto;
+  z-index: 40;
+  padding: 0.5rem;
+  background: var(--pico-background-color);
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  box-shadow: var(--pico-box-shadow);
+}
+
+#search-results[hidden] {
+  display: none !important;
+}
+
+#search-results [role="status"] {
+  margin: 0.25rem 0.5rem 0.5rem;
+  font-size: 0.875rem;
+  color: var(--pico-muted-color);
+}
+
+#search-results [role="listbox"] {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#search-results [role="listbox"] a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--pico-border-radius);
+  text-decoration: none;
+}
+
+#search-results [role="listbox"] a p {
+  margin: 0.25rem 0 0;
+  color: var(--pico-muted-color);
+  font-size: 0.9rem;
+}
+
+#search-results [role="listbox"] li.is-active a,
+#search-results [role="listbox"] a:hover {
+  background: var(--pico-secondary-focus);
+}
+
+nav[aria-label="Jump to year"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  margin-bottom: 1rem;
+}
+
+section[aria-label="Posts"] {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+}
+
+section[aria-label="Posts"] > h2 {
+  flex: 1 0 100%;
+  margin: 1.25rem 0 0.15rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+  scroll-margin-top: 4.5rem;
+}
+
+/* Keep anchored headings below the sticky header when jumping (TOC, years). */
+h1[id],
+h2[id],
+h3[id],
+h4[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+section[aria-label="Posts"] article {
+  display: flex;
+  flex-direction: column;
+  min-width: min(100%, 300px);
+  flex: 1 1 300px;
+  max-width: calc(50% - 0.5rem);
+}
+
+section[aria-label="Posts"] article header {
+  display: block;
+}
+
+section[aria-label="Posts"] article header > a {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--pico-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+section[aria-label="Posts"] article header > a:hover {
+  color: var(--pico-primary-hover);
+  text-decoration: underline;
+}
+
+/* Excerpt: muted and clamped so cards in a row stay even. */
+section[aria-label="Posts"] article > p {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--pico-muted-color);
+  font-size: 0.9rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Tags sit in Pico's sectioned footer, pinned to the card bottom. */
+section[aria-label="Posts"] article > footer {
+  margin-top: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  section[aria-label="Posts"] article {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  section[aria-label="Posts"] article:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--pico-card-box-shadow), 0 0.5rem 1.5rem rgb(0 0 0 / 0.12);
+  }
+}
+
+.post-meta {
+  display: block;
+  color: var(--pico-muted-color);
+  font-size: 0.8rem;
+}
+
+/* Keep preview images proportional so tall SVGs/logos cannot dominate the card. */
+section[aria-label="Posts"] article figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 1rem;
+  overflow: hidden;
+}
+
+section[aria-label="Posts"] article figure img,
+main > article > figure img {
+  width: auto;
+  max-width: 100%;
+  height: 9.5rem;
+  max-height: 9.5rem;
+  object-fit: contain;
+  object-position: center;
+}
+
+main > article > figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0 1.5rem;
+  overflow: hidden;
+}
+
+main > article > figure img {
+  height: 16rem;
+  max-height: 16rem;
+}
+
+main > article > header > h1 {
+  margin-bottom: 0.4rem;
+}
+
+main > article > header .post-meta {
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  section[aria-label="Posts"] article {
+    max-width: 100%;
+  }
+}
+
+nav[aria-label="Adjacent posts"] {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--pico-muted-border-color);
+}
+
+nav[aria-label="Adjacent posts"] a {
+  display: flex;
+  flex-direction: column;
+  max-width: min(100%, 48%);
+  text-decoration: none;
+}
+
+nav[aria-label="Adjacent posts"] > a:last-child {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* Tag chips: compact pills. Reset Pico classless nav li padding (1rem) so
+   wrapped rows sit close together instead of a full line-height apart. */
+nav[aria-label="Tags"] ul {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.35rem;
+  row-gap: 0.2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav[aria-label="Tags"] li {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+nav[aria-label="Tags"] a {
+  display: inline-block;
+  margin: 0;
+  padding: 0.05rem 0.5rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--pico-muted-color);
+  text-decoration: none;
+}
+
+/* Post layout: Contents is a reserved column, never overlaid on the body. */
+main > article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 1.5rem;
+  row-gap: 0;
+}
+
+main > article > header { grid-area: header; }
+main > article > figure { grid-area: figure; }
+main > article > aside { grid-area: toc; }
+main > article > section { grid-area: content; }
+main > article > nav { grid-area: nav; }
+main > article > footer { grid-area: footer; }
+
+main > article {
+  grid-template-areas:
+    "header"
+    "figure"
+    "toc"
+    "content"
+    "nav"
+    "footer";
+}
+
+@media (min-width: 1024px) {
+  /* Remove Pico's card padding so the Contents outline can sit at the left
+     edge of the main column instead of being clipped by 1.25rem of padding. */
+  main > article:has(> aside) {
+    padding: 0;
+    /* TOC uses the left margin: 14rem minimum, up to 20vw on wide screens. */
+    grid-template-columns: minmax(14rem, 20vw) minmax(0, 1fr);
+    grid-template-areas:
+      "header header"
+      "figure figure"
+      "toc content"
+      "toc nav"
+      "toc footer";
+  }
+
+  main > article > aside {
+    position: sticky;
+    top: 4.5rem;
+    align-self: start;
+    max-height: calc(100vh - 5.5rem);
+    overflow: auto;
+  }
+
+  /* Outline, not a disclosure: always visible beside the post. */
+  main > article > aside summary {
+    pointer-events: none;
+  }
+
+  main > article > aside summary::-webkit-details-marker,
+  main > article > aside summary::marker {
+    content: "";
+    display: none;
+  }
+
+  main > article > aside summary::after {
+    display: none;
+  }
+}
+
+/* Compact Google-Docs-like outline, presented as its own card so it reads
+   as a distinct block instead of unstyled text flush with the page edge. */
+main > article > aside {
+  background: var(--pico-card-sectioning-background-color, var(--pico-background-color));
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  padding: 0.85rem 1rem;
+}
+
+/* Stacked (mobile) layout: give the Contents card breathing room before
+   the article body that follows it. */
+@media (max-width: 1023.98px) {
+  main > article > aside {
+    margin-bottom: 1.25rem;
+  }
+}
+
+main > article > aside summary {
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--pico-muted-color);
+}
+
+main > article > aside ul,
+main > article > aside nav ul {
+  margin: 0;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding: 0;
+  list-style: none;
+}
+
+main > article > aside li {
+  margin: 0;
+  padding: 0;
+}
+
+main > article > aside li ul {
+  padding-left: 0.75rem;
+}
+
+main > article > aside a {
+  display: block;
+  margin: 0;
+  padding: 0.2rem 0;
+  color: var(--pico-muted-color);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-decoration: none;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+main > article > aside a:hover {
+  color: var(--pico-primary);
+}
+
+/* Social icons - adapt to theme */
+footer img {
+  filter: brightness(0) saturate(100%);
+}
+
+[data-theme="dark"] footer img {
+  filter: brightness(0) saturate(100%) invert(1);
+}
+
+pre.giallo,
+pre.z-l-code,
+pre.z-d-code,
+pre {
+  position: relative;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.copy-code-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--pico-muted-color);
+  background: var(--pico-card-background-color, var(--pico-background-color));
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out, background 0.15s ease-in-out, color 0.15s ease-in-out;
+  cursor: pointer;
+  z-index: 2;
+  user-select: none;
+}
+
+pre:hover .copy-code-btn,
+.copy-code-btn:focus-visible,
+.copy-code-btn.is-copied {
+  opacity: 1;
+}
+
+.copy-code-btn:hover {
+  color: var(--pico-primary-hover);
+  border-color: var(--pico-primary-hover);
+}
+
+.copy-code-btn.is-copied {
+  color: var(--pico-primary);
+  border-color: var(--pico-primary);
+}
+
+@media (hover: none) {
+  .copy-code-btn {
+    opacity: 0.75;
+  }
+}
