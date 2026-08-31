@@ -37,9 +37,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ title }}{% endblock %}</title>
   <meta name="description" content="{% block description %}{{ description }}{% endblock %}">
-  {% if page is defined and page.taxonomies.tags %}
-  <meta name="keywords" content="{{ page.taxonomies.tags | join(sep=',') }}">
-  {% endif %}
+  {%- if page is defined %}
+  {%- set tag_kw = page.taxonomies.tags | default(value=[]) %}
+  {%- set extra_kw = page.extra.keywords | default(value=[]) %}
+  {%- if tag_kw or extra_kw %}
+  <meta name="keywords" content="{{ tag_kw | join(sep=',') }}{% if tag_kw and extra_kw %},{% endif %}{{ extra_kw | join(sep=',') }}">
+  {%- endif %}
+  {%- endif %}
   <meta name="robots" content="index, follow">
   <meta name="author" content="{{ config.author }}">
   {% block rss %}
