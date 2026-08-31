@@ -5,8 +5,10 @@ lang: en
 description: We are going to analyze with examples new filesystem features coming with C++17
 toc: true
 aliases: ["/langs/en/posts/recursive-directory-iterator", "/langs/es/posts/recursive-directory-iterator"]
+extra:
+  keywords: ["c++", "c++11", "c++17"]
 taxonomies:
-  tags: ["cpp", "cpp17", "filesystem", "c++", "c++11", "c++17", "io"]
+  tags: ["cpp", "cpp17", "filesystem", "io"]
 ---
 
 ## Introduction

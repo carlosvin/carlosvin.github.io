@@ -5,8 +5,10 @@ lang: en
 description: Mutex wrapper on C++98 pthread mutex and a the better C++11 std::mutex solution
 toc: true
 aliases: ["/langs/en/posts/cpp-mutex", "/langs/es/posts/cpp-mutex"]
+extra:
+  keywords: ["c++"]
 taxonomies:
-  tags: ["cpp", "concurrency", "multithreading", "c++", "pthread", "mutex"]
+  tags: ["cpp", "concurrency", "multithreading", "pthread", "mutex"]
 ---
 
 [C++11](https://en.wikipedia.org/wiki/C++11) has added many improvements to help us developing multi-thread systems. I'm going to talk about [Mutex](https://en.wikipedia.org/wiki/Mutex).

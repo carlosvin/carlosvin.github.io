@@ -5,8 +5,10 @@ updated: 2025-08-30
 lang: en
 description: "Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture."
 toc: true
+extra:
+  keywords: ["tanstack router", "type-safe routing", "application architecture", "guidelines", "production-ready", "data fetching", "state management"]
 taxonomies:
-  tags: ["react", "typescript", "tanstack-router", "frontend", "web-development", "architecture", "tanstack router", "routing", "guidelines", "type-safe routing", "data fetching", "state management", "production-ready", "vite", "vitest", "arktype", "application architecture"]
+  tags: ["react", "typescript", "tanstack-router", "frontend", "web-development", "architecture", "routing", "vite", "vitest", "arktype"]
 ---
 
 This post captures a practical way to implement a React application using TanStack Router. It focuses on maintainability, predictable data flows, and ergonomics for both reading and writing code.
