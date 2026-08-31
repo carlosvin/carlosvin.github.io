@@ -128,7 +128,7 @@ export function toToolTask(row: TaskRepo): Task {
 After `Schema.parse()`, preserve inferred TypeScript types end-to-end — prefer `satisfies`, discriminated unions, narrow type guards, and exhaustive `switch` with `assertNever` over `any` or loose `as` type casts.
 
 > **Why Zod?**  
-> [ArkType](https://arktype.io/) is a great alternative and I personally like its syntax. We chose Zod for this template because of its broad ecosystem adoption and first-class tool tooling. Because the architecture is interface-first, you can swap to ArkType or Valibot by maintaining the same schema boundaries.
+> [ArkType](https://arktype.io/) is a great alternative and I personally like its syntax. We chose Zod for this template because of its broad ecosystem adoption and first-class tooling. Because the architecture is interface-first, you can swap to ArkType or Valibot by maintaining the same schema boundaries.
 
 ## Server Execution Boundaries & Isomorphic Loaders
 
