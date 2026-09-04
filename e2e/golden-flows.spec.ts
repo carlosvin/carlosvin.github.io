@@ -316,6 +316,7 @@ test.describe("golden flows", () => {
   }) => {
     const THEME_COLOR_LIGHT = "#a2c11c";
     const THEME_COLOR_DARK = "#13171f";
+    const PWA_ENTRY_URL = "/?source=pwa";
 
     await page.goto("/");
 
@@ -333,19 +334,24 @@ test.describe("golden flows", () => {
     expect(manifestResponse.ok()).toBe(true);
 
     const manifest = await manifestResponse.json();
-    expect(manifest.id).toBe("/?source=pwa");
-    expect(manifest.start_url).toBe("/?source=pwa");
+    expect(manifest.id).toBe(PWA_ENTRY_URL);
+    expect(manifest.start_url).toBe(PWA_ENTRY_URL);
     expect(manifest.scope).toBe("/");
     expect(manifest.display).toBe("standalone");
     expect(manifest.theme_color).toBe(THEME_COLOR_LIGHT);
     expect(manifest.background_color).toBe("#ffffff");
     expect(manifest.icons.length).toBeGreaterThanOrEqual(2);
-    expect(manifest.icons.some((i: { purpose?: string }) => i.purpose?.includes("maskable"))).toBe(true);
-    expect(manifest.icons.some((i: { purpose?: string }) => i.purpose?.includes("any"))).toBe(true);
+
+    const hasPurpose = (purpose: string) =>
+      manifest.icons.some(
+        (icon: { purpose?: string }) => icon.purpose?.includes(purpose),
+      );
+    expect(hasPurpose("maskable")).toBe(true);
+    expect(hasPurpose("any")).toBe(true);
     expect(manifest.shortcuts.length).toBeGreaterThan(0);
 
     const iconResponses = await Promise.all(
-      manifest.icons.map((icon: { src: string }) => request.get(icon.src)),
+      manifest.icons.map((icon: { src: string }) => request.head(icon.src)),
     );
     for (const res of iconResponses) {
       expect(res.ok()).toBe(true);
