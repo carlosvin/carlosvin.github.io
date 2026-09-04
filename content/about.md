@@ -4,6 +4,7 @@ lang: en
 description: "A little bit about this blog, who I am and what I do."
 aliases: ["/langs/en/about"]
 date: 2025-08-15
+updated: 2026-09-04
 template: page.html
 in_search_index: false
 include_in_feeds: false
@@ -13,7 +14,7 @@ extra:
 
 ## About this blog
 
-Welcome to 'My Software Engineering Journey' [blog](@/_index.md), a personal blog where I document my adventures in the world of code. Here, I dive deep into topics I'm passionate about, especially within software engineering, AI, programming languages, code examples, coding practices, recent learnings and more. From deep dives into performance and efficiency to practical guides on building and deploying applications, my goal is to share what I've learned along the way. Whether you're a seasoned developer or just starting out, I hope you'll find something valuable and inspiring in [these posts](@/_index.md). Join me as I explore the ever-evolving landscape of software engineering, one line of code at a time.
+Welcome to 'My Software Engineering Journey' [blog](@/_index.md), a personal blog where I document my adventures in the world of code. Here, I dive deep into topics I'm passionate about, especially within software engineering, AI adoption, programming languages, code examples, coding practices, recent learnings and more. From deep dives into performance and efficiency to practical guides on building and deploying applications, my goal is to share what I've learned along the way. Whether you're a seasoned developer or just starting out, I hope you'll find something valuable and inspiring in [these posts](@/_index.md). Join me as I explore the ever-evolving landscape of software engineering, one line of code at a time.
 
 <small>Note that there are some old posts, that are kind of legacy, I keep them for reference, one example can be [Choosing a Modern C++ stack](@/choosing-modern-cpp-stack.md), it was written in 2017, updated on 2020, but I guess today is not modern anymore :smile:.</small>
 
@@ -23,11 +24,11 @@ Welcome to 'My Software Engineering Journey' [blog](@/_index.md), a personal blo
 
 Over the years, I've had the privilege of working with industry in great companies like [Microsoft](https://www.microsoft.com/), [eBay](https://www.ebay.com/), Champ, Santander Global Tech and Spanish Lotteries, where I've led teams, architected solutions, and developed scalable systems that power critical business functions. My expertise spans across languages and frameworks such as [Go](https://golang.org/), [Java](https://www.java.com/), [React](https://reactjs.org/), [Python](https://www.python.org/), [TypeScript](https://www.typescriptlang.org/), [C++](https://isocpp.org/) and more. I've contributed to projects ranging from e-commerce platforms to real-time trading systems, always with a focus on improving efficiency, reliability, and user experience.
 
+At [MongoDB](https://www.mongodb.com/), I previously led the Sales Apps team. Our mission was to boost the productivity of the GTM organization by building innovative software solutions. We leveraged the [FARM stack](https://www.mongodb.com/resources/basics/farm-stack)—[FastAPI](https://fastapi.tiangolo.com/), [React](https://reactjs.org/), [MongoDB](https://www.mongodb.com/), and [Next.js](https://nextjs.org/)—along with [TanStack Router](https://tanstack.com/router), to create tools that help sales teams work more efficiently and effectively. We also created a sister team with the same mission of improving GTM efficiency, focused on leveraging AI to solve problems.
+
 ### Now
 
-Currently, I lead the Sales Apps team at [MongoDB](https://www.mongodb.com/). Our mission is to boost the productivity of the GTM organization by building innovative software solutions. We leverage the [FARM stack](https://www.mongodb.com/resources/basics/farm-stack)—[FastAPI](https://fastapi.tiangolo.com/), [React](https://reactjs.org/), [MongoDB](https://www.mongodb.com/), and [Next.js](https://nextjs.org/)—along with [TanStack Router](https://tanstack.com/router), to create tools that help our sales teams work more efficiently and effectively.
-
-We also created a sister team with the same mission of improving GTM efficiency, but focused on leveraging AI to solve problems.
+Currently, I'm a Staff Enterprise Architect – AI at [MongoDB](https://www.mongodb.com/). My focus is applying best practices and designing AI adoption strategies so colleagues can make effective use of these tools. I work to bring uniformity through a shared agent harness, and to ground decisions in a metrics framework that tracks engineering excellence—delivery and quality—alongside business value, so we can define strategies with clear evidence.
 
 ## Contact
 
