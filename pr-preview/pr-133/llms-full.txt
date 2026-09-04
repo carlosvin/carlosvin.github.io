@@ -1,89 +1,320 @@
-# My Software Engineering Journey - Full LLM Digest
+# My software engineering journey
 
-> Comprehensive reference of architecture principles, technical guides, and core post digests from Carlos Martin Sanchez's engineering blog (https://carlosvin.github.io).
+> Personal technical blog by Carlos Martin Sanchez (Staff AI Enterprise Architect at MongoDB).
+
+- **Author**: Carlos Martin Sanchez
+- **Website**: https://carlosvin.github.io/pr-preview/pr-133
+- **About**: https://carlosvin.github.io/pr-preview/pr-133/about
+- **GitHub**: https://github.com/carlosvin
+- **LinkedIn**: https://linkedin.com/in/carlosvin
+- **RSS Feed**: https://carlosvin.github.io/pr-preview/pr-133/rss.xml
+- **Atom Feed**: https://carlosvin.github.io/pr-preview/pr-133/atom.xml
 
 ---
-
 ## Author Profile & Entity Context
 
 - **Author**: Carlos Martin Sanchez
-- **Role**: Staff AI Enterprise Architect at MongoDB (Enterprise architecture, AI engineering, full-stack systems, and developer productivity tools)
-- **Background**: Previously led Sales Apps engineering at MongoDB; worked at Microsoft, eBay, Santander Global Tech, Champ, and Spanish Lotteries.
-- **Core Specializations**: Software Architecture, Full-Stack TypeScript/React, AI-Promptable Systems, Agent Skills, TanStack Router & Start, Go, Java, Python, C++, Distributed Systems, and Performance Engineering.
+- **Role**: Staff AI Enterprise Architect at MongoDB
+- **Specializations**: Software Engineering, Full-Stack Development, Software Architecture, AI Engineering, TypeScript, React, TanStack Router, TanStack Start, Go, Python, Java, C++, MongoDB, Distributed Systems, Testing and Automation
 - **Profiles**:
-  - Personal Site: https://carlosvin.github.io
-  - About: https://carlosvin.github.io/about/
+  - Personal Site: https://carlosvin.github.io/pr-preview/pr-133
+  - About: https://carlosvin.github.io/pr-preview/pr-133/about
   - GitHub: https://github.com/carlosvin
   - LinkedIn: https://linkedin.com/in/carlosvin
 
 ---
 
-## Core Guides & Architecture Overviews
-
+## Post Catalog
 ### 1. Building AI-Promptable Full-Stack Apps with TanStack Start
-- **URL**: https://carlosvin.github.io/building-ai-promptable-fullstack-apps/
-- **Key Architecture Rules**:
-  1. *Everything Behind an Interface*: All data access is governed by `ReadRepository` and `WritableRepository` interfaces. In-memory `SeedRepository` enables instant local dev and CI; `MongoRepository` powers production without touching application logic.
-  2. *Three-Layer Schemas*:
-     - Layer 1: Repository Schema (DB document shape).
-     - Layer 2: Tools / Server Function Schema (`schemas.ts` with `.describe()` annotations for LLM tool calling).
-     - Layer 3: Router Search Layer (`validateSearch` URL schemas).
-  3. *Server Execution Boundaries*: Route loaders are isomorphic (execute in SSR and SPA client navigation). Sensitive database clients and secrets live exclusively in `*.server.ts` files protected by Vite import boundary rules (`behavior: 'error'`).
-  4. *Auth & Request Pipeline*: Typed `AccessTicket` built via request middleware; `createServerFn` chains `requireAuthMiddleware` and `invalidateMiddleware`.
-  5. *Parity Between UI & AI Tools*: AI agent tools (`createSafeServerTool`) execute the exact same server functions and validation handlers as UI components, wrapped with structured error handling (`safeToolHandler`).
-  6. *Codified Agent Skills*: Architectural invariants are packaged as Agent Skills (`npx skills add carlosvin/tanstack-fullstack-ai-template --skill tanstack-promptable-fullstack-app-template`) to guide coding agents during development.
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/building-ai-promptable-fullstack-apps/
+- **Published**: 2026-03-08 (updated 2026-08-31)
+- **Summary**: A reproducible full-stack architecture for AI-promptable web apps with TanStack Start, three-layer schemas, swappable interfaces, and Agent Skills.
+- **Tags**: ai, react, typescript, tanstack-start, tanstack-ai, zod, fullstack, architecture, mongodb, mantine, tanstack-router, web-development, playwright
+- **Reading time**: 9 min
 
-### 2. TanStack Router: Opinionated Guidelines for Production React Apps
-- **URL**: https://carlosvin.github.io/tanstack-router-opinionated-conventions-production-react-apps/
-- **Key Recommendations**:
-  1. *URL-as-State*: Store page-level state (filters, sorting, pagination, search query) in search parameters validated with ArkType or Zod rather than ad-hoc `useState`. Enables bookmarkable, shareable URLs.
-  2. *Selective Loader Dependencies*: Use `loaderDeps: ({ search: { page, sort } }) => ({ page, sort })` to avoid re-fetching data when presentation-only params change (e.g. `condensedView`).
-  3. *Loaders Throw, Mutations Return*: Route loaders throw typed errors (`AppError`) to activate TanStack Error Components. Mutations called in event handlers return `{ data, error }` to preserve type safety.
-  4. *Nested Routing for Modals*: Use nested sub-routes (e.g., `/products/new`) instead of conditional open/close flags to allow state recovery and deep-linking.
-  5. *Thin Backend Clients*: Wrap OpenAPI generated clients (`openapi-fetch`) with unified error normalizers.
+### 2. Isolated Integration Tests with pytest-scenarios
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/pytest-scenarios-isolated-integration-tests/
+- **Published**: 2026-01-03
+- **Summary**: Use pytest-scenarios to create isolated integration test data that cleans itself up automatically.
+- **Tags**: python, testing, pytest, mongodb, integration-testing
+- **Reading time**: 2 min
 
-### 3. REST URLs Design Best Practices
-- **URL**: https://carlosvin.github.io/rest-urls/
-- **Principles**:
-  - Map HTTP verbs directly to CRUD: GET (Read), POST (Create), PUT (Update), DELETE (Delete).
-  - URLs represent nouns/resources (e.g., `/api/cars/123`), never action verbs (avoid `/api/cars/delete-oil`).
-  - Use query parameters for filtering, sorting, pagination, and projection (e.g., `/api/cars?brand=fiat&page=2&limit=10`).
-  - Represent sub-collections hierarchically (e.g., `POST /api/cars/{id}/oils/` and `DELETE /api/cars/{id}/oils/{oilId}`).
+### 3. TanStack Router: Opinionated Guidelines for Production React Apps
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/tanstack-router-opinionated-conventions-production-react-apps/
+- **Published**: 2025-08-15 (updated 2025-08-30)
+- **Summary**: Based on real-world experience in shipping complex applications, this guide delivers the best practices you need to master modern React development and ship high-quality, scalable applications. Perfect for developers looking to optimize React performance and application architecture.
+- **Tags**: react, typescript, tanstack-router, frontend, web-development, architecture, routing, vite, vitest, arktype
+- **Reading time**: 6 min
 
-### 4. Easily Creating a Golang CLI Tool
-- **URL**: https://carlosvin.github.io/create-cmd-tool-golang/
-- **Techniques**:
-  - Standard library `flag` package for zero-dependency argument parsing.
-  - Integration with Viper and Meta-Viper for unifying configuration across CLI flags, environment variables, and config files (JSON/YAML).
+### 4. Easily creating a golang command line tool
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/create-cmd-tool-golang/
+- **Published**: 2021-02-14
+- **Summary**: Let's see how to easily and quickly create a command line tool in golang
+- **Tags**: golang, cli, tools, cmd
+- **Reading time**: 2 min
 
-### 5. Embedded Java Databases Performance Comparison
-- **URL**: https://carlosvin.github.io/java-embedded-db-performance-comparison/
-- **Key Findings**:
-  - Benchmark of 100,000 CRUD operations across embedded ACID databases.
-  - SqliteDB (via JDBC) achieved the highest overall throughput and lowest latency.
-  - ObjectDB (JPA object store) achieved strong performance close to SQLite with simplified object mapping.
-  - DerbyDB / JavaDB was the slowest (approx. 8x slower than SQLite on batch operations).
+### 5. Parameterized Tests in Cypress
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/cypress-parametrized-dynamic-tests/
+- **Published**: 2021-01-06
+- **Summary**: How to write parameterized tests in Cypress
+- **Tags**: testing, cypress, javascript, e2e
+- **Reading time**: 2 min
 
-### 6. C++ Mutex and Concurrency
-- **URL**: https://carlosvin.github.io/cpp-mutex/
-- **Concepts**:
-  - Contrast legacy C++98 `pthread_mutex_t` manual initialization/destruction with C++11 `std::mutex` and `std::lock_guard` RAII-based safety.
+### 6. Golang over Java for REST services
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/rest-service-go-vs-java/
+- **Published**: 2020-11-01
+- **Summary**: Why I'd pick Golang over Java to create any new distributed system. I am going to compare a REST service implementation in Java vs the implementation in Golang
+- **Tags**: golang, java, rest, api, web-services, gingonic, spring
+- **Reading time**: 7 min
 
-### 7. Filesystem in C++17
-- **URL**: https://carlosvin.github.io/recursive-directory-iterator/
-- **Concepts**:
-  - Using `std::filesystem::recursive_directory_iterator` for portable directory traversal, error handling, and permission filtering in modern C++.
+### 7. Create a PWA with Create React App: Lessons Learned
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/pwa-lessons-learned-cra/
+- **Published**: 2019-11-04 (updated 2020-06-10)
+- **Summary**: Lessons learned while developing a PWA with CRA: Budget Tracker
+- **Tags**: react, typescript, pwa, firebase, frontend, web-development, create react app, firestore, svelte, sapper
+- **Reading time**: 11 min
 
-### 8. C++ Struct Memory Alignment & Pragma Pack
-- **URL**: https://carlosvin.github.io/cpp-pragma-pack/
-- **Concepts**:
-  - CPU word boundary alignment, padding overhead, and cache line performance vs byte-packing trade-offs using `#pragma pack`.
+### 8. Create SPA with React + Typescript + Parcel
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/react-typescript-parcel/
+- **Published**: 2019-01-01 (updated 2019-07-10)
+- **Summary**: Example project how to create a Single Page Application with React, Typescript and Parcel.
+- **Tags**: react, typescript, parcel, frontend, web-development, spa
+- **Reading time**: 4 min
+
+### 9. Custom Maven Plugin - Override default build lifecycle
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/creating-custom-maven-plugin-default/
+- **Published**: 2018-05-12
+- **Summary**: How to create a custom Maven plugin which overrides default build lifecycle
+- **Tags**: java, maven, build-systems, maven plugins
+- **Reading time**: 1 min
+
+### 10. Example how to create custom Maven Plugin
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/creating-custom-maven-plugin/
+- **Published**: 2018-03-11
+- **Summary**: Example to understand Maven plugins concepts and how to create a custom Maven plugin from scratch
+- **Tags**: java, maven, build-systems, maven-site-plugin, maven plugins
+- **Reading time**: 7 min
+
+### 11. Choosing a Modern C++ stack
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/choosing-modern-cpp-stack/
+- **Published**: 2017-09-15 (updated 2020-06-13)
+- **Summary**: Why I'd choose Meson+Doctest tech stack to create a new C++ project with a reusable and easy-to-run example.
+- **Tags**: cpp, build-systems, meson, testing, doctest, catch
+- **Reading time**: 4 min
+
+### 12. Filesystem in C++17
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/recursive-directory-iterator/
+- **Published**: 2017-05-28
+- **Summary**: We are going to analyze with examples new filesystem features coming with C++17
+- **Tags**: cpp, cpp17, filesystem, io
+- **Reading time**: 3 min
+
+### 13. Multi-Domain Docker Containers
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/reverse-proxy-multidomain-docker/
+- **Published**: 2016-11-24
+- **Summary**: How to create different Docker containers with different domain names in the same host
+- **Tags**: docker, microservices, reverse-proxy, nginx
+- **Reading time**: 3 min
+
+### 14. Convert files formats - Windows to Unix
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/recursive-dos-unix/
+- **Published**: 2016-02-12
+- **Summary**: Convert Windows formatted files to Unix format per directory recursively
+- **Tags**: unix, linux, tools, windows, useful commands
+- **Reading time**: 1 min
+
+### 15. REST URLs
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/rest-urls/
+- **Published**: 2015-08-16
+- **Summary**: Design REST API: URLs
+- **Tags**: rest, api, web-services, architecture
+- **Reading time**: 5 min
+
+### 16. Build C++ project with Gradle
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/gradle-cpp/
+- **Published**: 2014-09-27
+- **Summary**: How to build a C++ project using Gradle
+- **Tags**: cpp, gradle, build-systems, dependency management
+- **Reading time**: 6 min
+
+### 17. Embedded Java Databases - Performance Comparison
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/java-embedded-db-performance-comparison/
+- **Published**: 2014-06-07
+- **Summary**: Performance comparison in Java between three embedded databases like Derby/JavaDB, Sqlite, and ObjectDB
+- **Tags**: java, database, performance, sqlite, embedded
+- **Reading time**: 4 min
+
+### 18. Java serialization ways: Performance Comparison
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/serialization-java-serializable-externalizable/
+- **Published**: 2014-05-13
+- **Summary**: Java serialization ways, performance comparison
+- **Tags**: java, performance, serialization
+- **Reading time**: 3 min
+
+### 19. Mutex C++
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/cpp-mutex/
+- **Published**: 2014-04-24
+- **Summary**: Mutex wrapper on C++98 pthread mutex and a the better C++11 std::mutex solution
+- **Tags**: cpp, concurrency, multithreading, pthread, mutex
+- **Reading time**: 1 min
+
+### 20. Android Studio Portable Download
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/android-studio-portable-download/
+- **Published**: 2013-10-29
+- **Summary**: Link to download Android Studio Portable
+- **Tags**: android, tools, ide
+- **Reading time**: 1 min
+
+### 21. Debugging library generated with libtool
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/debug-libtool-lib/
+- **Published**: 2013-02-01
+- **Summary**: How to debug a library generated with libtool
+- **Tags**: cpp, debugging, autotools, build-systems, gnu, tips and tricks
+- **Reading time**: 1 min
+
+### 22. C++ Struct memory alignment
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/cpp-pragma-pack/
+- **Published**: 2012-11-26
+- **Summary**: Understanding pragma pack preprocessor directive and how it affects to memory alignment
+- **Tags**: cpp, performance, memory-management, compilers
+- **Reading time**: 2 min
+
+### 23. Git Proxy Configuration
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/git-proxy-config/
+- **Published**: 2012-11-15
+- **Summary**: Quick guide to configure Git to work through HTTP/HTTPS proxies
+- **Tags**: git, configuration, tools, proxy, tips and tricks
+- **Reading time**: 1 min
+
+### 24. Replace punctuation symbols in Python
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/remove-replace-punctuation-py/
+- **Published**: 2012-10-23 (updated 2012-05-09)
+- **Summary**: An example of how to remove or replace punctuation symbols of a Python string
+- **Tags**: python, text-processing, tips and tricks
+- **Reading time**: 1 min
+
+### 25. Text Normalization in Python
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/normalize-text-py/
+- **Published**: 2012-10-02
+- **Summary**: Avoiding problems with texts containing non-ASCII characters
+- **Tags**: python, text-processing, tips and tricks
+- **Reading time**: 1 min
+
+### 26. Remove HTML Tags
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/delete-html-tags-py-django/
+- **Published**: 2012-10-02
+- **Summary**: How to remove HTML tags using Python or even easier, using Django
+- **Tags**: python, django, html, text-processing
+- **Reading time**: 1 min
+
+### 27. Remove orphaned packages (Linux)
+- **URL**: https://carlosvin.github.io/pr-preview/pr-133/linux-remove-orphaned-files/
+- **Published**: 2012-10-02
+- **Summary**: How to remove unused packages in Linux
+- **Tags**: linux, package-management, system-administration, archlinux, debian, tips and tricks
+- **Reading time**: 1 min
+
+
+
+## Tag Index
+- **ai** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/ai/
+- **android** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/android/
+- **api** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/api/
+- **architecture** (3 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/architecture/
+- **archlinux** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/archlinux/
+- **arktype** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/arktype/
+- **autotools** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/autotools/
+- **build-systems** (5 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/build-systems/
+- **catch** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/catch/
+- **cli** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/cli/
+- **cmd** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/cmd/
+- **compilers** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/compilers/
+- **concurrency** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/concurrency/
+- **configuration** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/configuration/
+- **cpp** (6 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/cpp/
+- **cpp17** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/cpp17/
+- **create react app** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/create-react-app/
+- **cypress** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/cypress/
+- **database** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/database/
+- **debian** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/debian/
+- **debugging** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/debugging/
+- **dependency management** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/dependency-management/
+- **django** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/django/
+- **docker** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/docker/
+- **doctest** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/doctest/
+- **e2e** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/e2e/
+- **embedded** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/embedded/
+- **filesystem** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/filesystem/
+- **firebase** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/firebase/
+- **firestore** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/firestore/
+- **frontend** (3 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/frontend/
+- **fullstack** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/fullstack/
+- **gingonic** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/gingonic/
+- **git** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/git/
+- **gnu** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/gnu/
+- **golang** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/golang/
+- **gradle** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/gradle/
+- **html** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/html/
+- **ide** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/ide/
+- **integration-testing** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/integration-testing/
+- **io** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/io/
+- **java** (5 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/java/
+- **javascript** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/javascript/
+- **linux** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/linux/
+- **mantine** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/mantine/
+- **maven** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/maven/
+- **maven plugins** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/maven-plugins/
+- **maven-site-plugin** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/maven-site-plugin/
+- **memory-management** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/memory-management/
+- **meson** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/meson/
+- **microservices** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/microservices/
+- **mongodb** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/mongodb/
+- **multithreading** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/multithreading/
+- **mutex** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/mutex/
+- **nginx** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/nginx/
+- **package-management** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/package-management/
+- **parcel** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/parcel/
+- **performance** (3 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/performance/
+- **playwright** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/playwright/
+- **proxy** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/proxy/
+- **pthread** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/pthread/
+- **pwa** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/pwa/
+- **pytest** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/pytest/
+- **python** (4 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/python/
+- **react** (4 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/react/
+- **rest** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/rest/
+- **reverse-proxy** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/reverse-proxy/
+- **routing** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/routing/
+- **sapper** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/sapper/
+- **serialization** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/serialization/
+- **spa** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/spa/
+- **spring** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/spring/
+- **sqlite** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/sqlite/
+- **svelte** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/svelte/
+- **system-administration** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/system-administration/
+- **tanstack-ai** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/tanstack-ai/
+- **tanstack-router** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/tanstack-router/
+- **tanstack-start** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/tanstack-start/
+- **testing** (3 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/testing/
+- **text-processing** (3 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/text-processing/
+- **tips and tricks** (5 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/tips-and-tricks/
+- **tools** (4 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/tools/
+- **typescript** (4 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/typescript/
+- **unix** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/unix/
+- **useful commands** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/useful-commands/
+- **vite** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/vite/
+- **vitest** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/vitest/
+- **web-development** (4 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/web-development/
+- **web-services** (2 posts): https://carlosvin.github.io/pr-preview/pr-133/tags/web-services/
+- **windows** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/windows/
+- **zod** (1 post): https://carlosvin.github.io/pr-preview/pr-133/tags/zod/
+
 
 ---
 
 ## Machine-Readable Sitemap & Feeds
 
-- RSS Feed: https://carlosvin.github.io/rss.xml
-- Atom Feed: https://carlosvin.github.io/atom.xml
-- Sitemap: https://carlosvin.github.io/sitemap.xml
-- LLMS Digest: https://carlosvin.github.io/llms.txt
+- RSS Feed: https://carlosvin.github.io/pr-preview/pr-133/rss.xml
+- Atom Feed: https://carlosvin.github.io/pr-preview/pr-133/atom.xml
+- Sitemap: https://carlosvin.github.io/pr-preview/pr-133/sitemap.xml
+- LLMS Digest: https://carlosvin.github.io/pr-preview/pr-133/llms.txt
