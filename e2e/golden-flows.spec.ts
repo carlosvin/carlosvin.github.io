@@ -309,4 +309,82 @@ test.describe("golden flows", () => {
     expect(tagLabels).toContain("cpp");
     expect(tagLabels).not.toContain("c++");
   });
+
+  test("json-ld graph contains valid BreadcrumbList, TechArticle/BlogPosting, and Person schema", async ({
+    page,
+  }) => {
+    await page.goto("/tanstack-router-opinionated-conventions-production-react-apps/");
+
+    const jsonLdScript = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLdScript).toBeAttached();
+
+    const jsonLdContent = await jsonLdScript.textContent();
+    expect(jsonLdContent).toBeTruthy();
+    const data = JSON.parse(jsonLdContent!);
+    expect(data["@context"]).toBe("https://schema.org");
+    expect(Array.isArray(data["@graph"])).toBe(true);
+
+    const types = data["@graph"].map((node: any) => node["@type"]);
+    expect(types).toContain("WebSite");
+    expect(types).toContain("Person");
+    expect(types).toContain("BreadcrumbList");
+    expect(types).toContain("TechArticle");
+    expect(types).toContain("WebPage");
+
+    const personNode = data["@graph"].find((node: any) => node["@type"] === "Person");
+    expect(personNode.jobTitle).toBe("Engineering Lead");
+    expect(personNode.worksFor.name).toBe("MongoDB");
+    expect(personNode.knowsAbout).toContain("TanStack Router");
+    expect(personNode.sameAs).toContain("https://github.com/carlosvin");
+
+    const breadcrumbNode = data["@graph"].find((node: any) => node["@type"] === "BreadcrumbList");
+    expect(breadcrumbNode.itemListElement.length).toBe(2);
+    expect(breadcrumbNode.itemListElement[0].name).toBe("Home");
+    expect(breadcrumbNode.itemListElement[1].name).toBe("TanStack Router: Opinionated Guidelines for Production React Apps");
+
+    const articleNode = data["@graph"].find((node: any) => node["@type"] === "TechArticle");
+    expect(articleNode.about.length).toBeGreaterThan(0);
+    expect(articleNode.about[0]["@type"]).toBe("Thing");
+  });
+
+  test("tag pages contain CollectionPage and ItemList structured data", async ({
+    page,
+  }) => {
+    await page.goto("/tags/cpp/");
+
+    const jsonLdScript = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLdScript).toBeAttached();
+
+    const jsonLdContent = await jsonLdScript.textContent();
+    expect(jsonLdContent).toBeTruthy();
+    const data = JSON.parse(jsonLdContent!);
+    const types = data["@graph"].map((node: any) => node["@type"]);
+    expect(types).toContain("CollectionPage");
+    expect(types).toContain("BreadcrumbList");
+
+    const collectionNode = data["@graph"].find((node: any) => node["@type"] === "CollectionPage");
+    expect(collectionNode.mainEntity["@type"]).toBe("ItemList");
+    expect(collectionNode.mainEntity.numberOfItems).toBeGreaterThan(0);
+    expect(collectionNode.mainEntity.itemListElement.length).toBeGreaterThan(0);
+
+    const breadcrumbNode = data["@graph"].find((node: any) => node["@type"] === "BreadcrumbList");
+    expect(breadcrumbNode.itemListElement.length).toBe(3);
+    expect(breadcrumbNode.itemListElement[1].name).toBe("Tags");
+    expect(breadcrumbNode.itemListElement[2].name).toBe("cpp");
+  });
+
+  test("social links include rel='me' and base includes link rel='author'", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const authorLink = page.locator('link[rel="author"]');
+    await expect(authorLink).toHaveAttribute("href", /about/);
+
+    const githubLink = page.locator('footer a[href="https://github.com/carlosvin"]');
+    await expect(githubLink).toHaveAttribute("rel", /me/);
+
+    const linkedinLink = page.locator('footer a[href="https://linkedin.com/in/carlosvin"]');
+    await expect(linkedinLink).toHaveAttribute("rel", /me/);
+  });
 });
