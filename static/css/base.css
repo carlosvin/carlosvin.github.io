@@ -12,12 +12,35 @@
   to   { opacity: 1; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 :root {
   color-scheme: light;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
+}
+
+/* Accent wash behind the top of the page, derived from Pico's own accent. */
+body {
+  background-image: radial-gradient(
+    60rem 20rem at 50% -8rem,
+    color-mix(in oklab, var(--pico-primary) 16%, transparent),
+    transparent 70%
+  );
+  background-repeat: no-repeat;
 }
 
 .skip-link {
@@ -37,6 +60,13 @@ header nav {
   row-gap: 0.5rem;
 }
 
+/* Both nav rows wrap: without this the search field cannot leave the row it
+   shares with the links and pushes the page into horizontal scroll on phones. */
+header nav > ul {
+  flex-wrap: wrap;
+  row-gap: 0.25rem;
+}
+
 /* Top bar spans the full viewport; only the nav row is padded in. */
 body > header {
   position: sticky;
@@ -50,6 +80,13 @@ body > header {
   border-bottom: 1px solid var(--pico-muted-border-color);
 }
 
+@supports (backdrop-filter: blur(1px)) {
+  body > header {
+    background: color-mix(in srgb, var(--pico-background-color) 82%, transparent);
+    backdrop-filter: blur(10px) saturate(140%);
+  }
+}
+
 header nav {
   padding: 0 var(--pico-spacing);
 }
@@ -58,12 +95,24 @@ header nav > ul:last-of-type {
   margin-right: calc(var(--pico-nav-element-spacing-horizontal) * -1);
 }
 
-/* Use the full viewport so the Contents outline can sit in the left margin. */
+header nav a[aria-current] {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.4rem;
+}
+
+header nav a.brand[aria-current] {
+  text-decoration: none;
+}
+
+/* Use the full viewport so the Contents outline can sit in the left margin,
+   but stop growing on very wide displays. */
 body > main,
 body > footer {
-  max-width: none;
-  margin-left: 0;
-  margin-right: 0;
+  max-width: 100rem;
+  margin-left: auto;
+  margin-right: auto;
   padding-left: var(--pico-spacing);
   padding-right: var(--pico-spacing);
 }
@@ -102,10 +151,42 @@ header nav label:has([role="switch"]) {
   margin: 0;
 }
 
-header nav li:has(#search) {
+.nav-search {
   position: relative;
   flex: 1 1 12rem;
-  min-width: min(100%, 12rem);
+  min-width: 0;
+}
+
+/* On phones the field takes a row of its own instead of overflowing the bar.
+   The bar then costs three rows, so tighten it back up. */
+@media (max-width: 767.98px) {
+  header nav > ul:last-of-type {
+    flex: 1 1 100%;
+    margin-right: 0;
+  }
+
+  .nav-search {
+    flex-basis: 100%;
+    padding-inline: 0;
+  }
+
+  header nav {
+    row-gap: 0.15rem;
+    padding-block: 0.35rem;
+  }
+
+  header nav li {
+    padding-block: 0.2rem;
+  }
+
+  .brand span {
+    font-size: 0.95rem;
+  }
+
+  .brand img {
+    height: 1.75rem;
+    width: 1.75rem;
+  }
 }
 
 #search-results {
@@ -157,24 +238,77 @@ header nav li:has(#search) {
   background: var(--pico-secondary-focus);
 }
 
+/* Page intro (home, tag pages and the tag index). */
+main hgroup {
+  margin-bottom: 1.75rem;
+}
+
+main hgroup > h1 {
+  margin-bottom: 0.35rem;
+  font-size: clamp(2.1rem, 1.5rem + 2vw, 3.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+main hgroup > h1::after {
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 3px;
+  margin-top: 0.7rem;
+  border-radius: 2px;
+  background: var(--pico-primary);
+}
+
+main hgroup > p {
+  max-inline-size: 62ch;
+  color: var(--pico-muted-color);
+  text-wrap: pretty;
+}
+
+/* Pico spreads nav children apart; these pills read as a group instead. */
 nav[aria-label="Jump to year"] {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 0.85rem;
-  margin-bottom: 1rem;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
 }
 
+nav[aria-label="Jump to year"] a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.1rem 0.7rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 2rem;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--pico-muted-color);
+  text-decoration: none;
+}
+
+nav[aria-label="Jump to year"] a:hover,
+nav[aria-label="Jump to year"] a:focus-visible {
+  color: var(--pico-primary);
+  border-color: var(--pico-primary);
+}
+
+/* Equal-width columns that reflow by available space: a lone card in a year
+   no longer renders at half width next to an empty gap. */
 section[aria-label="Posts"] {
-  display: flex;
-  flex-flow: row wrap;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: 1.25rem;
 }
 
 section[aria-label="Posts"] > h2 {
-  flex: 1 0 100%;
+  grid-column: 1 / -1;
   margin: 1.25rem 0 0.15rem;
   padding-bottom: 0.25rem;
   border-bottom: 1px solid var(--pico-muted-border-color);
+  font-variant-numeric: tabular-nums;
   scroll-margin-top: 4.5rem;
 }
 
@@ -188,29 +322,50 @@ h4[id] {
 
 section[aria-label="Posts"] article {
   display: flex;
+  position: relative;
   flex-direction: column;
-  min-width: min(100%, 300px);
-  flex: 1 1 300px;
-  max-width: calc(50% - 0.5rem);
+  margin: 0;
+  border: 1px solid transparent;
 }
 
 section[aria-label="Posts"] article header {
   display: block;
 }
 
-section[aria-label="Posts"] article header > a {
-  display: block;
-  margin-bottom: 0.3rem;
+section[aria-label="Posts"] article h3 {
+  margin: 0 0 0.3rem;
   color: var(--pico-color);
   font-size: 1.1rem;
   font-weight: 600;
   line-height: 1.35;
+  text-wrap: balance;
+}
+
+section[aria-label="Posts"] article h3 a {
+  color: inherit;
   text-decoration: none;
 }
 
-section[aria-label="Posts"] article header > a:hover {
-  color: var(--pico-primary-hover);
-  text-decoration: underline;
+/* The whole card is one click target; interactive footer content stays above
+   the overlay so tag links remain reachable. */
+section[aria-label="Posts"] article h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+section[aria-label="Posts"] article:hover h3 {
+  color: var(--pico-primary);
+}
+
+section[aria-label="Posts"] article:hover {
+  border-color: color-mix(in oklab, var(--pico-primary) 45%, transparent);
+}
+
+section[aria-label="Posts"] article:has(h3 a:focus-visible) {
+  outline: 2px solid var(--pico-primary);
+  outline-offset: 2px;
 }
 
 /* Excerpt: muted and clamped so cards in a row stay even. */
@@ -225,6 +380,8 @@ section[aria-label="Posts"] article > p {
 
 /* Tags sit in Pico's sectioned footer, pinned to the card bottom. */
 section[aria-label="Posts"] article > footer {
+  position: relative;
+  z-index: 1;
   margin-top: auto;
 }
 
@@ -279,6 +436,9 @@ main > article > figure img {
 
 main > article > header > h1 {
   margin-bottom: 0.4rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 main > article > header .post-meta {
@@ -286,9 +446,54 @@ main > article > header .post-meta {
   font-size: 0.875rem;
 }
 
-@media (max-width: 768px) {
-  section[aria-label="Posts"] article {
-    max-width: 100%;
+/* Hold prose to a readable measure on wide screens; code, tables and figures
+   stay free to use the whole column. */
+main > article > section > * {
+  max-inline-size: 68ch;
+}
+
+main > article > section > pre,
+main > article > section > figure,
+main > article > section > table,
+main > article > section > details,
+main > article > section > iframe {
+  max-inline-size: none;
+}
+
+main > article > section p,
+main > article > section li {
+  text-wrap: pretty;
+}
+
+main > article > section :is(h2, h3, h4) {
+  text-wrap: balance;
+}
+
+/* Scroll-linked reading indicator; no JS, and only where the browser can
+   drive it from the scroll position. */
+.reading-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .reading-progress {
+    display: block;
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 60;
+    height: 3px;
+    background: var(--pico-primary);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    animation: reading-progress linear;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes reading-progress {
+  to {
+    transform: scaleX(1);
   }
 }
 
@@ -319,8 +524,7 @@ nav[aria-label="Adjacent posts"] > a:last-child {
 nav[aria-label="Tags"] ul {
   display: flex;
   flex-wrap: wrap;
-  column-gap: 0.35rem;
-  row-gap: 0.2rem;
+  gap: 0.35rem;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -333,17 +537,46 @@ nav[aria-label="Tags"] li {
   line-height: 1;
 }
 
-nav[aria-label="Tags"] a {
-  display: inline-block;
+nav[aria-label="Tags"] a,
+nav[aria-label="Tags"] .tag-overflow {
+  display: inline-flex;
+  align-items: center;
+  /* Flex drops the markup whitespace between the name and its count. */
+  gap: 0.25rem;
+  /* WCAG 2.2 SC 2.5.8 Target Size (Minimum) asks for at least 24x24 CSS px. */
+  min-height: 1.5rem;
   margin: 0;
-  padding: 0.05rem 0.5rem;
+  padding: 0.1rem 0.6rem;
   border: 1px solid var(--pico-muted-border-color);
   border-radius: 2rem;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  line-height: 1.35;
+  line-height: 1.2;
   color: var(--pico-muted-color);
   text-decoration: none;
+}
+
+nav[aria-label="Tags"] a:hover,
+nav[aria-label="Tags"] a:focus-visible {
+  color: var(--pico-primary);
+  border-color: var(--pico-primary);
+  background: color-mix(in oklab, var(--pico-primary) 10%, transparent);
+}
+
+nav[aria-label="Tags"] .tag-overflow {
+  border-style: dashed;
+}
+
+/* The tag index is the only page where a Tags nav is a direct child of the
+   article; give that browse-oriented list roomier targets. */
+main > article > nav[aria-label="Tags"] ul {
+  gap: 0.5rem;
+}
+
+main > article > nav[aria-label="Tags"] a {
+  min-height: 2rem;
+  padding: 0.25rem 0.85rem;
+  font-size: 0.9rem;
 }
 
 /* Post layout: Contents is a reserved column, never overlaid on the body. */
@@ -445,7 +678,9 @@ main > article > aside nav ul {
 
 main > article > aside li {
   margin: 0;
-  padding: 0;
+  /* The rule doubles as the marker for the section being read. */
+  border-left: 2px solid transparent;
+  padding: 0 0 0 0.5rem;
 }
 
 main > article > aside li ul {
@@ -468,9 +703,26 @@ main > article > aside a:hover {
   color: var(--pico-primary);
 }
 
+/* Marks the heading the reader is currently at (set by theme.js). */
+main > article > aside a[aria-current] {
+  color: var(--pico-primary);
+  font-weight: 600;
+}
+
+main > article > aside li:has(> a[aria-current]) {
+  border-left-color: var(--pico-primary);
+}
+
 /* Social icons - adapt to theme */
 footer img {
   filter: brightness(0) saturate(100%);
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+footer a:hover img,
+footer a:focus-visible img {
+  opacity: 1;
 }
 
 [data-theme="dark"] footer img {
