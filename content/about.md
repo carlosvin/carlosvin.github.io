@@ -6,6 +6,7 @@ aliases: ["/langs/en/about"]
 date: 2025-08-15
 template: page.html
 in_search_index: false
+include_in_feeds: false
 extra:
   unlisted: true
 ---
