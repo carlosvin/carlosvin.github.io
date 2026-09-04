@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Isolated Integration Tests with pytest-scenarios</title>
+  <meta name="description" content="Use pytest-scenarios to create isolated integration test data that cleans itself up automatically.">
+  <meta name="keywords" content="python,testing,pytest,mongodb,integration-testing">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Carlos Martin Sanchez">
+  <meta name="theme-color" content="#a2c11c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#13171f" media="(prefers-color-scheme: dark)">
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="https://carlosvin.github.io/pr-preview/pr-134/rss.xml">
+  
+
+  <meta property="og:title" content="Isolated Integration Tests with pytest-scenarios">
+<meta property="og:description" content="Use pytest-scenarios to create isolated integration test data that cleans itself up automatically.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="My software engineering journey">
+<meta property="og:url" content="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://carlosvin.github.io/pr-preview/pr-134/img/android-chrome-192x192.png">
+<link rel="canonical" href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/">
+
+
+
+<meta property="article:published_time" content="2026-01-03T00:00:00Z">
+
+
+
+
+<meta property="article:tag" content="python">
+
+<meta property="article:tag" content="testing">
+
+<meta property="article:tag" content="pytest">
+
+<meta property="article:tag" content="mongodb">
+
+<meta property="article:tag" content="integration-testing">
+
+
+
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Isolated Integration Tests with pytest-scenarios">
+<meta name="twitter:description" content="Use pytest-scenarios to create isolated integration test data that cleans itself up automatically.">
+<meta name="twitter:image" content="https://carlosvin.github.io/pr-preview/pr-134/img/android-chrome-192x192.png">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-134/#website",
+      "url": "https://carlosvin.github.io/pr-preview/pr-134",
+      "name": "My software engineering journey",
+      "description": "Documenting a personal journey through software engineering, AI, and programming. This blog features deep dives, practical guides, and recent learnings for both seasoned and aspiring developers.",
+      "publisher": { "@id": "https://carlosvin.github.io/pr-preview/pr-134/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-134/#person",
+      "name": "Carlos Martin Sanchez",
+      "url": "https://carlosvin.github.io/pr-preview/pr-134",
+      "sameAs": [
+        "https://github.com/carlosvin",
+        "https://linkedin.com/in/carlosvin",
+        "https://carlosvin.github.io/pr-preview/pr-134/atom.xml"
+        
+      ]
+    }
+    
+    ,{
+      "@type": "BlogPosting",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests//#article",
+      "isPartOf": { "@id": "https://carlosvin.github.io/pr-preview/pr-134/#website" },
+      "author": { "@id": "https://carlosvin.github.io/pr-preview/pr-134/#person" },
+      "headline": "Isolated Integration Tests with pytest-scenarios",
+      "description": "Use pytest-scenarios to create isolated integration test data that cleans itself up automatically.",
+      "datePublished": "2026-01-03T00:00:00Z",
+      "dateModified": "2026-01-03T00:00:00Z",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/" },
+      "url": "https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/",
+      "image": "https://carlosvin.github.io/pr-preview/pr-134/img/android-chrome-192x192.png",
+      "publisher": { "@id": "https://carlosvin.github.io/pr-preview/pr-134/#person" },
+      "articleSection": "Blog",
+      "keywords": [
+        "python",
+        "testing",
+        "pytest",
+        "mongodb",
+        "integration-testing"
+        
+      ],
+      "inLanguage": "en",
+      "wordCount": 376
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/",
+      "url": "https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/",
+      "name": "Isolated Integration Tests with pytest-scenarios",
+      "isPartOf": { "@id": "https://carlosvin.github.io/pr-preview/pr-134/#website" },
+      "about": { "@id": "https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests//#article" },
+      "description": "Use pytest-scenarios to create isolated integration test data that cleans itself up automatically.",
+      "inLanguage": "en"
+    }
+    
+  ]
+}
+</script>
+
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.classless.lime.min.css">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-134/css/base.css">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-134/giallo-light.css" id="syntax-light">
+  <link rel="stylesheet" href="https://carlosvin.github.io/pr-preview/pr-134/giallo-dark.css" id="syntax-dark" disabled>
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("theme");
+        var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (theme !== "dark" && theme !== "light") theme = "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.style.colorScheme = theme;
+        var darkSheet = document.getElementById("syntax-dark");
+        var lightSheet = document.getElementById("syntax-light");
+        if (darkSheet && lightSheet) {
+          darkSheet.disabled = theme !== "dark";
+          lightSheet.disabled = theme === "dark";
+        }
+      } catch (e) { }
+    })();
+  </script>
+
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-134/img/favicon.ico" sizes="any">
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-134/img/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="https://carlosvin.github.io/pr-preview/pr-134/img/android-chrome-192x192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="https://carlosvin.github.io/pr-preview/pr-134/img/apple-touch-icon.png">
+  <link rel="manifest" href="https://carlosvin.github.io/pr-preview/pr-134/manifest.json">
+
+  <script type="speculationrules">
+    {
+      "prerender": [{
+        "where": {
+          "and": [
+            { "href_matches": "/*" },
+            { "not": { "href_matches": "https://*/*" } }
+          ]
+        }
+      }]
+    }
+  </script>
+  <script>
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "58k0hy1db4");
+  </script>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="b33a381d-0843-4a11-b306-74c285c39206"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"
+    integrity="sha512-0QarUp4p9r5IqUgSRyP89BHga45OpEd7VR8lbRkJkf48p/EhcU742fWUpKpoDyu9N6XYAEq/vz6m6z1OolnsDw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/theme-change@3.0.4/index.js"></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header>
+    <nav>
+  <ul>
+    <li>
+      <a class="brand" href="https://carlosvin.github.io/pr-preview/pr-134">
+        <img src="https://carlosvin.github.io/pr-preview/pr-134/img/android-chrome-192x192.png" alt="" width="32" height="32">
+        <span>My software engineering journey</span>
+      </a>
+    </li>
+  </ul>
+  <ul>
+    
+    <li><a href="https://carlosvin.github.io/pr-preview/pr-134/about">About</a></li>
+    
+    <li><a href="https://carlosvin.github.io/pr-preview/pr-134/tags">Tags</a></li>
+    <li>
+      <label>
+        Dark
+        <input type="checkbox" data-toggle-theme="dark,light" role="switch" aria-label="Dark mode">
+      </label>
+    </li>
+    <li>
+      <input id="search" type="search" placeholder="Search posts" aria-label="Search posts"
+        autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-controls="search-results"
+        aria-expanded="false" title="Press / to search">
+      <div id="search-results" hidden>
+        <p role="status" aria-live="polite"></p>
+        <ul role="listbox" aria-label="Search results"></ul>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+  </header>
+
+  <main id="main-content">
+    
+<article>
+  <header>
+    <h1>Isolated Integration Tests with pytest-scenarios</h1>
+    
+    <span class="post-meta"><time datetime="2026-01-03">Jan 3, 2026</time>
+    · <time datetime="PT2M">2 min read</time>
+    · <span>376 words</span>
+</span>
+
+    
+
+
+
+<nav aria-label="Tags">
+  <ul>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-134/tags/python/" title="All the posts in python">
+        python
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-134/tags/testing/" title="All the posts in testing">
+        testing
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-134/tags/pytest/" title="All the posts in pytest">
+        pytest
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-134/tags/mongodb/" title="All the posts in mongodb">
+        mongodb
+        
+      </a>
+    </li>
+    
+    
+    <li>
+      <a href="https://carlosvin.github.io/pr-preview/pr-134/tags/integration-testing/" title="All the posts in integration-testing">
+        integration-testing
+        
+      </a>
+    </li>
+    
+  </ul>
+</nav>
+
+
+  </header>
+
+  
+
+  
+<aside>
+  <nav aria-label="Contents">
+    <details open>
+      <summary>Contents</summary>
+      <ul>
+        
+        <li>
+          <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#the-problem">The Problem</a>
+          
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#the-solution-declarative-test-scenarios">The Solution: Declarative Test Scenarios</a>
+          
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#key-concepts">Key Concepts</a>
+          
+          <ul>
+            
+            <li>
+              <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#templates-define-defaults">Templates Define Defaults</a>
+            </li>
+            
+            <li>
+              <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#automatic-cleanup">Automatic Cleanup</a>
+            </li>
+            
+            <li>
+              <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#real-database-testing">Real Database Testing</a>
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#try-it-yourself">Try It Yourself</a>
+          
+          <ul>
+            
+            <li>
+              <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#quick-start">Quick Start</a>
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#installation">Installation</a>
+          
+        </li>
+        
+        <li>
+          <a href="https://carlosvin.github.io/pr-preview/pr-134/pytest-scenarios-isolated-integration-tests/#learn-more">Learn More</a>
+          
+        </li>
+        
+      </ul>
+    </details>
+  </nav>
+</aside>
+
+
+
+  <section>
+    <p>Integration tests are essential for catching bugs that unit tests miss—but they come with a notorious problem: <strong>shared state</strong>. When tests share a database, they become flaky, order-dependent, and painful to debug.</p>
+<p>What if each test could start with a clean slate, with exactly the data it needs, without manual cleanup or complex fixtures?</p>
+<p>That's what <a rel="external" href="https://github.com/carlosvin/pytest-scenarios"><code>pytest-scenarios</code></a> does.</p>
+<h2 id="the-problem">The Problem</h2>
+<p>Consider testing an e-commerce checkout system. You need to verify that:</p>
+<ul>
+<li>Active customers can complete orders</li>
+<li>Suspended customers are rejected</li>
+<li>Out-of-stock items fail gracefully</li>
+</ul>
+<p>Each scenario requires different data. With traditional approaches, you either share fixtures (tests interfere), manually clean up (boilerplate hell), or use transaction rollbacks (complex and misses commit-time bugs).</p>
+<h2 id="the-solution-declarative-test-scenarios">The Solution: Declarative Test Scenarios</h2>
+<p>With <code>pytest-scenarios</code>, you declare <em>what state you need</em>, and the plugin handles the rest:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="python"><span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">def</span><span class="z-l-1 z-d-1"> test_checkout_rejects_suspended_customer</span><span>(</span><span>scenario_builder</span><span>,</span><span> db</span><span>)</span><span>:</span></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">    #</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Arrange: Declare the scenario</span></span>
+<span class="giallo-l"><span>    scenario_builder</span><span>.</span><span>create</span><span>(</span><span>{</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2">        &quot;</span><span class="z-l-2 z-d-2">customers</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span> [</span><span>{</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-2 z-d-2">customer_id</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">user_1</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">status</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">suspended</span><span class="z-l-2 z-d-2">&quot;</span><span>}</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2">        &quot;</span><span class="z-l-2 z-d-2">products</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span> [</span><span>{</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-2 z-d-2">product_id</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">item_1</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">in_stock</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-7 z-d-7"> True</span><span>}</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2">        &quot;</span><span class="z-l-2 z-d-2">orders</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span> [</span><span>{</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-2 z-d-2">id</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">order_1</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">customer_id</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">user_1</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span><span class="z-l-8 z-d-8"> ...</span><span>}</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>    }</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">    #</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Act: Run your business logic</span></span>
+<span class="giallo-l"><span>    checkout</span><span class="z-l-5 z-d-5"> =</span><span> Checkout</span><span>(</span><span>db</span><span>)</span></span>
+<span class="giallo-l"><span>    result</span><span class="z-l-5 z-d-5"> =</span><span> checkout</span><span>.</span><span>process</span><span>(</span><span>order_id</span><span class="z-l-5 z-d-5">=</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-2 z-d-2">order_1</span><span class="z-l-2 z-d-2">&quot;</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">    #</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> Assert: Verify the outcome</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">    assert</span><span> result</span><span>.</span><span>success</span><span class="z-l-5 z-d-5"> is</span><span class="z-l-7 z-d-7"> False</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">    assert</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">not active</span><span class="z-l-2 z-d-2">&quot;</span><span class="z-l-5 z-d-5"> in</span><span> result</span><span>.</span><span>error</span></span></code></pre>
+<p>No manual cleanup. No fixture dependencies. Each test is completely isolated.</p>
+<h2 id="key-concepts">Key Concepts</h2>
+<h3 id="templates-define-defaults">Templates Define Defaults</h3>
+<p>Define templates with sensible defaults—tests only override what matters:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="python"><span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">#</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> tests/templates/customers.py</span></span>
+<span class="giallo-l"><span class="z-l-8 z-d-8">TEMPLATE</span><span class="z-l-5 z-d-5"> =</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2">    &quot;</span><span class="z-l-2 z-d-2">name</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">John Doe</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2">    &quot;</span><span class="z-l-2 z-d-2">email</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">john.doe@example.test</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span class="z-l-2 z-d-2">    &quot;</span><span class="z-l-2 z-d-2">status</span><span class="z-l-2 z-d-2">&quot;</span><span>:</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">active</span><span class="z-l-2 z-d-2">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><h3 id="automatic-cleanup">Automatic Cleanup</h3>
+<p>The plugin clears all managed collections <em>before each test</em>. Even if a test fails, the next test starts fresh.</p>
+<h3 id="real-database-testing">Real Database Testing</h3>
+<p>Tests run against a real MongoDB instance, catching issues that mocks would miss: query errors, index problems, schema mismatches.</p>
+<h2 id="try-it-yourself">Try It Yourself</h2>
+<p>I've created a complete runnable example that demonstrates <code>pytest-scenarios</code> with a simple e-commerce checkout system.</p>
+<p>👉 <strong><a rel="external" href="https://github.com/carlosvin/pytest-scenarios/tree/main/examples">View the example on GitHub</a></strong></p>
+<p>The example includes:</p>
+<ul>
+<li>A <a rel="external" href="https://github.com/carlosvin/pytest-scenarios/blob/main/examples/src/checkout.py"><code>Checkout</code> class</a> with real business logic</li>
+<li><a rel="external" href="https://github.com/carlosvin/pytest-scenarios/blob/main/examples/tests/integration/test_checkout.py">Integration tests</a> covering happy paths and edge cases</li>
+<li><a rel="external" href="https://github.com/carlosvin/pytest-scenarios/tree/main/examples/tests/templates">Templates</a> for customers, products, and orders</li>
+</ul>
+<h3 id="quick-start">Quick Start</h3>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">git</span><span class="z-l-2 z-d-2"> clone</span><span class="z-l-2 z-d-2"> https://github.com/carlosvin/pytest-scenarios.git</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">cd</span><span class="z-l-2 z-d-2"> pytest-scenarios/examples</span></span></code></pre>
+<p>Then follow the instructions in the <a rel="external" href="https://github.com/carlosvin/pytest-scenarios/blob/main/examples/README.md">example README</a> to run the tests.</p>
+<h2 id="installation">Installation</h2>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="shellscript"><span class="giallo-l"><span class="z-l-1 z-d-1">pip</span><span class="z-l-2 z-d-2"> install</span><span class="z-l-2 z-d-2"> pytest-scenarios</span></span>
+<span class="giallo-l"><span class="z-l-6 z-l-i z-d-3 z-d-i">#</span><span class="z-l-6 z-l-i z-d-3 z-d-i"> or</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">uv</span><span class="z-l-2 z-d-2"> add</span><span class="z-l-2 z-d-2"> pytest-scenarios</span></span></code></pre>
+<p>Configure in <code>pyproject.toml</code>:</p>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="toml"><span class="giallo-l"><span>[</span><span>tool</span><span>.</span><span>pytest</span><span>.</span><span>ini_options</span><span>]</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">db-url</span><span> =</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">mongodb://127.0.0.1:27017</span><span class="z-l-2 z-d-2">&quot;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">db-name</span><span> =</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">my_test_db</span><span class="z-l-2 z-d-2">&quot;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">templates-path</span><span> =</span><span class="z-l-2 z-d-2"> &quot;</span><span class="z-l-2 z-d-2">tests/templates</span><span class="z-l-2 z-d-2">&quot;</span></span></code></pre><h2 id="learn-more">Learn More</h2>
+<ul>
+<li>📦 <a rel="external" href="https://pypi.org/project/pytest-scenarios/">PyPI Package</a></li>
+<li>📁 <a rel="external" href="https://github.com/carlosvin/pytest-scenarios">GitHub Repository</a></li>
+<li>📖 <a rel="external" href="https://github.com/carlosvin/pytest-scenarios/tree/main/examples">Example Project &amp; README</a></li>
+</ul>
+<hr />
+<p>Stop fighting flaky integration tests. Let <code>pytest-scenarios</code> handle the isolation while you focus on what matters: testing your business logic.</p>
+
+  </section>
+
+  
+<nav aria-label="Adjacent posts">
+  
+  <a href="https://carlosvin.github.io/pr-preview/pr-134/building-ai-promptable-fullstack-apps/">
+    <small>Newer</small>
+    <span>Building AI-Promptable Full-Stack Apps with TanStack Start</span>
+  </a>
+  
+  
+  <a href="https://carlosvin.github.io/pr-preview/pr-134/about/">
+    <small>Older</small>
+    <span>About</span>
+  </a>
+  
+</nav>
+
+
+
+  <footer>
+    <div id="comments"></div>
+    <script>
+      (function () {
+        var theme = document.documentElement.getAttribute("data-theme") === "dark" ? "github-dark" : "github-light";
+        var script = document.createElement("script");
+        script.src = "https://utteranc.es/client.js";
+        script.setAttribute("repo", "carlosvin/carlosvin.github.io");
+        script.setAttribute("issue-term", "title");
+        script.setAttribute("theme", theme);
+        script.setAttribute("crossorigin", "anonymous");
+        script.async = true;
+        document.getElementById("comments").appendChild(script);
+      })();
+    </script>
+  </footer>
+</article>
+
+  </main>
+
+  <footer>
+    <nav>
+      <small>&copy; 2026 Carlos Martin Sanchez | Powered by <a
+          href="https://www.getzola.org/">Zola</a>
+      </small>
+      <ul>
+  
+  <li>
+    <a href="https://github.com/carlosvin"
+      target="_blank" rel="noopener">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub"
+        width="32" height="32">
+    </a>
+  </li>
+  
+  <li>
+    <a href="https://linkedin.com/in/carlosvin"
+      target="_blank" rel="noopener">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn"
+        width="32" height="32">
+    </a>
+  </li>
+  
+  <li>
+    <a href="https://carlosvin.github.io/pr-preview/pr-134/atom.xml"
+      >
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/rss.svg" alt="RSS"
+        width="32" height="32">
+    </a>
+  </li>
+  
+</ul>
+
+    </nav>
+  </footer>
+
+  <script src="https://carlosvin.github.io/pr-preview/pr-134/js/theme.js" defer></script>
+  <script src="https://carlosvin.github.io/pr-preview/pr-134/js/search.js" defer
+    data-search-index="https://carlosvin.github.io/pr-preview/pr-134/search_index.en.json"></script>
+</body>
+
+</html>
