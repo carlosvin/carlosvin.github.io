@@ -1,7 +1,8 @@
+{%- set here = current_path | default(value="/") -%}
 <nav>
   <ul>
     <li>
-      <a class="brand" href="{{ get_url(path='') }}">
+      <a class="brand" href="{{ get_url(path='') }}" {% if here == "/" %}aria-current="page"{% endif %}>
         <img src="{{ get_url(path='img/android-chrome-192x192.png') }}" alt="" width="32" height="32">
         <span>{{ config.title }}</span>
       </a>
@@ -9,16 +10,17 @@
   </ul>
   <ul>
     {% for section in config.extra.nav_sections %}
-    <li><a href="{{ get_url(path=section.path) }}">{{ section.title }}</a></li>
+    {% set section_prefix = "/" ~ section.path %}
+    <li><a href="{{ get_url(path=section.path) }}" {% if here is starting_with(pat=section_prefix) %}aria-current="page"{% endif %}>{{ section.title }}</a></li>
     {% endfor %}
-    <li><a href="{{ get_url(path='tags') }}">Tags</a></li>
+    <li><a href="{{ get_url(path='tags') }}" {% if here is starting_with(pat="/tags") %}aria-current="page"{% endif %}>Tags</a></li>
     <li>
       <label>
         Dark
         <input type="checkbox" data-toggle-theme="dark,light" role="switch" aria-label="Dark mode">
       </label>
     </li>
-    <li>
+    <li class="nav-search">
       <input id="search" type="search" placeholder="Search posts" aria-label="Search posts"
         autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-controls="search-results"
         aria-expanded="false" title="Press / to search">
