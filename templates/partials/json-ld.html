@@ -58,8 +58,9 @@
           "item": "{{ og_url }}"
         }
       ]
-    },
-    {
+    }
+    {% if not page.path is starting_with(pat="/about") and (page.extra.article_type or page.taxonomies.tags) %}
+    ,{
       "@type": "{% if page.extra.article_type %}{{ page.extra.article_type }}{% elif page.taxonomies.tags %}TechArticle{% else %}BlogPosting{% endif %}",
       "@id": "{{ og_url }}/#article",
       "isPartOf": { "@id": "{{ config.base_url }}/#website" },
@@ -96,15 +97,20 @@
       {% endif -%}
       "inLanguage": "{{ page.lang | default(value=config.default_language) }}",
       "wordCount": {{ page.word_count }}
-    },
-    {
-      "@type": "WebPage",
+    }
+    {% endif %}
+    ,{
+      "@type": "{% if page.path is starting_with(pat='/about') %}AboutPage{% else %}WebPage{% endif %}",
       "@id": "{{ og_url }}",
       "url": "{{ og_url }}",
       "name": "{{ title }}",
       "isPartOf": { "@id": "{{ config.base_url }}/#website" },
       "breadcrumb": { "@id": "{{ og_url }}/#breadcrumb" },
+      {% if not page.path is starting_with(pat="/about") and (page.extra.article_type or page.taxonomies.tags) %}
       "about": { "@id": "{{ og_url }}/#article" },
+      {% elif page.path is starting_with(pat="/about") %}
+      "about": { "@id": "{{ config.base_url }}/#person" },
+      {% endif %}
       "description": "{{ description }}",
       "inLanguage": "{{ page.lang | default(value=config.default_language) }}"
     }

@@ -387,4 +387,28 @@ test.describe("golden flows", () => {
     const linkedinLink = page.locator('footer a[href="https://linkedin.com/in/carlosvin"]');
     await expect(linkedinLink).toHaveAttribute("rel", /me/);
   });
+
+  test("about page emits AboutPage schema and links to Person entity without BlogPosting node", async ({
+    page,
+  }) => {
+    await page.goto("/about/");
+
+    const jsonLdScript = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLdScript).toBeAttached();
+
+    const jsonLdContent = await jsonLdScript.textContent();
+    expect(jsonLdContent).toBeTruthy();
+    const data = JSON.parse(jsonLdContent!);
+    const types = data["@graph"].map((node: any) => node["@type"]);
+
+    expect(types).toContain("AboutPage");
+    expect(types).toContain("Person");
+    expect(types).toContain("WebSite");
+    expect(types).toContain("BreadcrumbList");
+    expect(types).not.toContain("BlogPosting");
+    expect(types).not.toContain("TechArticle");
+
+    const aboutPageNode = data["@graph"].find((node: any) => node["@type"] === "AboutPage");
+    expect(aboutPageNode.about["@id"]).toMatch(/#person$/);
+  });
 });
