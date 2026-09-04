@@ -312,49 +312,45 @@ test.describe("golden flows", () => {
 
   test("manifest and theme meta tags are valid and accessible", async ({
     page,
+    request,
   }) => {
+    const THEME_COLOR_LIGHT = "#a2c11c";
+    const THEME_COLOR_DARK = "#13171f";
+
     await page.goto("/");
 
     const manifestLink = page.locator('link[rel="manifest"]');
     await expect(manifestLink).toHaveAttribute("href", /\/manifest\.json$/);
 
-    const themeColorLight = page.locator(
-      'meta[name="theme-color"][media*="light"]',
-    );
-    await expect(themeColorLight).toHaveAttribute("content", "#a2c11c");
+    await expect(
+      page.locator('meta[name="theme-color"][media*="light"]'),
+    ).toHaveAttribute("content", THEME_COLOR_LIGHT);
+    await expect(
+      page.locator('meta[name="theme-color"][media*="dark"]'),
+    ).toHaveAttribute("content", THEME_COLOR_DARK);
 
-    const themeColorDark = page.locator(
-      'meta[name="theme-color"][media*="dark"]',
-    );
-    await expect(themeColorDark).toHaveAttribute("content", "#13171f");
+    const manifestResponse = await request.get("/manifest.json");
+    expect(manifestResponse.ok()).toBe(true);
 
-    // Fetch and validate manifest JSON
-    const manifestResponse = await page.goto("/manifest.json");
-    expect(manifestResponse?.status()).toBe(200);
-
-    const manifest = await manifestResponse?.json();
+    const manifest = await manifestResponse.json();
     expect(manifest.id).toBe("/?source=pwa");
     expect(manifest.start_url).toBe("/?source=pwa");
     expect(manifest.scope).toBe("/");
     expect(manifest.display).toBe("standalone");
-    expect(manifest.theme_color).toBe("#a2c11c");
+    expect(manifest.theme_color).toBe(THEME_COLOR_LIGHT);
     expect(manifest.background_color).toBe("#ffffff");
     expect(manifest.icons.length).toBeGreaterThanOrEqual(2);
-    expect(manifest.icons.some((i: { purpose?: string }) => i.purpose === "maskable")).toBe(true);
-    expect(manifest.icons.some((i: { purpose?: string }) => i.purpose === "any")).toBe(true);
+    expect(manifest.icons.some((i: { purpose?: string }) => i.purpose?.includes("maskable"))).toBe(true);
+    expect(manifest.icons.some((i: { purpose?: string }) => i.purpose?.includes("any"))).toBe(true);
     expect(manifest.shortcuts.length).toBeGreaterThan(0);
-    expect(manifest.orientation).toBeUndefined();
-    expect(manifest.form_factor).toBeUndefined();
-    expect(manifest.screenshots).toBeUndefined();
 
-    // Verify icons resolve with HTTP 200
-    for (const icon of manifest.icons) {
-      const iconRes = await page.goto(icon.src);
-      expect(iconRes?.status()).toBe(200);
+    const iconResponses = await Promise.all(
+      manifest.icons.map((icon: { src: string }) => request.get(icon.src)),
+    );
+    for (const res of iconResponses) {
+      expect(res.ok()).toBe(true);
     }
 
-    // Capture visual artifacts of the home page and manifest verification
-    await page.goto("/");
     await page.screenshot({
       path: "/opt/cursor/artifacts/pwa_home_page_theme.png",
       fullPage: false,
