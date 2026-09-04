@@ -5,10 +5,14 @@
 {% else %}
 {% set tags_list = [] %}
 {% endif %}
+{# Listings pass max_tags so a heavily tagged post cannot drown its own card. #}
+{% set limit = max_tags | default(value=0) %}
+{% set overflow = tags_list | length - limit %}
 {% if tags_list %}
 <nav aria-label="Tags">
   <ul>
     {% for tag in tags_list %}
+    {% if limit == 0 or loop.index0 < limit %}
     {% set tag_name = tag.name | default(value=tag) %}
     <li>
       <a href="{{ get_taxonomy_url(kind='tags', name=tag_name) }}" title="All the posts in {{ tag_name }}">
@@ -18,7 +22,11 @@
         {% endif %}
       </a>
     </li>
+    {% endif %}
     {% endfor %}
+    {% if limit > 0 and overflow > 0 %}
+    <li><span class="tag-overflow" title="{{ overflow }} more tag{% if overflow > 1 %}s{% endif %} on this post">+{{ overflow }}</span></li>
+    {% endif %}
   </ul>
 </nav>
 {% endif %}
