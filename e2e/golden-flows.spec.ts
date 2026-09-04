@@ -309,4 +309,55 @@ test.describe("golden flows", () => {
     expect(tagLabels).toContain("cpp");
     expect(tagLabels).not.toContain("c++");
   });
+
+  test("manifest and theme meta tags are valid and accessible", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const manifestLink = page.locator('link[rel="manifest"]');
+    await expect(manifestLink).toHaveAttribute("href", /\/manifest\.json$/);
+
+    const themeColorLight = page.locator(
+      'meta[name="theme-color"][media*="light"]',
+    );
+    await expect(themeColorLight).toHaveAttribute("content", "#a2c11c");
+
+    const themeColorDark = page.locator(
+      'meta[name="theme-color"][media*="dark"]',
+    );
+    await expect(themeColorDark).toHaveAttribute("content", "#13171f");
+
+    // Fetch and validate manifest JSON
+    const manifestResponse = await page.goto("/manifest.json");
+    expect(manifestResponse?.status()).toBe(200);
+
+    const manifest = await manifestResponse?.json();
+    expect(manifest.id).toBe("/?source=pwa");
+    expect(manifest.start_url).toBe("/?source=pwa");
+    expect(manifest.scope).toBe("/");
+    expect(manifest.display).toBe("standalone");
+    expect(manifest.theme_color).toBe("#a2c11c");
+    expect(manifest.background_color).toBe("#ffffff");
+    expect(manifest.icons.length).toBeGreaterThanOrEqual(2);
+    expect(manifest.icons.some((i: { purpose?: string }) => i.purpose === "maskable")).toBe(true);
+    expect(manifest.icons.some((i: { purpose?: string }) => i.purpose === "any")).toBe(true);
+    expect(manifest.shortcuts.length).toBeGreaterThan(0);
+    expect(manifest.orientation).toBeUndefined();
+    expect(manifest.form_factor).toBeUndefined();
+    expect(manifest.screenshots).toBeUndefined();
+
+    // Verify icons resolve with HTTP 200
+    for (const icon of manifest.icons) {
+      const iconRes = await page.goto(icon.src);
+      expect(iconRes?.status()).toBe(200);
+    }
+
+    // Capture visual artifacts of the home page and manifest verification
+    await page.goto("/");
+    await page.screenshot({
+      path: "/opt/cursor/artifacts/pwa_home_page_theme.png",
+      fullPage: false,
+    });
+  });
 });
