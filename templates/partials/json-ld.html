@@ -8,13 +8,30 @@
       "url": "{{ config.base_url }}",
       "name": "{{ config.title }}",
       "description": "{{ config.description }}",
+      "inLanguage": "{{ config.default_language }}",
       "publisher": { "@id": "{{ config.base_url }}/#person" }
     },
     {
       "@type": "Person",
       "@id": "{{ config.base_url }}/#person",
       "name": "{{ config.author }}",
-      "url": "{{ config.base_url }}",
+      "url": "{{ get_url(path='about') }}",
+      {% if config.extra.author_job_title -%}
+      "jobTitle": "{{ config.extra.author_job_title }}",
+      {% endif -%}
+      {% if config.extra.author_works_for -%}
+      "worksFor": {
+        "@type": "Organization",
+        "name": "{{ config.extra.author_works_for }}"
+      },
+      {% endif -%}
+      {% if config.extra.author_knows_about -%}
+      "knowsAbout": [
+        {% for topic in config.extra.author_knows_about -%}
+        "{{ topic }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ],
+      {% endif -%}
       "sameAs": [
         {% if config.extra.social_links -%}
         {% for social in config.extra.social_links -%}
@@ -25,7 +42,26 @@
     }
     {% if page is defined %}
     ,{
-      "@type": "BlogPosting",
+      "@type": "BreadcrumbList",
+      "@id": "{{ og_url }}/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ config.base_url }}/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "{{ title }}",
+          "item": "{{ og_url }}"
+        }
+      ]
+    }
+    {% if not page.path is starting_with(pat="/about") and (page.extra.article_type or page.taxonomies.tags) %}
+    ,{
+      "@type": "{% if page.extra.article_type %}{{ page.extra.article_type }}{% elif page.taxonomies.tags %}TechArticle{% else %}BlogPosting{% endif %}",
       "@id": "{{ og_url }}/#article",
       "isPartOf": { "@id": "{{ config.base_url }}/#website" },
       "author": { "@id": "{{ config.base_url }}/#person" },
@@ -37,26 +73,140 @@
       "url": "{{ og_url }}",
       "image": "{{ og_image }}",
       "publisher": { "@id": "{{ config.base_url }}/#person" },
-      "articleSection": "Blog",
+      "articleSection": "Software Engineering",
       {% if page.taxonomies.tags -%}
       "keywords": [
         {% for tag in page.taxonomies.tags -%}
         "{{ tag }}"{% if not loop.last %},{% endif %}
         {% endfor %}
       ],
+      "about": [
+        {% for tag in page.taxonomies.tags -%}
+        {
+          "@type": "Thing",
+          "name": "{{ tag }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ],
+      {% endif -%}
+      {% if page.extra.dependencies -%}
+      "dependencies": "{{ page.extra.dependencies }}",
+      {% endif -%}
+      {% if page.extra.proficiency_level -%}
+      "proficiencyLevel": "{{ page.extra.proficiency_level }}",
       {% endif -%}
       "inLanguage": "{{ page.lang | default(value=config.default_language) }}",
       "wordCount": {{ page.word_count }}
-    },
-    {
-      "@type": "WebPage",
+    }
+    {% endif %}
+    ,{
+      "@type": "{% if page.path is starting_with(pat='/about') %}AboutPage{% else %}WebPage{% endif %}",
       "@id": "{{ og_url }}",
       "url": "{{ og_url }}",
       "name": "{{ title }}",
       "isPartOf": { "@id": "{{ config.base_url }}/#website" },
+      "breadcrumb": { "@id": "{{ og_url }}/#breadcrumb" },
+      {% if not page.path is starting_with(pat="/about") and (page.extra.article_type or page.taxonomies.tags) %}
       "about": { "@id": "{{ og_url }}/#article" },
+      {% elif page.path is starting_with(pat="/about") %}
+      "about": { "@id": "{{ config.base_url }}/#person" },
+      {% endif %}
       "description": "{{ description }}",
       "inLanguage": "{{ page.lang | default(value=config.default_language) }}"
+    }
+    {% elif term is defined %}
+    ,{
+      "@type": "BreadcrumbList",
+      "@id": "{{ og_url }}/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ config.base_url }}/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Tags",
+          "item": "{{ get_url(path='tags') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ term.name }}",
+          "item": "{{ og_url }}"
+        }
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "{{ og_url }}",
+      "url": "{{ og_url }}",
+      "name": "{{ title }}",
+      "isPartOf": { "@id": "{{ config.base_url }}/#website" },
+      "breadcrumb": { "@id": "{{ og_url }}/#breadcrumb" },
+      "description": "{{ description }}",
+      "inLanguage": "{{ config.default_language }}",
+      "image": "{{ og_image }}",
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": {{ term.pages | length }},
+        "itemListElement": [
+          {% for p in term.pages -%}
+          {
+            "@type": "ListItem",
+            "position": {{ loop.index }},
+            "name": "{{ p.title }}",
+            "url": "{{ p.permalink }}"
+          }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
+      }
+    }
+    {% elif taxonomy is defined %}
+    ,{
+      "@type": "BreadcrumbList",
+      "@id": "{{ og_url }}/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ config.base_url }}/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Tags",
+          "item": "{{ og_url }}"
+        }
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "{{ og_url }}",
+      "url": "{{ og_url }}",
+      "name": "{{ title }}",
+      "isPartOf": { "@id": "{{ config.base_url }}/#website" },
+      "breadcrumb": { "@id": "{{ og_url }}/#breadcrumb" },
+      "description": "{{ description }}",
+      "inLanguage": "{{ config.default_language }}",
+      "image": "{{ og_image }}",
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": {{ terms | length }},
+        "itemListElement": [
+          {% for t in terms -%}
+          {
+            "@type": "ListItem",
+            "position": {{ loop.index }},
+            "name": "{{ t.name }}",
+            "url": "{{ get_taxonomy_url(kind='tags', name=t.name) }}"
+          }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
+      }
     }
     {% else %}
     ,{

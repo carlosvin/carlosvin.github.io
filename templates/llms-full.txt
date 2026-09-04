@@ -1,0 +1,53 @@
+{% include "partials/llms-header.txt" -%}
+
+## Author Profile & Entity Context
+
+- **Author**: {{ config.author }}
+- **Role**: {{ config.extra.author_job_title }} at {{ config.extra.author_works_for }}
+- **Specializations**: {{ config.extra.author_knows_about | join(sep=", ") }}
+- **Profiles**:
+  - Personal Site: {{ config.base_url }}
+  - About: {{ get_url(path="about") }}
+{%- for link in config.extra.social_links %}
+{%- if link.url %}
+  - {{ link.name }}: {{ link.url }}
+{%- endif %}
+{%- endfor %}
+
+---
+
+{% set section = get_section(path="_index.md") -%}
+
+## Post Catalog
+{% set_global post_index = 0 -%}
+{% for post in section.pages | sort(attribute="date") | reverse -%}
+{% if post.date and not post.extra.unlisted | default(value=false) -%}
+{% set_global post_index = post_index + 1 -%}
+### {{ post_index }}. {{ post.title }}
+- **URL**: {{ post.permalink }}
+- **Published**: {{ post.date | date(format="%Y-%m-%d") }}{% if post.updated and post.updated != post.date %} (updated {{ post.updated | date(format="%Y-%m-%d") }}){% endif %}
+- **Summary**: {{ post.description | default(value=post.summary) }}
+{%- if post.taxonomies.tags %}
+- **Tags**: {{ post.taxonomies.tags | join(sep=", ") }}
+{%- endif %}
+{%- if post.reading_time %}
+- **Reading time**: {{ post.reading_time }} min
+{%- endif %}
+
+{% endif -%}
+{% endfor %}
+
+## Tag Index
+{% set tags_taxonomy = get_taxonomy(kind="tags") -%}
+{% for term in tags_taxonomy.items | sort(attribute="name") -%}
+- **{{ term.name }}** ({{ term.pages | length }} post{% if term.pages | length != 1 %}s{% endif %}): {{ get_taxonomy_url(kind="tags", name=term.name) }}
+{% endfor %}
+
+---
+
+## Machine-Readable Sitemap & Feeds
+
+- RSS Feed: {{ get_url(path="rss.xml", trailing_slash=false) }}
+- Atom Feed: {{ get_url(path="atom.xml", trailing_slash=false) }}
+- Sitemap: {{ get_url(path="sitemap.xml", trailing_slash=false) }}
+- LLMS Digest: {{ get_url(path="llms.txt", trailing_slash=false) }}
