@@ -381,6 +381,10 @@ test.describe("golden flows", () => {
     const authorLink = page.locator('link[rel="author"]');
     await expect(authorLink).toHaveAttribute("href", /about/);
 
+    const describedByLink = page.locator('link[rel="describedby"]');
+    await expect(describedByLink).toHaveAttribute("href", /llms\.txt$/);
+    await expect(describedByLink).toHaveAttribute("type", "text/plain");
+
     const githubLink = page.locator('footer a[href="https://github.com/carlosvin"]');
     await expect(githubLink).toHaveAttribute("rel", /me/);
 
@@ -410,5 +414,36 @@ test.describe("golden flows", () => {
 
     const aboutPageNode = data["@graph"].find((node: any) => node["@type"] === "AboutPage");
     expect(aboutPageNode.about["@id"]).toMatch(/#person$/);
+  });
+
+  test("llms.txt is generated at build time with post and tag indexes", async ({
+    page,
+  }) => {
+    const response = await page.goto("/llms.txt");
+    expect(response?.status()).toBe(200);
+
+    const body = (await page.locator("body").innerText()).trim();
+    expect(body).toMatch(/^# My software engineering journey/m);
+    expect(body).toContain("Staff AI Enterprise Architect");
+    expect(body).toContain("## Posts");
+    expect(body).toContain(
+      "[Building AI-Promptable Full-Stack Apps with TanStack Start]",
+    );
+    expect(body).toContain("## Tags");
+    expect(body).toContain("[react](https://carlosvin.github.io/tags/react/)");
+    expect(body).not.toContain("[About]");
+  });
+
+  test("llms-full.txt includes expanded post catalog metadata", async ({
+    page,
+  }) => {
+    const response = await page.goto("/llms-full.txt");
+    expect(response?.status()).toBe(200);
+
+    const body = (await page.locator("body").innerText()).trim();
+    expect(body).toContain("## Post Catalog");
+    expect(body).toContain("### 1. Building AI-Promptable Full-Stack Apps with TanStack Start");
+    expect(body).toContain("**Tags**:");
+    expect(body).toContain("## Machine-Readable Sitemap & Feeds");
   });
 });
