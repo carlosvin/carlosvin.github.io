@@ -362,8 +362,8 @@ test.describe("golden flows", () => {
         name: "Building AI-Promptable Full-Stack Apps with TanStack Start",
       }),
     });
-    await expect(card.locator("nav[aria-label='Tags'] a")).toHaveCount(4);
-    await expect(card.locator(".tag-overflow")).toHaveText("+9");
+    await expect(card.locator("nav[aria-label='Tags'] a")).toHaveCount(3);
+    await expect(card.locator(".tag-overflow")).toHaveText("+10");
 
     // The post itself still lists every tag.
     await page.goto("/building-ai-promptable-fullstack-apps/");
