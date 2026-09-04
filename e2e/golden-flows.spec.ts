@@ -440,4 +440,57 @@ test.describe("golden flows", () => {
     expect(tagLabels).toContain("cpp");
     expect(tagLabels).not.toContain("c++");
   });
+
+  test("manifest and theme meta tags are valid and accessible", async ({
+    page,
+    request,
+  }) => {
+    const THEME_COLOR_LIGHT = "#a2c11c";
+    const THEME_COLOR_DARK = "#13171f";
+    const PWA_ENTRY_URL = "/?source=pwa";
+
+    await page.goto("/");
+
+    const manifestLink = page.locator('link[rel="manifest"]');
+    await expect(manifestLink).toHaveAttribute("href", /\/manifest\.json$/);
+
+    await expect(
+      page.locator('meta[name="theme-color"][media*="light"]'),
+    ).toHaveAttribute("content", THEME_COLOR_LIGHT);
+    await expect(
+      page.locator('meta[name="theme-color"][media*="dark"]'),
+    ).toHaveAttribute("content", THEME_COLOR_DARK);
+
+    const manifestResponse = await request.get("/manifest.json");
+    expect(manifestResponse.ok()).toBe(true);
+
+    const manifest = await manifestResponse.json();
+    expect(manifest.id).toBe(PWA_ENTRY_URL);
+    expect(manifest.start_url).toBe(PWA_ENTRY_URL);
+    expect(manifest.scope).toBe("/");
+    expect(manifest.display).toBe("standalone");
+    expect(manifest.theme_color).toBe(THEME_COLOR_LIGHT);
+    expect(manifest.background_color).toBe("#ffffff");
+    expect(manifest.icons.length).toBeGreaterThanOrEqual(2);
+
+    const hasPurpose = (purpose: string) =>
+      manifest.icons.some(
+        (icon: { purpose?: string }) => icon.purpose?.includes(purpose),
+      );
+    expect(hasPurpose("maskable")).toBe(true);
+    expect(hasPurpose("any")).toBe(true);
+    expect(manifest.shortcuts.length).toBeGreaterThan(0);
+
+    const iconResponses = await Promise.all(
+      manifest.icons.map((icon: { src: string }) => request.head(icon.src)),
+    );
+    for (const res of iconResponses) {
+      expect(res.ok()).toBe(true);
+    }
+
+    await page.screenshot({
+      path: "/opt/cursor/artifacts/pwa_home_page_theme.png",
+      fullPage: false,
+    });
+  });
 });
