@@ -87,6 +87,63 @@
     });
   }
 
+  // Marks the outline entry for the section the reader is currently in.
+  function initTocHighlight() {
+    var sections = [];
+    document.querySelectorAll("main > article > aside nav a").forEach(function (link) {
+      var id = decodeURIComponent((link.getAttribute("href") || "").split("#")[1] || "");
+      var heading = id && document.getElementById(id);
+      if (heading) {
+        sections.push({ heading: heading, link: link });
+      }
+    });
+    if (!sections.length) {
+      return;
+    }
+
+    var active = null;
+    var queued = false;
+
+    function update() {
+      queued = false;
+      // A section becomes current once its heading passes the upper quarter.
+      var line = window.innerHeight * 0.25;
+      var current = sections[0];
+      for (var i = 0; i < sections.length; i++) {
+        if (sections[i].heading.getBoundingClientRect().top > line) {
+          break;
+        }
+        current = sections[i];
+      }
+      // The last section can be too short to ever reach the line.
+      var scrolled = window.scrollY + window.innerHeight;
+      if (scrolled >= document.documentElement.scrollHeight - 2) {
+        current = sections[sections.length - 1];
+      }
+
+      if (current.link === active) {
+        return;
+      }
+      if (active) {
+        active.removeAttribute("aria-current");
+      }
+      active = current.link;
+      active.setAttribute("aria-current", "true");
+    }
+
+    function schedule() {
+      if (queued) {
+        return;
+      }
+      queued = true;
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    update();
+  }
+
   applyThemeExtras(currentTheme());
 
   new MutationObserver(function () {
@@ -100,9 +157,11 @@
     document.addEventListener("DOMContentLoaded", function () {
       applyThemeExtras(currentTheme());
       initCodeCopy();
+      initTocHighlight();
     });
   } else {
     applyThemeExtras(currentTheme());
     initCodeCopy();
+    initTocHighlight();
   }
 })();
