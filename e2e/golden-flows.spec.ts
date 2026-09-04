@@ -332,7 +332,7 @@ test.describe("golden flows", () => {
     expect(types).toContain("WebPage");
 
     const personNode = data["@graph"].find((node: any) => node["@type"] === "Person");
-    expect(personNode.jobTitle).toBe("Engineering Lead");
+    expect(personNode.jobTitle).toBe("Staff AI Enterprise Architect");
     expect(personNode.worksFor.name).toBe("MongoDB");
     expect(personNode.knowsAbout).toContain("TanStack Router");
     expect(personNode.sameAs).toContain("https://github.com/carlosvin");

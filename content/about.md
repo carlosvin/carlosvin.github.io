@@ -24,9 +24,7 @@ Over the years, I've had the privilege of working with industry in great compani
 
 ### Now
 
-Currently, I lead the Sales Apps team at [MongoDB](https://www.mongodb.com/). Our mission is to boost the productivity of the GTM organization by building innovative software solutions. We leverage the [FARM stack](https://www.mongodb.com/resources/basics/farm-stack)—[FastAPI](https://fastapi.tiangolo.com/), [React](https://reactjs.org/), [MongoDB](https://www.mongodb.com/), and [Next.js](https://nextjs.org/)—along with [TanStack Router](https://tanstack.com/router), to create tools that help our sales teams work more efficiently and effectively.
-
-We also created a sister team with the same mission of improving GTM efficiency, but focused on leveraging AI to solve problems.
+Currently, I serve as Staff AI Enterprise Architect at [MongoDB](https://www.mongodb.com/). Prior to this role, I led the Sales Apps engineering team and helped establish our sister team focused on leveraging AI to solve enterprise problems. In my work, I focus on building scalable enterprise solutions and modern AI-promptable architectures, leveraging technologies like [FastAPI](https://fastapi.tiangolo.com/), [React](https://reactjs.org/), [MongoDB](https://www.mongodb.com/), [Next.js](https://nextjs.org/), and [TanStack Router & Start](https://tanstack.com/router).
 
 ## Contact
 
