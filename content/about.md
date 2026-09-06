@@ -28,7 +28,7 @@ At [MongoDB](https://www.mongodb.com/), I previously led the Sales Apps team. Ou
 
 ### Now
 
-I'm now Staff Enterprise Architect – AI at [MongoDB](https://www.mongodb.com/). The work shifted from shipping one team's tools to helping engineering adopt AI well—standardizing how we build and run agents, and tracking delivery, quality, and business value so we know what to scale.
+I'm now Staff AI Enterprise Architect at [MongoDB](https://www.mongodb.com/). The work shifted from shipping one team's tools to helping engineering adopt AI well—standardizing how we build and run agents, and tracking delivery, quality, and business value so we know what to scale.
 
 ## Contact
 

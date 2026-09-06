@@ -22,7 +22,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `zola serve --interface 127.0.0.1 --port ${port}`,
+    command: `zola build && ./scripts/flatten-llms-output.sh && python3 -m http.server ${port} --bind 127.0.0.1 --directory public`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

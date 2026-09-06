@@ -1,0 +1,20 @@
+{% include "partials/llms-header.txt" -%}
+{% set section = get_section(path="_index.md") -%}
+
+## Posts
+{% for post in section.pages | sort(attribute="date") | reverse -%}
+{% if post.date and not post.extra.unlisted | default(value=false) %}
+- [{{ post.title }}]({{ post.permalink }}): {{ post.description | default(value=post.summary) }}
+{% endif -%}
+{% endfor %}
+
+## Tags
+{% set tags_taxonomy = get_taxonomy(kind="tags") -%}
+{% for term in tags_taxonomy.items | sort(attribute="name") -%}
+- [{{ term.name }}]({{ get_taxonomy_url(kind="tags", name=term.name) }}): {{ term.pages | length }} post{% if term.pages | length != 1 %}s{% endif %}.
+{% endfor %}
+
+## Optional
+
+- [Full LLM digest]({{ get_url(path="llms-full.txt", trailing_slash=false) }}): Expanded post metadata and author context.
+- [Sitemap]({{ get_url(path="sitemap.xml", trailing_slash=false) }}): Machine-readable URL index.

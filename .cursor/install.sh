@@ -44,3 +44,4 @@ fi
 
 zola --version
 zola build
+./scripts/flatten-llms-output.sh
