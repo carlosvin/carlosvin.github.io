@@ -104,10 +104,7 @@ test.describe("golden flows", () => {
   });
 
   test("browse tags, filter, then open a tagged post", async ({ page }) => {
-    await page.goto("/");
-
-    await headerNav(page).getByRole("link", { name: "Tags", exact: true }).click();
-    await expect(page).toHaveURL(/\/tags\/?$/);
+    await page.goto("/tags/");
     await expect(
       page.getByRole("heading", { level: 1, name: "All Tags" }),
     ).toBeVisible();
@@ -375,18 +372,24 @@ test.describe("golden flows", () => {
   });
 
   test("the nav marks the section the reader is in", async ({ page }) => {
-    await page.goto("/tags/python/");
-    await expect(
-      headerNav(page).getByRole("link", { name: "Tags", exact: true }),
-    ).toHaveAttribute("aria-current", "page");
-
     await page.goto("/about/");
     await expect(
       headerNav(page).getByRole("link", { name: "About", exact: true }),
     ).toHaveAttribute("aria-current", "page");
     await expect(
-      headerNav(page).getByRole("link", { name: "Tags", exact: true }),
+      headerNav(page).getByRole("link", { name: "LLM", exact: true }),
     ).not.toHaveAttribute("aria-current", "page");
+  });
+
+  test("nav includes a link to the LLM index", async ({ page }) => {
+    await page.goto("/");
+
+    const llmLink = headerNav(page).getByRole("link", { name: "LLM", exact: true });
+    await expect(llmLink).toHaveAttribute("href", /llms\.txt$/);
+
+    const response = await page.goto("/llms.txt");
+    expect(response?.status()).toBe(200);
+    await expect(page.locator("body")).toContainText("Staff AI Enterprise Architect");
   });
 
   test("the contents outline follows the heading being read", async ({
