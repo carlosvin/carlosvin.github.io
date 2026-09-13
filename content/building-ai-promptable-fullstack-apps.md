@@ -6,6 +6,8 @@ date: 2026-03-08
 updated: 2026-08-31
 lang: en
 toc: true
+extra:
+  preview_image: /img/building-ai-promptable-fullstack-apps.png
 taxonomies:
   tags: ["ai", "react", "typescript", "tanstack-start", "tanstack-ai", "zod", "fullstack", "architecture", "mongodb", "mantine", "tanstack-router", "web-development", "playwright"]
 ---
