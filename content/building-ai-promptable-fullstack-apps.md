@@ -54,6 +54,10 @@ For quality and testing, [Biome](https://biomejs.dev/) handles fast linting and 
 
 The core principle is simple: **every external service is accessed through an interface**. This makes the database, auth, AI provider, and observability layer swappable without touching application code.
 
+![Runtime architecture: the UI layer and AI tool definitions both route through createServerFn server functions; client tools can call the UI layer directly; only the server layer talks to the repository interface.](/img/building-ai-promptable-fullstack-apps-architecture.png)
+
+*Runtime flow: server tools call the same `createServerFn` endpoints as route loaders and UI handlers; client tools (navigation, cache invalidation) run in the browser. The repository layer is a swappable interface — never accessed directly by AI tools.*
+
 ### The Repository Pattern
 
 All data access goes through a `ReadRepository` + `WritableRepository` interface that speaks exclusively in repository-layer types:
