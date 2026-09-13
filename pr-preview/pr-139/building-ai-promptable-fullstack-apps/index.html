@@ -225,7 +225,7 @@
         
       ],
       "inLanguage": "en",
-      "wordCount": 2130
+      "wordCount": 2206
     }
     
     ,{
@@ -349,8 +349,8 @@
     
     <span class="post-meta"><time datetime="2026-03-08">Mar 8, 2026</time>
     · <span class="post-meta__updated">Updated <time datetime="2026-08-31">Aug 31, 2026</time></span>
-    · <time datetime="PT9M">9 min read</time>
-    · <span>2130 words</span>
+    · <time datetime="PT10M">10 min read</time>
+    · <span>2206 words</span>
 </span>
 
     
@@ -695,6 +695,8 @@ The guidelines and architecture in this post are based on real-world experience 
 <p>For quality and testing, <a rel="external" href="https://biomejs.dev/">Biome</a> handles fast linting and formatting, <a rel="external" href="https://vitest.dev/">Vitest</a> runs unit tests in jsdom, and <a rel="external" href="https://playwright.dev/">Playwright</a> executes end-to-end tests against in-memory seed data.</p>
 <h2 id="architecture-everything-behind-an-interface">Architecture: Everything Behind an Interface</h2>
 <p>The core principle is simple: <strong>every external service is accessed through an interface</strong>. This makes the database, auth, AI provider, and observability layer swappable without touching application code.</p>
+<p><img src="/img/building-ai-promptable-fullstack-apps-architecture.png" alt="Runtime architecture: the UI layer and AI tool definitions both route through createServerFn server functions; client tools can call the UI layer directly; only the server layer talks to the repository interface." /></p>
+<p><em>Runtime flow: server tools call the same <code>createServerFn</code> endpoints as route loaders and UI handlers; client tools (navigation, cache invalidation) run in the browser. The repository layer is a swappable interface — never accessed directly by AI tools.</em></p>
 <h3 id="the-repository-pattern">The Repository Pattern</h3>
 <p>All data access goes through a <code>ReadRepository</code> + <code>WritableRepository</code> interface that speaks exclusively in repository-layer types:</p>
 <pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> interface</span><span class="z-l-8 z-d-8"> ReadRepository</span><span> {</span></span>
