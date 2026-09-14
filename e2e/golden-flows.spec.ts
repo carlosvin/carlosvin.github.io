@@ -74,7 +74,7 @@ test.describe("golden flows", () => {
   test("search finds a post and opens it", async ({ page }) => {
     await page.goto("/");
 
-    const search = page.getByRole("searchbox", { name: "Search posts" });
+    const search = page.getByRole("combobox", { name: "Search posts" });
     await search.click();
     await search.pressSequentially("python", { delay: 30 });
 
