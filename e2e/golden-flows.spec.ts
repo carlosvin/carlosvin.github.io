@@ -342,9 +342,12 @@ test.describe("golden flows", () => {
     await expect(heading).toBeVisible();
     const title = (await heading.innerText()).trim();
 
-    // Click the card body, away from the title link itself.
-    const box = (await firstCard.boundingBox())!;
-    await page.mouse.click(box.x + box.width - 12, box.y + box.height / 2);
+    // Tall preview-image cards extend below the viewport; scroll before clicking.
+    await firstCard.scrollIntoViewIfNeeded();
+    // Click the excerpt through the card overlay; avoid the tag footer above it.
+    const excerpt = firstCard.locator("> p");
+    const box = (await excerpt.boundingBox())!;
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
     await expect(postHeading(page)).toHaveText(title);
   });
 
