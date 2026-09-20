@@ -368,7 +368,7 @@ test.describe("golden flows", () => {
     // The post itself still lists every tag.
     await page.goto("/building-ai-promptable-fullstack-apps/");
     const postTags = page.locator(
-      "main > article > header nav[aria-label='Tags'] a",
+      "main > article > nav[aria-label='Tags'] a",
     );
     expect(await postTags.count()).toBe(13);
     await expect(page.locator("main > article .tag-overflow")).toHaveCount(0);
@@ -439,7 +439,7 @@ test.describe("golden flows", () => {
 
     // The tag pill nav, unlike the meta, must not show the duplicate.
     const tagLabels = await page
-      .locator("main > article header nav[aria-label='Tags'] a")
+      .locator("main > article > nav[aria-label='Tags'] a")
       .evaluateAll((links) =>
         links.map((a) => (a.textContent ?? "").trim()),
       );
