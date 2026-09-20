@@ -342,9 +342,12 @@ test.describe("golden flows", () => {
     await expect(heading).toBeVisible();
     const title = (await heading.innerText()).trim();
 
-    // Click the card body, away from the title link itself.
-    const box = (await firstCard.boundingBox())!;
-    await page.mouse.click(box.x + box.width - 12, box.y + box.height / 2);
+    // Tall preview-image cards extend below the viewport; scroll before clicking.
+    await firstCard.scrollIntoViewIfNeeded();
+    // Click the excerpt through the card overlay; avoid the tag footer above it.
+    const excerpt = firstCard.locator("> p");
+    const box = (await excerpt.boundingBox())!;
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
     await expect(postHeading(page)).toHaveText(title);
   });
 
@@ -365,7 +368,7 @@ test.describe("golden flows", () => {
     // The post itself still lists every tag.
     await page.goto("/building-ai-promptable-fullstack-apps/");
     const postTags = page.locator(
-      "main > article > header nav[aria-label='Tags'] a",
+      "main > article > nav[aria-label='Tags'] a",
     );
     expect(await postTags.count()).toBe(13);
     await expect(page.locator("main > article .tag-overflow")).toHaveCount(0);
@@ -436,7 +439,7 @@ test.describe("golden flows", () => {
 
     // The tag pill nav, unlike the meta, must not show the duplicate.
     const tagLabels = await page
-      .locator("main > article header nav[aria-label='Tags'] a")
+      .locator("main > article > nav[aria-label='Tags'] a")
       .evaluateAll((links) =>
         links.map((a) => (a.textContent ?? "").trim()),
       );
