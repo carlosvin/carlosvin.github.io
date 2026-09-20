@@ -1,9 +1,9 @@
 ---
 title: "Building AI-Promptable Full-Stack Apps with TanStack Start"
 slug: building-ai-promptable-fullstack-apps
-description: "A reproducible full-stack architecture for AI-promptable web apps with TanStack Start, three-layer schemas, swappable interfaces, and Agent Skills."
+description: "A simpler full-stack contract for AI-promptable apps: one Repository, schema trust boundaries, and TypeScript that stays typed after parse."
 date: 2026-03-08
-updated: 2026-08-31
+updated: 2026-09-20
 lang: en
 toc: true
 extra:
@@ -12,66 +12,64 @@ taxonomies:
   tags: ["ai", "react", "typescript", "tanstack-start", "tanstack-ai", "zod", "fullstack", "architecture", "mongodb", "mantine", "tanstack-router", "web-development", "playwright"]
 ---
 
-Every time our team started a new full-stack React app, we faced the same problem: rebuild the same architecture from scratch. JWT authentication, database access, UI shell, TanStack AI integration, observability, and server boundaries — all the plumbing that has nothing to do with the actual business logic.
+Every new full-stack React app used to restart the same plumbing: JWT auth, database access, UI shell, TanStack AI, observability, and server boundaries. The business logic was never the expensive part.
 
-It started with internal tools at [MongoDB](https://www.mongodb.com), but the patterns apply to any full-stack web application — a customer-facing product, an admin dashboard, or a side project. After shipping several apps this way, we extracted the architecture into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) that is **promptable by design**: the same server functions power the UI and AI tools, external services stay behind interfaces, and the entire contract is codified as **Agent Skills** so coding agents don't break invariants.
+It started with internal tools at [MongoDB](https://www.mongodb.com), but the patterns apply to any web app. We extracted them into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) that is **promptable by design**: one `Repository` interface, the same server functions for UI and AI, and an **Agent Skill** that encodes the contract so coding agents don't invent a second architecture.
 
 - [🔗 GitHub Repository](https://github.com/carlosvin/tanstack-fullstack-ai-template)
 - [🚀 Live Demo](https://fullstack-promptable-app-example.netlify.app)
 
 > **Note:**  
-> The guidelines and architecture in this post are based on real-world experience building internal and customer-facing tools. They reflect lessons learned around schema boundaries, isomorphic execution, and agent tooling in production.
+> This post tracks the current architecture skill (`tanstack-promptable-fullstack-app-template` v1.31). The skill is the contract; this article is the tour.
 
 ## The Problem
 
-Most full-stack web applications share a remarkable amount of infrastructure:
+Most full-stack apps share the same foundation:
 
-- A database-backed API with CRUD operations and filtering
-- Authentication and traceability from request headers
-- An accessible component library with dark/light mode
-- Safe server boundaries (preventing secret/driver leaks into client bundles)
-- Error monitoring, structured logging, and performance tracing
-- Increasingly, an AI assistant that can query data, navigate, and perform permitted mutations
+- CRUD behind a database
+- Auth and audit from request headers
+- An accessible UI with dark/light mode
+- Safe server/client splits
+- Logging, error tracking, tracing
+- An AI assistant that can query, navigate, and mutate with the same rules as the UI
 
-Yet every project starts from `pnpm init` and rebuilds all of this. The code looks similar but is never quite the same, making it hard to maintain consistent patterns across a growing portfolio of applications.
+Without a shared contract, every repo reinvented those pieces slightly differently. Agents then followed the local drift.
 
 ## The Chosen Tech Stack
 
-We chose [TanStack Start](https://tanstack.com/start) as the foundation — a full-stack React meta-framework that gives us:
+[TanStack Start](https://tanstack.com/start) is the fixed core: **Start**, **Router**, and **AI**.
 
-- **Server functions** (`createServerFn`) that act as type-safe RPC endpoints
-- **File-based routing** with [TanStack Router](https://tanstack.com/router) (see also our [production TanStack Router conventions](@/tanstack-router-opinionated-conventions-production-react-apps.md))
-- **SSR** via Nitro, deployable anywhere (Netlify, Node, Docker)
-- **Middleware pipeline** that runs on requests to build typed context (`next({ context })`)
+- **Server functions** (`createServerFn`) as type-safe RPC
+- **File-based routing** with [TanStack Router](https://tanstack.com/router) (see our [production router conventions](@/tanstack-router-opinionated-conventions-production-react-apps.md))
+- **SSR** via Nitro
+- **Middleware** that builds typed request context with `next({ context })`
 
-For the UI, [Mantine](https://mantine.dev/) gives us 120+ accessible components, dark/light mode out of the box, responsive mobile-first props, and a theme system that keeps things consistent without writing custom CSS. For icons, we standardize on [`lucide-react`](https://lucide.dev/).
+Everything else is swappable behind interfaces: database, AI provider, observability, UI kit, schema library. The reference app uses [Mantine](https://mantine.dev/), [`lucide-react`](https://lucide.dev/), [TanStack AI](https://tanstack.com/ai), [Zod](https://zod.dev/), [Biome](https://biomejs.dev/), [Vitest](https://vitest.dev/), and [Playwright](https://playwright.dev/). Those concrete packages live in the companion skill `reference-tech-stack`, not in the architecture contract.
 
-For AI, [TanStack AI](https://tanstack.com/ai) provides a unified interface across OpenAI, Anthropic, Gemini, and Netlify AI Gateway — with first-class support for tool calling, client-side tools, and streaming.
+## Architecture: One Interface Per External
 
-For quality and testing, [Biome](https://biomejs.dev/) handles fast linting and formatting, [Vitest](https://vitest.dev/) runs unit tests in jsdom, and [Playwright](https://playwright.dev/) executes end-to-end tests against in-memory seed data.
+**Every external service sits behind an interface.** The database, AI adapter, and observability layer can change without touching routes or tools.
 
-## Architecture: Everything Behind an Interface
+![Runtime architecture: the UI layer and AI tool definitions both route through createServerFn server functions; client tools can call the UI layer directly; only the server layer talks to a single Repository interface.](./building-ai-promptable-fullstack-apps-architecture.png)
 
-The core principle is simple: **every external service is accessed through an interface**. This makes the database, auth, AI provider, and observability layer swappable without touching application code.
+*Runtime flow: server tools call the same `createServerFn` endpoints as loaders and UI handlers; client tools (navigation, cache invalidation) run in the browser. Data access is a single `Repository` — never reached directly by AI tools.*
 
-![Runtime architecture: the UI layer and AI tool definitions both route through createServerFn server functions; client tools can call the UI layer directly; only the server layer talks to the repository interface.](./building-ai-promptable-fullstack-apps-architecture.png)
+### One `Repository`, not read vs write
 
-*Runtime flow: server tools call the same `createServerFn` endpoints as route loaders and UI handlers; client tools (navigation, cache invalidation) run in the browser. The repository layer is a swappable interface — never accessed directly by AI tools.*
-
-### The Repository Pattern
-
-All data access goes through a `ReadRepository` + `WritableRepository` interface that speaks exclusively in repository-layer types:
+Auth for writes lives on **POST server functions** (`requireAuthMiddleware`), not on a second repository type. Reads and writes share one interface that speaks **repository-layer types only**:
 
 ```typescript
-export interface ReadRepository {
+export interface TraceabilityContext {
+  createdBy?: string
+  lastModifiedBy?: string
+}
+
+export interface Repository {
   getTasks(filter?: TaskRepoFilter): Promise<TaskRepo[]>
   getTask(taskId: string): Promise<TaskRepo | null>
   getDistinctValues(field: DistinctValueField): Promise<string[]>
   getUserProfile(email: string): Promise<UserProfileRepo | null>
   getUserAccess(email: string): Promise<UserAccessRepo | null>
-}
-
-export interface WritableRepository {
   createTask(input: TaskRepoInput, trace?: TraceabilityContext): Promise<TaskRepo>
   updateTask(taskId: string, input: Partial<TaskRepoInput>, trace?: TraceabilityContext): Promise<TaskRepo | null>
   deleteTask(taskId: string): Promise<boolean>
@@ -80,182 +78,114 @@ export interface WritableRepository {
 
 Two implementations ship with the template:
 
-1. **SeedRepository** — in-memory with sample data. Zero configuration, works instantly for local dev and CI.
-2. **MongoRepository** — production MongoDB implementation.
+1. **SeedRepository** — in-memory sample data for local dev and CI
+2. **MongoRepository** — production MongoDB
 
-A factory function auto-detects which to use based on whether `MONGODB_URI` is set (or explicit `REPOSITORY_TYPE`). For development, you never need a database running.
+A factory picks one from `MONGODB_URI` (or explicit `REPOSITORY_TYPE`). You do not need a database to start.
 
-### Traceability on Writes
+An overlay repository (read-only upstream plus sparse user overrides) is an **optional** composition pattern in the skill — not a core read/write factory split.
 
-Notice the `TraceabilityContext` argument on `WritableRepository` methods:
+### Traceability on writes
+
+Mutations take a `TraceabilityContext` built from the auth ticket (`createWriteTrace` / `updateWriteTrace`), not a bare email argument. Implementations persist `createdBy` / `lastModifiedBy` on the entity so UI and AI writes stay auditable.
+
+## App Boundaries and Type Safety
+
+This is the part the skill now stresses most: **untrusted values become typed only at trust boundaries**. After that, TypeScript keeps the interior honest.
+
+```
+URL search  →  validateSearch  →  loader  →  tools schema  →  server fn
+                                                      ↓ Schema.parse()
+                                              repository schema  →  Repository
+                                                      ↓ Schema.parse()
+                                              tools schema  →  UI or AI
+```
+
+### Three schema layers
+
+1. **Repository** (`repository.ts`): DB-shaped documents. No `.describe()` required. Types inferred from the validator.
+2. **Tools / server functions** (`schemas.ts`): API-shaped, shared by `createServerFn` `.inputValidator(Schema)` and AI `toolDefinition({ inputSchema })`. Field `.describe()` (and optional `.meta({ unit, format, title })`) is what the model sees.
+3. **Router search**: local `validateSearch` schemas. That **is** the trust boundary for URL params.
+
+UI and AI consume **tools-layer types only**. They never import repository schemas.
+
+### Parse at the edge, infer inside
+
+Layer switches happen in mapper functions. The last step is always `Schema.parse()`:
 
 ```typescript
-export interface TraceabilityContext {
-  createdBy?: string
-  lastModifiedBy?: string
+// Inbound: tools layer → repository layer
+function toRepoCreateInput(tool: z.infer<typeof TaskCreateToolSchema>): TaskRepoInput {
+  return TaskRepoInputSchema.parse({
+    title: tool.title,
+    status: tool.status,
+  })
+}
+
+// Outbound: repository row → tools layer (UI loaders and AI tools)
+function toToolTask(row: TaskRepo): z.infer<typeof TaskToolSchema> {
+  return TaskToolSchema.parse({
+    id: row.id,
+    title: row.title,
+    status: row.status,
+  })
 }
 ```
 
-Instead of passing ad-hoc email strings across handlers, write operations pass a structured traceability object built from the auth ticket (`createWriteTrace` on create, `updateWriteTrace` on update). Repositories persist these audit fields directly onto the entity (`createdBy` and `lastModifiedBy`), ensuring full auditability whether a mutation was triggered by the UI or by an AI tool call.
+The same rule applies to other untrusted edges: DB documents and external API JSON in repository implementations, `createServerFn` input, AI tool args, env (companion `observability-and-env`), and widget `onChange` values typed as bare `string`. Parse with the **same schema** — do not add `Array.find` helpers that duplicate enums.
 
-## The Three-Layer Schema Architecture
+### TypeScript after parse
 
-A common failure mode in full-stack TypeScript apps is type erasure or schema drift. We organize schemas into three distinct layers:
-
-```
-Route search schema (Layer 3: URL-shaped)
-       ↓ (loaderDeps / loader)
-Tools schema (Layer 2: API & AI-shaped, carries .describe())
-       ↓ (createServerFn handler mapping via Schema.parse)
-Repository schema (Layer 1: DB-shaped)
-       ↓
-Database / Repository Implementation
-```
-
-1. **Repository layer (`repository.ts`)**: Persisted DB document shapes. No `.describe()` needed here because these are internal.
-2. **Tools / Server function layer (`schemas.ts`)**: API-shaped schemas shared between `createServerFn` (`.inputValidator(Schema)`) and AI `toolDefinition({ inputSchema })`. Every field has `.describe()` so the LLM receives rich JSON Schema metadata explaining what each parameter means.
-3. **Router search layer**: Local `validateSearch` schemas in route files representing URL query parameters.
-
-### Boundary Mapping
-
-Layer switches happen strictly via mapper functions with `Schema.parse()` at each boundary:
+Once a value has crossed a boundary, keep **schema-inferred types** end-to-end. Prefer `satisfies`, `as const` tuples, discriminated unions, and exhaustive `switch` with `assertNever`. Do not widen back to `string` / `any` / `Record<string, unknown>` and re-parse with a homemade guard.
 
 ```typescript
-// Inbound: Tools layer → Repository layer
-const repoFilter = filter ? TaskRepoFilterSchema.parse(filter) : undefined
-const repoInput = TaskRepoInputSchema.parse(data)
+type TaskStatus = 'pending' | 'done'
 
-// Outbound: Repository row → Tools layer (for UI loaders & AI tools)
-export function toToolTask(row: TaskRepo): Task {
-  return TaskSchema.parse(row)
+const STATUS_LABEL = {
+  pending: 'Pending',
+  done: 'Done',
+} as const satisfies Record<TaskStatus, string>
+
+function labelForStatus(status: TaskStatus): string {
+  switch (status) {
+    case 'pending':
+      return STATUS_LABEL.pending
+    case 'done':
+      return STATUS_LABEL.done
+    default:
+      return assertNever(status)
+  }
 }
 ```
 
-After `Schema.parse()`, preserve inferred TypeScript types end-to-end — prefer `satisfies`, discriminated unions, narrow type guards, and exhaustive `switch` with `assertNever` over `any` or loose `as` type casts.
+Runtime validation checks the edges. TypeScript checks the interior. Hand-written interfaces define **behavior** (`Repository`, `AIAdapterService`) — not ad-hoc JSON shapes.
 
 > **Why Zod?**  
-> [ArkType](https://arktype.io/) is a great alternative and I personally like its syntax. We chose Zod for this template because of its broad ecosystem adoption and first-class tooling. Because the architecture is interface-first, you can swap to ArkType or Valibot by maintaining the same schema boundaries.
+> [ArkType](https://arktype.io/) and Valibot are valid alternatives. The skill is validator-agnostic: pick **one** library per app. The reference template uses Zod for ecosystem reach; swap by keeping the same layer and parse boundaries.
 
-## Server Execution Boundaries & Isomorphic Loaders
+## Server Execution Boundaries
 
-TanStack Start route **loaders are isomorphic**: they run on the server during SSR **and** in the browser during client-side SPA navigations.
+Route **loaders are isomorphic**: they run on the server during SSR **and** in the browser on SPA navigations. A route file is not server-only code.
 
-Treating route files as purely server-side code is a dangerous trap that can leak database drivers, secrets, or Node SDKs into client bundles.
+Keep routes thin (`createFileRoute`, `validateSearch`, `loaderDeps`, `loader`, `component`). Loaders only call exported `createServerFn` endpoints from `src/services/api/serverFns.ts`. Database clients, repo factories, and crypto live in `*.server.ts` (or `import '@tanstack/react-start/server-only'`). Internal singletons that must never be RPC-callable use `createServerOnlyFn`, not `createServerFn`.
 
-### The Rules We Enforce
+Vite `importProtection` with `behavior: 'error'` fails the build if drivers or secrets leak into the client bundle.
 
-- **Route files are thin**: They only declare `createFileRoute`, `validateSearch`, `loaderDeps`, `loader`, and `component`.
-- **No direct DB/repo imports in routes**: Loaders only call exported `createServerFn` endpoints from `src/services/api/serverFns.ts`.
-- **`*.server.ts` naming convention**: Database clients (`mongoClient.server.ts`), repository loaders (`getRepository.server.ts`), and crypto utilities (`jwt.server.ts`) use the `.server.ts` suffix or start with `import '@tanstack/react-start/server-only'`.
-- **`createServerOnlyFn` for internal singletons**: Internal factories that must **never** be client-callable (like DB connection getters) use `createServerOnlyFn` instead of `createServerFn`.
-- **Vite import protection**: `vite.config.ts` configures `importProtection` with `behavior: 'error'` to immediately fail the build if server files or sensitive packages enter the client bundle:
+## Request Context
 
-```typescript
-tanstackStart({
-  importProtection: {
-    behavior: 'error',
-    client: {
-      specifiers: ['mongodb', 'jose'],
-      files: ['**/services/db/**', '**/repository/*.server.ts', '**/env/**'],
-    },
-  },
-})
-```
+Middleware validates at the edge, then `next({ context })`. Start **infers** `context` from the chain. Handlers read `context.accessTicket` directly — no `as AuthContext`, no runtime "is this field present?" helpers.
 
-## Request Context & Middleware Pipeline
+Auth middleware decodes the JWT, loads profile and roles via `getRepository()`, and builds an **`AccessTicket`** (identity, roles, guards such as `requireTaskCreator`). Mutations chain `.middleware([requireAuthMiddleware, invalidateMiddleware])`. Queries stay unauthenticated by default.
 
-TanStack Start supports composable middleware where each middleware enriches context via `next({ context })`.
+`invalidateMiddleware` tells the client to `router.invalidate()` after a successful POST. Components do not invalidate by hand.
 
-### Auth via Typed Access Ticket
+Authorization is **server-enforced**. Hiding a button is not enough.
 
-The auth middleware (`src/middleware/auth.ts`) reads the JWT from the configured `AUTH_HEADER_NAME` (default: `Authorization`), extracts identity claims, loads the user's profile and roles from the repository, and constructs an **`AccessTicket`**:
+## Promptable by Design
+
+TanStack AI tools call the **same server functions** as loaders and UI handlers:
 
 ```typescript
-export const authMiddleware = createMiddleware().server(async ({ next, request }) => {
-  const authHeader = request.headers.get(AUTH_HEADER_NAME)
-  const identity = extractIdentityFromJwt(authHeader)
-
-  let profile = null
-  let roles: string[] = []
-
-  if (identity.email) {
-    const [userProfile, userAccess] = await Promise.all([
-      getReadRepository().getUserProfile(identity.email),
-      getReadRepository().getUserAccess(identity.email),
-    ])
-    profile = userProfile
-    roles = userAccess?.roles ?? []
-  }
-
-  const accessTicket = createAccessTicket({ identity, profile, roles })
-  return next({ context: { accessTicket } })
-})
-```
-
-The `AccessTicket` encapsulates user identity, roles, and authorization helpers (`requireTaskCreator`, `requireRole`).
-
-### Middleware Chaining
-
-We chain middleware to infer typed context on server functions:
-
-```typescript
-// Queries: GET server functions (unauthenticated by default)
-export const getTasks = createServerFn({ method: 'GET' })
-  .inputValidator(TaskFilterSchema.optional())
-  .handler(async ({ data: filter }) => {
-    const repoFilter = filter ? TaskRepoFilterSchema.parse(filter) : undefined
-    const rows = await getObservability({}).startSpan('getTasks', () => 
-      getReadRepository().getTasks(repoFilter)
-    )
-    return rows.map(toToolTask)
-  })
-
-// Mutations: POST server functions chain requireAuthMiddleware and invalidateMiddleware
-export const updateTask = createServerFn({ method: 'POST' })
-  .middleware([requireAuthMiddleware, invalidateMiddleware])
-  .inputValidator(UpdateTaskInputSchema)
-  .handler(async ({ data, context }) => {
-    const task = await getReadRepository().getTask(data.taskId)
-    if (!task) throw new HttpError(404, 'Task not found')
-    
-    // Server-enforced authorization guard
-    context.accessTicket.requireTaskCreator(task)
-    
-    const repoUpdates = TaskRepoInputSchema.partial().parse(data.updates)
-    const trace = updateWriteTrace(context.accessTicket.identity.email)
-    const row = await getObservability({}).startSpan('updateTask', () =>
-      getWritableRepository().updateTask(data.taskId, repoUpdates, trace)
-    )
-    return row ? toToolTask(row) : null
-  })
-```
-
-Key aspects of this pipeline:
-- **`requireAuthMiddleware`**: Enforces that `context.accessTicket` is authenticated for mutations; throws 401 if anonymous.
-- **`invalidateMiddleware`**: Instructs the client router to automatically call `router.invalidate()` after a successful POST mutation. Components never trigger manual invalidations.
-- **No manual context casts**: TypeScript automatically infers `context.accessTicket` from the middleware chain.
-
-## Centralized Observability & Env Validation
-
-Instead of scattering `process.env` calls across the codebase, we parse environment variables **once at startup** into a validated schema:
-
-```
-process.env → webServerEnv (server-only secrets + configs)
-            → shellSession (browser-safe projection: public env + app version)
-```
-
-1. **`src/env/webEnv.server.ts`**: Parses and validates `WebServerEnvSchema` lazily on first access.
-2. **`src/middleware/webEnv.ts`**: Injects `serverEnv` and `shellSession` into request context.
-3. **`getBrowserShellSession`**: A GET server function called by the root route loader (`__root.tsx`) to project safe app metadata and public config to the browser without exposing secrets or `window.__ENV__`.
-4. **Structured logging**: `createServerLogger('moduleName')` binds the validated log level and environment to [Pino](https://getpino.io/) loggers without reading `process.env` inside utility functions.
-5. **Error tracking**: Sentry is bootstrapped before application startup via `instrument.server.mts`. If `SENTRY_DSN` is not provided, a no-op implementation is used.
-
-## Promptable by Design: AI Tools on the Same Server Functions
-
-This is the pattern we are most excited about. TanStack AI tools call the **same server functions** that route loaders and UI event handlers use:
-
-```typescript
-// src/services/ai/tools.ts
 const getTasksToolDef = toolDefinition({
   name: 'getTasks',
   description: 'Get all tasks with optional filters. Supports status, priority, assignee, and search.',
@@ -263,83 +193,39 @@ const getTasksToolDef = toolDefinition({
 })
 
 export const getTasksTool = createSafeServerTool(getTasksToolDef, async (args) =>
-  getTasks({ data: TaskFilterSchema.parse(args) })
+  getTasks({ data: TaskFilterSchema.parse(args) }),
 )
 ```
 
-### Safe Tool Handlers
+`createSafeServerTool` turns `HttpError` 401/403/404 into `{ error, code }` so the agent can explain "you need to log in" instead of crashing the loop.
 
-Instead of letting thrown `HttpError`s crash the agent loop, `createSafeServerTool` wraps execution with `safeToolHandler()`. When an unauthorized mutation is attempted, it catches the 401/403/404 `HttpError` and returns a structured `{ error, code }` response.
+The skill requires **full tool coverage**: every repository method becomes a server tool, plus distinct-value tools for real filter options, plus client tools `navigate` and `invalidateRouter`. Chat is gated on `getAIAvailability()`. The client sends `browserContext` (timezone, locale, current path); the server injects it into the system prompt with a navigation manifest from the router. Every `chat()` call sets `agentLoopStrategy: maxIterations(10)`.
 
-The AI assistant can then explain the failure politely:
-- *401*: "You need to log in to create tasks."
-- *403*: "Only the task creator can edit or delete this task."
+## URL-as-State
 
-### Full Tool Coverage & Client Tools
+Filters, tabs, and selections live in validated search params with `loaderDeps` so loaders refetch only when those keys change. A project `Link` wrapper defaults to `search: true` so query state survives navigation. Shared `beforeLoad` and expensive reads belong on the **parent** layout; children consume parent loader data.
 
-The AI assistant is equipped with:
-- **Server tools**: `getTasks`, `getTask`, `getDistinctValues` (discovers real filter values like active assignees), `getUserProfile`, `getUserAccess`, `getAppRuntimeInfo`, `getCurrentUserContext`, `createTask`, `updateTask`, `deleteTask`.
-- **Client tools**: Executed directly in the browser via `@tanstack/ai-client`:
-  - **`navigate`**: Calls `router.navigate()` with validated routes and search params.
-  - **`invalidateRouter`**: Calls `router.invalidate()` so the UI immediately refreshes after AI mutations.
+Free-text search uses an uncontrolled input and a **debounced** navigate. Discrete filters navigate immediately.
 
-### Dynamic AI Context & Navigation Manifest
+## Agent Skills
 
-The chat endpoint (`POST /api/chat`) streams SSE responses using TanStack AI's `chat()`. The client attaches a `BrowserContext` (timezone, locale, current path, query string, full URL).
-
-The server injects this into the system prompt alongside a navigation manifest derived from the router (`buildAppNavigation(router)`). This lets the AI resolve relative references: when a user on `/tasks/task-123` says *"Summarize this task and mark it done"*, the assistant extracts `$taskId` from the current location context and acts on it immediately.
-
-```typescript
-const stream = chat({
-  adapter,
-  messages: convertMessagesToModelMessages(body.messages ?? []),
-  systemPrompts: [systemPrompt],
-  tools,
-  agentLoopStrategy: maxIterations(10), // Bounded agent loop
-})
-```
-
-All `chat()` invocations set an explicit `agentLoopStrategy: maxIterations(10)` to prevent runaway tool loops.
-
-## URL-as-State & Router Conventions
-
-We follow opinionated router conventions:
-
-- **URL-as-State**: Filters, pagination, and search queries live in URL search params validated with `validateSearch`. They are shareable, bookmarkable, and survive refresh.
-- **`loaderDeps` for caching**: Specify exact dependencies (`loaderDeps: ({ search }) => search`) so loaders only re-fetch when relevant search keys change.
-- **Debounced free-text search**: To avoid re-running loaders on every keystroke, free-text inputs use uncontrolled inputs (`defaultValue` from URL) and a debounced navigate callback. Discrete filters (dropdowns, segmented tabs) navigate immediately.
-- **Search-preserving `Link` component**: We ship a project-local `Link` wrapper with `search: true` as the default so current query parameters are preserved when navigating between tabs and pages.
-- **Parent layout loaders**: Shared beforeLoad guards and expensive profile reads belong on the parent layout (`__root.tsx`); child routes consume them via `useLoaderData` rather than repeating calls.
-
-## Distributing Best Practices via Agent Skills
-
-Architecture documentation in a wiki or README often goes unread. When developers work with AI coding agents (Cursor, Claude Code, Windsurf), agents can easily introduce anti-patterns unless given explicit guidelines.
-
-We packaged the entire architectural contract into **Agent Skills** published directly from the repository:
+The contract is published from the template so agents don't have to infer it from scattered READMEs:
 
 ```bash
-# Discover all available skills in this template repository
 npx skills add carlosvin/tanstack-fullstack-ai-template --list
 
-# Install the core architecture skill
 npx skills add carlosvin/tanstack-fullstack-ai-template --skill tanstack-promptable-fullstack-app-template
-
-# Install companion skills
 npx skills add carlosvin/tanstack-fullstack-ai-template --skill observability-and-env
 npx skills add carlosvin/tanstack-fullstack-ai-template --skill reference-tech-stack
 ```
 
-### The Three Published Skills
+1. **`tanstack-promptable-fullstack-app-template`** — vendor-agnostic architecture: one repository, three schema layers, trust-boundary parsing, isomorphic loaders, AI tool parity, URL-as-state, middleware-inferred context.
+2. **`observability-and-env`** — startup-parsed env, `webServerEnv` vs `shellSession`, logging and error-tracking bootstrap.
+3. **`reference-tech-stack`** — this template's package defaults (Zod, Mantine, MongoDB, jose, Biome, Vitest, Playwright, Netlify).
 
-1. **`tanstack-promptable-fullstack-app-template`** (Core Architecture): Vendor-agnostic contract enforcing three-layer schemas, isomorphic loader safety, server boundaries, AI tool parity, URL-as-state, and middleware request context.
-2. **`observability-and-env`**: Invariants for single-parse startup env, `webServerEnv` vs `shellSession`, Pino logging factories, and Sentry bootstrap.
-3. **`reference-tech-stack`**: Concrete package defaults for this reference implementation (Zod, Mantine, MongoDB, jose, Biome, Vitest, Playwright, Netlify).
-
-Whenever an AI agent generates new entities, server functions, or routes in projects using this skill, it adheres to these invariants automatically.
+Day-to-day ops (UI kit, chat wiring, test commands) live in the template's `AGENTS.md`. The skill is what agents must not break.
 
 ## Getting Started
-
-You can spin up the full template locally in seconds:
 
 ```bash
 git clone https://github.com/carlosvin/tanstack-fullstack-ai-template.git my-app
@@ -348,52 +234,37 @@ pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The app starts with in-memory seed data — a complete task management application with a responsive dashboard, filtered lists, detail views, task CRUD, and the AI chat drawer. No database, no API keys, and no environment variables required.
-
-### Testing and Validation
-
-Run the complete validation suite:
+Open [http://localhost:3000](http://localhost:3000). Seed data is enough for dashboard, lists, detail, CRUD, and the AI drawer. No database, API keys, or env vars required.
 
 ```bash
-pnpm format    # Auto-format with Biome
-pnpm lint      # Lint and typecheck with Biome + tsc
-pnpm test      # Run unit tests with Vitest
-pnpm test:e2e  # Run Playwright E2E tests against seed data
-pnpm build     # Verify production SSR build
+pnpm format && pnpm lint && pnpm test && pnpm test:e2e && pnpm build
 ```
 
-When you are ready to connect production services, configure the environment variables in `.env`:
+When you connect real services, the main switches are:
 
 | Variable | Purpose |
 | -------- | ------- |
-| `MONGODB_URI` | Connect a real MongoDB database (swaps from seed repository automatically) |
-| `GEMINI_API_KEY` or `OPENAI_API_KEY` | Enable the AI chat assistant (or deploy to Netlify for AI Gateway) |
-| `SENTRY_DSN` | Enable error and performance tracking |
-| `AUTH_HEADER_NAME` | Custom HTTP header for incoming JWTs (default: `Authorization`) |
+| `MONGODB_URI` | Swap seed repository for MongoDB |
+| `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT` | Enable chat (or deploy on Netlify AI Gateway) |
+| `SENTRY_DSN` | Error and performance tracking |
+| `AUTH_HEADER_NAME` | JWT header (default: `Authorization`) |
+
+Env is parsed **once at startup** into `webServerEnv` and a browser-safe `shellSession`. The root loader exposes only `getBrowserShellSession` — never `serverEnv` or `window.__ENV__`.
 
 ## Extending the Template
 
-Adding a new domain entity is a repeatable six-step workflow:
+Adding a domain entity is still a short, repeatable path:
 
-1. **Schemas**: Add repository-layer schemas in `repository.ts` and tools-layer schemas with `.describe()` in `schemas.ts`. Create bidirectional mappers with `Schema.parse()`.
-2. **Repository**: Declare methods on `ReadRepository` and `WritableRepository` (accepting `TraceabilityContext`). Implement in `seedRepository.ts` and `mongoRepository.server.ts`.
-3. **Server Functions**: Create GET queries and POST mutations (with `requireAuthMiddleware` and `invalidateMiddleware`) in `serverFns.ts`.
-4. **AI Tools**: Expose the server functions as AI tools in `tools.ts` via `createSafeServerTool()`. Add distinct-value discovery tools if applicable.
-5. **Routes & UI**: Add file-based routes in `src/routes/` with `validateSearch`, `loaderDeps`, and component UI.
-6. **Tests**: Add unit tests for repository mappers and E2E specs in `e2e/` using seed data.
+1. **Schemas** — repository + tools + search layers; mappers that end in `Schema.parse()`.
+2. **Repository** — methods on `Repository` with `TraceabilityContext` on writes; implement seed and production.
+3. **Server functions** — GET queries; POST mutations with `requireAuthMiddleware` and `invalidateMiddleware`.
+4. **AI tools** — `toolDefinition` + `createSafeServerTool` for every server function; client navigate/invalidate in the chat shell.
+5. **Routes** — thin files, `validateSearch`, `loaderDeps`, parent layouts for shared work.
+6. **Tests** — mapper/unit tests and Playwright against seed data.
 
 ## Conclusion
 
-The goal of this template is not to create another rigid framework — it is to provide a **production-ready starting point** for full-stack, AI-promptable applications.
-
-By combining:
-- Type-safe server functions and isomorphic loaders
-- Three-layer schema validation with Zod
-- Repository and service interfaces for complete swappability
-- AI tools sharing the exact same code paths and authorization as the UI
-- Codified Agent Skills for reliable AI-assisted engineering
-
-You get a solid, maintainable foundation that saves weeks of repetitive scaffolding on every new project.
+The template is a **starting point**, not another framework. The current skill is simpler than the first write-up of this architecture: one `Repository`, parse at the app's edges, keep inferred types on the inside, and let AI tools share the same server functions as the UI.
 
 - 📁 [GitHub Repository](https://github.com/carlosvin/tanstack-fullstack-ai-template)
 - 🚀 [Live Demo](https://fullstack-promptable-app-example.netlify.app)
