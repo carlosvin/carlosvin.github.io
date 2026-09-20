@@ -1,7 +1,7 @@
 ---
 title: "Building AI-Promptable Full-Stack Apps with TanStack Start"
 slug: building-ai-promptable-fullstack-apps
-description: "A simpler full-stack contract for AI-promptable apps: one Repository, schema trust boundaries, and TypeScript that stays typed after parse."
+description: "A reproducible full-stack architecture for AI-promptable apps: one Repository, schema trust boundaries, and TypeScript that stays typed after parse."
 date: 2026-03-08
 updated: 2026-09-20
 lang: en
@@ -14,13 +14,13 @@ taxonomies:
 
 Every new full-stack React app used to restart the same plumbing: JWT auth, database access, UI shell, TanStack AI, observability, and server boundaries. The business logic was never the expensive part.
 
-It started with internal tools at [MongoDB](https://www.mongodb.com), but the patterns apply to any web app. We extracted them into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) that is **promptable by design**: one `Repository` interface, the same server functions for UI and AI, and an **Agent Skill** that encodes the contract so coding agents don't invent a second architecture.
+It started with internal tools at [MongoDB](https://www.mongodb.com), but the patterns apply to any web app. We extracted them into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) that is **promptable by design**: one Repository interface, the same server functions for UI and AI, and an **Agent Skill** that encodes the contract so coding agents don't invent a second architecture.
 
 - [🔗 GitHub Repository](https://github.com/carlosvin/tanstack-fullstack-ai-template)
 - [🚀 Live Demo](https://fullstack-promptable-app-example.netlify.app)
 
 > **Note:**  
-> This post tracks the current architecture skill (`tanstack-promptable-fullstack-app-template` v1.31). The skill is the contract; this article is the tour.
+> This post tracks architecture skill v1.31 from the template. The skill is the contract; this article is the tour.
 
 ## The Problem
 
