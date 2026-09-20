@@ -1,7 +1,7 @@
 ---
 title: "Building AI-Promptable Full-Stack Apps with TanStack Start"
 slug: building-ai-promptable-fullstack-apps
-description: "A reproducible full-stack architecture for AI-promptable apps: one Repository, schema trust boundaries, and TypeScript that stays typed after parse."
+description: "A reproducible full-stack architecture for AI-promptable apps: the repository pattern, schema trust boundaries, and TypeScript that stays typed after parse."
 date: 2026-03-08
 updated: 2026-09-20
 lang: en
@@ -14,7 +14,7 @@ taxonomies:
 
 Every new full-stack React app used to restart the same plumbing: JWT auth, database access, UI shell, TanStack AI, observability, and server boundaries. The business logic was never the expensive part.
 
-It started with internal tools at [MongoDB](https://www.mongodb.com), but the patterns apply to any web app. We extracted them into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) that is **promptable by design**: one Repository interface, the same server functions for UI and AI, and an **Agent Skill** that encodes the contract so coding agents don't invent a second architecture.
+It started with internal tools at [MongoDB](https://www.mongodb.com), but the patterns apply to any web app. We extracted them into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) that is **promptable by design**: a Repository for data access, the same server functions for UI and AI, and an **Agent Skill** that encodes the contract so coding agents don't invent a second architecture.
 
 - [🔗 GitHub Repository](https://github.com/carlosvin/tanstack-fullstack-ai-template)
 - [🚀 Live Demo](https://fullstack-promptable-app-example.netlify.app)
@@ -50,13 +50,13 @@ Everything else is swappable behind interfaces: database, AI provider, observabi
 
 **Every external service sits behind an interface.** The database, AI adapter, and observability layer can change without touching routes or tools.
 
-![Runtime architecture: the UI layer and AI tool definitions both route through createServerFn server functions; client tools can call the UI layer directly; only the server layer talks to a single Repository interface.](./building-ai-promptable-fullstack-apps-architecture.png)
+![Runtime architecture: the UI layer and AI tool definitions both route through createServerFn server functions; client tools can call the UI layer directly; only the server layer talks to the Repository interface.](./building-ai-promptable-fullstack-apps-architecture.png)
 
-*Runtime flow: server tools call the same `createServerFn` endpoints as loaders and UI handlers; client tools (navigation, cache invalidation) run in the browser. Data access is a single `Repository` — never reached directly by AI tools.*
+*Runtime flow: server tools call the same `createServerFn` endpoints as loaders and UI handlers; client tools (navigation, cache invalidation) run in the browser. Data access goes through a `Repository` — never reached directly by AI tools.*
 
-### One `Repository`, not read vs write
+### The Repository pattern
 
-Auth for writes lives on **POST server functions** (`requireAuthMiddleware`), not on a second repository type. Reads and writes share one interface that speaks **repository-layer types only**:
+All data access goes through a `Repository` interface that speaks **repository-layer types only**. Implementations hide the database. Authorization for mutations lives on **POST server functions** (`requireAuthMiddleware`):
 
 ```typescript
 export interface TraceabilityContext {
@@ -82,8 +82,6 @@ Two implementations ship with the template:
 2. **MongoRepository** — production MongoDB
 
 A factory picks one from `MONGODB_URI` (or explicit `REPOSITORY_TYPE`). You do not need a database to start.
-
-An overlay repository (read-only upstream plus sparse user overrides) is an **optional** composition pattern in the skill — not a core read/write factory split.
 
 ### Traceability on writes
 
@@ -219,7 +217,7 @@ npx skills add carlosvin/tanstack-fullstack-ai-template --skill observability-an
 npx skills add carlosvin/tanstack-fullstack-ai-template --skill reference-tech-stack
 ```
 
-1. **`tanstack-promptable-fullstack-app-template`** — vendor-agnostic architecture: one repository, three schema layers, trust-boundary parsing, isomorphic loaders, AI tool parity, URL-as-state, middleware-inferred context.
+1. **`tanstack-promptable-fullstack-app-template`** — vendor-agnostic architecture: repository pattern, three schema layers, trust-boundary parsing, isomorphic loaders, AI tool parity, URL-as-state, middleware-inferred context.
 2. **`observability-and-env`** — startup-parsed env, `webServerEnv` vs `shellSession`, logging and error-tracking bootstrap.
 3. **`reference-tech-stack`** — this template's package defaults (Zod, Mantine, MongoDB, jose, Biome, Vitest, Playwright, Netlify).
 
@@ -264,7 +262,7 @@ Adding a domain entity is still a short, repeatable path:
 
 ## Conclusion
 
-The template is a **starting point**, not another framework. The current skill is simpler than the first write-up of this architecture: one `Repository`, parse at the app's edges, keep inferred types on the inside, and let AI tools share the same server functions as the UI.
+The template is a **starting point**, not another framework: a `Repository` for data access, parse at the app's edges, keep inferred types on the inside, and let AI tools share the same server functions as the UI.
 
 - 📁 [GitHub Repository](https://github.com/carlosvin/tanstack-fullstack-ai-template)
 - 🚀 [Live Demo](https://fullstack-promptable-app-example.netlify.app)
