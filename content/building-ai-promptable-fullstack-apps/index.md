@@ -46,7 +46,7 @@ Without a shared contract, every repo reinvented those pieces slightly different
 
 Everything else is swappable behind interfaces: database, AI provider, observability, UI kit, schema library. The reference app uses [Mantine](https://mantine.dev/), [`lucide-react`](https://lucide.dev/), [TanStack AI](https://tanstack.com/ai), [Zod](https://zod.dev/), [Biome](https://biomejs.dev/), [Vitest](https://vitest.dev/), and [Playwright](https://playwright.dev/). Those concrete packages live in the companion skill `reference-tech-stack`, not in the architecture contract.
 
-## Architecture: One Interface Per External
+## Architecture: One Interface Per External Service
 
 **Every external service sits behind an interface.** The database, AI adapter, and observability layer can change without touching routes or tools.
 
