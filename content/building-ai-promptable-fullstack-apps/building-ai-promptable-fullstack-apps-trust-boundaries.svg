@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" role="img" aria-labelledby="title desc">
+  <title id="title">Trust boundaries</title>
+  <desc id="desc">Untrusted URL params, database rows, server-function input, AI tool arguments, and widget strings become typed only at validateSearch or Schema.parse. After that, inferred types flow through the app. UI and AI see tools-layer types only.</desc>
+  <style>
+    .bg { fill: #10140f; }
+    .card { fill: #171d16; stroke: #31402a; stroke-width: 1.5; }
+    .boundary { fill: #1c2814; stroke: #b6d94a; stroke-width: 1.5; }
+    .typed { fill: #141a18; stroke: #3d5240; stroke-width: 1.5; }
+    .title { fill: #f3f6ef; font: 700 34px ui-sans-serif, system-ui, sans-serif; }
+    .subtitle { fill: #9aab92; font: 500 16px ui-sans-serif, system-ui, sans-serif; }
+    .col { fill: #c6e56a; font: 700 13px ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.08em; }
+    .label { fill: #f3f6ef; font: 600 18px ui-sans-serif, system-ui, sans-serif; }
+    .hint { fill: #b7c4ae; font: 500 14px ui-sans-serif, system-ui, sans-serif; }
+    .arrow { stroke: #b6d94a; stroke-width: 2; fill: none; }
+    .foot { fill: #d5e0cc; font: 500 15px ui-sans-serif, system-ui, sans-serif; }
+    .foot-strong { fill: #c6e56a; font: 700 15px ui-sans-serif, system-ui, sans-serif; }
+  </style>
+  <rect class="bg" width="1200" height="780" rx="0"/>
+  <text class="title" x="48" y="64">Trust boundaries</text>
+  <text class="subtitle" x="48" y="96">A value becomes typed only once, at the edge. The interior keeps that inferred type.</text>
+
+  <text class="col" x="48" y="148">UNTRUSTED INPUT</text>
+  <text class="col" x="430" y="148">BOUNDARY</text>
+  <text class="col" x="820" y="148">TYPED INTERIOR</text>
+
+  <rect class="card" x="40" y="168" width="330" height="88" rx="14"/>
+  <text class="label" x="60" y="206">URL search params</text>
+  <text class="hint" x="60" y="232">Partial query string</text>
+  <path class="arrow" d="M370 212 H418" marker-end="url(#arrow)"/>
+  <rect class="boundary" x="422" y="168" width="340" height="88" rx="14"/>
+  <text class="label" x="442" y="206">validateSearch</text>
+  <text class="hint" x="442" y="232">Router search schema</text>
+  <path class="arrow" d="M762 212 H810" marker-end="url(#arrow)"/>
+  <rect class="typed" x="814" y="168" width="346" height="88" rx="14"/>
+  <text class="label" x="834" y="206">Router search type</text>
+  <text class="hint" x="834" y="232">loaderDeps and loader</text>
+
+  <rect class="card" x="40" y="276" width="330" height="88" rx="14"/>
+  <text class="label" x="60" y="314">Database rows, API JSON</text>
+  <text class="hint" x="60" y="340">Documents from outside the app</text>
+  <path class="arrow" d="M370 320 H418" marker-end="url(#arrow)"/>
+  <rect class="boundary" x="422" y="276" width="340" height="88" rx="14"/>
+  <text class="label" x="442" y="314">Schema.parse()</text>
+  <text class="hint" x="442" y="340">Repository-layer schema</text>
+  <path class="arrow" d="M762 320 H810" marker-end="url(#arrow)"/>
+  <rect class="typed" x="814" y="276" width="346" height="88" rx="14"/>
+  <text class="label" x="834" y="314">Repository type</text>
+  <text class="hint" x="834" y="340">Stays inside the repository</text>
+
+  <rect class="card" x="40" y="384" width="330" height="88" rx="14"/>
+  <text class="label" x="60" y="422">Server input, tool args</text>
+  <text class="hint" x="60" y="448">createServerFn and toolDefinition</text>
+  <path class="arrow" d="M370 428 H418" marker-end="url(#arrow)"/>
+  <rect class="boundary" x="422" y="384" width="340" height="88" rx="14"/>
+  <text class="label" x="442" y="422">Schema.parse()</text>
+  <text class="hint" x="442" y="448">One shared tools-layer schema</text>
+  <path class="arrow" d="M762 428 H810" marker-end="url(#arrow)"/>
+  <rect class="typed" x="814" y="384" width="346" height="88" rx="14"/>
+  <text class="label" x="834" y="422">Tools type</text>
+  <text class="hint" x="834" y="448">What the UI and the AI see</text>
+
+  <rect class="card" x="40" y="492" width="330" height="88" rx="14"/>
+  <text class="label" x="60" y="530">Widget value as string</text>
+  <text class="hint" x="60" y="556">onChange and other untyped edges</text>
+  <path class="arrow" d="M370 536 H418" marker-end="url(#arrow)"/>
+  <rect class="boundary" x="422" y="492" width="340" height="88" rx="14"/>
+  <text class="label" x="442" y="530">Same schema .parse()</text>
+  <text class="hint" x="442" y="556">No second parser for the enum</text>
+  <path class="arrow" d="M762 536 H810" marker-end="url(#arrow)"/>
+  <rect class="typed" x="814" y="492" width="346" height="88" rx="14"/>
+  <text class="label" x="834" y="530">Inferred union</text>
+  <text class="hint" x="834" y="556">Carry it with a typed map</text>
+
+  <text class="foot" x="48" y="640">Between layers, mappers end in</text>
+  <text class="foot-strong" x="292" y="640">Schema.parse()</text>
+  <text class="foot" x="430" y="640">both ways: tools to repository, and repository rows back to tools.</text>
+  <text class="foot" x="48" y="672">After the boundary, keep the inferred type through handlers, components, and tools.</text>
+  <text class="foot" x="48" y="720">UI and AI import tools-layer types only. Repository schemas stay on the server side of the repository.</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.2 L 8 5 L 0 8.8 z" fill="#b6d94a"/>
+    </marker>
+  </defs>
+</svg>

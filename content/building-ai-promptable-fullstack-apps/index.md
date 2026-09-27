@@ -71,13 +71,9 @@ Hand-written interfaces describe **behavior** (`Repository`, `AIAdapterService`,
 
 Untrusted values become typed only at a trust boundary. After that, the rest of the app keeps the inferred type.
 
-```
-URL search  →  validateSearch  →  loader  →  tools schema  →  server fn
-                                                      ↓ Schema.parse()
-                                              repository schema  →  Repository
-                                                      ↓ Schema.parse()
-                                              tools schema  →  UI or AI
-```
+![Trust boundaries: URL params, database rows, server input, AI tool arguments, and widget strings become typed only at validateSearch or Schema.parse. UI and AI then see tools-layer types.](./building-ai-promptable-fullstack-apps-trust-boundaries.svg)
+
+*Each outside value crosses one boundary. URL params use `validateSearch`. Database rows, API JSON, server input, and tool arguments use `Schema.parse()` on the schema for that layer. Widget strings use that same schema. Mappers between the tools layer and the repository end in `Schema.parse()` in both directions.*
 
 ### Three schema layers
 
