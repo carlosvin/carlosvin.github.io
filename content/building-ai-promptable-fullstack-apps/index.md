@@ -3,7 +3,7 @@ title: "Building AI-Promptable Full-Stack Apps with TanStack Start"
 slug: building-ai-promptable-fullstack-apps
 description: "A reproducible full-stack architecture for AI-promptable apps: the repository pattern, schema trust boundaries, and TypeScript that stays typed after parse."
 date: 2026-03-08
-updated: 2026-09-20
+updated: 2026-09-27
 lang: en
 toc: true
 extra:
@@ -12,51 +12,43 @@ taxonomies:
   tags: ["ai", "react", "typescript", "tanstack-start", "tanstack-ai", "zod", "fullstack", "architecture", "mongodb", "mantine", "tanstack-router", "web-development", "playwright"]
 ---
 
-Every new full-stack React app used to restart the same plumbing: JWT auth, database access, UI shell, TanStack AI, observability, and server boundaries. The business logic was never the expensive part.
+Every new full-stack React app used to restart the same plumbing: auth, database access, a UI shell, an AI assistant, and a safe split between server and browser. The business logic was never the expensive part.
 
-It started with internal tools at [MongoDB](https://www.mongodb.com), but the patterns apply to any web app. We extracted them into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) that is **promptable by design**: a Repository for data access, the same server functions for UI and AI, and an **Agent Skill** that encodes the contract so coding agents don't invent a second architecture.
+It started with internal tools at [MongoDB](https://www.mongodb.com). The patterns apply to any web app. We extracted them into a [TanStack Start template](https://github.com/carlosvin/tanstack-fullstack-ai-template) and wrote the architecture down as an **Agent Skill**. The skill is the contract. The task app in that repository is one example of the contract.
 
 - [🔗 GitHub Repository](https://github.com/carlosvin/tanstack-fullstack-ai-template)
 - [🚀 Live Demo](https://fullstack-promptable-app-example.netlify.app)
 
 > **Note:**  
-> This post tracks architecture skill v1.31 from the template. The skill is the contract; this article is the tour.
+> This post teaches `tanstack-promptable-fullstack-app-template` (v1.31). Day-to-day setup lives in the template's `AGENTS.md`. Concrete packages live in the companion skill `reference-tech-stack`.
 
 ## The Problem
 
 Most full-stack apps share the same foundation:
 
-- CRUD behind a database
-- Auth and audit from request headers
-- An accessible UI with dark/light mode
-- Safe server/client splits
-- Logging, error tracking, tracing
+- Data access behind a database
+- Auth and request context from headers
+- An accessible UI with dark and light mode
+- A boundary that keeps drivers and secrets out of the browser
 - An AI assistant that can query, navigate, and mutate with the same rules as the UI
 
-Without a shared contract, every repo reinvented those pieces slightly differently. Agents then followed the local drift.
+Without a shared contract, every repo reinvented those pieces. Coding agents then copied whichever local variant they found.
 
-## The Chosen Tech Stack
+## What the skill fixes, and what it leaves open
 
-[TanStack Start](https://tanstack.com/start) is the fixed core: **Start**, **Router**, and **AI**.
+The skill fixes the TanStack pieces: **Start**, **Router**, and **AI**. Server functions, middleware, file routes, `validateSearch`, loaders, and `chat()` / tools are part of the contract. Current library docs come from `@tanstack/cli`, not from memory.
 
-- **Server functions** (`createServerFn`) as type-safe RPC
-- **File-based routing** with [TanStack Router](https://tanstack.com/router) (see our [production router conventions](@/tanstack-router-opinionated-conventions-production-react-apps.md))
-- **SSR** via Nitro
-- **Middleware** that builds typed request context with `next({ context })`
-
-Everything else is swappable behind interfaces: database, AI provider, observability, UI kit, schema library. The reference app uses [Mantine](https://mantine.dev/), [`lucide-react`](https://lucide.dev/), [TanStack AI](https://tanstack.com/ai), [Zod](https://zod.dev/), [Biome](https://biomejs.dev/), [Vitest](https://vitest.dev/), and [Playwright](https://playwright.dev/). Those concrete packages live in the companion skill `reference-tech-stack`, not in the architecture contract.
-
-## Architecture: One Interface Per External Service
-
-**Every external service sits behind an interface.** The database, AI adapter, and observability layer can change without touching routes or tools.
+Everything else stays behind an interface: database, auth mechanism, AI provider, observability, UI kit, and the schema library. Pick **one** validator per app (the samples below use Zod) and use it for router search, server-function inputs, and AI tool schemas.
 
 ![Runtime architecture: the UI layer and AI tool definitions both route through createServerFn server functions; client tools can call the UI layer directly; only the server layer talks to the Repository interface.](./building-ai-promptable-fullstack-apps-architecture.png)
 
-*Runtime flow: server tools call the same `createServerFn` endpoints as loaders and UI handlers; client tools (navigation, cache invalidation) run in the browser. Data access goes through a `Repository` — never reached directly by AI tools.*
+*UI handlers and server tools call the same `createServerFn` endpoints. Client tools (navigation, cache invalidation) run in the browser. Data access goes through a `Repository`.*
 
-### The Repository pattern
+## The repository
 
-All data access goes through a `Repository` interface that speaks **repository-layer types only**. Implementations hide the database. Authorization for mutations lives on **POST server functions** (`requireAuthMiddleware`):
+External services are reached through interfaces. For data, that interface is `Repository`. Its methods speak **repository-layer types** only. Authorization for writes lives on POST server functions (`requireAuthMiddleware`).
+
+The reference app's interface is a task list. A different product keeps the same shape and changes the methods:
 
 ```typescript
 export interface Repository {
@@ -71,16 +63,13 @@ export interface Repository {
 }
 ```
 
-Two implementations ship with the template:
+The reference app ships two implementations of that interface: an in-memory **SeedRepository** for local dev and CI, and a **MongoRepository** for production. A factory selects one. Swapping the database means a new implementation and a factory change. Routes, server functions, and AI tools stay put.
 
-1. **SeedRepository** — in-memory sample data for local dev and CI
-2. **MongoRepository** — production MongoDB
+Hand-written interfaces describe **behavior** (`Repository`, `AIAdapterService`, `ObservabilityService`). JSON shapes come from schemas.
 
-A factory picks one from `MONGODB_URI` (or explicit `REPOSITORY_TYPE`). You do not need a database to start.
+## App boundaries and type safety
 
-## App Boundaries and Type Safety
-
-This is the part the skill now stresses most: **untrusted values become typed only at trust boundaries**. After that, TypeScript keeps the interior honest.
+Untrusted values become typed only at a trust boundary. After that, the rest of the app keeps the inferred type.
 
 ```
 URL search  →  validateSearch  →  loader  →  tools schema  →  server fn
@@ -92,18 +81,24 @@ URL search  →  validateSearch  →  loader  →  tools schema  →  server fn
 
 ### Three schema layers
 
-1. **Repository** (`repository.ts`): DB-shaped documents. No `.describe()` required. Types inferred from the validator.
-2. **Tools / server functions** (`schemas.ts`): API-shaped, shared by `createServerFn` `.inputValidator(Schema)` and AI `toolDefinition({ inputSchema })`. Field `.describe()` (and optional `.meta({ unit, format, title })`) is what the model sees.
-3. **Router search**: local `validateSearch` schemas. That **is** the trust boundary for URL params.
+1. **Repository** (DB-shaped), in `repository.ts`. Types are inferred. Field descriptions are optional here.
+2. **Tools / server functions** (API-shaped), in `schemas.ts`. One schema is shared by `createServerFn` `.inputValidator(Schema)` and AI `toolDefinition({ inputSchema })`. `.describe()` is the text the model sees. `.meta({ unit, format, title })` is for structured hints only.
+3. **Router search** (URL-shaped). A local `validateSearch` schema. That schema is the trust boundary for query params. Fields are usually optional, because URLs are partial.
 
-UI and AI consume **tools-layer types only**. They never import repository schemas.
+UI and AI import tools-layer types only.
 
-### Parse at the edge, infer inside
+### Parse at the edge
 
-Layer switches happen in mapper functions. The last step is always `Schema.parse()`:
+Each untrusted edge uses the same validator:
+
+- Database documents and external API JSON are parsed with the **repository** schema inside the repository implementation.
+- URL params go through `validateSearch`.
+- Server-function bodies and AI tool arguments go through the **tools** schema.
+- A widget `onChange` typed as `string` is parsed with that same schema.
+
+Layer changes happen in mapper functions. The last step is `Schema.parse()`:
 
 ```typescript
-// Inbound: tools layer → repository layer
 function toRepoCreateInput(tool: z.infer<typeof TaskCreateToolSchema>): TaskRepoInput {
   return TaskRepoInputSchema.parse({
     title: tool.title,
@@ -111,7 +106,6 @@ function toRepoCreateInput(tool: z.infer<typeof TaskCreateToolSchema>): TaskRepo
   })
 }
 
-// Outbound: repository row → tools layer (UI loaders and AI tools)
 function toToolTask(row: TaskRepo): z.infer<typeof TaskToolSchema> {
   return TaskToolSchema.parse({
     id: row.id,
@@ -121,14 +115,17 @@ function toToolTask(row: TaskRepo): z.infer<typeof TaskToolSchema> {
 }
 ```
 
-The same rule applies to other untrusted edges: DB documents and external API JSON in repository implementations, `createServerFn` input, AI tool args, env (companion `observability-and-env`), and widget `onChange` values typed as bare `string`. Parse with the **same schema** — do not add `Array.find` helpers that duplicate enums.
+Parsing inbound input and returning a raw database row skips half the boundary. A second parser (`Array.find` on a tuple, a homemade guard, a cast) for the same enum duplicates the schema.
 
-### TypeScript after parse
+### Types after the boundary
 
-Once a value has crossed a boundary, keep **schema-inferred types** end-to-end. Prefer a typed map (`as const satisfies Record<...>`), `as const` tuples, and discriminated unions so every member of the union is covered. Do not widen back to `string` / `any` / `Record<string, unknown>` and re-parse with a homemade guard.
+Once a value is parsed, carry the inferred type through handlers, tools, and components. Closed sets start as an `as const` tuple, become a schema enum, and infer the union. A label map then has to cover every member:
 
 ```typescript
-type TaskStatus = 'pending' | 'done'
+const TASK_STATUSES = ['pending', 'done'] as const
+
+const TaskStatusSchema = z.enum(TASK_STATUSES).describe('Current status')
+type TaskStatus = z.infer<typeof TaskStatusSchema>
 
 const labelForStatus = {
   pending: 'Pending',
@@ -140,37 +137,67 @@ function label(status: TaskStatus) {
 }
 ```
 
-Runtime validation checks the edges. TypeScript checks the interior. Hand-written interfaces define **behavior** (`Repository`, `AIAdapterService`) — not ad-hoc JSON shapes.
+Widening that union back to `string`, `any`, or `Record<string, unknown>` throws away the boundary you just paid for.
 
-> **Why Zod?**  
-> [ArkType](https://arktype.io/) and Valibot are valid alternatives. The skill is validator-agnostic: pick **one** library per app. The reference template uses Zod for ecosystem reach; swap by keeping the same layer and parse boundaries.
+> **Why Zod in the samples?**  
+> The skill is validator-agnostic. [ArkType](https://arktype.io/) and Valibot are valid if the three layers and the `parse` boundaries stay. The reference app uses Zod.
 
-## Server Execution Boundaries
+## Where code is allowed to run
 
-Route **loaders are isomorphic**: they run on the server during SSR **and** in the browser on SPA navigations. A route file is not server-only code.
+Route loaders are **isomorphic**. They run on the server during SSR and in the browser on client navigations. A route file can ship to the client bundle.
 
-Keep routes thin (`createFileRoute`, `validateSearch`, `loaderDeps`, `loader`, `component`). Loaders only call exported `createServerFn` endpoints from `src/services/api/serverFns.ts`. Database clients, repo factories, and crypto live in `*.server.ts` (or `import '@tanstack/react-start/server-only'`). Internal singletons that must never be RPC-callable use `createServerOnlyFn`, not `createServerFn`.
+Route files stay thin: `createFileRoute`, `validateSearch`, `loaderDeps`, `loader`, and `component`. Page UI lives in `src/components/`. The loader only calls a server function:
 
-Vite `importProtection` with `behavior: 'error'` fails the build if drivers or secrets leak into the client bundle.
+```typescript
+export const Route = createFileRoute('/tasks/')({
+  validateSearch: TasksSearchSchema,
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps }) => getTasks({ data: deps }),
+})
+```
 
-## Request Context
+```typescript
+export const getTasks = createServerFn({ method: 'GET' })
+  .inputValidator(TaskFilterSchema.optional())
+  .handler(async ({ data: filter }) => {
+    const repoFilter = filter ? TaskRepoFilterSchema.parse(filter) : undefined
+    const rows = await getRepository().getTasks(repoFilter)
+    return rows.map(toToolTask)
+  })
+```
 
-Middleware validates at the edge, then `next({ context })`. Start **infers** `context` from the chain. Handlers read `context.accessTicket` directly — no `as AuthContext`, no runtime "is this field present?" helpers.
+Database clients, repository factories, and crypto live in `*.server.ts` (or start with `import '@tanstack/react-start/server-only'`).
 
-Auth middleware decodes the JWT, loads profile and roles via `getRepository()`, and builds an **`AccessTicket`** (identity, roles, guards such as `requireTaskCreator`). Mutations chain `.middleware([requireAuthMiddleware, invalidateMiddleware])`. Queries stay unauthenticated by default.
+| Primitive | Use when |
+| --------- | -------- |
+| `createServerFn` | A loader, a mutation, or an AI tool must call the server over RPC |
+| `createServerOnlyFn` | An internal singleton, such as a DB client, that must never be an RPC endpoint |
 
-`invalidateMiddleware` tells the client to `router.invalidate()` after a successful POST. Components do not invalidate by hand.
+`tanstackStart({ importProtection: { behavior: 'error' } })` fails the build when a driver or secret package reaches the client graph.
 
-Authorization is **server-enforced**. Hiding a button is not enough.
+## Request context
 
-## Promptable by Design
+Middleware is where external input becomes context: the auth header, env, repository lookups that enrich the user. It calls `next({ context })`. From there, Start **infers** `context` from the middleware chain. Handlers read `context.accessTicket` directly.
 
-TanStack AI tools call the **same server functions** as loaders and UI handlers:
+Auth middleware decodes the JWT, loads profile and access through `getRepository()`, and builds an **`AccessTicket`** (identity, roles, guards). POST mutations chain `.middleware([requireAuthMiddleware, invalidateMiddleware])`. GET queries stay open unless the handler itself requires a ticket. `invalidateMiddleware` tells the client to `router.invalidate()` after a successful POST, so components do not invalidate by hand.
+
+Handlers return data or throw `HttpError`. Callers normalize that differently per surface:
+
+- UI code uses `processResponse` and renders `{ data, error }`.
+- AI tools use `createSafeServerTool`, which turns 401, 403, and 404 into `{ error, code }` so the model can explain the failure.
+
+Hiding a button is not authorization. The server handler is.
+
+Env is parsed **once** at startup into `webServerEnv` and a browser-safe `shellSession`. The root loader exposes only `getBrowserShellSession`. The recipe for env schemas, logging, and error tracking is the companion skill `observability-and-env`.
+
+## One code path for the UI and the AI
+
+A server function that the UI can call is a server function the assistant can call. The tool reuses the tools-layer schema:
 
 ```typescript
 const getTasksToolDef = toolDefinition({
   name: 'getTasks',
-  description: 'Get all tasks with optional filters. Supports status, priority, assignee, and search.',
+  description: 'Get tasks with optional filters.',
   inputSchema: TaskFilterSchema,
 })
 
@@ -179,19 +206,29 @@ export const getTasksTool = createSafeServerTool(getTasksToolDef, async (args) =
 )
 ```
 
-`createSafeServerTool` turns `HttpError` 401/403/404 into `{ error, code }` so the agent can explain "you need to log in" instead of crashing the loop.
+Coverage is part of the contract:
 
-The skill requires **full tool coverage**: every repository method becomes a server tool, plus distinct-value tools for real filter options, plus client tools `navigate` and `invalidateRouter`. Chat is gated on `getAIAvailability()`. The client sends `browserContext` (timezone, locale, current path); the server injects it into the system prompt with a navigation manifest from the router. Every `chat()` call sets `agentLoopStrategy: maxIterations(10)`.
+- Every repository method has a server tool.
+- Enum-like filters get a distinct-values tool, so the model filters on real data.
+- `navigate` and `invalidateRouter` are client tools. They run in the browser.
+- The root loader checks `getAIAvailability()` and mounts chat only when it is configured.
+- The client sends `browserContext` (timezone, locale, current path). `buildSystemPrompt` combines that with the auth ticket and with route structure derived from the router.
+- Every `chat()` call sets `agentLoopStrategy: maxIterations(10)` explicitly.
 
-## URL-as-State
+Assistant replies render as Markdown, including tables and code. How the reference app renders that Markdown is in `AGENTS.md`.
 
-Filters, tabs, and selections live in validated search params with `loaderDeps` so loaders refetch only when those keys change. A project `Link` wrapper defaults to `search: true` so query state survives navigation. Shared `beforeLoad` and expensive reads belong on the **parent** layout; children consume parent loader data.
+## URL state and navigation
 
-Free-text search uses an uncontrolled input and a **debounced** navigate. Discrete filters navigate immediately.
+Filters, tabs, and selections live in validated search params. `loaderDeps` names the search fields that should refetch the loader, so unrelated URL changes do not bust the cache.
 
-## Agent Skills
+Two navigation decisions ship together:
 
-The contract is published from the template so agents don't have to infer it from scattered READMEs:
+- A project `Link` wrapper whose default is `search: true`, used for every internal link, so query state survives navigation.
+- Router defaults: `defaultStaleTime`, `defaultPreload: 'intent'`, `defaultPreloadStaleTime: 0`, `scrollRestoration: true`, and `notFoundComponent`.
+
+Shared `beforeLoad` guards and expensive reads belong on the **parent** layout. Child routes read that loader data with `getRouteApi` or `useLoaderData({ from })`.
+
+## The skills
 
 ```bash
 npx skills add carlosvin/tanstack-fullstack-ai-template --list
@@ -201,13 +238,13 @@ npx skills add carlosvin/tanstack-fullstack-ai-template --skill observability-an
 npx skills add carlosvin/tanstack-fullstack-ai-template --skill reference-tech-stack
 ```
 
-1. **`tanstack-promptable-fullstack-app-template`** — vendor-agnostic architecture: repository pattern, three schema layers, trust-boundary parsing, isomorphic loaders, AI tool parity, URL-as-state, middleware-inferred context.
-2. **`observability-and-env`** — startup-parsed env, `webServerEnv` vs `shellSession`, logging and error-tracking bootstrap.
-3. **`reference-tech-stack`** — this template's package defaults (Zod, Mantine, MongoDB, jose, Biome, Vitest, Playwright, Netlify).
+1. **`tanstack-promptable-fullstack-app-template`** is this post: interfaces, three schema layers, trust boundaries, isomorphic loaders, AI tool parity, URL state, and middleware-inferred context.
+2. **`observability-and-env`** is startup env, `webServerEnv` versus `shellSession`, logging, and error-tracking bootstrap.
+3. **`reference-tech-stack`** is the reference app's packages: Zod, Mantine, MongoDB, jose, Biome, Vitest, Playwright, Netlify.
 
-Day-to-day ops (UI kit, chat wiring, test commands) live in the template's `AGENTS.md`. The skill is what agents must not break.
+`AGENTS.md` is the handbook for UI, chat wiring, and the validation commands. The architecture skill is what an agent must not break.
 
-## Getting Started
+## The reference app
 
 ```bash
 git clone https://github.com/carlosvin/tanstack-fullstack-ai-template.git my-app
@@ -216,37 +253,35 @@ pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Seed data is enough for dashboard, lists, detail, CRUD, and the AI drawer. No database, API keys, or env vars required.
+Open [http://localhost:3000](http://localhost:3000). Seed data is enough for the dashboard, lists, detail, CRUD, and the AI drawer.
 
 ```bash
 pnpm format && pnpm lint && pnpm test && pnpm test:e2e && pnpm build
 ```
 
-When you connect real services, the main switches are:
+Wiring that example to real services is environment, not architecture:
 
 | Variable | Purpose |
 | -------- | ------- |
-| `MONGODB_URI` | Swap seed repository for MongoDB |
-| `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT` | Enable chat (or deploy on Netlify AI Gateway) |
+| `MONGODB_URI` | Use MongoDB instead of the seed repository |
+| `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT` | Enable chat |
 | `SENTRY_DSN` | Error and performance tracking |
 | `AUTH_HEADER_NAME` | JWT header (default: `Authorization`) |
 
-Env is parsed **once at startup** into `webServerEnv` and a browser-safe `shellSession`. The root loader exposes only `getBrowserShellSession` — never `serverEnv` or `window.__ENV__`.
+## Adding a domain entity
 
-## Extending the Template
+The skill's implementation order is the same for every entity:
 
-Adding a domain entity is still a short, repeatable path:
-
-1. **Schemas** — repository + tools + search layers; mappers that end in `Schema.parse()`.
-2. **Repository** — methods on `Repository`; implement seed and production.
-3. **Server functions** — GET queries; POST mutations with `requireAuthMiddleware` and `invalidateMiddleware`.
-4. **AI tools** — `toolDefinition` + `createSafeServerTool` for every server function; client navigate/invalidate in the chat shell.
-5. **Routes** — thin files, `validateSearch`, `loaderDeps`, parent layouts for shared work.
-6. **Tests** — mapper/unit tests and Playwright against seed data.
+1. **Schemas** for the repository layer, the tools layer, and route search. Mappers end in `Schema.parse()`.
+2. **Repository** methods on the interface, with a seed implementation and a production implementation.
+3. **Server functions** in `serverFns.ts`. GET for reads. POST with `requireAuthMiddleware` and `invalidateMiddleware` for writes. Both sides share the tools-layer validator.
+4. **AI tools**: `toolDefinition` plus `createSafeServerTool` for each server function, and the client navigate / invalidate tools in the chat shell.
+5. **Routes** with `validateSearch`, `loaderDeps`, and loaders. Shared work goes on the parent layout.
+6. **Tests** for the mappers and end-to-end flows against the seed repository.
 
 ## Conclusion
 
-The template is a **starting point**, not another framework: a `Repository` for data access, parse at the app's edges, keep inferred types on the inside, and let AI tools share the same server functions as the UI.
+The template is a starting point. The skill is the part worth keeping when the task domain is replaced: a `Repository` for data access, parse at the edges, inferred types on the inside, and AI tools that call the same server functions as the UI.
 
 - 📁 [GitHub Repository](https://github.com/carlosvin/tanstack-fullstack-ai-template)
 - 🚀 [Live Demo](https://fullstack-promptable-app-example.netlify.app)
