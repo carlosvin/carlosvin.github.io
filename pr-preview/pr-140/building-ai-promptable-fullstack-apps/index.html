@@ -225,7 +225,7 @@
         
       ],
       "inLanguage": "en",
-      "wordCount": 1484
+      "wordCount": 1447
     }
     
     ,{
@@ -350,7 +350,7 @@
     <span class="post-meta"><time datetime="2026-03-08">Mar 8, 2026</time>
     · <span class="post-meta__updated">Updated <time datetime="2026-09-20">Sep 20, 2026</time></span>
     · <time datetime="PT7M">7 min read</time>
-    · <span>1484 words</span>
+    · <span>1447 words</span>
 </span>
 
   </header>
@@ -535,10 +535,6 @@
               <a href="https://carlosvin.github.io/pr-preview/pr-140/building-ai-promptable-fullstack-apps/#the-repository-pattern">The Repository pattern</a>
             </li>
             
-            <li>
-              <a href="https://carlosvin.github.io/pr-preview/pr-140/building-ai-promptable-fullstack-apps/#traceability-on-writes">Traceability on writes</a>
-            </li>
-            
           </ul>
           
         </li>
@@ -648,19 +644,14 @@ This post tracks architecture skill v1.31 from the template. The skill is the co
 <p><em>Runtime flow: server tools call the same <code>createServerFn</code> endpoints as loaders and UI handlers; client tools (navigation, cache invalidation) run in the browser. Data access goes through a <code>Repository</code> — never reached directly by AI tools.</em></p>
 <h3 id="the-repository-pattern">The Repository pattern</h3>
 <p>All data access goes through a <code>Repository</code> interface that speaks <strong>repository-layer types only</strong>. Implementations hide the database. Authorization for mutations lives on <strong>POST server functions</strong> (<code>requireAuthMiddleware</code>):</p>
-<pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> interface</span><span class="z-l-8 z-d-8"> TraceabilityContext</span><span> {</span></span>
-<span class="giallo-l"><span>  createdBy</span><span class="z-l-5 z-d-5">?</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span></span>
-<span class="giallo-l"><span>  lastModifiedBy</span><span class="z-l-5 z-d-5">?</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> interface</span><span class="z-l-8 z-d-8"> Repository</span><span> {</span></span>
+<pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-5 z-d-5">export</span><span class="z-l-3 z-l-b z-d-6 z-d-b"> interface</span><span class="z-l-8 z-d-8"> Repository</span><span> {</span></span>
 <span class="giallo-l"><span class="z-l-1 z-d-1">  getTasks</span><span>(</span><span>filter</span><span class="z-l-5 z-d-5">?</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TaskRepoFilter</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskRepo</span><span>[</span><span>]</span><span>&gt;</span></span>
 <span class="giallo-l"><span class="z-l-1 z-d-1">  getTask</span><span>(</span><span>taskId</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskRepo</span><span class="z-l-5 z-d-5"> |</span><span class="z-l-5 z-d-5"> null</span><span>&gt;</span></span>
 <span class="giallo-l"><span class="z-l-1 z-d-1">  getDistinctValues</span><span>(</span><span>field</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> DistinctValueField</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-5 z-d-5">string</span><span>[</span><span>]</span><span>&gt;</span></span>
 <span class="giallo-l"><span class="z-l-1 z-d-1">  getUserProfile</span><span>(</span><span>email</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">UserProfileRepo</span><span class="z-l-5 z-d-5"> |</span><span class="z-l-5 z-d-5"> null</span><span>&gt;</span></span>
 <span class="giallo-l"><span class="z-l-1 z-d-1">  getUserAccess</span><span>(</span><span>email</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">UserAccessRepo</span><span class="z-l-5 z-d-5"> |</span><span class="z-l-5 z-d-5"> null</span><span>&gt;</span></span>
-<span class="giallo-l"><span class="z-l-1 z-d-1">  createTask</span><span>(</span><span>input</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TaskRepoInput</span><span>,</span><span> trace</span><span class="z-l-5 z-d-5">?</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TraceabilityContext</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskRepo</span><span>&gt;</span></span>
-<span class="giallo-l"><span class="z-l-1 z-d-1">  updateTask</span><span>(</span><span>taskId</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>,</span><span> input</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Partial</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskRepoInput</span><span>&gt;</span><span>,</span><span> trace</span><span class="z-l-5 z-d-5">?</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TraceabilityContext</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskRepo</span><span class="z-l-5 z-d-5"> |</span><span class="z-l-5 z-d-5"> null</span><span>&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  createTask</span><span>(</span><span>input</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TaskRepoInput</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskRepo</span><span>&gt;</span></span>
+<span class="giallo-l"><span class="z-l-1 z-d-1">  updateTask</span><span>(</span><span>taskId</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>,</span><span> input</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Partial</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskRepoInput</span><span>&gt;</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskRepo</span><span class="z-l-5 z-d-5"> |</span><span class="z-l-5 z-d-5"> null</span><span>&gt;</span></span>
 <span class="giallo-l"><span class="z-l-1 z-d-1">  deleteTask</span><span>(</span><span>taskId</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> Promise</span><span>&lt;</span><span class="z-l-5 z-d-5">boolean</span><span>&gt;</span></span>
 <span class="giallo-l"><span>}</span></span></code></pre>
 <p>Two implementations ship with the template:</p>
@@ -669,8 +660,6 @@ This post tracks architecture skill v1.31 from the template. The skill is the co
 <li><strong>MongoRepository</strong> — production MongoDB</li>
 </ol>
 <p>A factory picks one from <code>MONGODB_URI</code> (or explicit <code>REPOSITORY_TYPE</code>). You do not need a database to start.</p>
-<h3 id="traceability-on-writes">Traceability on writes</h3>
-<p>Mutations take a <code>TraceabilityContext</code> built from the auth ticket (<code>createWriteTrace</code> / <code>updateWriteTrace</code>), not a bare email argument. Implementations persist <code>createdBy</code> / <code>lastModifiedBy</code> on the entity so UI and AI writes stay auditable.</p>
 <h2 id="app-boundaries-and-type-safety">App Boundaries and Type Safety</h2>
 <p>This is the part the skill now stresses most: <strong>untrusted values become typed only at trust boundaries</strong>. After that, TypeScript keeps the interior honest.</p>
 <pre class="giallo z-l-code z-d-code" ><code data-lang="plain"><span class="giallo-l"><span>URL search  →  validateSearch  →  loader  →  tools schema  →  server fn</span></span>
@@ -784,7 +773,7 @@ This post tracks architecture skill v1.31 from the template. The skill is the co
 <p>Adding a domain entity is still a short, repeatable path:</p>
 <ol>
 <li><strong>Schemas</strong> — repository + tools + search layers; mappers that end in <code>Schema.parse()</code>.</li>
-<li><strong>Repository</strong> — methods on <code>Repository</code> with <code>TraceabilityContext</code> on writes; implement seed and production.</li>
+<li><strong>Repository</strong> — methods on <code>Repository</code>; implement seed and production.</li>
 <li><strong>Server functions</strong> — GET queries; POST mutations with <code>requireAuthMiddleware</code> and <code>invalidateMiddleware</code>.</li>
 <li><strong>AI tools</strong> — <code>toolDefinition</code> + <code>createSafeServerTool</code> for every server function; client navigate/invalidate in the chat shell.</li>
 <li><strong>Routes</strong> — thin files, <code>validateSearch</code>, <code>loaderDeps</code>, parent layouts for shared work.</li>
