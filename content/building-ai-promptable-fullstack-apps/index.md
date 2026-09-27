@@ -125,25 +125,18 @@ The same rule applies to other untrusted edges: DB documents and external API JS
 
 ### TypeScript after parse
 
-Once a value has crossed a boundary, keep **schema-inferred types** end-to-end. Prefer `satisfies`, `as const` tuples, discriminated unions, and exhaustive `switch` with `assertNever`. Do not widen back to `string` / `any` / `Record<string, unknown>` and re-parse with a homemade guard.
+Once a value has crossed a boundary, keep **schema-inferred types** end-to-end. Prefer a typed map (`as const satisfies Record<...>`), `as const` tuples, and discriminated unions so every member of the union is covered. Do not widen back to `string` / `any` / `Record<string, unknown>` and re-parse with a homemade guard.
 
 ```typescript
 type TaskStatus = 'pending' | 'done'
 
-const STATUS_LABEL = {
+const labelForStatus = {
   pending: 'Pending',
   done: 'Done',
 } as const satisfies Record<TaskStatus, string>
 
-function labelForStatus(status: TaskStatus): string {
-  switch (status) {
-    case 'pending':
-      return STATUS_LABEL.pending
-    case 'done':
-      return STATUS_LABEL.done
-    default:
-      return assertNever(status)
-  }
+function label(status: TaskStatus) {
+  return labelForStatus[status]
 }
 ```
 
