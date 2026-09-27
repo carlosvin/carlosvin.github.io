@@ -213,7 +213,7 @@ Coverage is part of the contract:
 - `navigate` and `invalidateRouter` are client tools. They run in the browser.
 - The root loader checks `getAIAvailability()` and mounts chat only when it is configured.
 - The client sends `browserContext` (timezone, locale, current path). `buildSystemPrompt` combines that with the auth ticket and with route structure derived from the router.
-- Every `chat()` call sets `agentLoopStrategy: maxIterations(10)` explicitly.
+- Every `chat()` call sets `agentLoopStrategy: maxIterations(N)` to an explicit bound. `N` is configuration for that app.
 
 Assistant replies render as Markdown, including tables and code. How the reference app renders that Markdown is in `AGENTS.md`.
 
