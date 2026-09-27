@@ -225,7 +225,7 @@
         
       ],
       "inLanguage": "en",
-      "wordCount": 1447
+      "wordCount": 1457
     }
     
     ,{
@@ -350,7 +350,7 @@
     <span class="post-meta"><time datetime="2026-03-08">Mar 8, 2026</time>
     · <span class="post-meta__updated">Updated <time datetime="2026-09-20">Sep 20, 2026</time></span>
     · <time datetime="PT7M">7 min read</time>
-    · <span>1447 words</span>
+    · <span>1457 words</span>
 </span>
 
   </header>
@@ -693,23 +693,16 @@ This post tracks architecture skill v1.31 from the template. The skill is the co
 <span class="giallo-l"><span>}</span></span></code></pre>
 <p>The same rule applies to other untrusted edges: DB documents and external API JSON in repository implementations, <code>createServerFn</code> input, AI tool args, env (companion <code>observability-and-env</code>), and widget <code>onChange</code> values typed as bare <code>string</code>. Parse with the <strong>same schema</strong> — do not add <code>Array.find</code> helpers that duplicate enums.</p>
 <h3 id="typescript-after-parse">TypeScript after parse</h3>
-<p>Once a value has crossed a boundary, keep <strong>schema-inferred types</strong> end-to-end. Prefer <code>satisfies</code>, <code>as const</code> tuples, discriminated unions, and exhaustive <code>switch</code> with <code>assertNever</code>. Do not widen back to <code>string</code> / <code>any</code> / <code>Record&lt;string, unknown&gt;</code> and re-parse with a homemade guard.</p>
+<p>Once a value has crossed a boundary, keep <strong>schema-inferred types</strong> end-to-end. Prefer a typed map (<code>as const satisfies Record&lt;...&gt;</code>), <code>as const</code> tuples, and discriminated unions so every member of the union is covered. Do not widen back to <code>string</code> / <code>any</code> / <code>Record&lt;string, unknown&gt;</code> and re-parse with a homemade guard.</p>
 <pre class="giallo z-l-code z-d-code" ><code data-lang="typescript"><span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">type</span><span class="z-l-8 z-d-8"> TaskStatus</span><span class="z-l-5 z-d-5"> =</span><span class="z-l-2 z-d-2"> &#39;</span><span class="z-l-2 z-d-2">pending</span><span class="z-l-2 z-d-2">&#39;</span><span class="z-l-5 z-d-5"> |</span><span class="z-l-2 z-d-2"> &#39;</span><span class="z-l-2 z-d-2">done</span><span class="z-l-2 z-d-2">&#39;</span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">const</span><span class="z-l-1 z-d-1"> STATUS_LABEL</span><span class="z-l-5 z-d-5"> =</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">const</span><span class="z-l-1 z-d-1"> labelForStatus</span><span class="z-l-5 z-d-5"> =</span><span> {</span></span>
 <span class="giallo-l"><span>  pending</span><span>:</span><span class="z-l-2 z-d-2"> &#39;</span><span class="z-l-2 z-d-2">Pending</span><span class="z-l-2 z-d-2">&#39;</span><span>,</span></span>
 <span class="giallo-l"><span>  done</span><span>:</span><span class="z-l-2 z-d-2"> &#39;</span><span class="z-l-2 z-d-2">Done</span><span class="z-l-2 z-d-2">&#39;</span><span>,</span></span>
 <span class="giallo-l"><span>}</span><span class="z-l-5 z-d-5"> as</span><span class="z-l-8 z-d-8"> const</span><span class="z-l-5 z-d-5"> satisfies</span><span class="z-l-8 z-d-8"> Record</span><span>&lt;</span><span class="z-l-8 z-d-8">TaskStatus</span><span>,</span><span class="z-l-5 z-d-5"> string</span><span>&gt;</span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">function</span><span class="z-l-1 z-d-1"> labelForStatus</span><span>(</span><span>status</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TaskStatus</span><span>)</span><span class="z-l-5 z-d-5">:</span><span class="z-l-5 z-d-5"> string</span><span> {</span></span>
-<span class="giallo-l"><span class="z-l-5 z-d-5">  switch</span><span> (</span><span class="z-l-1 z-d-1">status</span><span>)</span><span> {</span></span>
-<span class="giallo-l"><span class="z-l-5 z-d-5">    case</span><span class="z-l-2 z-d-2"> &#39;</span><span class="z-l-2 z-d-2">pending</span><span class="z-l-2 z-d-2">&#39;</span><span>:</span></span>
-<span class="giallo-l"><span class="z-l-5 z-d-5">      return</span><span class="z-l-1 z-d-1"> STATUS_LABEL</span><span>.</span><span class="z-l-1 z-d-1">pending</span></span>
-<span class="giallo-l"><span class="z-l-5 z-d-5">    case</span><span class="z-l-2 z-d-2"> &#39;</span><span class="z-l-2 z-d-2">done</span><span class="z-l-2 z-d-2">&#39;</span><span>:</span></span>
-<span class="giallo-l"><span class="z-l-5 z-d-5">      return</span><span class="z-l-1 z-d-1"> STATUS_LABEL</span><span>.</span><span class="z-l-1 z-d-1">done</span></span>
-<span class="giallo-l"><span class="z-l-5 z-d-5">    default</span><span>:</span></span>
-<span class="giallo-l"><span class="z-l-5 z-d-5">      return</span><span class="z-l-1 z-d-1"> assertNever</span><span>(</span><span class="z-l-1 z-d-1">status</span><span>)</span></span>
-<span class="giallo-l"><span>  }</span></span>
+<span class="giallo-l"><span class="z-l-3 z-l-b z-d-6 z-d-b">function</span><span class="z-l-1 z-d-1"> label</span><span>(</span><span>status</span><span class="z-l-5 z-d-5">:</span><span class="z-l-8 z-d-8"> TaskStatus</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-l-5 z-d-5">  return</span><span class="z-l-1 z-d-1"> labelForStatus</span><span>[</span><span class="z-l-1 z-d-1">status</span><span>]</span></span>
 <span class="giallo-l"><span>}</span></span></code></pre>
 <p>Runtime validation checks the edges. TypeScript checks the interior. Hand-written interfaces define <strong>behavior</strong> (<code>Repository</code>, <code>AIAdapterService</code>) — not ad-hoc JSON shapes.</p>
 <blockquote>
