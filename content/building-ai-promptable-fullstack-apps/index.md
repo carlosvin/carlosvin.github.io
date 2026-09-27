@@ -59,19 +59,14 @@ Everything else is swappable behind interfaces: database, AI provider, observabi
 All data access goes through a `Repository` interface that speaks **repository-layer types only**. Implementations hide the database. Authorization for mutations lives on **POST server functions** (`requireAuthMiddleware`):
 
 ```typescript
-export interface TraceabilityContext {
-  createdBy?: string
-  lastModifiedBy?: string
-}
-
 export interface Repository {
   getTasks(filter?: TaskRepoFilter): Promise<TaskRepo[]>
   getTask(taskId: string): Promise<TaskRepo | null>
   getDistinctValues(field: DistinctValueField): Promise<string[]>
   getUserProfile(email: string): Promise<UserProfileRepo | null>
   getUserAccess(email: string): Promise<UserAccessRepo | null>
-  createTask(input: TaskRepoInput, trace?: TraceabilityContext): Promise<TaskRepo>
-  updateTask(taskId: string, input: Partial<TaskRepoInput>, trace?: TraceabilityContext): Promise<TaskRepo | null>
+  createTask(input: TaskRepoInput): Promise<TaskRepo>
+  updateTask(taskId: string, input: Partial<TaskRepoInput>): Promise<TaskRepo | null>
   deleteTask(taskId: string): Promise<boolean>
 }
 ```
@@ -82,10 +77,6 @@ Two implementations ship with the template:
 2. **MongoRepository** — production MongoDB
 
 A factory picks one from `MONGODB_URI` (or explicit `REPOSITORY_TYPE`). You do not need a database to start.
-
-### Traceability on writes
-
-Mutations take a `TraceabilityContext` built from the auth ticket (`createWriteTrace` / `updateWriteTrace`), not a bare email argument. Implementations persist `createdBy` / `lastModifiedBy` on the entity so UI and AI writes stay auditable.
 
 ## App Boundaries and Type Safety
 
@@ -254,7 +245,7 @@ Env is parsed **once at startup** into `webServerEnv` and a browser-safe `shellS
 Adding a domain entity is still a short, repeatable path:
 
 1. **Schemas** — repository + tools + search layers; mappers that end in `Schema.parse()`.
-2. **Repository** — methods on `Repository` with `TraceabilityContext` on writes; implement seed and production.
+2. **Repository** — methods on `Repository`; implement seed and production.
 3. **Server functions** — GET queries; POST mutations with `requireAuthMiddleware` and `invalidateMiddleware`.
 4. **AI tools** — `toolDefinition` + `createSafeServerTool` for every server function; client navigate/invalidate in the chat shell.
 5. **Routes** — thin files, `validateSearch`, `loaderDeps`, parent layouts for shared work.
