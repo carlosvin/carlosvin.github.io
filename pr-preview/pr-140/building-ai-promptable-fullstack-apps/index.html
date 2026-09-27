@@ -225,7 +225,7 @@
         
       ],
       "inLanguage": "en",
-      "wordCount": 1634
+      "wordCount": 1717
     }
     
     ,{
@@ -349,8 +349,8 @@
     
     <span class="post-meta"><time datetime="2026-03-08">Mar 8, 2026</time>
     · <span class="post-meta__updated">Updated <time datetime="2026-09-27">Sep 27, 2026</time></span>
-    · <time datetime="PT7M">7 min read</time>
-    · <span>1634 words</span>
+    · <time datetime="PT8M">8 min read</time>
+    · <span>1717 words</span>
 </span>
 
   </header>
@@ -642,11 +642,9 @@ This post teaches <code>tanstack-promptable-fullstack-app-template</code> (v1.31
 <p>Hand-written interfaces describe <strong>behavior</strong> (<code>Repository</code>, <code>AIAdapterService</code>, <code>ObservabilityService</code>). JSON shapes come from schemas.</p>
 <h2 id="app-boundaries-and-type-safety">App boundaries and type safety</h2>
 <p>Untrusted values become typed only at a trust boundary. After that, the rest of the app keeps the inferred type.</p>
-<pre class="giallo z-l-code z-d-code" ><code data-lang="plain"><span class="giallo-l"><span>URL search  →  validateSearch  →  loader  →  tools schema  →  server fn</span></span>
-<span class="giallo-l"><span>                                                      ↓ Schema.parse()</span></span>
-<span class="giallo-l"><span>                                              repository schema  →  Repository</span></span>
-<span class="giallo-l"><span>                                                      ↓ Schema.parse()</span></span>
-<span class="giallo-l"><span>                                              tools schema  →  UI or AI</span></span></code></pre><h3 id="three-schema-layers">Three schema layers</h3>
+<p><img src="https://carlosvin.github.io/pr-preview/pr-140/building-ai-promptable-fullstack-apps/./building-ai-promptable-fullstack-apps-trust-boundaries.svg" alt="Trust boundaries: URL params, database rows, server input, AI tool arguments, and widget strings become typed only at validateSearch or Schema.parse. UI and AI then see tools-layer types." /></p>
+<p><em>Each outside value crosses one boundary. URL params use <code>validateSearch</code>. Database rows, API JSON, server input, and tool arguments use <code>Schema.parse()</code> on the schema for that layer. Widget strings use that same schema. Mappers between the tools layer and the repository end in <code>Schema.parse()</code> in both directions.</em></p>
+<h3 id="three-schema-layers">Three schema layers</h3>
 <ol>
 <li><strong>Repository</strong> (DB-shaped), in <code>repository.ts</code>. Types are inferred. Field descriptions are optional here.</li>
 <li><strong>Tools / server functions</strong> (API-shaped), in <code>schemas.ts</code>. One schema is shared by <code>createServerFn</code> <code>.inputValidator(Schema)</code> and AI <code>toolDefinition({ inputSchema })</code>. <code>.describe()</code> is the text the model sees. <code>.meta({ unit, format, title })</code> is for structured hints only.</li>
