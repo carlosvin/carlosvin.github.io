@@ -3,7 +3,7 @@ title: "Building AI-Promptable Full-Stack Apps with TanStack Start"
 slug: building-ai-promptable-fullstack-apps
 description: "A reproducible full-stack architecture for AI-promptable web apps with TanStack Start, three-layer schemas, swappable interfaces, and Agent Skills."
 date: 2026-03-08
-updated: 2026-08-31
+updated: 2026-10-17
 lang: en
 toc: true
 extra:
@@ -337,6 +337,8 @@ npx skills add carlosvin/tanstack-fullstack-ai-template --skill reference-tech-s
 
 Whenever an AI agent generates new entities, server functions, or routes in projects using this skill, it adheres to these invariants automatically.
 
+Prompt placement is a later decision, covered in [Three UI skills for promptable apps](@/three-ui-skills-promptable-apps/index.md): `promptable-ux` for a hidden side panel or a prompt-first page, and `agentic-ux` for a fully agentic shell. The repository also publishes `repository-architecture` for collection ownership, indexes, and resource lifetime.
+
 ## Getting Started
 
 You can spin up the full template locally in seconds:
@@ -394,6 +396,8 @@ By combining:
 - Codified Agent Skills for reliable AI-assisted engineering
 
 You get a solid, maintainable foundation that saves weeks of repetitive scaffolding on every new project.
+
+Where the prompt sits is a separate decision. [Three UI skills for promptable apps](@/three-ui-skills-promptable-apps/index.md) covers the three experiences that sit on this contract: a hidden side panel, a prompt-first page, and a fully agentic shell.
 
 - 📁 [GitHub Repository](https://github.com/carlosvin/tanstack-fullstack-ai-template)
 - 🚀 [Live Demo](https://fullstack-promptable-app-example.netlify.app)
